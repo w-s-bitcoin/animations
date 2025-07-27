@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wicked Smart Bitcoin</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #f4f4f4;
+      font-family: monospace;
+      margin: 2rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .image-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .chart {
+      max-width: 90vw;
+      border: 1px solid #333;
+      border-radius: 8px;
+    }
+    a {
+      color: #f7931a;
+      text-decoration: none;
+    }
+    footer {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wicked Smart Bitcoin</h1>
+  <p>Daily on-chain visuals. Minimal BS. Updated 8 PM EST.</p>
+
+  <div class="image-grid" id="image-grid"></div>
+
+  <footer>
+    &copy; 2025 Wicked Smart Bitcoin
+  </footer>
+
+  <script>
+    const imageGrid = document.getElementById('image-grid');
+
+    fetch("final_frames/image_list.json")
+      .then(res => res.json())
+      .then(images => {
+        images.forEach(filename => {
+          const base = filename.replace(/_/g, ' ').replace(/\.png$/, '');
+          const displayName = base.charAt(0).toUpperCase() + base.slice(1);
+
+          const container = document.createElement('div');
+          const link = document.createElement('a');
+          link.href = `final_frames/${filename}`;
+
+          const img = document.createElement('img');
+          img.src = `final_frames/${filename}`;
+          img.alt = displayName;
+          img.className = 'chart';
+
+          const caption = document.createElement('div');
+          caption.textContent = displayName;
+
+          link.appendChild(img);
+          container.appendChild(link);
+          container.appendChild(caption);
+          imageGrid.appendChild(container);
+        });
+      })
+      .catch(err => {
+        imageGrid.textContent = "Failed to load images.";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
+
