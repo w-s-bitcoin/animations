@@ -16,6 +16,18 @@
       font-size: 2rem;
       margin-bottom: 1rem;
     }
+    .toggle-container {
+      margin: 1rem 0;
+    }
+    .toggle-button {
+      background-color: #222;
+      color: #f7931a;
+      border: 1px solid #f7931a;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 1rem;
+    }
     .image-grid {
       display: flex;
       flex-direction: column;
@@ -23,10 +35,19 @@
       gap: 2rem;
       margin-top: 2rem;
     }
+    .image-grid.grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .image-grid.grid > div {
+      width: 300px;
+    }
     .chart {
       max-width: 90vw;
       border: 1px solid #333;
       border-radius: 8px;
+      width: 100%;
     }
     a {
       color: #f7931a;
@@ -41,7 +62,11 @@
 </head>
 <body>
   <h1>Wicked Smart Bitcoin</h1>
-  <p>Daily on-chain visuals. Minimal BS. Updated 8 PM EST.</p>
+  <p>Bitcoin visualizations updated daily at 8PM EST</p>
+
+  <div class="toggle-container">
+    <button class="toggle-button" onclick="toggleLayout()">Toggle Grid/List View</button>
+  </div>
 
   <div class="image-grid" id="image-grid"></div>
 
@@ -52,28 +77,25 @@
   <script>
     const imageGrid = document.getElementById('image-grid');
 
+    function toggleLayout() {
+      imageGrid.classList.toggle('grid');
+    }
+
     fetch("final_frames/image_list.json")
       .then(res => res.json())
       .then(images => {
         images.forEach(filename => {
-          const base = filename.replace(/_/g, ' ').replace(/\.png$/, '');
-          const displayName = base.charAt(0).toUpperCase() + base.slice(1);
-
           const container = document.createElement('div');
           const link = document.createElement('a');
           link.href = `final_frames/${filename}`;
 
           const img = document.createElement('img');
           img.src = `final_frames/${filename}`;
-          img.alt = displayName;
+          img.alt = filename;
           img.className = 'chart';
-
-          const caption = document.createElement('div');
-          caption.textContent = displayName;
 
           link.appendChild(img);
           container.appendChild(link);
-          container.appendChild(caption);
           imageGrid.appendChild(container);
         });
       })
@@ -84,4 +106,3 @@
   </script>
 </body>
 </html>
-
