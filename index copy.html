@@ -245,10 +245,6 @@
       align-items: center;
       justify-content: center;
     }
-    .search-btn.active {
-      box-shadow: 0 0 8px #f7931a;
-      background-color: #333;
-    }
 
     .search-input {
       height: 32px;
@@ -274,8 +270,9 @@
 <body>
   <h1>Wicked Smart Bitcoin</h1>
   <p>Bitcoin Visualizations Updated Daily</p>
-  <div class="controls-row">
-    <div class="toggle-icons" id="toggleIcons">
+
+  <div class="toggle-container" id="toggleContainer">
+    <div class="toggle-icons">
       <div class="toggle-icon active" id="gridView" onclick="setLayout('grid')">
         <div class="icon-grid">
           <div></div><div></div><div></div>
@@ -288,14 +285,18 @@
           <div></div><div></div><div></div><div></div>
         </div>
       </div>
-    </div>
-    <div class="search-container">
-      <button id="search-btn" class="search-btn" onclick="toggleSearch()" aria-label="Search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15zm0 2a5.5 5.5 0 1 0 0 11a5.5 5.5 0 0 0 0-11zm8.03 12.47l3.25 3.25a1 1 0 1 1-1.41 1.41l-3.25-3.25a1 1 0 0 1 1.41-1.41z" fill="currentColor"/>
-        </svg>
-      </button>
-      <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="filterImages()" />
+      <div class="search-container">
+        <button id="search-btn" class="search-btn" onclick="toggleSearch()" aria-label="Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15zm0 2a5.5 5.5 0 1 0 0 11
+                    a5.5 5.5 0 0 0 0-11zm8.03 12.47l3.25 3.25a1 1 0 1 1-1.41 1.41l-3.25-3.25
+                    a1 1 0 0 1 1.41-1.41z"
+                  fill="currentColor"/>
+          </svg>
+        </button>
+        <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="filterImages()" />
+      </div>
     </div>
   </div>
 
@@ -338,7 +339,7 @@
 
   <script>
     const imageGrid = document.getElementById('image-grid');
-    const toggleIcons = document.getElementById('toggleIcons');
+    const toggleContainer = document.getElementById('toggleContainer');
     let imageList = [];
     let visibleImages = [];
     let currentIndex = 0;
@@ -367,32 +368,14 @@
       const containerWidth = imageGrid.offsetWidth;
       const columnWidth = 280 + 32;
       const columns = Math.floor(containerWidth / columnWidth);
-      const toggleIcons = document.getElementById('toggleIcons');
-      const searchContainer = document.querySelector('.search-container');
-      const searchInput = document.getElementById('search-input');
-      const searchBtn = document.getElementById('search-btn');
 
       if (columns < 2) {
-        toggleIcons.style.display = 'none';
-        if (!searchContainer.classList.contains('active')) {
-          searchContainer.classList.add('active');
-          if (searchBtn) searchBtn.classList.add('active');
-        }
-        if (searchBtn) {
-          searchBtn.disabled = true;
-        }
+        toggleContainer.style.display = 'none';
         if (userSelectedLayout !== 'list') {
           setLayout('list', false);
         }
       } else {
-        toggleIcons.style.display = 'inline-flex';
-        if (searchWasInitiallyClosed && searchInput.value.trim() === '') {
-          searchContainer.classList.remove('active');
-          if (searchBtn) searchBtn.classList.remove('active');
-        }
-        if (searchBtn) {
-          searchBtn.disabled = false;
-        }
+        toggleContainer.style.display = 'block';
         if (userSelectedLayout === 'list') {
           setLayout('list', false);
         } else {
@@ -404,9 +387,6 @@
     window.addEventListener('resize', updateLayoutBasedOnWidth);
     window.addEventListener('load', updateLayoutBasedOnWidth);
 
-    let searchWasManuallyOpened = false;
-    let searchWasInitiallyClosed = true;
-  
     function openModalByIndex(index) {
       const image = visibleImages[index];
       if (!image) return;
@@ -448,20 +428,11 @@
 
     function toggleSearch() {
       const container = document.querySelector('.search-container');
-      const input = document.getElementById('search-input');
-      const button = document.getElementById('search-btn');
-      const nowActive = !container.classList.contains('active');
-
       container.classList.toggle('active');
-      button.classList.toggle('active', nowActive);
-
-      if (nowActive) {
-        searchWasManuallyOpened = true;
-        searchWasInitiallyClosed = false;
-        input.focus();
+      if (container.classList.contains('active')) {
+        document.getElementById('search-input').focus();
       } else {
-        input.value = '';
-        searchWasInitiallyClosed = true;
+        document.getElementById('search-input').value = '';
         filterImages();
       }
     }
@@ -512,7 +483,7 @@
       .then(data => {
         imageList = data;
         visibleImages = [...imageList];
-        filterImages();
+        filterImages();  // Render all initially
       })
       .catch(err => {
         imageGrid.textContent = "Failed to load images.";
@@ -530,7 +501,7 @@
         if (e.key === 'ArrowLeft') prevImage();
         else if (e.key === 'ArrowRight') nextImage();
       }
-      });
+    });
   </script>
 </body>
 </html>
