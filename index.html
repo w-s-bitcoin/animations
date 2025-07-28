@@ -367,6 +367,13 @@
         closeModal();
       }
     });
+
+    document.addEventListener('keydown', (e) => {
+      if (modal.style.display === 'flex') {
+        if (e.key === 'ArrowLeft') prevImage();
+        else if (e.key === 'ArrowRight') nextImage();
+      }
+    });
   </script>
 </body>
 </html>
