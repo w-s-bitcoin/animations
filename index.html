@@ -351,6 +351,22 @@
       modalImg.src = `final_frames/${image.filename}`;
       modalImg.alt = image.title;
       modal.style.display = 'flex';
+    }    function openModalByIndex(index) {
+      const image = imageList[index];
+      if (!image) return;
+      currentIndex = index;
+      modalImg.src = `final_frames/${image.filename}`;
+      modalImg.alt = image.title;
+      modal.style.display = 'flex';
+
+      document.getElementById('x-link').style.display = image.latest_x ? 'inline' : 'none';
+      document.getElementById('x-link').href = image.latest_x || '#';
+
+      document.getElementById('nostr-link').style.display = image.latest_nostr ? 'inline' : 'none';
+      document.getElementById('nostr-link').href = image.latest_nostr || '#';
+
+      document.getElementById('youtube-link').style.display = image.latest_youtube ? 'inline' : 'none';
+      document.getElementById('youtube-link').href = image.latest_youtube || '#';
     }
 
     function prevImage() {
