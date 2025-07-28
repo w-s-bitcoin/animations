@@ -209,12 +209,28 @@
     }
     .modal-controls {
       position: absolute;
-      top: 0.5rem;
-      left: 1rem;
+      top: 0;
+      left: 0;
       display: flex;
-      gap: 1rem;
-      align-items: center;
-      padding-bottom: 0.5rem;
+      justify-content: flex-start;
+      align-items: flex-end;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+    .modal-controls .close-btn,
+    .modal-controls a,
+    .modal-controls .label {
+      display: inline-flex;
+      align-items: flex-end;
+      height: 32px;
+    }
+    .modal-controls .label {
+      font-size: 1rem;
+      color: white;
+      margin-left: 0.25rem;
     }
     .close-btn {
       font-size: 2rem;
@@ -306,7 +322,7 @@
       <button class="close-btn" onclick="closeModal()">×</button>
       <button class="close-btn" onclick="prevImage()">&#8249;</button>
       <button class="close-btn" onclick="nextImage()">&#8250;</button>
-      <span style="color:white; font-size: 1rem; padding-left: 1rem;">Latest posts:</span>
+      <div class="label" style="margin-left: 0.25rem;">Posts:</div>
       <a id="x-link" class="close-btn" href="#" target="_blank" style="display:none;">
         <svg width="16" height="16" fill="#f7931a" class="bi bi-twitter-x" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>      </a>
       </a>
