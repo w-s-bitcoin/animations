@@ -41,6 +41,14 @@
     "latest_youtube": "https://youtu.be/MzxIZ4_f3e0"
   },
   {
+    "filename": "eoe_growth.png",
+    "title": "Epoch-Over-Epoch Growth",
+    "description": "Shows the epoch-over-epoch growth based on block height",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1903791287846711591",
+    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyr7v5tnafyk25qph5edlfk235gh2mu8qn05l82y5dm9067wg3vfqjcmmt7s",
+    "latest_youtube": "https://youtu.be/ieiwq2m9aWg"
+  },
+  {
     "filename": "halving_progress.png",
     "title": "Halving Progress",
     "description": "Shows the halving progress based on block height through each epoch",
@@ -99,7 +107,7 @@
   {
     "filename": "cagr.png",
     "title": "CAGR",
-    "description": "Shows the 4, 6, 8, 10, and 12 year compound annual growth rate",
+    "description": "Shows the 4, 6, 8, 10, and 12 year compound annual growth rates",
     "latest_x": "https://x.com/w_s_bitcoin/status/1899422307778453933",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzx4u2qy9szds7sgpq8rqu7adxw88qx68u97tswyejl7jsm5vvvfc0ly7nv",
     "latest_youtube": "https://youtu.be/CmogAUugkDo"
