@@ -180,6 +180,48 @@
       color: white;
       cursor: pointer;
     }
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .search-btn {
+      width: 32px;
+      height: 32px;
+      padding: 0.005rem 0.02rem;
+      border: 1px solid #f7931a;
+      border-radius: 6px;
+      background-color: #1a1a1a;
+      color: #f7931a;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-input {
+      height: 32px;
+      width: 0;
+      opacity: 0;
+      transition: width 0.3s ease, opacity 0.3s ease;
+      background-color: #1a1a1a;
+      border: 1px solid #f7931a;
+      color: #f4f4f4;
+      padding: 0 0.5rem;
+      font-family: monospace;
+      font-size: 1rem;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .search-container.active .search-input {
+      width: 200px;
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -199,6 +241,18 @@
         <div class="icon-list">
           <div></div><div></div><div></div><div></div>
         </div>
+      </div>
+      <div class="search-container">
+        <button id="search-btn" class="search-btn" onclick="toggleSearch()" aria-label="Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15zm0 2a5.5 5.5 0 1 0 0 11
+                    a5.5 5.5 0 0 0 0-11zm8.03 12.47l3.25 3.25a1 1 0 1 1-1.41 1.41l-3.25-3.25
+                    a1 1 0 0 1 1.41-1.41z"
+                  fill="currentColor"/>
+          </svg>
+        </button>
+        <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="filterImages()" />
       </div>
     </div>
   </div>
@@ -244,6 +298,7 @@
     const imageGrid = document.getElementById('image-grid');
     const toggleContainer = document.getElementById('toggleContainer');
     let imageList = [];
+    let visibleImages = [];
     let currentIndex = 0;
     const gridIcon = document.getElementById('gridView');
     const listIcon = document.getElementById('listView');
@@ -290,30 +345,21 @@
     window.addEventListener('load', updateLayoutBasedOnWidth);
 
     function openModalByIndex(index) {
-      const image = imageList[index];
+      const image = visibleImages[index];
       if (!image) return;
       currentIndex = index;
       modalImg.src = `final_frames/${image.filename}`;
       modalImg.alt = image.title;
       modal.style.display = 'flex';
-
-      document.getElementById('x-link').style.display = image.latest_x ? 'inline' : 'none';
-      document.getElementById('x-link').href = image.latest_x || '#';
-
-      document.getElementById('nostr-link').style.display = image.latest_nostr ? 'inline' : 'none';
-      document.getElementById('nostr-link').href = image.latest_nostr || '#';
-
-      document.getElementById('youtube-link').style.display = image.latest_youtube ? 'inline' : 'none';
-      document.getElementById('youtube-link').href = image.latest_youtube || '#';
     }
 
     function prevImage() {
-      const prevIndex = (currentIndex - 1 + imageList.length) % imageList.length;
+      const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
       openModalByIndex(prevIndex);
     }
 
     function nextImage() {
-      const nextIndex = (currentIndex + 1) % imageList.length;
+      const nextIndex = (currentIndex + 1) % visibleImages.length;
       openModalByIndex(nextIndex);
     }
 
@@ -321,41 +367,64 @@
       modal.style.display = 'none';
     }
 
+    function toggleSearch() {
+      const container = document.querySelector('.search-container');
+      container.classList.toggle('active');
+      if (container.classList.contains('active')) {
+        document.getElementById('search-input').focus();
+      } else {
+        document.getElementById('search-input').value = '';
+        filterImages();
+      }
+    }
+
+    function filterImages() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const grid = document.getElementById('image-grid');
+      grid.innerHTML = '';
+
+      visibleImages = imageList.filter(({ title, description }) =>
+        title.toLowerCase().includes(query) ||
+        description.toLowerCase().includes(query)
+      );
+
+      visibleImages.forEach(({ filename, title, description }, index) => {
+        const container = document.createElement('div');
+
+        const titleElem = document.createElement('div');
+        titleElem.className = 'chart-title';
+        titleElem.textContent = title;
+
+        const chartWrapper = document.createElement('div');
+        chartWrapper.className = 'chart-container';
+
+        const img = document.createElement('img');
+        img.src = `final_frames/${filename}`;
+        img.alt = title;
+        img.className = 'chart';
+        img.onclick = () => openModalByIndex(index);
+
+        const desc = document.createElement('div');
+        desc.className = 'chart-description';
+        desc.textContent = description;
+
+        chartWrapper.appendChild(img);
+        chartWrapper.appendChild(desc);
+
+        container.appendChild(titleElem);
+        container.appendChild(chartWrapper);
+        grid.appendChild(container);
+      });
+
+      updateLayoutBasedOnWidth();
+    }
+
     fetch("final_frames/image_list.json")
       .then(res => res.json())
       .then(data => {
         imageList = data;
-        return data;
-      })
-      .then(images => {
-        images.forEach(({ filename, title, description }, index) => {
-          const container = document.createElement('div');
-
-          const titleElem = document.createElement('div');
-          titleElem.className = 'chart-title';
-          titleElem.textContent = title;
-
-          const chartWrapper = document.createElement('div');
-          chartWrapper.className = 'chart-container';
-
-          const img = document.createElement('img');
-          img.src = `final_frames/${filename}`;
-          img.alt = title;
-          img.className = 'chart';
-          img.onclick = () => openModalByIndex(index);
-
-          const desc = document.createElement('div');
-          desc.className = 'chart-description';
-          desc.textContent = description;
-
-          chartWrapper.appendChild(img);
-          chartWrapper.appendChild(desc);
-
-          container.appendChild(titleElem);
-          container.appendChild(chartWrapper);
-          imageGrid.appendChild(container);
-        });
-        updateLayoutBasedOnWidth();
+        visibleImages = [...imageList];
+        filterImages();  // Render all initially
       })
       .catch(err => {
         imageGrid.textContent = "Failed to load images.";
