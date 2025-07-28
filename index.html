@@ -43,11 +43,33 @@
     .image-grid.grid > div {
       width: 300px;
     }
+    .chart-container {
+      position: relative;
+      display: inline-block;
+    }
+    .chart-description {
+      position: absolute;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      width: 100%;
+      padding: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-size: 0.9rem;
+    }
+    .chart-container:hover .chart-description {
+      opacity: 1;
+    }
     .chart {
       max-width: 90vw;
       border: 1px solid #333;
       border-radius: 8px;
       width: 100%;
+    }
+    .chart-title {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
     }
     a {
       color: #f7931a;
@@ -68,7 +90,7 @@
     <button class="toggle-button" onclick="toggleLayout()">Toggle Grid/List View</button>
   </div>
 
-  <div class="image-grid" id="image-grid"></div>
+  <div class="image-grid grid" id="image-grid"></div>
 
   <footer>
     &copy; 2025 Wicked Smart Bitcoin
@@ -84,18 +106,34 @@
     fetch("final_frames/image_list.json")
       .then(res => res.json())
       .then(images => {
-        images.forEach(filename => {
+        images.forEach(({ filename, title, description }) => {
           const container = document.createElement('div');
+
+          const titleElem = document.createElement('div');
+          titleElem.className = 'chart-title';
+          titleElem.textContent = title;
+
+          const chartWrapper = document.createElement('div');
+          chartWrapper.className = 'chart-container';
+
           const link = document.createElement('a');
           link.href = `final_frames/${filename}`;
 
           const img = document.createElement('img');
           img.src = `final_frames/${filename}`;
-          img.alt = filename;
+          img.alt = title;
           img.className = 'chart';
 
+          const desc = document.createElement('div');
+          desc.className = 'chart-description';
+          desc.textContent = description;
+
           link.appendChild(img);
-          container.appendChild(link);
+          chartWrapper.appendChild(link);
+          chartWrapper.appendChild(desc);
+
+          container.appendChild(titleElem);
+          container.appendChild(chartWrapper);
           imageGrid.appendChild(container);
         });
       })
