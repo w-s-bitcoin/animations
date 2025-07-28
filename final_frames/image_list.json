@@ -61,18 +61,18 @@
   },
   {
     "filename": "monthly_bars.png",
-    "title": "Monthly Bars",
-    "description": "Bitcoin chart with monthly candles"
+    "title": "Monthly Candles",
+    "description": "Shows the monthly candles chart"
   },
   {
     "filename": "yearly_bars.png",
-    "title": "Yearly Bars",
-    "description": "Bitcoin chart with yearly candles"
+    "title": "Yearly Candles",
+    "description": "Shows the yearly candles chart"
   },
   {
     "filename": "epoch_bars.png",
-    "title": "Epoch Bars",
-    "description": "Bitcoin chart with epoch candles"
+    "title": "Epoch Candles",
+    "description": "Shows the epoch candles chart"
   },
   {
     "filename": "windows.png",
