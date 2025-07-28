@@ -33,6 +33,14 @@
     "latest_youtube": "https://youtu.be/yb2p0WnP53M"
   },
   {
+    "filename": "halving_progress.png",
+    "title": "Halving Progress",
+    "description": "Shows the halving progress based on block height through each epoch",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "diff_and_target.png",
     "title": "Difficulty and Target",
     "description": "Shows block hashes and difficulty targets",
