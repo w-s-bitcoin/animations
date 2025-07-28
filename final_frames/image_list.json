@@ -33,6 +33,14 @@
     "latest_youtube": "https://youtu.be/yb2p0WnP53M"
   },
   {
+    "filename": "block_subsidy.png",
+    "title": "Mined Supply & Price",
+    "description": "Shows the mined supply and price, colored by the epoch",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "halving_progress.png",
     "title": "Halving Progress",
     "description": "Shows the halving progress based on block height through each epoch",
@@ -42,7 +50,7 @@
   },
   {
     "filename": "diff_and_target.png",
-    "title": "Difficulty and Target",
+    "title": "Target & Block Hashes",
     "description": "Shows block hashes and difficulty targets",
     "latest_x": "",
     "latest_nostr": "",
