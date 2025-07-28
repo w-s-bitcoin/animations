@@ -414,13 +414,6 @@
       modalImg.src = `final_frames/${image.filename}`;
       modalImg.alt = image.title;
       modal.style.display = 'flex';
-    }    function openModalByIndex(index) {
-      const image = imageList[index];
-      if (!image) return;
-      currentIndex = index;
-      modalImg.src = `final_frames/${image.filename}`;
-      modalImg.alt = image.title;
-      modal.style.display = 'flex';
 
       document.getElementById('x-link').style.display = image.latest_x ? 'inline' : 'none';
       document.getElementById('x-link').href = image.latest_x || '#';
@@ -527,10 +520,15 @@
 
     document.addEventListener('keydown', (e) => {
       if (modal.style.display === 'flex') {
-        if (e.key === 'ArrowLeft') prevImage();
-        else if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') {
+          const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
+          openModalByIndex(prevIndex);
+        } else if (e.key === 'ArrowRight') {
+          const nextIndex = (currentIndex + 1) % visibleImages.length;
+          openModalByIndex(nextIndex);
+        }
       }
-      });
+    });
   </script>
 </body>
 </html>
