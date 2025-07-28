@@ -526,6 +526,9 @@
         } else if (e.key === 'ArrowRight') {
           const nextIndex = (currentIndex + 1) % visibleImages.length;
           openModalByIndex(nextIndex);
+        } else if (e.key === ' ' || e.code === 'Space') {
+          e.preventDefault();
+          closeModal();
         }
       }
     });
