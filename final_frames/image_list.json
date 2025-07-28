@@ -2,81 +2,81 @@
   {
     "filename": "bitcoin_dominance.png",
     "title": "Bitcoin Dominance",
-    "description": "Tracks Bitcoin's market cap share compared to the top 9 (non-stablecoin) shitcoins."
+    "description": "Tracks Bitcoin's market cap share compared to the top 9 cryptocurrencies (excluding stablecoins)"
   },
   {
     "filename": "bitcoin_utxos.png",
     "title": "Bitcoin UTXO Distributions",
-    "description": "Visualizes the distributions of UTXOs, both by counts and by value."
+    "description": "Visualizes the distributions of UTXOs, both by counts and by value"
   },
   {
     "filename": "bitcoin_vs_gold.png",
     "title": "Bitcoin vs Gold $50 Weekly DCA",
-    "description": "Compares the returns of a $50 weekly DCA in bitcoin vs gold."
+    "description": "Compares the returns of a $50 weekly DCA in bitcoin vs gold"
   },
   {
     "filename": "block_size.png",
     "title": "Block Size",
-    "description": "Shows each block size with smaller epoch windows on the side."
+    "description": "Shows each block size with smaller epoch windows on the side"
   },
   {
     "filename": "days_at_a_loss.png",
     "title": "Days at a Loss",
-    "description": "Shows the number of days purchases made at each daily high were at a loss."
+    "description": "Shows the number of days purchases made at each daily high were at a loss"
   },
   {
     "filename": "days_since_ath.png",
     "title": "Days Since All-Time High",
-    "description": "Shows the number of days since Bitcoin's last all-time high."
+    "description": "Shows the number of days since Bitcoin's last all-time high"
   },
   {
     "filename": "diff_and_target.png",
     "title": "Difficulty and Target",
-    "description": "Shows block hashes and difficulty targets."
+    "description": "Shows block hashes and difficulty targets"
   },
   {
     "filename": "hodl_waves.png",
     "title": "HODL Waves",
-    "description": "Shows UTXO age distribution over time to visualize HODLing behavior."
+    "description": "Shows UTXO age distribution over time to visualize HODLing behavior"
   },
   {
     "filename": "inflation_rate.png",
     "title": "Inflation Rate",
-    "description": "Shows Bitcoin's annualized monetary inflation rate."
+    "description": "Shows Bitcoin's annualized monetary inflation rate"
   },
   {
     "filename": "monthly_bars.png",
     "title": "Monthly Bars",
-    "description": "Bitcoin chart with monthly candles."
+    "description": "Bitcoin chart with monthly candles"
   },
   {
     "filename": "yearly_bars.png",
     "title": "Yearly Bars",
-    "description": "Bitcoin chart with yearly candles."
+    "description": "Bitcoin chart with yearly candles"
   },
   {
     "filename": "epoch_bars.png",
     "title": "Epoch Bars",
-    "description": "Bitcoin chart with epoch candles."
+    "description": "Bitcoin chart with epoch candles"
   },
   {
     "filename": "price_distribution.png",
     "title": "Price Distribution",
-    "description": "Shows the number of daily closes in between each price range."
+    "description": "Shows the number of daily closes in between each price range"
   },
   {
     "filename": "price_distribution_mcap.png",
     "title": "Price Distribution by Market Cap",
-    "description": "Shows the number of daily closes in between each market cap range."
+    "description": "Shows the number of daily closes in between each market cap range"
   },
   {
     "filename": "supply_distribution.png",
     "title": "Supply Distribution & Age By Realized Price",
-    "description": "Shows the prices and ages of the circulating bitcoin supply."
+    "description": "Shows the prices and ages of the circulating bitcoin supply"
   },
   {
     "filename": "windows.png",
     "title": "Bitcoin 1Y/2Y/3Y/4Y Windows",
-    "description": "Bitcoin chart with 1 year, 2 year, 3 year, & 4 year windows."
+    "description": "Bitcoin chart with 1 year, 2 year, 3 year, & 4 year windows"
   }
 ]

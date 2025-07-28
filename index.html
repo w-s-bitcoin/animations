@@ -19,29 +19,78 @@
     .toggle-container {
       margin: 1rem 0;
     }
-    .toggle-button {
-      background-color: #222;
-      color: #f7931a;
+    .toggle-icons {
+      display: inline-flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .toggle-icon {
+      padding: 0.05rem 0.1rem;
       border: 1px solid #f7931a;
-      padding: 0.5rem 1rem;
       cursor: pointer;
-      font-family: monospace;
-      font-size: 1rem;
+      border-radius: 6px;
+      background-color: #1a1a1a;
+      color: #f7931a;
+      font-size: 1.2rem;
+      box-shadow: none;
+      transition: box-shadow 0.2s, background-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+    }
+    .toggle-icon.active {
+      box-shadow: 0 0 8px #f7931a;
+      background-color: #333;
+    }
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1px;
+      width: 20px;
+      height: 20px;
+    }
+    .icon-grid div {
+      background-color: #f7931a;
+      width: 100%;
+      height: 100%;
+    }
+    .icon-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 26px;
+    }
+    .icon-list div {
+      background-color: #f7931a;
+      height: 3px;
+      width: 100%;
     }
     .image-grid {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .image-grid.grid {
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .image-grid.list {
+      flex-direction: column;
+      align-items: center;
     }
     .image-grid.grid > div {
       width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .image-grid.list > div {
+      width: 90vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .chart-container {
       position: relative;
@@ -56,20 +105,34 @@
       padding: 0.5rem;
       opacity: 0;
       transition: opacity 0.3s ease;
+    }
+    .image-grid.grid .chart-description {
       font-size: 0.9rem;
+    }
+    .image-grid.list .chart-description {
+      font-size: 1.4rem;
     }
     .chart-container:hover .chart-description {
       opacity: 1;
     }
     .chart {
-      max-width: 90vw;
+      max-width: 100%;
       border: 1px solid #333;
       border-radius: 8px;
       width: 100%;
     }
     .chart-title {
       margin-bottom: 0.5rem;
+      min-height: 2.5rem;
+      display: flex;
+      align-items: flex-end;
+      text-align: center;
+    }
+    .image-grid.grid .chart-title {
       font-size: 1rem;
+    }
+    .image-grid.list .chart-title {
+      font-size: 1.6rem;
     }
     a {
       color: #f7931a;
@@ -84,10 +147,23 @@
 </head>
 <body>
   <h1>Wicked Smart Bitcoin</h1>
-  <p>Bitcoin visualizations updated daily at 8PM EST</p>
+  <p>Bitcoin Visualizations Updated Daily</p>
 
   <div class="toggle-container">
-    <button class="toggle-button" onclick="toggleLayout()">Toggle Grid/List View</button>
+    <div class="toggle-icons">
+      <div class="toggle-icon active" id="gridView" onclick="setLayout('grid')">
+        <div class="icon-grid">
+          <div></div><div></div><div></div>
+          <div></div><div></div><div></div>
+          <div></div><div></div><div></div>
+        </div>
+      </div>
+      <div class="toggle-icon" id="listView" onclick="setLayout('list')">
+        <div class="icon-list">
+          <div></div><div></div><div></div><div></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="image-grid grid" id="image-grid"></div>
@@ -98,9 +174,19 @@
 
   <script>
     const imageGrid = document.getElementById('image-grid');
+    const gridIcon = document.getElementById('gridView');
+    const listIcon = document.getElementById('listView');
 
-    function toggleLayout() {
-      imageGrid.classList.toggle('grid');
+    function setLayout(type) {
+      imageGrid.classList.remove('grid', 'list');
+      imageGrid.classList.add(type);
+      if (type === 'grid') {
+        gridIcon.classList.add('active');
+        listIcon.classList.remove('active');
+      } else {
+        listIcon.classList.add('active');
+        gridIcon.classList.remove('active');
+      }
     }
 
     fetch("final_frames/image_list.json")
@@ -128,9 +214,9 @@
           desc.className = 'chart-description';
           desc.textContent = description;
 
-          link.appendChild(img);
           chartWrapper.appendChild(link);
           chartWrapper.appendChild(desc);
+          link.appendChild(img);
 
           container.appendChild(titleElem);
           container.appendChild(chartWrapper);
