@@ -25,7 +25,7 @@
       justify-content: center;
     }
     .toggle-icon {
-      padding: 0.05rem 0.1rem;
+      padding: 0.005rem 0.02rem;
       border: 1px solid #f7931a;
       cursor: pointer;
       border-radius: 6px;
@@ -37,8 +37,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
+      width: 30px;
+      height: 30px;
     }
     .toggle-icon.active {
       box-shadow: 0 0 8px #f7931a;
@@ -49,8 +49,8 @@
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       gap: 1px;
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
     }
     .icon-grid div {
       background-color: #f7931a;
@@ -60,28 +60,29 @@
     .icon-list {
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      width: 26px;
+      gap: 1px;
+      width: 20px;
     }
     .icon-list div {
       background-color: #f7931a;
-      height: 3px;
+      height: 2px;
       width: 100%;
     }
     .image-grid {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
       margin-top: 2rem;
+      gap: 2rem;
     }
-    .image-grid.list {
+    .image-grid.grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .image-grid.grid > div {
+      display: flex;
       flex-direction: column;
       align-items: center;
     }
-    .image-grid.grid > div {
-      width: 300px;
+    .image-grid.list {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -95,6 +96,7 @@
     .chart-container {
       position: relative;
       display: inline-block;
+      cursor: pointer;
     }
     .chart-description {
       position: absolute;
@@ -127,6 +129,7 @@
       display: flex;
       align-items: flex-end;
       text-align: center;
+      justify-content: center;
     }
     .image-grid.grid .chart-title {
       font-size: 1rem;
@@ -143,13 +146,46 @@
       font-size: 0.9rem;
       color: #777;
     }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+    .modal img {
+      max-width: 95vw;
+      max-height: 90vh;
+    }
+    .modal-controls {
+      position: absolute;
+      top: 2rem;
+      left: 1rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      padding-bottom: 0.5rem;
+    }
+    .close-btn {
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>Wicked Smart Bitcoin</h1>
   <p>Bitcoin Visualizations Updated Daily</p>
 
-  <div class="toggle-container">
+  <div class="toggle-container" id="toggleContainer">
     <div class="toggle-icons">
       <div class="toggle-icon active" id="gridView" onclick="setLayout('grid')">
         <div class="icon-grid">
@@ -168,16 +204,31 @@
 
   <div class="image-grid grid" id="image-grid"></div>
 
+  <div class="modal" id="modal">
+    <div class="modal-controls">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <button class="close-btn" onclick="prevImage()">&#8249;</button>
+      <button class="close-btn" onclick="nextImage()">&#8250;</button>
+    </div>
+    <img id="modal-img" src="" alt="Full size image">
+  </div>
+
   <footer>
     &copy; 2025 Wicked Smart Bitcoin
   </footer>
 
   <script>
     const imageGrid = document.getElementById('image-grid');
+    const toggleContainer = document.getElementById('toggleContainer');
+    let imageList = [];
+    let currentIndex = 0;
     const gridIcon = document.getElementById('gridView');
     const listIcon = document.getElementById('listView');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    let userSelectedLayout = null;
 
-    function setLayout(type) {
+    function setLayout(type, manual = true) {
       imageGrid.classList.remove('grid', 'list');
       imageGrid.classList.add(type);
       if (type === 'grid') {
@@ -187,12 +238,65 @@
         listIcon.classList.add('active');
         gridIcon.classList.remove('active');
       }
+      if (manual) {
+        userSelectedLayout = type;
+      }
+    }
+
+    function updateLayoutBasedOnWidth() {
+      const containerWidth = imageGrid.offsetWidth;
+      const columnWidth = 280 + 32;
+      const columns = Math.floor(containerWidth / columnWidth);
+
+      if (columns < 2) {
+        toggleContainer.style.display = 'none';
+        if (userSelectedLayout !== 'list') {
+          setLayout('list', false);
+        }
+      } else {
+        toggleContainer.style.display = 'block';
+        if (userSelectedLayout === 'list') {
+          setLayout('list', false);
+        } else {
+          setLayout('grid', false);
+        }
+      }
+    }
+
+    window.addEventListener('resize', updateLayoutBasedOnWidth);
+    window.addEventListener('load', updateLayoutBasedOnWidth);
+
+    function openModalByIndex(index) {
+      const image = imageList[index];
+      if (!image) return;
+      currentIndex = index;
+      modalImg.src = `final_frames/${image.filename}`;
+      modalImg.alt = image.title;
+      modal.style.display = 'flex';
+    }
+
+    function prevImage() {
+      const prevIndex = (currentIndex - 1 + imageList.length) % imageList.length;
+      openModalByIndex(prevIndex);
+    }
+
+    function nextImage() {
+      const nextIndex = (currentIndex + 1) % imageList.length;
+      openModalByIndex(nextIndex);
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
     }
 
     fetch("final_frames/image_list.json")
       .then(res => res.json())
+      .then(data => {
+        imageList = data;
+        return data;
+      })
       .then(images => {
-        images.forEach(({ filename, title, description }) => {
+        images.forEach(({ filename, title, description }, index) => {
           const container = document.createElement('div');
 
           const titleElem = document.createElement('div');
@@ -202,31 +306,35 @@
           const chartWrapper = document.createElement('div');
           chartWrapper.className = 'chart-container';
 
-          const link = document.createElement('a');
-          link.href = `final_frames/${filename}`;
-
           const img = document.createElement('img');
           img.src = `final_frames/${filename}`;
           img.alt = title;
           img.className = 'chart';
+          img.onclick = () => openModalByIndex(index);
 
           const desc = document.createElement('div');
           desc.className = 'chart-description';
           desc.textContent = description;
 
-          chartWrapper.appendChild(link);
+          chartWrapper.appendChild(img);
           chartWrapper.appendChild(desc);
-          link.appendChild(img);
 
           container.appendChild(titleElem);
           container.appendChild(chartWrapper);
           imageGrid.appendChild(container);
         });
+        updateLayoutBasedOnWidth();
       })
       .catch(err => {
         imageGrid.textContent = "Failed to load images.";
         console.error(err);
       });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
   </script>
 </body>
 </html>
