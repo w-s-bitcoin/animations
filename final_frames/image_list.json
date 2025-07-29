@@ -2,7 +2,7 @@
   {
     "filename": "uoa.png",
     "title": "Unit of Account",
-    "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of USD",
+    "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of U.S. dollars",
     "latest_x": "https://x.com/w_s_bitcoin/status/1945906813968298283",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqypvng2f8pa2laesr3vcdanfplczkljns7zxc4m8t9j7u0p8m8jjgwzncgnt",
     "latest_youtube": "https://youtu.be/CZKA01K3vig"
@@ -135,6 +135,14 @@
     "latest_x": "https://x.com/w_s_bitcoin/status/1922990893264416835",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyqwetstujsq64hl8x4pk3s3n787q4pqrxhckg7a0lc2tg8477adjy79ladm",
     "latest_youtube": "https://youtu.be/WxKmFBpq_8M"
+  },
+  {
+    "filename": "200_dma_200_wma.png",
+    "title": "200 DMA & 200 WMA",
+    "description": "Shows the 200 daily moving average and the 200 weekly moving average",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1891599845720301793",
+    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzyqldexw6x7kfr8vvefyzgsyc3g22g0h53k2l3srzvwqw5u7rfuqaah0xg",
+    "latest_youtube": "https://youtu.be/2qjF6A68oi0"
   },
   {
     "filename": "bitcoin_dominance.png",
