@@ -358,9 +358,7 @@
         listIcon.classList.add('active');
         gridIcon.classList.remove('active');
       }
-      if (manual) {
-        userSelectedLayout = type;
-      }
+      if (manual) userSelectedLayout = type;
     }
 
     function updateLayoutBasedOnWidth() {
@@ -376,23 +374,17 @@
         toggleIcons.style.display = 'none';
         if (!searchContainer.classList.contains('active')) {
           searchContainer.classList.add('active');
-          if (searchBtn) searchBtn.classList.add('active');
+          searchBtn.classList.add('active');
         }
-        if (searchBtn) {
-          searchBtn.disabled = true;
-        }
-        if (userSelectedLayout !== 'list') {
-          setLayout('list', false);
-        }
+        searchBtn.disabled = true;
+        if (userSelectedLayout !== 'list') setLayout('list', false);
       } else {
         toggleIcons.style.display = 'inline-flex';
         if (searchWasInitiallyClosed && searchInput.value.trim() === '') {
           searchContainer.classList.remove('active');
-          if (searchBtn) searchBtn.classList.remove('active');
+          searchBtn.classList.remove('active');
         }
-        if (searchBtn) {
-          searchBtn.disabled = false;
-        }
+        searchBtn.disabled = false;
         if (userSelectedLayout === 'list') {
           setLayout('list', false);
         } else {
@@ -401,12 +393,9 @@
       }
     }
 
-    window.addEventListener('resize', updateLayoutBasedOnWidth);
-    window.addEventListener('load', updateLayoutBasedOnWidth);
-
     let searchWasManuallyOpened = false;
     let searchWasInitiallyClosed = true;
-  
+
     function openModalByIndex(index) {
       const image = visibleImages[index];
       if (!image) return;
@@ -423,6 +412,8 @@
 
       document.getElementById('youtube-link').style.display = image.latest_youtube ? 'inline' : 'none';
       document.getElementById('youtube-link').href = image.latest_youtube || '#';
+
+      history.replaceState(null, '', `/${image.filename.replace('.png', '')}`);
     }
 
     function prevImage() {
@@ -437,6 +428,7 @@
 
     function closeModal() {
       modal.style.display = 'none';
+      history.replaceState(null, '', '/');
     }
 
     function toggleSearch() {
@@ -465,8 +457,7 @@
       grid.innerHTML = '';
 
       visibleImages = imageList.filter(({ title, description }) =>
-        title.toLowerCase().includes(query) ||
-        description.toLowerCase().includes(query)
+        title.toLowerCase().includes(query) || description.toLowerCase().includes(query)
       );
 
       visibleImages.forEach(({ filename, title, description }, index) => {
@@ -491,7 +482,6 @@
 
         chartWrapper.appendChild(img);
         chartWrapper.appendChild(desc);
-
         container.appendChild(titleElem);
         container.appendChild(chartWrapper);
         grid.appendChild(container);
@@ -500,32 +490,49 @@
       updateLayoutBasedOnWidth();
     }
 
+    function getImageNameFromPath() {
+      const path = window.location.pathname.replace(/^\/+|\/+$/g, ''); // remove leading/trailing slashes
+      if (!path) return null;
+      return path + '.png';
+    }
+
     fetch("final_frames/image_list.json")
       .then(res => res.json())
       .then(data => {
         imageList = data;
         visibleImages = [...imageList];
         filterImages();
+
+        const initialFilename = getImageNameFromPath();
+        if (initialFilename) {
+          const index = visibleImages.findIndex(img => img.filename === initialFilename);
+          if (index !== -1) {
+            openModalByIndex(index);
+          } else {
+            // Optional: log or handle 404 case silently
+            console.warn(`No image found for filename: ${initialFilename}`);
+            history.replaceState(null, '', '/'); // fallback to homepage URL
+          }
+        }
       })
       .catch(err => {
         imageGrid.textContent = "Failed to load images.";
         console.error(err);
       });
 
+    window.addEventListener('resize', updateLayoutBasedOnWidth);
+    window.addEventListener('load', updateLayoutBasedOnWidth);
+
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
+      if (e.target === modal) closeModal();
     });
 
     document.addEventListener('keydown', (e) => {
       if (modal.style.display === 'flex') {
         if (e.key === 'ArrowLeft') {
-          const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
-          openModalByIndex(prevIndex);
+          prevImage();
         } else if (e.key === 'ArrowRight') {
-          const nextIndex = (currentIndex + 1) % visibleImages.length;
-          openModalByIndex(nextIndex);
+          nextImage();
         } else if (e.key === ' ' || e.code === 'Space') {
           e.preventDefault();
           closeModal();
