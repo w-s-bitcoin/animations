@@ -177,8 +177,8 @@
     "latest_youtube": ""
   },
   {
-    "filename": "windows.png",
-    "title": "1Y/2Y/3Y/4Y Windows",
+    "filename": "yearly_windows.png",
+    "title": "Yearly Windows",
     "description": "Chart with 1 year, 2 year, 3 year, & 4 year windows",
     "latest_x": "https://x.com/w_s_bitcoin/status/1780570971520291069",
     "latest_nostr": "",
