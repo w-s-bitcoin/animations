@@ -269,6 +269,48 @@
       width: 200px;
       opacity: 1;
     }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* for 1080x1920 aspect ratio */
+      background-color: #111; /* optional background */
+      overflow: hidden;
+    }
+
+    .chart-wrapper img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .chart-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 4px solid #444;
+      border-top: 4px solid #f7931a;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
   </style>
 </head>
 <body>
@@ -467,23 +509,40 @@
         titleElem.className = 'chart-title';
         titleElem.textContent = title;
 
+        const chartContainer = document.createElement('div');
+        chartContainer.className = 'chart-container';
+
         const chartWrapper = document.createElement('div');
-        chartWrapper.className = 'chart-container';
+        chartWrapper.className = 'chart-wrapper';
+
+        const spinner = document.createElement('div');
+        spinner.className = 'chart-loading';
 
         const img = document.createElement('img');
-        img.src = `final_frames/${filename}`;
         img.alt = title;
-        img.className = 'chart';
+        img.style.opacity = 0;
+        img.onload = () => {
+          spinner.remove();
+          img.style.opacity = 1;
+        };
+        img.onerror = () => {
+          spinner.remove();
+          img.style.opacity = 1;
+        };
         img.onclick = () => openModalByIndex(index);
+        img.src = `final_frames/${filename}`;
+
+        chartWrapper.appendChild(spinner);
+        chartWrapper.appendChild(img);
+        chartContainer.appendChild(chartWrapper);
 
         const desc = document.createElement('div');
         desc.className = 'chart-description';
         desc.textContent = description;
 
-        chartWrapper.appendChild(img);
-        chartWrapper.appendChild(desc);
+        chartContainer.appendChild(desc);
         container.appendChild(titleElem);
-        container.appendChild(chartWrapper);
+        container.appendChild(chartContainer);
         grid.appendChild(container);
       });
 
