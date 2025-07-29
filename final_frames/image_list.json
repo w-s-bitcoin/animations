@@ -41,7 +41,7 @@
     "latest_youtube": "https://youtu.be/yb2p0WnP53M"
   },
   {
-    "filename": "block_subsidy.png",
+    "filename": "mined_supply_price.png",
     "title": "Mined Supply & Price",
     "description": "Shows the mined supply and price, colored by the epoch",
     "latest_x": "https://x.com/w_s_bitcoin/status/1907423798309122064",
@@ -65,7 +65,7 @@
     "latest_youtube": ""
   },
   {
-    "filename": "diff_and_target.png",
+    "filename": "target_and_block_hashes.png",
     "title": "Target & Block Hashes",
     "description": "Shows block hashes and difficulty targets",
     "latest_x": "https://x.com/w_s_bitcoin/status/1925974203527762141",
