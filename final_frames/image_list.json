@@ -89,7 +89,7 @@
     "latest_youtube": "https://youtu.be/k7baducIk-Y"
   },
   {
-    "filename": "bitcoin_utxos.png",
+    "filename": "utxo_distributions.png",
     "title": "UTXO Distributions",
     "description": "Visualizes the distributions of UTXOs, both by counts and by value",
     "latest_x": "https://x.com/w_s_bitcoin/status/1886828292017131951",
