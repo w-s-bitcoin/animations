@@ -16,7 +16,7 @@
     "latest_youtube": "https://youtu.be/WwpJY5rmP_A"
   },
   {
-    "filename": "price_distribution_mcap.png",
+    "filename": "mcap_distribution.png",
     "title": "Market Cap Distribution",
     "description": "Shows the number of daily closes in between each market cap range",
     "latest_x": "https://x.com/w_s_bitcoin/status/1895886293097464282",
