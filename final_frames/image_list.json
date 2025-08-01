@@ -91,7 +91,7 @@
   {
     "filename": "utxo_distributions.png",
     "title": "UTXO Distributions",
-    "description": "Visualizes the distributions of unspent transactions outputs, both by counts and by value",
+    "description": "Visualizes the distributions of non-zero unspent transactions outputs, both by counts and by value",
     "latest_x": "https://x.com/w_s_bitcoin/status/1886828292017131951",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzy8hqk0cnvjax5ch60q3fc6wpu6993qmfk4f0gk44vdeqyjaz2n78qsvsv",
     "latest_youtube": "https://youtu.be/iU2I1TchOB8"
