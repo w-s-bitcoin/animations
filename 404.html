@@ -315,6 +315,46 @@
       border-radius: 50%;
     }
 
+    .favorite-star {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 1.5rem;
+      color: #f7931a;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .chart-container:hover .favorite-star,
+    .favorite-star.filled {
+      opacity: 1;
+    }
+
+    #favoritesToggle {
+      font-size: 1.5rem; /* slightly larger than the default 1.2rem */
+      line-height: 1;
+    }
+
+    #favoritesToggle.active {
+      box-shadow: 0 0 8px #f7931a;
+      background-color: #333;
+      color: #f7931a;
+    }
+
+    .favorites-toggle-star {
+      display: inline-block;
+      transform: translateY(-1.5px);
+    }
+
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
@@ -339,6 +379,9 @@
           <div></div><div></div><div></div><div></div>
         </div>
       </div>
+    </div>
+    <div class="toggle-icon" id="favoritesToggle" onclick="toggleFavoritesView()" aria-label="Favorites">
+      <span class="favorites-toggle-star">★</span>
     </div>
     <div class="search-container">
       <button id="search-btn" class="search-btn" onclick="toggleSearch()" aria-label="Search">
@@ -409,7 +452,10 @@
         listIcon.classList.add('active');
         gridIcon.classList.remove('active');
       }
-      if (manual) userSelectedLayout = type;
+      if (manual) {
+        userSelectedLayout = type;
+        localStorage.setItem('preferredLayout', type); // <-- save preference
+      }
     }
 
     function updateLayoutBasedOnWidth() {
@@ -442,6 +488,15 @@
           setLayout('grid', false);
         }
       }
+    }
+
+    let showFavoritesOnly = localStorage.getItem('showFavoritesOnly') === 'true';
+
+    function toggleFavoritesView() {
+      showFavoritesOnly = !showFavoritesOnly;
+      localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
+      document.getElementById('favoritesToggle').classList.toggle('active', showFavoritesOnly);
+      filterImages();
     }
 
     let searchWasManuallyOpened = false;
@@ -502,14 +557,52 @@
       }
     }
 
+    function getFavorites() {
+      const stored = localStorage.getItem('favorites');
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    function saveFavorites(favs) {
+      localStorage.setItem('favorites', JSON.stringify(favs));
+    }
+
+    function isFavorite(filename) {
+      const favs = getFavorites();
+      return favs.includes(filename);
+    }
+
+    function toggleFavorite(filename, starElem) {
+      let favs = getFavorites();
+      const index = favs.indexOf(filename);
+
+      if (index !== -1) {
+        favs.splice(index, 1);
+        starElem.textContent = '☆';
+        starElem.classList.remove('filled');
+      } else {
+        favs.push(filename);
+        starElem.textContent = '★';
+        starElem.classList.add('filled');
+      }
+
+      saveFavorites(favs);
+
+      // 🟡 If we're in favorites-only view and item was just unstarred, refresh the grid
+      if (showFavoritesOnly && index !== -1) {
+        filterImages();
+      }
+    }
+
     function filterImages() {
       const query = document.getElementById('search-input').value.toLowerCase();
       const grid = document.getElementById('image-grid');
       grid.innerHTML = '';
 
-      visibleImages = imageList.filter(({ title, description }) =>
-        title.toLowerCase().includes(query) || description.toLowerCase().includes(query)
-      );
+      visibleImages = imageList.filter(({ title, description, filename }) => {
+        const matchesSearch = title.toLowerCase().includes(query) || description.toLowerCase().includes(query);
+        const isFav = !showFavoritesOnly || isFavorite(filename);
+        return matchesSearch && isFav;
+      });
 
       visibleImages.forEach(({ filename, title, description }, index) => {
         const container = document.createElement('div');
@@ -541,6 +634,18 @@
         img.onclick = () => openModalByIndex(index);
         img.src = `final_frames/${filename}`;
 
+        const star = document.createElement('div');
+        star.className = 'favorite-star';
+        const isFav = isFavorite(filename);
+        star.textContent = isFav ? '★' : '☆';
+        if (isFav) star.classList.add('filled');
+
+        star.onclick = (e) => {
+          e.stopPropagation(); // prevent image click from opening modal
+          toggleFavorite(filename, star);
+        };
+        chartContainer.appendChild(star);
+
         chartWrapper.appendChild(spinner);
         chartWrapper.appendChild(img);
         chartContainer.appendChild(chartWrapper);
@@ -571,6 +676,13 @@
         visibleImages = [...imageList];
         filterImages();
 
+        const savedLayout = localStorage.getItem('preferredLayout');
+        if (savedLayout === 'list' || savedLayout === 'grid') {
+          setLayout(savedLayout, false);
+        }
+        if (showFavoritesOnly) {
+          document.getElementById('favoritesToggle').classList.add('active');
+        }
         const initialFilename = getImageNameFromPath();
         if (initialFilename) {
           const index = visibleImages.findIndex(img => img.filename === initialFilename);
