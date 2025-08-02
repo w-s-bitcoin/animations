@@ -2,10 +2,19 @@
   {
     "filename": "uoa.png",
     "title": "Unit of Account",
-    "description": "Shows the price of $1 USD in terms of BTC and 1 BTC in terms of USD starting on February 10, 2011 when 1 BTC = 1 USD",
+    "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of dollars",
     "latest_x": "https://x.com/w_s_bitcoin/status/1945906813968298283",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqypvng2f8pa2laesr3vcdanfplczkljns7zxc4m8t9j7u0p8m8jjgwzncgnt",
     "latest_youtube": "https://youtu.be/CZKA01K3vig"
+  },
+  {
+    "filename": "price_of_ground_beef.png",
+    "title": "Price of Ground Beef",
+    "description": "Shows the price of ground beef in terms of bitcoin and in terms dollars",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1951449159833358605",
+    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqy2hwumn8ghj7un9d3shjtnyv9kh2uewd9hj7qg6waehxw309aex2mrp0yhxwet5v9kxy7fwvdhk6tmkxyqzqspy8lq67yk73e3rtsqdstf2e2fslhcuu9g0v0sfcx6scuphgl2wtwmq0p",
+    "latest_youtube": "https://youtu.be/rjLhuqDaTu4"
+    
   },
   {
     "filename": "price_distribution.png",
@@ -59,7 +68,7 @@
   {
     "filename": "halving_progress.png",
     "title": "Halving Progress",
-    "description": "Shows the halving progress based on block height through each epoch",
+    "description": "Shows the relative halving progress based on block height through each epoch",
     "latest_x": "https://x.com/w_s_bitcoin/status/1938957414125961398",
     "latest_nostr": "",
     "latest_youtube": ""
@@ -91,7 +100,7 @@
   {
     "filename": "utxo_distributions.png",
     "title": "UTXO Distributions",
-    "description": "Visualizes the distributions of non-zero unspent transactions outputs, both by counts and by value",
+    "description": "Shows the distributions of non-zero UTXOs, both by counts and by value",
     "latest_x": "https://x.com/w_s_bitcoin/status/1886828292017131951",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzy8hqk0cnvjax5ch60q3fc6wpu6993qmfk4f0gk44vdeqyjaz2n78qsvsv",
     "latest_youtube": "https://youtu.be/iU2I1TchOB8"
@@ -139,7 +148,7 @@
   {
     "filename": "200_dma_200_wma.png",
     "title": "200 DMA & 200 WMA",
-    "description": "Shows the 200 daily moving average and the 200 weekly moving average",
+    "description": "Shows the 200 daily and the 200 weekly moving averages",
     "latest_x": "https://x.com/w_s_bitcoin/status/1891599845720301793",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzyqldexw6x7kfr8vvefyzgsyc3g22g0h53k2l3srzvwqw5u7rfuqaah0xg",
     "latest_youtube": "https://youtu.be/2qjF6A68oi0"
