@@ -217,14 +217,22 @@
       max-height: 88vh;
     }
 
-    #modal-img {
+    #modal-img-wrapper {
+      touch-action: none;
+      overflow: hidden;
       max-width: 95vw;
       max-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #modal-img {
+      max-width: 100%;
+      max-height: 100%;
       width: auto;
       height: auto;
       object-fit: contain;
-      touch-action: none;
-      transform: none; /* Panzoom will override this later */
     }
 
     .modal-controls {
@@ -450,7 +458,9 @@
         <svg height="20" viewBox="0 0 576 512" fill="#f7931a"><path d="M549.7 124.1c-6.3-23.8-25-42.4-48.8-48.8C456.5 64 288 64 288 64s-168.5 0-212.9 11.3c-23.8 6.3-42.5 25-48.8 48.8C16 168.5 16 256 16 256s0 87.5 10.3 131.9c6.3 23.8 25 42.4 48.8 48.8C119.5 448 288 448 288 448s168.5 0 212.9-11.3c23.8-6.3 42.5-25 48.8-48.8C560 343.5 560 256 560 256s0-87.5-10.3-131.9zM232 336V176l142 80-142 80z"/></svg>
       </a>
     </div>
-    <img id="modal-img" src="" alt="Full size image">
+    <div id="modal-img-wrapper">
+      <img id="modal-img" src="" alt="Full size image">
+    </div>
   </div>
 
   <footer>
@@ -550,14 +560,14 @@
     function enablePanzoom() {
       if (panzoomInstance) panzoomInstance.destroy();
 
+      const wrapper = document.getElementById('modal-img-wrapper');
+
       panzoomInstance = Panzoom(modalImg, {
         maxScale: 5,
         minScale: 1,
-        contain: 'outside', // allows dragging beyond edge
+        contain: 'outside',
         startScale: 1,
-        // important: only apply transform when interacting
         setTransform: (el, { scale, x, y }) => {
-          // only apply transform if user has zoomed in
           if (scale === 1 && x === 0 && y === 0) {
             el.style.transform = 'none';
           } else {
@@ -566,9 +576,9 @@
         }
       });
 
-      modalImg.parentElement.addEventListener('wheel', panzoomInstance.zoomWithWheel);
+      wrapper.addEventListener('wheel', panzoomInstance.zoomWithWheel);
 
-      modalImg.parentElement.addEventListener('dblclick', (e) => {
+      wrapper.addEventListener('dblclick', (e) => {
         e.preventDefault();
         panzoomInstance.zoomIn({ animate: true });
       });
@@ -582,9 +592,9 @@
           e.preventDefault();
           const currentScale = panzoomInstance.getScale();
           if (currentScale > 1.1) {
-            panzoomInstance.zoomTo(0, 0, 1 / currentScale); // zoom out
+            panzoomInstance.zoomTo(0, 0, 1 / currentScale);
           } else {
-            panzoomInstance.zoomTo(0, 0, 2); // zoom in
+            panzoomInstance.zoomTo(0, 0, 2);
           }
         }
       });
