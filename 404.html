@@ -214,6 +214,7 @@
       max-width: 95vw;
       max-height: 88vh;
     }
+
     .modal-controls {
       position: absolute;
       top: 0.5rem;
@@ -222,7 +223,15 @@
       gap: 1rem;
       align-items: center;
       padding-bottom: 0.5rem;
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
+
+    .modal-controls.hidden {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .close-btn {
       font-size: 2rem;
       background: none;
@@ -464,6 +473,8 @@
     let userSelectedLayout = null;
     let touchStartX = 0;
     let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
 
     function setLayout(type, manual = true) {
       imageGrid.classList.remove('grid', 'list');
@@ -755,6 +766,23 @@
         }
       }
     }
+    
+    function handleVerticalSwipe() {
+      const deltaY = touchEndY - touchStartY;
+      const threshold = 50; // minimum distance
+
+      const controls = document.querySelector('.modal-controls');
+
+      if (Math.abs(deltaY) > threshold) {
+        if (deltaY < 0) {
+          // swipe up
+          controls.classList.add('hidden');
+        } else {
+          // swipe down
+          controls.classList.remove('hidden');
+        }
+      }
+    }
 
     fetch("final_frames/image_list.json")
       .then(res => res.json())
@@ -796,11 +824,15 @@
 
     modal.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
     });
 
     modal.addEventListener('touchend', (e) => {
       touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+
       handleSwipe();
+      handleVerticalSwipe();
     });
 
     document.addEventListener('keydown', (e) => {
