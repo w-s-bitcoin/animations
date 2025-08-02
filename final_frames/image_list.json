@@ -90,6 +90,15 @@
     
   },
   {
+    "filename": "price_of_eggs.png",
+    "title": "Price of Eggs",
+    "description": "Shows the price of eggs in terms of bitcoin and in terms of dollars",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+    
+  },
+  {
     "filename": "block_size.png",
     "title": "Block Size",
     "description": "Shows each block size with smaller epoch windows on the side",
@@ -132,7 +141,7 @@
   {
     "filename": "dca_cost_basis.png",
     "title": "Daily DCA Cost Basis",
-    "description": "Shows the cost basis of every daily dollar cost average",
+    "description": "Shows the cost basis of every daily dollar cost average starting point",
     "latest_x": "https://x.com/w_s_bitcoin/status/1936505784680210796",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyq0yfdwutp86f933wft3taa9zysq0ergz4jf85a540jufdlqm69lyayxe0y",
     "latest_youtube": "https://youtu.be/xauqhLkJF3c"
