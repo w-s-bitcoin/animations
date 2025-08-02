@@ -428,6 +428,9 @@
   </div>
 
   <div class="image-grid grid" id="image-grid"></div>
+  <div id="no-favorites-message" style="display:none; color:#ccc; font-size:1.2rem; margin-top:2rem;">
+    No starred visualizations.
+  </div>
   <div class="modal" id="modal">
     <div class="modal-controls">
       <button class="close-btn" onclick="closeModal()">×</button>
@@ -695,6 +698,14 @@
         return matchesSearch && isFav;
       });
 
+      // Show "no favorites" message if applicable
+      const message = document.getElementById('no-favorites-message');
+      if (showFavoritesOnly && visibleImages.length === 0) {
+        message.style.display = 'block';
+      } else {
+        message.style.display = 'none';
+      }
+
       visibleImages.forEach(({ filename, title, description }, index) => {
         const container = document.createElement('div');
 
@@ -818,7 +829,7 @@
         }
       })
       .catch(err => {
-        imageGrid.textContent = "Failed to load images.";
+        imageGrid.textContent = "Failed to load visualizations.";
         console.error(err);
       });
 
