@@ -207,7 +207,9 @@
       align-items: center;
       z-index: 9999;
       flex-direction: column;
+      touch-action: pan-y;
     }
+    
     .modal img {
       max-width: 95vw;
       max-height: 88vh;
@@ -441,6 +443,8 @@
     const modal = document.getElementById('modal');
     const modalImg = document.getElementById('modal-img');
     let userSelectedLayout = null;
+    let touchStartX = 0;
+    let touchEndX = 0;
 
     function setLayout(type, manual = true) {
       imageGrid.classList.remove('grid', 'list');
@@ -520,6 +524,7 @@
       document.getElementById('youtube-link').href = image.latest_youtube || '#';
 
       history.replaceState(null, '', `/${image.filename.replace('.png', '')}`);
+      document.body.style.overflow = 'hidden'; // disable scroll
     }
 
     function prevImage() {
@@ -535,6 +540,7 @@
     function closeModal() {
       modal.style.display = 'none';
       history.replaceState(null, '', '/');
+      document.body.style.overflow = ''; // re-enable scroll
     }
 
     function toggleSearch() {
@@ -669,6 +675,19 @@
       return path + '.png';
     }
 
+    function handleSwipe() {
+      const swipeDistance = touchEndX - touchStartX;
+      const minSwipe = 50; // minimum distance to trigger
+
+      if (Math.abs(swipeDistance) > minSwipe) {
+        if (swipeDistance < 0) {
+          nextImage();
+        } else {
+          prevImage();
+        }
+      }
+    }
+
     fetch("final_frames/image_list.json")
       .then(res => res.json())
       .then(data => {
@@ -705,6 +724,15 @@
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
+    });
+
+    modal.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    modal.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
     });
 
     document.addEventListener('keydown', (e) => {
