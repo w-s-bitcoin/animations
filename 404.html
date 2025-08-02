@@ -209,7 +209,7 @@
       flex-direction: column;
       touch-action: pan-y;
     }
-    
+
     .modal img {
       max-width: 95vw;
       max-height: 88vh;
@@ -357,6 +357,22 @@
       transform: translateY(-1.5px);
     }
 
+    #modal-fav-btn {
+      font-size: 1.3rem;  /* slightly smaller than 1.5rem */
+      line-height: 1;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 0.1rem;
+    }
+
+    #modal-fav-btn.filled {
+      color: #f7931a;
+    }
+
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
@@ -401,6 +417,7 @@
       <button class="close-btn" onclick="closeModal()">×</button>
       <button class="close-btn" onclick="prevImage()">&#8249;</button>
       <button class="close-btn" onclick="nextImage()">&#8250;</button>
+      <button id="modal-fav-btn" class="close-btn" onclick="toggleFavoriteFromModal()">★</button>
       <span style="color:white; font-size: 1rem; padding-left: 0.2rem; padding-top: 0.3rem;">Latest posts:</span>
       <a id="x-link" class="close-btn" href="#" target="_blank" style="display:none;">
         <svg width="16" height="16" fill="#f7931a" class="bi bi-twitter-x" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>      </a>
@@ -438,6 +455,8 @@
     let imageList = [];
     let visibleImages = [];
     let currentIndex = 0;
+    let justUnstarredInModal = false;
+    const modalFavBtn = document.getElementById('modal-fav-btn');
     const gridIcon = document.getElementById('gridView');
     const listIcon = document.getElementById('listView');
     const modal = document.getElementById('modal');
@@ -525,14 +544,58 @@
 
       history.replaceState(null, '', `/${image.filename.replace('.png', '')}`);
       document.body.style.overflow = 'hidden'; // disable scroll
+      const isFav = isFavorite(image.filename);
+      modalFavBtn.textContent = isFav ? '★' : '☆';
+      modalFavBtn.classList.toggle('filled', isFav);
+    }
+
+    function toggleFavoriteFromModal() {
+      const filename = visibleImages[currentIndex].filename;
+      let favs = getFavorites();
+      const index = favs.indexOf(filename);
+
+      const gridStar = document.querySelector(`.favorite-star[data-filename="${filename}"]`);
+
+      if (index !== -1) {
+        favs.splice(index, 1);
+        modalFavBtn.textContent = '☆';
+        modalFavBtn.classList.remove('filled');
+        if (gridStar) {
+          gridStar.textContent = '☆';
+          gridStar.classList.remove('filled');
+        }
+      } else {
+        favs.push(filename);
+        modalFavBtn.textContent = '★';
+        modalFavBtn.classList.add('filled');
+        if (gridStar) {
+          gridStar.textContent = '★';
+          gridStar.classList.add('filled');
+        }
+      }
+
+      saveFavorites(favs);
+
+      // If in favorites view and unstarred, remove image from modal
+      if (showFavoritesOnly && index !== -1) {
+        justUnstarredInModal = true;
+      }
     }
 
     function prevImage() {
+      if (justUnstarredInModal) {
+        justUnstarredInModal = false;
+        filterImages();  // remove unstarred image now that user moved on
+      }
       const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
       openModalByIndex(prevIndex);
     }
 
     function nextImage() {
+      if (justUnstarredInModal) {
+        justUnstarredInModal = false;
+        filterImages();  // remove unstarred image now that user moved on
+      }
       const nextIndex = (currentIndex + 1) % visibleImages.length;
       openModalByIndex(nextIndex);
     }
@@ -541,6 +604,10 @@
       modal.style.display = 'none';
       history.replaceState(null, '', '/');
       document.body.style.overflow = ''; // re-enable scroll
+      if (justUnstarredInModal) {
+        justUnstarredInModal = false;
+        filterImages();  // remove unstarred image from grid
+      }
     }
 
     function toggleSearch() {
@@ -645,6 +712,7 @@
         const isFav = isFavorite(filename);
         star.textContent = isFav ? '★' : '☆';
         if (isFav) star.classList.add('filled');
+        star.setAttribute('data-filename', filename);
 
         star.onclick = (e) => {
           e.stopPropagation(); // prevent image click from opening modal
