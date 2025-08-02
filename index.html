@@ -218,21 +218,22 @@
     }
 
     #modal-img-wrapper {
-      touch-action: none;
-      overflow: hidden;
-      max-width: 95vw;
-      max-height: 88vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    touch-action: none;
+    overflow: hidden;
+    max-width: 95vw;
+    max-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     }
 
     #modal-img {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
-      object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    touch-action: none;
     }
 
     .modal-controls {
@@ -479,7 +480,7 @@
     </div>
     &copy; 2025 Wicked Smart Bitcoin
   </footer>
-
+  <script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
   <script>
     const imageGrid = document.getElementById('image-grid');
     const toggleIcons = document.getElementById('toggleIcons');
@@ -922,6 +923,5 @@
       }
     });
   </script>
-<script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
 </body>
 </html>
