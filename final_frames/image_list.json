@@ -73,8 +73,8 @@
     "latest_youtube": "https://youtu.be/HD6vcASMA8o"
   },
   {
-    "filename": "inflation_rate.png",
-    "title": "Inflation Rate",
+    "filename": "issuance_rate.png",
+    "title": "Issuance Rate",
     "description": "Shows Bitcoin's annualized issuance rate",
     "latest_x": "https://x.com/w_s_bitcoin/status/1946567772600746158",
     "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qy88wumn8ghj7mn0wvhxcmmv9uqzpte88e2kxxgdm33nlaj296ntgpsa5tgeks27wv0dreappcr4y7cswza6r5",
