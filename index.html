@@ -611,10 +611,13 @@
       document.getElementById('youtube-link').href = image.latest_youtube || '#';
 
       history.replaceState(null, '', `/${image.filename.replace('.png', '')}`);
-      document.body.style.overflow = 'hidden'; // disable scroll
+      document.body.style.overflow = 'hidden';
+
       const isFav = isFavorite(image.filename);
       modalFavBtn.textContent = isFav ? '★' : '☆';
       modalFavBtn.classList.toggle('filled', isFav);
+
+      enablePanzoom(); // ✅ This is what was missing
     }
 
     function toggleFavoriteFromModal() {
