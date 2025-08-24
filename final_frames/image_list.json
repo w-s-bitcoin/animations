@@ -28,9 +28,9 @@
     "filename": "days_since_ath.png",
     "title": "Days Since All-Time High",
     "description": "Shows the number of days since Bitcoin's last all-time high",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1944752821150048725",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyrz38rfv9phvwhmustr6gny2j9x0ty654g8l8svp4qnck2ruj7cdyfdkde2",
-    "latest_youtube": "https://youtu.be/5KTiwi59CUk"
+    "latest_x": "https://x.com/w_s_bitcoin/status/1959695610346455280",
+    "latest_nostr": "https://primal.net/e/nevent1qqswt5etklghyxv7aqu48ml9u6324xmg6zm9nur4ds98hz97v5aqj4cmfxqws",
+    "latest_youtube": "https://youtu.be/INLz3aHUKiM"
   },
   {
     "filename": "days_at_a_loss.png",
