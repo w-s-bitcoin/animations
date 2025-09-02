@@ -540,7 +540,8 @@
     const yearSelect = document.getElementById('year-select');
 
     const BVG_BASE = 'bitcoin_vs_gold';
-    const BVG_YEARS = Array.from({length: 2025 - 2013 + 1}, (_, i) => 2013 + i);
+    // Years newest → oldest
+    const BVG_YEARS = Array.from({ length: 2025 - 2013 + 1 }, (_, i) => 2025 - i);
     const BVG_STORAGE_KEY = 'bvgYear';
 
     // --- Cookies ---
