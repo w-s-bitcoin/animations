@@ -241,6 +241,23 @@
       }
     }
 
+    @media (max-width: 900px) and (orientation: landscape) {
+      .modal {
+        padding-top: var(--controls-offset, 1.5rem);  /* was 3rem */
+      }
+      .modal img {
+        max-height: calc(88vh - var(--controls-offset, 1.5rem));  /* was 3rem */
+      }
+    }
+
+    @supports (padding: max(0px)) {
+      @media (max-width: 900px) and (orientation: landscape) {
+        .modal {
+          padding-top: max(var(--controls-offset, 1.5rem), env(safe-area-inset-top)); /* was 3rem */
+        }
+      }
+    }
+
     .close-btn {
       font-size: 2rem;
       background: none;
@@ -708,6 +725,8 @@
 
       currentIndex = index;
       modal.style.display = 'flex';
+      updateModalSafePadding();
+      setTimeout(updateModalSafePadding, 0); // ensure after layout/wrap
       document.body.style.overflow = 'hidden';
 
       // Social links
@@ -733,6 +752,7 @@
         modalImg.alt = image.title;
         history.replaceState(null, '', `/${fname.replace('.png', '')}`);
       }
+      updateModalSafePadding();
 
       // Star state (uses possibly-updated filename)
       const isFav = isFavorite(visibleImages[currentIndex].filename);
@@ -791,6 +811,23 @@
       openModalByIndex(nextIndex);
     }
 
+    function updateModalSafePadding() {
+      const controls = document.querySelector('.modal-controls');
+      const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
+
+      if (!controls || !isSmallLandscape || modal.style.display !== 'flex') {
+        modal.style.removeProperty('--controls-offset');
+        return;
+      }
+
+      // Measure real height but clamp the reserved space so it isn't aggressive
+      const h = controls.getBoundingClientRect().height;   // actual pixels
+      // Clamp between 20px and 44px; subtract a few px since image can tuck a bit under
+      const offset = Math.max(20, Math.min(h - 6, 44));
+
+      modal.style.setProperty('--controls-offset', offset + 'px');
+    }
+
     function closeModal() {
       modal.style.display = 'none';
       history.replaceState(null, '', '/');
@@ -800,6 +837,7 @@
         filterImages();  // remove unstarred image from grid
       }
       showYearControls(false);
+      modal.style.removeProperty('--controls-offset');
     }
 
     function toggleSearch() {
@@ -1039,7 +1077,9 @@
       });
 
     window.addEventListener('resize', updateLayoutBasedOnWidth);
+    window.addEventListener('resize', updateModalSafePadding);
     window.addEventListener('load', updateLayoutBasedOnWidth);
+    window.addEventListener('orientationchange', updateModalSafePadding);
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
