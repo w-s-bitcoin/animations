@@ -224,12 +224,21 @@
       align-items: center;
       padding-bottom: 0.5rem;
       transition: transform 0.3s ease, opacity 0.3s ease;
+      flex-wrap: wrap;
+      row-gap: 0.25rem;
     }
 
     .modal-controls.hidden {
       transform: translateY(-100%);
       opacity: 0;
       pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      #year-controls {
+        flex-basis: 100%;   /* NEW: takes full row, wraps under the first line */
+        margin-left: 0;     /* NEW: align with the X */
+      }
     }
 
     .close-btn {
