@@ -612,6 +612,21 @@
       yearControls.classList.toggle('show', !!show);
     }
 
+    function cycleBvgYear(direction) {
+      const current = parseInt(yearSelect.value, 10);
+      const idx = BVG_YEARS.indexOf(current);
+      if (idx === -1) return;
+
+      let newIdx = direction === 'up' ? idx - 1 : idx + 1;
+
+      if (newIdx < 0) newIdx = 0;                           // clamp at 2013
+      if (newIdx >= BVG_YEARS.length) newIdx = BVG_YEARS.length - 1; // clamp at 2025
+
+      const newYear = BVG_YEARS[newIdx];
+      yearSelect.value = newYear;
+      setBvgYear(newYear);
+    }
+
     function setLayout(type, manual = true) {
       imageGrid.classList.remove('grid', 'list');
       imageGrid.classList.add(type);
@@ -1012,6 +1027,17 @@
         } else if (e.key === ' ' || e.code === 'Space') {
           e.preventDefault();
           closeModal();
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          // Handle year cycling only for Bitcoin vs Gold
+          const currentFile = visibleImages[currentIndex]?.filename || "";
+          if (isBvgFile(currentFile)) {
+            e.preventDefault(); // stop page scrolling
+            if (e.key === 'ArrowUp') {
+              cycleBvgYear('up');
+            } else {
+              cycleBvgYear('down');
+            }
+          }
         }
       }
     });
