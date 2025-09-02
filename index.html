@@ -394,6 +394,49 @@
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
+    .year-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
+    .year-controls.show { display: inline-flex; }
+
+    /* wrapper to draw custom triangles */
+    .select-wrap { position: relative; display: inline-block; line-height: 1; }
+
+    /* transparent, no border, same font */
+    #year-select {
+      font-family: monospace;
+      font-size: 1rem;
+      color: #fff;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding-right: 1.6rem;           /* space for triangles */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    /* custom ▼ */
+    .select-wrap::after {
+      content: "";
+      position: absolute;
+      right: 0.35rem; top: 50%;
+      width: 0; height: 0; pointer-events: none;
+      border-left: 5px solid transparent; border-right: 5px solid transparent;
+      border-top: 6px solid #fff;      /* ▼ orange */
+      transform: translateY(25%);
+    }
+
+    /* custom ▲ */
+    .select-wrap::before {
+      content: "";
+      position: absolute;
+      right: 0.35rem; top: 50%;
+      width: 0; height: 0; pointer-events: none;
+      border-left: 5px solid transparent; border-right: 5px solid transparent;
+      border-bottom: 6px solid #fff;   /* ▲ orange */
+      transform: translateY(-125%);
+    }
+
   </style>
 </head>
 <body>
@@ -447,6 +490,13 @@
       <a id="youtube-link" class="close-btn" href="#" target="_blank" style="display:none;">
         <svg height="20" viewBox="0 0 576 512" fill="#f7931a"><path d="M549.7 124.1c-6.3-23.8-25-42.4-48.8-48.8C456.5 64 288 64 288 64s-168.5 0-212.9 11.3c-23.8 6.3-42.5 25-48.8 48.8C16 168.5 16 256 16 256s0 87.5 10.3 131.9c6.3 23.8 25 42.4 48.8 48.8C119.5 448 288 448 288 448s168.5 0 212.9-11.3c23.8-6.3 42.5-25 48.8-48.8C560 343.5 560 256 560 256s0-87.5-10.3-131.9zM232 336V176l142 80-142 80z"/></svg>
       </a>
+      <!-- Year dropdown for Bitcoin vs Gold -->
+      <span class="year-controls" id="year-controls">
+        <span style="color:white; font-size: 1rem;">Starting Year:</span>
+        <span class="select-wrap">
+          <select id="year-select" aria-label="Choose year"></select>
+        </span>
+      </span>
     </div>
     <img id="modal-img" src="" alt="Full size image">
   </div>
@@ -486,6 +536,81 @@
     let touchEndX = 0;
     let touchStartY = 0;
     let touchEndY = 0;
+    const yearControls = document.getElementById('year-controls');
+    const yearSelect = document.getElementById('year-select');
+
+    const BVG_BASE = 'bitcoin_vs_gold';
+    const BVG_YEARS = Array.from({length: 2025 - 2013 + 1}, (_, i) => 2013 + i);
+    const BVG_STORAGE_KEY = 'bvgYear';
+
+    // --- Cookies ---
+    function setCookie(name, value, days = 365) {
+      const d = new Date();
+      d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/;SameSite=Lax`;
+    }
+
+    function getCookie(name) {
+      const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
+      return match ? decodeURIComponent(match.split('=')[1]) : null;
+    }
+
+    function setBvgYear(year) {
+      const oldFilename = visibleImages[currentIndex].filename;
+      const newFilename = bvgFilenameForYear(year);
+
+      // Persist
+      setStoredBvgYear(year);
+
+      // Update modal + URL
+      modalImg.src = `final_frames/${newFilename}`;
+      modalImg.alt = `Bitcoin vs Gold (${year})`;
+      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
+
+      // Update the in-memory item
+      visibleImages[currentIndex].filename = newFilename;
+
+      // Update the grid thumbnail for this card (live, no reload)
+      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+      if (thumb) thumb.src = `final_frames/${newFilename}`;
+
+      // Migrate favorites from old filename to new filename
+      let favs = getFavorites();
+      const pos = favs.indexOf(oldFilename);
+      if (pos !== -1) {
+        favs.splice(pos, 1);
+        if (!favs.includes(newFilename)) favs.push(newFilename);
+        saveFavorites(favs);
+        // ensure the modal star reflects the migrated state
+        modalFavBtn.classList.add('filled');
+        modalFavBtn.textContent = '★';
+      }
+
+      // Also update the grid star's data-filename so future toggles act on the new filename
+      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
+      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
+    }
+
+    // Dropdown change
+    yearSelect?.addEventListener('change', (e) => setBvgYear(e.target.value));
+
+    function isBvgFile(fname) { return fname.startsWith(BVG_BASE); }
+    function bvgFilenameForYear(y) { return `${BVG_BASE}_${y}.png`; }
+    function extractBvgYear(fname) {
+      const m = fname.match(/bitcoin_vs_gold_(\d{4})\.png$/);
+      return m ? m[1] : null;
+    }
+    function getStoredBvgYear() { return localStorage.getItem(BVG_STORAGE_KEY) || '2018'; }
+    function setStoredBvgYear(y) { localStorage.setItem(BVG_STORAGE_KEY, y); }
+
+    function populateYearSelect() {
+      if (!yearSelect || yearSelect.options.length) return;
+      yearSelect.innerHTML = BVG_YEARS.map(y => `<option value="${y}">${y}</option>`).join('');
+    }
+
+    function showYearControls(show) {
+      yearControls.classList.toggle('show', !!show);
+    }
 
     function setLayout(type, manual = true) {
       imageGrid.classList.remove('grid', 'list');
@@ -550,23 +675,37 @@
     function openModalByIndex(index) {
       const image = visibleImages[index];
       if (!image) return;
-      currentIndex = index;
-      modalImg.src = `final_frames/${image.filename}`;
-      modalImg.alt = image.title;
-      modal.style.display = 'flex';
 
+      currentIndex = index;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      // Social links
       document.getElementById('x-link').style.display = image.latest_x ? 'inline' : 'none';
       document.getElementById('x-link').href = image.latest_x || '#';
-
       document.getElementById('nostr-link').style.display = image.latest_nostr ? 'inline' : 'none';
       document.getElementById('nostr-link').href = image.latest_nostr || '#';
-
       document.getElementById('youtube-link').style.display = image.latest_youtube ? 'inline' : 'none';
       document.getElementById('youtube-link').href = image.latest_youtube || '#';
 
-      history.replaceState(null, '', `/${image.filename.replace('.png', '')}`);
-      document.body.style.overflow = 'hidden'; // disable scroll
-      const isFav = isFavorite(image.filename);
+      // Bitcoin vs Gold handling
+      populateYearSelect();
+      const fname = image.filename;
+      if (isBvgFile(fname)) {
+        showYearControls(true);
+        const fromFilename = extractBvgYear(fname);
+        const chosenYear = fromFilename || getStoredBvgYear(); // fallback to cookie/localStorage/2018
+        yearSelect.value = chosenYear;
+        setBvgYear(chosenYear);
+      } else {
+        showYearControls(false);
+        modalImg.src = `final_frames/${fname}`;
+        modalImg.alt = image.title;
+        history.replaceState(null, '', `/${fname.replace('.png', '')}`);
+      }
+
+      // Star state (uses possibly-updated filename)
+      const isFav = isFavorite(visibleImages[currentIndex].filename);
       modalFavBtn.textContent = isFav ? '★' : '☆';
       modalFavBtn.classList.toggle('filled', isFav);
     }
@@ -630,6 +769,7 @@
         justUnstarredInModal = false;
         filterImages();  // remove unstarred image from grid
       }
+      showYearControls(false);
     }
 
     function toggleSearch() {
@@ -724,6 +864,8 @@
         spinner.className = 'chart-loading';
 
         const img = document.createElement('img');
+        img.className = 'grid-thumb';
+        img.dataset.gridIndex = index;
         img.alt = title;
         img.style.opacity = 0;
         img.onload = () => {
@@ -807,6 +949,13 @@
       .then(res => res.json())
       .then(data => {
         imageList = data;
+        const storedBvgYear = getStoredBvgYear();
+        imageList = imageList.map(img => {
+          if (isBvgFile(img.filename)) {
+            return { ...img, filename: bvgFilenameForYear(storedBvgYear) };
+          }
+          return img;
+        });
         visibleImages = [...imageList];
         filterImages();
 
