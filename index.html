@@ -965,30 +965,48 @@
       .then(res => res.json())
       .then(data => {
         imageList = data;
-        const storedBvgYear = getStoredBvgYear();
+
+        // ── NEW: see if URL is a specific bitcoin_vs_gold year; if so, persist it
+        const initialFilename = getImageNameFromPath(); // e.g., "bitcoin_vs_gold_2013.png" or null
+        if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
+          const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
+          if (m) {
+            const directYear = m[1];
+            // Persist the direct-link year to cookie/localStorage so the card & dropdown match
+            setStoredBvgYear(directYear);
+          }
+        }
+
+        // ── NEW: Remap the BVG card to the stored (or freshly overridden) year before rendering
+        const storedBvgYear = getStoredBvgYear(); // cookie → localStorage → default
         imageList = imageList.map(img => {
-          if (isBvgFile(img.filename)) {
-            return { ...img, filename: bvgFilenameForYear(storedBvgYear) };
+          if (img.filename.startsWith('bitcoin_vs_gold')) {
+            return { ...img, filename: `bitcoin_vs_gold_${storedBvgYear}.png` };
           }
           return img;
         });
+
+        // Render grid
         visibleImages = [...imageList];
         filterImages();
 
+        // Restore layout & favorites toggle
         const savedLayout = localStorage.getItem('preferredLayout');
-        if (savedLayout === 'list' || savedLayout === 'grid') {
-          setLayout(savedLayout, false);
-        }
-        if (showFavoritesOnly) {
-          document.getElementById('favoritesToggle').classList.add('active');
-        }
-        const initialFilename = getImageNameFromPath();
+        if (savedLayout === 'list' || savedLayout === 'grid') setLayout(savedLayout, false);
+        if (showFavoritesOnly) document.getElementById('favoritesToggle').classList.add('active');
+
+        // ── UPDATED: Try to open the requested file; if not found and it's BVG, open the BVG card we just remapped
         if (initialFilename) {
-          const index = visibleImages.findIndex(img => img.filename === initialFilename);
-          if (index !== -1) {
-            openModalByIndex(index);
+          let openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+
+          if (openIdx === -1 && initialFilename.startsWith('bitcoin_vs_gold_')) {
+            // fall back to "the" BVG card (now set to stored/overridden year)
+            openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
+          }
+
+          if (openIdx !== -1) {
+            openModalByIndex(openIdx);
           } else {
-            // Optional: log or handle 404 case silently
             console.warn(`No image found for filename: ${initialFilename}`);
             history.replaceState(null, '', '/'); // fallback to homepage URL
           }
