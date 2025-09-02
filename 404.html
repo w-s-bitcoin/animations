@@ -628,6 +628,11 @@
       setBvgYear(newYear);
     }
 
+    function isValidBvgYear(yStr) {
+      const y = parseInt(yStr, 10);
+      return Number.isInteger(y) && BVG_YEARS.includes(y);
+    }
+
     function setLayout(type, manual = true) {
       imageGrid.classList.remove('grid', 'list');
       imageGrid.classList.add(type);
@@ -966,18 +971,21 @@
       .then(data => {
         imageList = data;
 
-        // ── NEW: see if URL is a specific bitcoin_vs_gold year; if so, persist it
-        const initialFilename = getImageNameFromPath(); // e.g., "bitcoin_vs_gold_2013.png" or null
+        // Check URL for a specific BVG year (e.g., /bitcoin_vs_gold_2013)
+        const initialFilename = getImageNameFromPath(); // e.g. "bitcoin_vs_gold_2013.png" or null
+        let urlBvgYear = null;
         if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
           const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
-          if (m) {
-            const directYear = m[1];
-            // Persist the direct-link year to cookie/localStorage so the card & dropdown match
-            setStoredBvgYear(directYear);
+          if (m && isValidBvgYear(m[1])) {
+            urlBvgYear = m[1];                  // valid direct-link year
+            setStoredBvgYear(urlBvgYear);       // persist only if valid
+          } else {
+            // Invalid year in URL → treat as if no deep link was provided
+            // (Do NOT change cookies/localStorage or open a modal)
           }
         }
 
-        // ── NEW: Remap the BVG card to the stored (or freshly overridden) year before rendering
+        // Remap BVG grid card to the chosen (stored or URL-valid) year
         const storedBvgYear = getStoredBvgYear(); // cookie → localStorage → default
         imageList = imageList.map(img => {
           if (img.filename.startsWith('bitcoin_vs_gold')) {
@@ -995,20 +1003,24 @@
         if (savedLayout === 'list' || savedLayout === 'grid') setLayout(savedLayout, false);
         if (showFavoritesOnly) document.getElementById('favoritesToggle').classList.add('active');
 
-        // ── UPDATED: Try to open the requested file; if not found and it's BVG, open the BVG card we just remapped
+        // Open modal only when there is a valid target
         if (initialFilename) {
-          let openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-
-          if (openIdx === -1 && initialFilename.startsWith('bitcoin_vs_gold_')) {
-            // fall back to "the" BVG card (now set to stored/overridden year)
-            openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
+          let openIdx = -1;
+          if (urlBvgYear) {
+            // Valid year: open the corresponding BVG card (it now matches storedBvgYear)
+            openIdx = visibleImages.findIndex(img => img.filename === initialFilename)
+                  // fallback in case filenames were normalized differently:
+                  if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
+          } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
+            // Non-BVG deep link: try to open it normally
+            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
           }
 
           if (openIdx !== -1) {
             openModalByIndex(openIdx);
           } else {
-            console.warn(`No image found for filename: ${initialFilename}`);
-            history.replaceState(null, '', '/'); // fallback to homepage URL
+            // Invalid BVG year or unknown filename → load original page, no modal, no state change
+            history.replaceState(null, '', '/');
           }
         }
       })
