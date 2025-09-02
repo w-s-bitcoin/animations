@@ -243,17 +243,17 @@
 
     @media (max-width: 900px) and (orientation: landscape) {
       .modal {
-        padding-top: var(--controls-offset, 1.5rem);  /* was 3rem */
+        padding-top: var(--controls-offset, 0.5rem);   /* was 1.5rem */
       }
       .modal img {
-        max-height: calc(88vh - var(--controls-offset, 1.5rem));  /* was 3rem */
+        max-height: calc(88vh - var(--controls-offset, 0.5rem));  /* was 1.5rem */
       }
     }
 
     @supports (padding: max(0px)) {
       @media (max-width: 900px) and (orientation: landscape) {
         .modal {
-          padding-top: max(var(--controls-offset, 1.5rem), env(safe-area-inset-top)); /* was 3rem */
+          padding-top: max(var(--controls-offset, 0.5rem), env(safe-area-inset-top)); /* was 1.5rem */
         }
       }
     }
@@ -820,12 +820,21 @@
         return;
       }
 
-      // Measure real height but clamp the reserved space so it isn't aggressive
-      const h = controls.getBoundingClientRect().height;   // actual pixels
-      // Clamp between 20px and 44px; subtract a few px since image can tuck a bit under
-      const offset = Math.max(20, Math.min(h - 6, 44));
+      // Measure *actual* overlap, not the whole controls height
+      const cRect = controls.getBoundingClientRect();
+      const iRect = modalImg.getBoundingClientRect();
 
-      modal.style.setProperty('--controls-offset', offset + 'px');
+      // How much do controls intrude above the image?
+      const overlap = Math.max(0, cRect.bottom - iRect.top);
+
+      // Add a tiny buffer (4px), and clamp very low so it’s never aggressive
+      const pad = Math.min(24, overlap + 4);  // cap at 24px (tweakable)
+
+      if (pad > 0) {
+        modal.style.setProperty('--controls-offset', pad + 'px');
+      } else {
+        modal.style.removeProperty('--controls-offset');
+      }
     }
 
     function closeModal() {
@@ -1080,6 +1089,7 @@
     window.addEventListener('resize', updateModalSafePadding);
     window.addEventListener('load', updateLayoutBasedOnWidth);
     window.addEventListener('orientationchange', updateModalSafePadding);
+    modalImg.addEventListener('load', updateModalSafePadding);
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
