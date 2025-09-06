@@ -240,6 +240,12 @@
         margin-left: 0;     /* NEW: align with the X */
       }
     }
+    @media (max-width: 640px) {
+      #scale-controls {
+        flex-basis: 100%;
+        margin-left: 0;
+      }
+    }
 
     @media (max-width: 900px) and (orientation: landscape) {
       .modal {
@@ -441,6 +447,23 @@
       appearance: none;
     }
 
+    #scale-select {
+      font-family: monospace;
+      font-size: 1rem;
+      color: #fff;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding-right: 1.6rem;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .scale-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
+    .scale-controls.show { display: inline-flex; }
+
     /* custom ▼ */
     .select-wrap::after {
       content: "";
@@ -523,6 +546,15 @@
           <select id="year-select" aria-label="Choose year"></select>
         </span>
       </span>
+      <span class="scale-controls" id="scale-controls">
+        <span style="color:white; font-size: 1rem;">Scale:</span>
+        <span class="select-wrap">
+          <select id="scale-select" aria-label="Choose scale">
+            <option value="linear">Linear</option>
+            <option value="log">Log</option>
+          </select>
+        </span>
+      </span>
     </div>
     <img id="modal-img" src="" alt="Full size image">
   </div>
@@ -542,7 +574,7 @@
       </a>
     </div>
     <p>© 2025 Wicked Smart Bitcoin <span id="version-info">(v0.1.1)</span></p>
-    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on September 06, 2025 at 12:40 UTC</p>
+    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on September 06, 2025 at 22:57 UTC</p>
   </footer>
 
   <script>
@@ -564,11 +596,98 @@
     let touchEndY = 0;
     const yearControls = document.getElementById('year-controls');
     const yearSelect = document.getElementById('year-select');
+    const DAL_BASE = 'days_at_a_loss';
+    const DAL_STORAGE_KEY = 'dalScale';
+    const scaleControls = document.getElementById('scale-controls');
+    const scaleSelect   = document.getElementById('scale-select');
 
     const BVG_BASE = 'bitcoin_vs_gold';
     // Years newest → oldest
     const BVG_YEARS = Array.from({ length: 2025 - 2013 + 1 }, (_, i) => 2025 - i);
     const BVG_STORAGE_KEY = 'bvgYear';
+
+    // Order matches your dropdown: Linear (top/default), then Log
+    const DAL_SCALES = ['linear', 'log'];
+
+    function cycleDalScale(direction) {
+      const current = (typeof scaleSelect !== 'undefined' && scaleSelect?.value) || getStoredDalScale();
+      const idx = DAL_SCALES.indexOf(current);
+      if (idx === -1) return;
+
+      let newIdx = direction === 'up' ? idx - 1 : idx + 1;  // clamp ends
+      if (newIdx < 0) newIdx = 0;
+      if (newIdx >= DAL_SCALES.length) newIdx = DAL_SCALES.length - 1;
+
+      const next = DAL_SCALES[newIdx];
+      if (typeof scaleSelect !== 'undefined' && scaleSelect) scaleSelect.value = next;
+      setDalScale(next);   // this updates image, URL, grid, favorites, and persists
+    }
+
+    function isDalFile(fname) {
+      return fname.startsWith(DAL_BASE);
+    }
+
+    function dalScaleFromFilename(fname) {
+      // days_at_a_loss_log.png -> 'log', otherwise 'linear'
+      return /_log\.png$/.test(fname) ? 'log' : 'linear';
+    }
+
+    function dalFilenameForScale(scale) {
+      return scale === 'log' ? `${DAL_BASE}_log.png` : `${DAL_BASE}.png`;
+    }
+
+    function getStoredDalScale() {
+      return localStorage.getItem(DAL_STORAGE_KEY) || 'linear';
+    }
+
+    function setStoredDalScale(s) {
+      localStorage.setItem(DAL_STORAGE_KEY, s);
+    }
+
+    function showScaleControls(show) {
+      scaleControls?.classList.toggle('show', !!show);
+    }
+
+    // Swap the DAL image, persist, update grid & favorites like Year does
+    function setDalScale(scale) {
+      const oldFilename = visibleImages[currentIndex].filename;
+      if (!isDalFile(oldFilename)) return;
+
+      const newFilename = dalFilenameForScale(scale);
+
+      // Persist
+      setStoredDalScale(scale);
+
+      // Update modal image + URL
+      modalImg.src = `final_frames/${newFilename}`;
+      modalImg.alt = `Days at a Loss (${scale})`;
+      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
+
+      // Update in-memory model
+      visibleImages[currentIndex].filename = newFilename;
+
+      // Update the grid thumbnail for this card (live)
+      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+      if (thumb) thumb.src = `final_frames/${newFilename}`;
+
+      // Migrate favorites to the new filename
+      let favs = getFavorites();
+      const pos = favs.indexOf(oldFilename);
+      if (pos !== -1) {
+        favs.splice(pos, 1);
+        if (!favs.includes(newFilename)) favs.push(newFilename);
+        saveFavorites(favs);
+        modalFavBtn.classList.add('filled');
+        modalFavBtn.textContent = '★';
+      }
+
+      // Update the grid star target
+      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
+      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
+
+      // Recompute modal padding if needed
+      updateModalSafePadding();
+    }
 
     // --- Cookies ---
     function setCookie(name, value, days = 365) {
@@ -620,6 +739,7 @@
 
     // Dropdown change
     yearSelect?.addEventListener('change', (e) => setBvgYear(e.target.value));
+    scaleSelect?.addEventListener('change', (e) => setDalScale(e.target.value));
 
     function isBvgFile(fname) { return fname.startsWith(BVG_BASE); }
     function bvgFilenameForYear(y) { return `${BVG_BASE}_${y}.png`; }
@@ -741,13 +861,25 @@
       populateYearSelect();
       const fname = image.filename;
       if (isBvgFile(fname)) {
+        // BVG
         showYearControls(true);
+        showScaleControls(false);
         const fromFilename = extractBvgYear(fname);
-        const chosenYear = fromFilename || getStoredBvgYear(); // fallback to cookie/localStorage/2018
+        const chosenYear = fromFilename || getStoredBvgYear();
         yearSelect.value = chosenYear;
         setBvgYear(chosenYear);
-      } else {
+      } else if (isDalFile(fname)) {
+        // DAL
         showYearControls(false);
+        showScaleControls(true);
+        const fromFilenameScale = dalScaleFromFilename(fname);         // 'linear' | 'log'
+        const chosenScale = fromFilenameScale || getStoredDalScale();  // fallback to stored
+        scaleSelect.value = chosenScale;
+        setDalScale(chosenScale);
+      } else {
+        // Normal images
+        showYearControls(false);
+        showScaleControls(false);
         modalImg.src = `final_frames/${fname}`;
         modalImg.alt = image.title;
         history.replaceState(null, '', `/${fname.replace('.png', '')}`);
@@ -837,6 +969,7 @@
         filterImages();  // remove unstarred image from grid
       }
       showYearControls(false);
+      showScaleControls(false);
       modal.style.removeProperty('--controls-offset');
     }
 
@@ -1031,12 +1164,32 @@
             // (Do NOT change cookies/localStorage or open a modal)
           }
         }
+        let urlDalScale = null;
+        if (initialFilename && initialFilename.startsWith(DAL_BASE)) {
+          if (initialFilename === `${DAL_BASE}_log.png`) {
+            urlDalScale = 'log';
+          } else if (initialFilename === `${DAL_BASE}.png`) {
+            urlDalScale = 'linear';
+          }
+          if (urlDalScale) {
+            setStoredDalScale(urlDalScale);  // persist only if valid
+          }
+        }
 
-        // Remap BVG grid card to the chosen (stored or URL-valid) year
-        const storedBvgYear = getStoredBvgYear(); // cookie → localStorage → default
+        // Remap BVG grid card to stored/URL-valid year
+        const storedBvgYear = getStoredBvgYear();
         imageList = imageList.map(img => {
           if (img.filename.startsWith('bitcoin_vs_gold')) {
             return { ...img, filename: `bitcoin_vs_gold_${storedBvgYear}.png` };
+          }
+          return img;
+        });
+
+        // NEW: Remap DAL grid card to stored/URL-valid scale
+        const storedDalScale = getStoredDalScale(); // 'linear' | 'log'
+        imageList = imageList.map(img => {
+          if (img.filename.startsWith(DAL_BASE)) {
+            return { ...img, filename: dalFilenameForScale(storedDalScale) };
           }
           return img;
         });
@@ -1054,19 +1207,19 @@
         if (initialFilename) {
           let openIdx = -1;
           if (urlBvgYear) {
-            // Valid year: open the corresponding BVG card (it now matches storedBvgYear)
-            openIdx = visibleImages.findIndex(img => img.filename === initialFilename)
-                  // fallback in case filenames were normalized differently:
-                  if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
+            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+            if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
+          } else if (urlDalScale) {
+            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+            if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DAL_BASE));
           } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
-            // Non-BVG deep link: try to open it normally
+            // Non-BVG deep link: try to open it normally (covers DAL too if no URL override)
             openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
           }
 
           if (openIdx !== -1) {
             openModalByIndex(openIdx);
           } else {
-            // Invalid BVG year or unknown filename → load original page, no modal, no state change
             history.replaceState(null, '', '/');
           }
         }
@@ -1108,14 +1261,22 @@
           e.preventDefault();
           closeModal();
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-          // Handle year cycling only for Bitcoin vs Gold
+          // Handle Up/Down inside modal for special series
           const currentFile = visibleImages[currentIndex]?.filename || "";
+
           if (isBvgFile(currentFile)) {
-            e.preventDefault(); // stop page scrolling
+            e.preventDefault(); // Year cycling (already in your code)
             if (e.key === 'ArrowUp') {
               cycleBvgYear('up');
             } else {
               cycleBvgYear('down');
+            }
+          } else if (typeof isDalFile === 'function' && isDalFile(currentFile)) {
+            e.preventDefault(); // Scale cycling for Days at a Loss
+            if (e.key === 'ArrowUp') {
+              cycleDalScale('up');
+            } else {
+              cycleDalScale('down');
             }
           }
         }
