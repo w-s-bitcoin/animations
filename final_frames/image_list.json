@@ -83,7 +83,7 @@
   {
     "filename": "global_wealth.png",
     "title": "Global Wealth",
-    "description": "Shows the estimated global wealth in terms of bitcoin",
+    "description": "Shows the estimated total global wealth in terms of bitcoin",
     "latest_x": "https://x.com/w_s_bitcoin/status/1946395544663765360",
     "latest_nostr": "https://primal.net/e/nevent1qqs2jx8y08fextanzh69zzklg0sltn0r4hxx8927fv9lds4xdykcuuse52d54",
     "latest_youtube": "https://youtu.be/D7uSIlNXYag"
