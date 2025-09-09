@@ -143,6 +143,15 @@
     
   },
   {
+    "filename": "price_of_ca_min_wage.png",
+    "title": "Price of CA Min Wage",
+    "description": "Shows the price of one hour of California minimum wage in terms of bitcoin and in terms of dollars",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+    
+  },
+  {
     "filename": "price_of_milk.png",
     "title": "Price of Milk",
     "description": "Shows the price of milk in terms of bitcoin and in terms of dollars",
