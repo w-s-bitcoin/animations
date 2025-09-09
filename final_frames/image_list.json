@@ -134,6 +134,15 @@
     
   },
   {
+    "filename": "price_of_hourly_earnings.png",
+    "title": "Price of Hourly Earnings",
+    "description": "Shows the price of one hour of earnings in terms of bitcoin and in terms of dollars",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+    
+  },
+  {
     "filename": "price_of_milk.png",
     "title": "Price of Milk",
     "description": "Shows the price of milk in terms of bitcoin and in terms of dollars",
