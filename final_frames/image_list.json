@@ -107,6 +107,15 @@
     
   },
   {
+    "filename": "price_of_unleaded_gasoline.png",
+    "title": "Price of Unleaded Gasoline",
+    "description": "Shows the price of unleaded gasoline in terms of bitcoin and in terms of dollars",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+    
+  },
+  {
     "filename": "block_size.png",
     "title": "Block Size",
     "description": "Shows each block size with smaller epoch windows on the side",
