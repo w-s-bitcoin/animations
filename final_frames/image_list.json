@@ -107,6 +107,15 @@
     
   },
   {
+    "filename": "price_of_milk.png",
+    "title": "Price of Milk",
+    "description": "Shows the price of milk in terms of bitcoin and in terms of dollars",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+    
+  },
+  {
     "filename": "price_of_unleaded_gasoline.png",
     "title": "Price of Unleaded Gasoline",
     "description": "Shows the price of unleaded gasoline in terms of bitcoin and in terms of dollars",
