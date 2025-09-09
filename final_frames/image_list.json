@@ -125,6 +125,15 @@
     
   },
   {
+    "filename": "price_of_sugar.png",
+    "title": "Price of Sugar",
+    "description": "Shows the price of sugar in terms of bitcoin and in terms of dollars",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+    
+  },
+  {
     "filename": "price_of_unleaded_gasoline.png",
     "title": "Price of Unleaded Gasoline",
     "description": "Shows the price of unleaded gasoline in terms of bitcoin and in terms of dollars",
