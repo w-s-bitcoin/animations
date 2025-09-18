@@ -772,12 +772,12 @@
 
     function cycleDominance(direction) {
       const current = (dominanceSelect?.value) || getStoredDominanceUnit();
-      let idx = DOM_UNITS.indexOf(current);
-      if (idx === -1) idx = 0;
+      const idx = DOM_UNITS.indexOf(current);
+      if (idx === -1) return;
 
-      let newIdx = direction === 'up' ? idx - 1 : idx + 1;
-      if (newIdx < 0) newIdx = 0;
-      if (newIdx >= DOM_UNITS.length) newIdx = DOM_UNITS.length - 1;
+      const delta = direction === 'up' ? -1 : 1;
+      const len = DOM_UNITS.length;
+      const newIdx = (idx + delta + len) % len;
 
       const next = DOM_UNITS[newIdx];
       if (dominanceSelect) dominanceSelect.value = next;
@@ -1003,36 +1003,35 @@
     // Cycle "Price of" selection (alphabetical order of the dropdown options), clamped at ends
     function cyclePriceOf(direction) {
       if (!priceOfSelect) return;
-
-      const opts  = Array.from(priceOfSelect.options);
-      if (opts.length <= 1) return;
+      const opts = Array.from(priceOfSelect.options);
+      if (opts.length === 0) return;
 
       const slugs = opts.map(o => o.value);
       const currentSlug = priceOfSelect.value || getStoredPofItem();
-      let idx = slugs.indexOf(currentSlug);
-      if (idx === -1) idx = 0;
+      const idx = slugs.indexOf(currentSlug);
+      if (idx === -1) return;
 
-      let newIdx = direction === 'up' ? idx - 1 : idx + 1;
-      if (newIdx < 0) newIdx = 0;                          // clamp top
-      if (newIdx >= slugs.length) newIdx = slugs.length-1; // clamp bottom
+      const delta = direction === 'up' ? -1 : 1;
+      const len = slugs.length;
+      const newIdx = (idx + delta + len) % len;
 
       const nextSlug = slugs[newIdx];
       priceOfSelect.value = nextSlug;
-      setPriceOfItem(nextSlug);  // swaps image, updates URL/grid/favorites, persists
+      setPriceOfItem(nextSlug);
     }
 
     function cycleDalScale(direction) {
-      const current = (typeof scaleSelect !== 'undefined' && scaleSelect?.value) || getStoredDalScale();
+      const current = (scaleSelect?.value) || getStoredDalScale();
       const idx = DAL_SCALES.indexOf(current);
       if (idx === -1) return;
 
-      let newIdx = direction === 'up' ? idx - 1 : idx + 1;  // clamp ends
-      if (newIdx < 0) newIdx = 0;
-      if (newIdx >= DAL_SCALES.length) newIdx = DAL_SCALES.length - 1;
+      const delta = direction === 'up' ? -1 : 1;
+      const len = DAL_SCALES.length;
+      const newIdx = (idx + delta + len) % len;
 
       const next = DAL_SCALES[newIdx];
-      if (typeof scaleSelect !== 'undefined' && scaleSelect) scaleSelect.value = next;
-      setDalScale(next);   // this updates image, URL, grid, favorites, and persists
+      if (scaleSelect) scaleSelect.value = next;
+      setDalScale(next);
     }
 
     function isDalFile(fname) {
@@ -1176,10 +1175,10 @@
       const idx = BVG_YEARS.indexOf(current);
       if (idx === -1) return;
 
-      let newIdx = direction === 'up' ? idx - 1 : idx + 1;
-
-      if (newIdx < 0) newIdx = 0;                           // clamp at 2013
-      if (newIdx >= BVG_YEARS.length) newIdx = BVG_YEARS.length - 1; // clamp at 2025
+      // array is [2025, 2024, ..., 2013]
+      const delta = direction === 'up' ? -1 : 1;
+      const len = BVG_YEARS.length;
+      const newIdx = (idx + delta + len) % len;   // wrap-around
 
       const newYear = BVG_YEARS[newIdx];
       yearSelect.value = newYear;
