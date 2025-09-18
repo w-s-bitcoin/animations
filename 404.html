@@ -504,6 +504,30 @@
       appearance: none;
     }
 
+    /* Dominance controls */
+    .dominance-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
+    .dominance-controls.show { display: inline-flex; }
+
+    /* Wrap under the X on small screens */
+    @media (max-width: 640px) {
+      #dominance-controls { flex-basis: 100%; margin-left: 0; }
+    }
+
+    /* Match the minimal select look */
+    #dominance-select {
+      font-family: monospace;
+      font-size: 1rem;
+      color: #fff;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding-right: 1.6rem;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
     .scale-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
     .scale-controls.show { display: inline-flex; }
 
@@ -630,6 +654,15 @@
           <select id="priceof-select" aria-label="Choose item"></select>
         </span>
       </span>
+      <span class="dominance-controls" id="dominance-controls">
+        <span style="color:white; font-size: 1rem;">Unit of Account:</span>
+        <span class="select-wrap">
+          <select id="dominance-select" aria-label="Choose unit">
+            <option value="usd">USD</option>
+            <option value="btc">BTC</option>
+          </select>
+        </span>
+      </span>
     </div>
     <img id="modal-img" src="" alt="Full size image">
   </div>
@@ -649,7 +682,7 @@
       </a>
     </div>
     <p>© 2025 Wicked Smart Bitcoin <span id="version-info">(v0.1.1)</span></p>
-    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on September 18, 2025 at 14:28 UTC</p>
+    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on September 18, 2025 at 17:57 UTC</p>
   </footer>
 
   <script>
@@ -675,6 +708,82 @@
     const DAL_STORAGE_KEY = 'dalScale';
     const scaleControls = document.getElementById('scale-controls');
     const scaleSelect   = document.getElementById('scale-select');
+    const DOM_BASE = 'bitcoin_dominance';
+    const DOM_STORAGE_KEY = 'dominanceUnit';
+    const dominanceControls = document.getElementById('dominance-controls');
+    const dominanceSelect   = document.getElementById('dominance-select');
+    const DOM_UNITS = ['usd','btc'];
+
+    function isDominanceFile(fname) { return fname.startsWith(DOM_BASE); }
+    function domUnitFromFilename(fname) { return /_btc\.png$/.test(fname) ? 'btc' : 'usd'; }
+    function domFilenameForUnit(u) { return u === 'btc' ? `${DOM_BASE}_btc.png` : `${DOM_BASE}.png`; }
+
+    function getStoredDominanceUnit() {
+      return getCookie(DOM_STORAGE_KEY) || localStorage.getItem(DOM_STORAGE_KEY) || 'usd';
+    }
+    function setStoredDominanceUnit(u) {
+      setCookie(DOM_STORAGE_KEY, u, 365);
+      localStorage.setItem(DOM_STORAGE_KEY, u);
+    }
+
+    function showDominanceControls(show) {
+      dominanceControls?.classList.toggle('show', !!show);
+    }
+
+    function setDominanceUnit(unit) {
+      const oldFilename = visibleImages[currentIndex].filename;
+      if (!isDominanceFile(oldFilename)) return;
+
+      const newFilename = domFilenameForUnit(unit);
+
+      // persist
+      setStoredDominanceUnit(unit);
+
+      // modal + URL
+      modalImg.src = `final_frames/${newFilename}`;
+      modalImg.alt = `Bitcoin Dominance (${unit.toUpperCase()})`;
+      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
+
+      // in-memory
+      visibleImages[currentIndex].filename = newFilename;
+
+      // grid thumb live swap
+      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+      if (thumb) thumb.src = `final_frames/${newFilename}`;
+
+      // migrate favorites (preserve star across unit swap)
+      let favs = getFavorites();
+      const pos = favs.indexOf(oldFilename);
+      if (pos !== -1) {
+        favs.splice(pos, 1);
+        if (!favs.includes(newFilename)) favs.push(newFilename);
+        saveFavorites(favs);
+        modalFavBtn.classList.add('filled');
+        modalFavBtn.textContent = '★';
+      }
+
+      // keep grid star targeting the new filename
+      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
+      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
+
+      updateModalSafePadding();
+    }
+
+    dominanceSelect?.addEventListener('change', (e) => setDominanceUnit(e.target.value));
+
+    function cycleDominance(direction) {
+      const current = (dominanceSelect?.value) || getStoredDominanceUnit();
+      let idx = DOM_UNITS.indexOf(current);
+      if (idx === -1) idx = 0;
+
+      let newIdx = direction === 'up' ? idx - 1 : idx + 1;
+      if (newIdx < 0) newIdx = 0;
+      if (newIdx >= DOM_UNITS.length) newIdx = DOM_UNITS.length - 1;
+
+      const next = DOM_UNITS[newIdx];
+      if (dominanceSelect) dominanceSelect.value = next;
+      setDominanceUnit(next);
+    }
 
     function setModalLinks({ x = '', nostr = '', youtube = '' } = {}) {
       const xLink     = document.getElementById('x-link');
@@ -1173,7 +1282,17 @@
         const chosenYear = fromFilename || getStoredBvgYear();
         yearSelect.value = chosenYear;
         setBvgYear(chosenYear);
+      } else if (isDominanceFile(fname)) {
+        // Bitcoin Dominance
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(true);
 
+        const fromFileUnit = domUnitFromFilename(fname);
+        const chosenUnit = fromFileUnit || getStoredDominanceUnit();
+        dominanceSelect.value = chosenUnit;
+        setDominanceUnit(chosenUnit);
       } else if (isDalFile(fname)) {
         // DAL
         showYearControls(false);
@@ -1585,6 +1704,12 @@
             setStoredDalScale(urlDalScale);  // persist only if valid
           }
         }
+        let urlDomUnit = null;
+        if (initialFilename && initialFilename.startsWith(DOM_BASE)) {
+          if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = 'btc';
+          else if (initialFilename === `${DOM_BASE}.png`) urlDomUnit = 'usd';
+          if (urlDomUnit) setStoredDominanceUnit(urlDomUnit); // persist only if valid
+        }
 
         // Remap BVG grid card to stored/URL-valid year
         const storedBvgYear = getStoredBvgYear();
@@ -1600,6 +1725,13 @@
         imageList = imageList.map(img => {
           if (img.filename.startsWith(DAL_BASE)) {
             return { ...img, filename: dalFilenameForScale(storedDalScale) };
+          }
+          return img;
+        });
+        const storedDomUnit = getStoredDominanceUnit(); // 'usd' | 'btc'
+        imageList = imageList.map(img => {
+          if (img.filename.startsWith(DOM_BASE)) {
+            return { ...img, filename: domFilenameForUnit(storedDomUnit) };
           }
           return img;
         });
@@ -1625,6 +1757,9 @@
           } else if (urlPofSlug) {
             openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
             if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POF_BASE));
+          } else if (urlDomUnit) {
+            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+            if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DOM_BASE));
           } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
             openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
           }
@@ -1689,6 +1824,13 @@
               cycleDalScale('up');
             } else {
               cycleDalScale('down');
+            }
+          } else if (typeof isDominanceFile === 'function' && isDominanceFile(currentFile)) {
+            e.preventDefault();
+            if (e.key === 'ArrowUp') {
+              cycleDominance('up');
+            } else {
+              cycleDominance('down');
             }
           } else if (typeof isPriceOfFile === 'function' && isPriceOfFile(currentFile)) {
             e.preventDefault();
