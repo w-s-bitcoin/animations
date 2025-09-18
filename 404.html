@@ -504,11 +504,10 @@
       appearance: none;
     }
 
-    /* Dominance controls */
+    /* Hide by default; show only when .show is added */
     .dominance-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
     .dominance-controls.show { display: inline-flex; }
 
-    /* Wrap under the X on small screens */
     @media (max-width: 640px) {
       #dominance-controls { flex-basis: 100%; margin-left: 0; }
     }
@@ -682,7 +681,7 @@
       </a>
     </div>
     <p>© 2025 Wicked Smart Bitcoin <span id="version-info">(v0.1.1)</span></p>
-    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on September 18, 2025 at 17:57 UTC</p>
+    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on September 18, 2025 at 18:08 UTC</p>
   </footer>
 
   <script>
@@ -1277,6 +1276,7 @@
         showYearControls(true);
         showScaleControls(false);
         showPriceOfControls(false);
+        showDominanceControls(false);
 
         const fromFilename = extractBvgYear(fname);
         const chosenYear = fromFilename || getStoredBvgYear();
@@ -1298,7 +1298,8 @@
         showYearControls(false);
         showScaleControls(true);
         showPriceOfControls(false);
-
+        showDominanceControls(false);
+  
         const fromFilenameScale = dalScaleFromFilename(fname);
         const chosenScale = fromFilenameScale || getStoredDalScale();
         scaleSelect.value = chosenScale;
@@ -1308,6 +1309,7 @@
         showYearControls(false);
         showScaleControls(false);
         showPriceOfControls(true);
+        showDominanceControls(false);
 
         populatePriceOfSelect();
 
@@ -1329,6 +1331,7 @@
         showYearControls(false);
         showScaleControls(false);
         showPriceOfControls(false);
+        showDominanceControls(false);
 
         modalImg.src = `final_frames/${fname}`;
         modalImg.alt = image.title;
