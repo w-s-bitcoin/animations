@@ -188,6 +188,14 @@
     
   },
   {
+    "filename": "node_count.png",
+    "title": "Node Count",
+    "description": "Shows each node count by software and version",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "block_size.png",
     "title": "Block Size",
     "description": "Shows each block size with smaller epoch windows on the side",
