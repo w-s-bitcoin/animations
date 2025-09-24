@@ -300,6 +300,14 @@
     "latest_youtube": "https://youtu.be/zob5dUOAcv0"
   },
   {
+    "filename": "wholecoins.png",
+    "title": "Wholecoins",
+    "description": "Shows the historical number of wholecoins in circulation",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1894174834365460525",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "pi_coins.png",
     "title": "Pi-coins",
     "description": "Shows the historical number of pi-coins in circulation",
