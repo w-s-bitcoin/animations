@@ -268,6 +268,22 @@
     "latest_youtube": "https://youtu.be/kBoSO7612v0"
   },
   {
+    "filename": "wholecoins.png",
+    "title": "Wholecoins",
+    "description": "Shows the historical number of wholecoins in circulation",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1894174834365460525",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
+    "filename": "pi_coins.png",
+    "title": "Pi-coins",
+    "description": "Shows the historical number of pi-coins in circulation",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1900530426726273294",
+    "latest_nostr": "",
+    "latest_youtube": "https://youtu.be/4yFjOoDp6zY"
+  },
+  {
     "filename": "monthly_bars.png",
     "title": "Monthly Candles",
     "description": "Shows the monthly candles chart",
@@ -298,21 +314,5 @@
     "latest_x": "https://x.com/w_s_bitcoin/status/1780570971520291069",
     "latest_nostr": "",
     "latest_youtube": "https://youtu.be/zob5dUOAcv0"
-  },
-  {
-    "filename": "wholecoins.png",
-    "title": "Wholecoins",
-    "description": "Shows the historical number of wholecoins in circulation",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1894174834365460525",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "pi_coins.png",
-    "title": "Pi-coins",
-    "description": "Shows the historical number of pi-coins in circulation",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1900530426726273294",
-    "latest_nostr": "",
-    "latest_youtube": "https://youtu.be/4yFjOoDp6zY"
   }
 ]
