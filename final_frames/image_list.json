@@ -292,7 +292,7 @@
     "latest_youtube": "https://youtu.be/k-58GrK6A8k"
   },
   {
-    "filename": "yearly_bars.png",
+    "filename": "yearly_candles.png",
     "title": "Yearly Candles",
     "description": "Shows the yearly candles chart",
     "latest_x": "https://x.com/w_s_bitcoin/status/1885706520416968789",
@@ -300,7 +300,7 @@
     "latest_youtube": ""
   },
   {
-    "filename": "epoch_bars.png",
+    "filename": "epoch_candles.png",
     "title": "Epoch Candles",
     "description": "Shows the epoch candles chart",
     "latest_x": "https://x.com/w_s_bitcoin/status/1851638646312472955",
