@@ -292,6 +292,14 @@
     "latest_youtube": ""
   },
   {
+    "filename": "m_coins.png",
+    "title": "M-coins",
+    "description": "Shows the history of M-coins (UTXOs worth exactly 1,000 BTC)",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "monthly_candles.png",
     "title": "Monthly Candles",
     "description": "Shows the monthly candles chart",
