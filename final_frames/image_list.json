@@ -303,9 +303,9 @@
     "filename": "l_coins.png",
     "title": "L-coins (50 BTC)",
     "description": "Shows the history of L-coins (UTXOs worth exactly 50 BTC)",
-    "latest_x": "",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1971692610172699018",
     "latest_nostr": "",
-    "latest_youtube": ""
+    "latest_youtube": "https://youtu.be/ecy7lLjDK6s"
   },
   {
     "filename": "c_coins.png",
