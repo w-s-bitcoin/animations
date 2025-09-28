@@ -269,7 +269,7 @@
   },
   {
     "filename": "wholecoins.png",
-    "title": "Wholecoins",
+    "title": "Wholecoins (1 BTC)",
     "description": "Shows the history of Wholecoins (UTXOs worth exactly 1 BTC)",
     "latest_x": "https://x.com/w_s_bitcoin/status/1894174834365460525",
     "latest_nostr": "",
@@ -277,27 +277,59 @@
   },
   {
     "filename": "pi_coins.png",
-    "title": "Pi-coins",
+    "title": "Pi-coins (3.14 BTC)",
     "description": "Shows the history of Pi-coins (UTXOs worth exactly 3.14 BTC or 3.14159265 BTC)",
     "latest_x": "https://x.com/w_s_bitcoin/status/1900530426726273294",
     "latest_nostr": "",
     "latest_youtube": "https://youtu.be/4yFjOoDp6zY"
   },
   {
+    "filename": "v_coins.png",
+    "title": "V-coins (5 BTC)",
+    "description": "Shows the history of V-coins (UTXOs worth exactly 5 BTC)",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
+    "filename": "x_coins.png",
+    "title": "X-coins (10 BTC)",
+    "description": "Shows the history of X-coins (UTXOs worth exactly 10 BTC)",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "l_coins.png",
-    "title": "L-coins",
+    "title": "L-coins (50 BTC)",
     "description": "Shows the history of L-coins (UTXOs worth exactly 50 BTC)",
     "latest_x": "",
     "latest_nostr": "",
     "latest_youtube": ""
   },
   {
-    "filename": "m_coins.png",
-    "title": "M-coins",
-    "description": "Shows the history of M-coins (UTXOs worth exactly 1,000 BTC)",
+    "filename": "c_coins.png",
+    "title": "C-coins (100 BTC)",
+    "description": "Shows the history of C-coins (UTXOs worth exactly 100 BTC)",
     "latest_x": "",
     "latest_nostr": "",
     "latest_youtube": ""
+  },
+  {
+    "filename": "d_coins.png",
+    "title": "D-coins (500 BTC)",
+    "description": "Shows the history of D-coins (UTXOs worth exactly 500 BTC)",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
+    "filename": "m_coins.png",
+    "title": "M-coins (1,000 BTC)",
+    "description": "Shows the history of M-coins (UTXOs worth exactly 1,000 BTC)",
+    "latest_x": "https://x.com/w_s_bitcoin/status/1971988248554885395",
+    "latest_nostr": "",
+    "latest_youtube": "https://youtu.be/hzPSxy55MPE"
   },
   {
     "filename": "monthly_candles.png",
