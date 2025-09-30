@@ -554,6 +554,27 @@
       appearance: none;
     }
 
+    .coin-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
+    .coin-controls.show { display: inline-flex; }
+
+    @media (max-width: 640px) {
+      #coin-controls { flex-basis: 100%; margin-left: 0; }
+    }
+
+    #coin-select {
+      font-family: monospace;
+      font-size: 1rem;
+      color: #fff;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding-right: 1.6rem;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
     /* custom ▼ */
     .select-wrap::after {
       content: "";
@@ -662,6 +683,12 @@
           </select>
         </span>
       </span>
+      <span class="coin-controls" id="coin-controls">
+        <span style="color:white; font-size: 1rem;">Type of Coin:</span>
+        <span class="select-wrap">
+          <select id="coin-select" aria-label="Choose coin type"></select>
+        </span>
+      </span>
     </div>
     <img id="modal-img" src="" alt="Full size image">
   </div>
@@ -712,6 +739,169 @@
     const dominanceControls = document.getElementById('dominance-controls');
     const dominanceSelect   = document.getElementById('dominance-select');
     const DOM_UNITS = ['usd','btc'];
+
+    const COIN_STORAGE_KEY = 'coinType';  // persist selected coin slug
+    const coinControls = document.getElementById('coin-controls');
+    const coinSelect   = document.getElementById('coin-select');
+
+    // Desired order in dropdown and ↑/↓ cycling
+    const COIN_ORDER = [
+      'wholecoins',     // wholecoins.png
+      'pi_coins',       // pi_coins.png
+      'v_coins',        // v_coins.png
+      'x_coins',        // x_coins.png
+      'l_coins',        // l_coins.png
+      'c_coins',        // c_coins.png
+      'd_coins',        // d_coins.png
+      'm_coins'         // m_coins.png
+    ];
+
+    // Will be filled from image_list.json
+    let COIN_OPTIONS = []; // [{slug, label, filename, title, description, latest_x, latest_nostr, latest_youtube}]
+    let COIN_META = {};    // { slug: { ...same fields... } }
+
+    function isCoinFile(fname) {
+      return /^(.+)\.png$/.test(fname) && COIN_ORDER.some(slug => `${slug}.png` === fname);
+    }
+    function coinSlugFromFilename(fname) {
+      const m = fname.match(/^([a-z0-9_]+)\.png$/i);
+      return m ? m[1] : null;
+    }
+    function coinFilenameForSlug(slug) { return `${slug}.png`; }
+
+    function getStoredCoinSlug() {
+      return getCookie(COIN_STORAGE_KEY) || localStorage.getItem(COIN_STORAGE_KEY) || 'wholecoins';
+    }
+    function setStoredCoinSlug(slug) {
+      setCookie(COIN_STORAGE_KEY, slug, 365);
+      localStorage.setItem(COIN_STORAGE_KEY, slug);
+    }
+
+    function showCoinControls(show) {
+      coinControls?.classList.toggle('show', !!show);
+    }
+
+    function buildCoinOptionsFromList(list) {
+      // pick only the 8 coin visuals
+      const bySlug = new Map();
+      list.forEach(img => {
+        const slug = coinSlugFromFilename(img.filename);
+        if (!slug || !COIN_ORDER.includes(slug)) return;
+
+        // Use the human-friendly part of title before " (" if available
+        const label = (img.title || slug)
+          .replace(/\s*\(.*?\)\s*$/, ''); // strip " (1 BTC)" etc.
+
+        bySlug.set(slug, {
+          slug,
+          label,
+          filename: img.filename,
+          title: img.title || label,
+          description: img.description || '',
+          latest_x: img.latest_x || '',
+          latest_nostr: img.latest_nostr || '',
+          latest_youtube: img.latest_youtube || ''
+        });
+      });
+
+      COIN_OPTIONS = COIN_ORDER
+        .filter(slug => bySlug.has(slug))
+        .map(slug => bySlug.get(slug));
+
+      COIN_META = COIN_OPTIONS.reduce((acc, o) => (acc[o.slug] = o, acc), {});
+    }
+
+    function populateCoinSelect() {
+      if (!coinSelect) return;
+      coinSelect.innerHTML = COIN_OPTIONS
+        .map(o => `<option value="${o.slug}">${o.label}</option>`)
+        .join('');
+    }
+
+    function setCoinType(slug) {
+      const image = visibleImages[currentIndex];
+      if (!image || !isCoinFile(image.filename)) return;
+
+      const meta = COIN_META[slug];
+      const oldFilename = image.filename;
+      const newFilename = coinFilenameForSlug(slug);
+
+      // persist
+      setStoredCoinSlug(slug);
+
+      // modal image + URL
+      modalImg.src = `final_frames/${newFilename}`;
+      modalImg.alt = meta?.title || image.title || slug;
+      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
+
+      // update modal links
+      setModalLinks({
+        x: meta?.latest_x || '',
+        nostr: meta?.latest_nostr || '',
+        youtube: meta?.latest_youtube || ''
+      });
+
+      // update in-memory model (so grid/modal text is consistent)
+      Object.assign(visibleImages[currentIndex], {
+        filename: newFilename,
+        title: meta?.title || image.title,
+        description: meta?.description || image.description,
+        latest_x: meta?.latest_x || '',
+        latest_nostr: meta?.latest_nostr || '',
+        latest_youtube: meta?.latest_youtube || ''
+      });
+
+      // live update grid title/desc and thumb
+      const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
+      if (titleEl) titleEl.textContent = meta?.title || image.title;
+
+      const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
+      if (descEl) descEl.textContent = meta?.description || image.description;
+
+      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+      if (thumb) {
+        thumb.src = `final_frames/${newFilename}`;
+        thumb.alt = meta?.title || image.title || slug;
+      }
+      const cardContainer = thumb ? thumb.closest('.chart-container') : null;
+      if (cardContainer) {
+        const tip = (meta?.description || meta?.title || slug);
+        cardContainer.setAttribute('title', tip);
+      }
+
+      // migrate favorites from old -> new filename (same pattern as BVG/DAL)
+      let favs = getFavorites();
+      const pos = favs.indexOf(oldFilename);
+      if (pos !== -1) {
+        favs.splice(pos, 1);
+        if (!favs.includes(newFilename)) favs.push(newFilename);
+        saveFavorites(favs);
+        modalFavBtn.classList.add('filled');
+        modalFavBtn.textContent = '★';
+      }
+      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
+      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
+
+      updateModalSafePadding();
+    }
+
+    coinSelect?.addEventListener('change', (e) => setCoinType(e.target.value));
+
+    function cycleCoinType(direction) {
+      if (!coinSelect || COIN_OPTIONS.length === 0) return;
+      const slugs = COIN_OPTIONS.map(o => o.slug);
+      const currentSlug = coinSelect.value || getStoredCoinSlug();
+      const idx = slugs.indexOf(currentSlug);
+      if (idx === -1) return;
+
+      const delta = direction === 'up' ? -1 : 1;
+      const len = slugs.length;
+      const newIdx = (idx + delta + len) % len;
+
+      const nextSlug = slugs[newIdx];
+      coinSelect.value = nextSlug;
+      setCoinType(nextSlug);
+    }
 
     function isDominanceFile(fname) { return fname.startsWith(DOM_BASE); }
     function domUnitFromFilename(fname) { return /_btc\.png$/.test(fname) ? 'btc' : 'usd'; }
@@ -1271,72 +1461,48 @@
       const fname = image.filename;
 
       if (isBvgFile(fname)) {
-        // BVG
-        showYearControls(true);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-
-        const fromFilename = extractBvgYear(fname);
-        const chosenYear = fromFilename || getStoredBvgYear();
+        showYearControls(true); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+        const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
         yearSelect.value = chosenYear;
         setBvgYear(chosenYear);
       } else if (isDominanceFile(fname)) {
-        // Bitcoin Dominance
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(true);
-
-        const fromFileUnit = domUnitFromFilename(fname);
-        const chosenUnit = fromFileUnit || getStoredDominanceUnit();
-        dominanceSelect.value = chosenUnit;
-        setDominanceUnit(chosenUnit);
+        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(true); showCoinControls(false);
+        const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
+        dominanceSelect.value = unit;
+        setDominanceUnit(unit);
       } else if (isDalFile(fname)) {
-        // DAL
-        showYearControls(false);
-        showScaleControls(true);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-  
-        const fromFilenameScale = dalScaleFromFilename(fname);
-        const chosenScale = fromFilenameScale || getStoredDalScale();
-        scaleSelect.value = chosenScale;
-        setDalScale(chosenScale);
-
+        showYearControls(false); showScaleControls(true); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+        const sc = dalScaleFromFilename(fname) || getStoredDalScale();
+        scaleSelect.value = sc;
+        setDalScale(sc);
       } else if (isPriceOfFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(true);
-        showDominanceControls(false);
-
+        showYearControls(false); showScaleControls(false); showPriceOfControls(true); showDominanceControls(false); showCoinControls(false);
         populatePriceOfSelect();
-
-        const fromSlug = pofSlugFromFilename(fname);
-        let chosenSlug = fromSlug || getStoredPofItem();
+        let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
         if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
-          chosenSlug = PRICE_OF_OPTIONS.find(o => o.slug === 'ground_beef')?.slug
-                    || PRICE_OF_OPTIONS[0]?.slug;
+          chosenSlug = PRICE_OF_OPTIONS.find(o => o.slug === 'ground_beef')?.slug || PRICE_OF_OPTIONS[0]?.slug;
         }
         priceOfSelect.value = chosenSlug;
-
-        // Apply links immediately, then finalize via setPriceOfItem
         const meta = PRICE_OF_META[chosenSlug];
         if (meta) applyPostLinksFromMeta(meta);
-
         setPriceOfItem(chosenSlug);
+      } else if (isCoinFile(fname)) {
+        // --- NEW: Coins ---
+        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(true);
+        populateCoinSelect();
+        let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
+        if (!COIN_OPTIONS.some(o => o.slug === chosen)) {
+          chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
+        }
+        coinSelect.value = chosen;
+        setCoinType(chosen);
       } else {
         // Normal images
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-
+        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
         modalImg.src = `final_frames/${fname}`;
         modalImg.alt = image.title;
         history.replaceState(null, '', `/${fname.replace('.png', '')}`);
       }
-      updateModalSafePadding();
 
       // Star state (uses possibly-updated filename)
       const isFav = isFavorite(visibleImages[currentIndex].filename);
@@ -1628,6 +1794,22 @@
         // Auto-build the list of "price_of_*" options from imageList
         buildPriceOfOptionsFromList(imageList);
         populatePriceOfSelect();
+        
+        /* ---------- NEW: Coins group setup ---------- */
+        buildCoinOptionsFromList(imageList);
+        populateCoinSelect();
+
+        // Extract coins and non-coins
+        const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
+        const coinsAll = imageList.filter(img => coinSet.has(img.filename));
+        const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
+
+        // Determine where to insert the single coin card:
+        // place it at the index where the first coin originally appeared (fallback: after Dominance; or end)
+        const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
+        let insertIdx = firstCoinIdx !== -1 ? firstCoinIdx
+                      : nonCoins.findIndex(img => img.filename.startsWith('bitcoin_dominance')) + 1;
+        if (insertIdx < 0) insertIdx = nonCoins.length;
 
         // Deep-link handling
         const initialFilename = getImageNameFromPath(); // you already have this
@@ -1638,6 +1820,40 @@
             urlPofSlug = s;
             setStoredPofItem(s); // persist only if valid
           }
+        }
+        let urlCoinSlug = null;
+        if (initialFilename && coinSet.has(initialFilename)) {
+          const s = coinSlugFromFilename(initialFilename);
+          if (s && COIN_ORDER.includes(s)) {
+            urlCoinSlug = s;
+            setStoredCoinSlug(s);
+          }
+        }
+        // Build coin card seeded with stored/URL selection; default to 'wholecoins'
+        const storedCoinSlug = getStoredCoinSlug();
+        const repCoinMeta = COIN_META[storedCoinSlug] || COIN_META['wholecoins'] || COIN_OPTIONS[0];
+
+        let coinCard = null;
+        if (repCoinMeta) {
+          coinCard = {
+            filename: coinFilenameForSlug(repCoinMeta.slug),
+            title: repCoinMeta.title,
+            description: repCoinMeta.description,
+            latest_x: repCoinMeta.latest_x || '',
+            latest_nostr: repCoinMeta.latest_nostr || '',
+            latest_youtube: repCoinMeta.latest_youtube || ''
+          };
+        }
+
+        // Compose new imageList with ONE coin card
+        if (coinCard) {
+          imageList = [
+            ...nonCoins.slice(0, insertIdx),
+            coinCard,
+            ...nonCoins.slice(insertIdx)
+          ];
+        } else {
+          imageList = nonCoins; // if somehow no coin data exists
         }
 
         const storedPofSlug = getStoredPofItem();
@@ -1762,6 +1978,13 @@
           } else if (urlDomUnit) {
             openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
             if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DOM_BASE));
+          } else if (coinSet.has(initialFilename)) {
+            // NEW: coin deep links
+            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+            if (openIdx === -1) {
+              // find the single coin card by checking any coin filename match
+              openIdx = visibleImages.findIndex(img => isCoinFile(img.filename));
+            }
           } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
             openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
           }
@@ -1800,6 +2023,7 @@
       handleVerticalSwipe();
     });
 
+    /* ===== Key handling: add coins to ↑/↓ cycling ===== */
     document.addEventListener('keydown', (e) => {
       if (modal.style.display === 'flex') {
         if (e.key === 'ArrowLeft') {
@@ -1810,37 +2034,18 @@
           e.preventDefault();
           closeModal();
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-          // Handle Up/Down inside modal for series with filters
           const currentFile = visibleImages[currentIndex]?.filename || "";
-
           if (isBvgFile(currentFile)) {
-            e.preventDefault();
-            if (e.key === 'ArrowUp') {
-              cycleBvgYear('up');
-            } else {
-              cycleBvgYear('down');
-            }
-          } else if (typeof isDalFile === 'function' && isDalFile(currentFile)) {
-            e.preventDefault();
-            if (e.key === 'ArrowUp') {
-              cycleDalScale('up');
-            } else {
-              cycleDalScale('down');
-            }
-          } else if (typeof isDominanceFile === 'function' && isDominanceFile(currentFile)) {
-            e.preventDefault();
-            if (e.key === 'ArrowUp') {
-              cycleDominance('up');
-            } else {
-              cycleDominance('down');
-            }
-          } else if (typeof isPriceOfFile === 'function' && isPriceOfFile(currentFile)) {
-            e.preventDefault();
-            if (e.key === 'ArrowUp') {
-              cyclePriceOf('up');
-            } else {
-              cyclePriceOf('down');
-            }
+            e.preventDefault(); e.key === 'ArrowUp' ? cycleBvgYear('up') : cycleBvgYear('down');
+          } else if (isDalFile(currentFile)) {
+            e.preventDefault(); e.key === 'ArrowUp' ? cycleDalScale('up') : cycleDalScale('down');
+          } else if (isDominanceFile(currentFile)) {
+            e.preventDefault(); e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
+          } else if (isPriceOfFile(currentFile)) {
+            e.preventDefault(); e.key === 'ArrowUp' ? cyclePriceOf('up') : cyclePriceOf('down');
+          } else if (isCoinFile(currentFile)) {
+            // --- NEW: coin cycle ---
+            e.preventDefault(); e.key === 'ArrowUp' ? cycleCoinType('up') : cycleCoinType('down');
           }
         }
       }
