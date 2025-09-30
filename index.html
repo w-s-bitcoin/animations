@@ -1,460 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wicked Smart Bitcoin</title>
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <!-- <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon_32x32.png"> -->
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+
   <style>
+    /* ===========================
+       THEME / GLOBAL ELEMENTS
+       =========================== */
+    :root {
+      --bg: #0f0f0f;
+      --fg: #f4f4f4;
+      --muted: #777;
+      --ink: #fff;
+      --ink-dim: #ccc;
+      --border: #333;
+      --panel: #1a1a1a;
+      --brand: #f7931a;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      background-color: #0f0f0f;
-      color: #f4f4f4;
+      background-color: var(--bg);
+      color: var(--fg);
       font-family: monospace;
       margin: 2rem;
       text-align: center;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-    .controls-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      margin: 1rem 0;
-      flex-wrap: wrap;
-    }
-    .toggle-icons {
-      display: inline-flex;
-      gap: 1rem;
-      justify-content: center;
-    }
-    .toggle-icon {
-      padding: 0.005rem 0.02rem;
-      border: 1px solid #f7931a;
-      cursor: pointer;
-      border-radius: 6px;
-      background-color: #1a1a1a;
-      color: #f7931a;
-      font-size: 1.2rem;
-      box-shadow: none;
-      transition: box-shadow 0.2s, background-color 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-    }
-    .toggle-icon.active {
-      box-shadow: 0 0 8px #f7931a;
-      background-color: #333;
-    }
-    .icon-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 1px;
-      width: 16px;
-      height: 16px;
-    }
-    .icon-grid div {
-      background-color: #f7931a;
-      width: 100%;
-      height: 100%;
-    }
-    .icon-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      width: 20px;
-    }
-    .icon-list div {
-      background-color: #f7931a;
-      height: 2px;
-      width: 100%;
-    }
-    .search-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .search-btn {
-      width: 32px;
-      height: 32px;
-      padding: 0.005rem 0.02rem;
-      border: 1px solid #f7931a;
-      border-radius: 6px;
-      background-color: #1a1a1a;
-      color: #f7931a;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .search-input {
-      height: 32px;
-      width: 0;
-      opacity: 0;
-      transition: width 0.3s ease, opacity 0.3s ease;
-      background-color: #1a1a1a;
-      border: 1px solid #f7931a;
-      color: #f4f4f4;
-      padding: 0 0.5rem;
-      font-family: monospace;
-      font-size: 1rem;
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-    .search-container.active .search-input {
-      width: 200px;
-      opacity: 1;
-    }
-    .image-grid {
-      margin-top: 2rem;
-      gap: 2rem;
-    }
-    .image-grid.grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-    }
-    .image-grid.grid > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .image-grid.list {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .image-grid.list > div {
-      width: 90vw;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .chart-container {
-      position: relative;
-      width: 100%;
-      max-width: 100%;
-    }
-    .chart-description {
-      position: absolute;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 0.5rem;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      overflow-wrap: break-word;
-      word-break: break-word;
-      text-align: center;
-    }
-    .image-grid.grid .chart-description {
-      font-size: 0.9rem;
-    }
-    .image-grid.list .chart-description {
-      font-size: 1.4rem;
-    }
-    .chart-container:hover .chart-description {
-      opacity: 1;
-    }
-    .chart {
-      max-width: 100%;
-      border: 1px solid #333;
-      border-radius: 8px;
-      width: 100%;
-    }
-    .chart-title {
-      margin-bottom: 0.5rem;
-      min-height: 2.5rem;
-      display: flex;
-      align-items: flex-end;
-      text-align: center;
-      justify-content: center;
-    }
-    .image-grid.grid .chart-title {
-      font-size: 1rem;
-    }
-    .image-grid.list .chart-title {
-      font-size: 1.6rem;
-    }
-    a {
-      color: #f7931a;
-      text-decoration: none;
-    }
+
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    a  { color: var(--brand); text-decoration: none; }
+
     footer {
       margin-top: 4rem;
       font-size: 0.9rem;
-      color: #777;
-    }
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      flex-direction: column;
-      touch-action: pan-y;
-    }
-
-    .modal img {
-      max-width: 95vw;
-      max-height: 88vh;
-    }
-    
-    .modal-controls {
-      position: absolute;
-      top: 0.5rem;
-      left: 1rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      padding-bottom: 0.5rem;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      flex-wrap: wrap;
-      row-gap: 0.25rem;
-    }
-
-    .modal-controls.hidden {
-      transform: translateY(-100%);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Modal post links (X / Nostr / YouTube) */
-    .modal-link {
-      color: #f7931a;                 /* active orange */
-      display: inline-flex;
-      align-items: center;
-    }
-
-    /* Make SVGs inherit the link color (overrides inline fill on the SVGs) */
-    .modal-link svg { fill: currentColor !important; transition: color .2s, opacity .2s; }
-
-    /* Disabled (dead) links: dark gray and no clicks or focus */
-    .modal-link.disabled {
-      color: #444;
-      opacity: 0.7;
-      pointer-events: none;           /* no clicks */
-      cursor: default;
-    }
-    .modal-link.disabled:focus { outline: none; }
-
-    @media (max-width: 640px) {
-      #year-controls {
-        flex-basis: 100%;   /* NEW: takes full row, wraps under the first line */
-        margin-left: 0;     /* NEW: align with the X */
-      }
-    }
-    @media (max-width: 640px) {
-      #scale-controls {
-        flex-basis: 100%;
-        margin-left: 0;
-      }
-    }
-
-    @media (max-width: 900px) and (orientation: landscape) {
-      .modal {
-        padding-top: var(--controls-offset, 1.5rem);  /* was 3rem */
-      }
-      .modal img {
-        max-height: calc(88vh - var(--controls-offset, 1.5rem));  /* was 3rem */
-      }
-    }
-
-    @supports (padding: max(0px)) {
-      @media (max-width: 900px) and (orientation: landscape) {
-        .modal {
-          padding-top: max(var(--controls-offset, 1.5rem), env(safe-area-inset-top)); /* was 3rem */
-        }
-      }
-    }
-
-    .close-btn {
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-    /* Force active modal links to your original orange */
-    .modal-controls .modal-link {
-      color: #f7931a;                 /* active (enabled) */
-    }
-
-    /* Keep disabled look */
-    .modal-controls .modal-link.disabled {
-      color: #444;
-      opacity: 0.7;
-      pointer-events: none;
-      cursor: default;
-    }
-
-    /* Make SVGs inherit the link color */
-    .modal-controls .modal-link svg {
-      fill: currentColor !important;
-    }
-
-    /* Optional: keep orange on hover/focus for enabled links */
-    .modal-controls .modal-link:not(.disabled):hover,
-    .modal-controls .modal-link:not(.disabled):focus {
-      color: #f7931a;
-      opacity: 1;
-    }
-    .search-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      position: relative;
-    }
-
-    .search-btn {
-      width: 32px;
-      height: 32px;
-      padding: 0.005rem 0.02rem;
-      border: 1px solid #f7931a;
-      border-radius: 6px;
-      background-color: #1a1a1a;
-      color: #f7931a;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .search-btn.active {
-      box-shadow: 0 0 8px #f7931a;
-      background-color: #333;
-    }
-
-    .search-input {
-      height: 32px;
-      width: 0;
-      opacity: 0;
-      transition: width 0.3s ease, opacity 0.3s ease;
-      background-color: #1a1a1a;
-      border: 1px solid #f7931a;
-      color: #f4f4f4;
-      padding: 0 0.5rem;
-      font-family: monospace;
-      font-size: 1rem;
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-
-    .search-container.active .search-input {
-      width: 200px;
-      opacity: 1;
-    }
-
-    .chart-container {
-      position: relative;
-      width: 100%;
-    }
-
-    .chart-wrapper {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%;
-      background-color: #111;
-      overflow: hidden;
-      border: 1px solid #333;
-      border-radius: 8px;
-    }
-
-    .chart-wrapper img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 8px;
-    }
-
-    .chart-loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 4px solid #444;
-      border-top: 4px solid #f7931a;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      animation: spin 1s linear infinite;
-      z-index: 1;
-      border-radius: 50%;
-    }
-
-    .favorite-star {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      font-size: 1.5rem;
-      color: #f7931a;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      cursor: pointer;
-      z-index: 2;
-    }
-
-    .chart-container:hover .favorite-star,
-    .favorite-star.filled {
-      opacity: 1;
-    }
-
-    #favoritesToggle {
-      font-size: 1.5rem; /* slightly larger than the default 1.2rem */
-      line-height: 1;
-    }
-
-    #favoritesToggle.active {
-      box-shadow: 0 0 8px #f7931a;
-      background-color: #333;
-      color: #f7931a;
-    }
-
-    .favorites-toggle-star {
-      display: inline-block;
-      transform: translateY(-1.5px);
-    }
-
-    #modal-fav-btn {
-      font-size: 1.3rem;  /* slightly smaller than 1.5rem */
-      line-height: 1;
-      padding: 0;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-top: 0.1rem;
-    }
-
-    #modal-fav-btn.filled {
-      color: #f7931a;
+      color: var(--muted);
     }
 
     #version-info {
@@ -464,145 +47,301 @@
       font-family: monospace;
     }
 
+    /* ===========================
+       TOP CONTROLS (layout/search/favorites)
+       =========================== */
+    .controls-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    /* Toggle icons (grid/list) */
+    .toggle-icons {
+      display: inline-flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .toggle-icon {
+      padding: 0.005rem 0.02rem;
+      border: 1px solid var(--brand);
+      cursor: pointer;
+      border-radius: 6px;
+      background-color: var(--panel);
+      color: var(--brand);
+      font-size: 1.2rem;
+      transition: box-shadow 0.2s, background-color 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px;
+      box-shadow: none;
+    }
+    .toggle-icon.active { box-shadow: 0 0 8px var(--brand); background-color: #333; }
+
+    /* Grid icon visual */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1px;
+      width: 16px; height: 16px;
+    }
+    .icon-grid div { background-color: var(--brand); width: 100%; height: 100%; }
+
+    /* List icon visual */
+    .icon-list { display: flex; flex-direction: column; gap: 1px; width: 20px; }
+    .icon-list div { background-color: var(--brand); height: 2px; width: 100%; }
+
+    /* Favorites "★" in the top row */
+    #favoritesToggle { font-size: 1.5rem; line-height: 1; }
+    #favoritesToggle.active { box-shadow: 0 0 8px var(--brand); background-color: #333; color: var(--brand); }
+    .favorites-toggle-star { display: inline-block; transform: translateY(-1.5px); }
+
+    /* Search affordance */
+    .search-container {
+      display: flex; align-items: center; gap: 0.5rem; position: relative;
+    }
+    .search-btn {
+      width: 32px; height: 32px;
+      padding: 0.005rem 0.02rem;
+      border: 1px solid var(--brand);
+      border-radius: 6px;
+      background-color: var(--panel);
+      color: var(--brand);
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .search-btn.active { box-shadow: 0 0 8px var(--brand); background-color: #333; }
+
+    .search-input {
+      height: 32px; width: 0; opacity: 0;
+      transition: width 0.3s ease, opacity 0.3s ease;
+      background-color: var(--panel);
+      border: 1px solid var(--brand);
+      color: var(--fg);
+      padding: 0 0.5rem;
+      font-family: monospace; font-size: 1rem;
+      border-radius: 6px;
+    }
+    .search-container.active .search-input { width: 200px; opacity: 1; }
+
+    /* ===========================
+       GRID / LIST LAYOUT
+       =========================== */
+    .image-grid { margin-top: 2rem; gap: 2rem; }
+    .image-grid.grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .image-grid.grid > div { display: flex; flex-direction: column; align-items: center; }
+
+    .image-grid.list { display: flex; flex-direction: column; align-items: center; }
+    .image-grid.list > div { width: 90vw; display: flex; flex-direction: column; align-items: center; }
+
+    /* ===========================
+       CHART CARDS
+       =========================== */
+    .chart-title {
+      margin-bottom: 0.5rem;
+      min-height: 2.5rem;
+      display: flex; align-items: flex-end; justify-content: center; text-align: center;
+    }
+    .image-grid.grid .chart-title { font-size: 1rem; }
+    .image-grid.list .chart-title { font-size: 1.6rem; }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    /* Intrinsic ratio wrapper for thumbs */
+    .chart-wrapper {
+      position: relative; width: 100%;
+      padding-top: 56.25%;
+      background-color: #111;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .chart-wrapper img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: contain; border-radius: 8px;
+    }
+
+    /* Loading spinner (hidden after image load) */
+    .chart-loading {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border: 4px solid #444; border-top: 4px solid var(--brand);
+      border-radius: 50%; width: 32px; height: 32px;
+      animation: spin 1s linear infinite; z-index: 1;
+    }
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    .year-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
-    .year-controls.show { display: inline-flex; }
+    /* Hover description overlay (grid/list sizes differ) */
+    .chart-description {
+      position: absolute; bottom: 0;
+      background: rgba(0,0,0,0.7); color: #fff;
+      width: 100%; padding: 0.5rem;
+      opacity: 0; transition: opacity 0.3s ease;
+      overflow-wrap: break-word; word-break: break-word; text-align: center;
+      box-sizing: border-box;
+    }
+    .chart-container:hover .chart-description { opacity: 1; }
+    .image-grid.grid .chart-description { font-size: 0.9rem; }
+    .image-grid.list .chart-description { font-size: 1.4rem; }
 
-    /* wrapper to draw custom triangles */
+    /* Per-card favorite star (top-right) */
+    .favorite-star {
+      position: absolute; top: 6px; right: 6px;
+      font-size: 1.5rem; color: var(--brand);
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 50%; width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s ease; cursor: pointer; z-index: 2;
+    }
+    .chart-container:hover .favorite-star, .favorite-star.filled { opacity: 1; }
+
+    /* ===========================
+       MODAL (lightbox)
+       =========================== */
+    .modal {
+      position: fixed; inset: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.9);
+      display: none; justify-content: center; align-items: center;
+      z-index: 9999; flex-direction: column;
+      touch-action: pan-y;
+    }
+    .modal img { max-width: 95vw; max-height: 88vh; }
+
+    /* Modal controls bar */
+    .modal-controls {
+      position: absolute; top: 0.5rem; left: 1rem;
+      display: flex; gap: 1rem; align-items: center;
+      padding-bottom: 0.5rem; transition: transform 0.3s ease, opacity 0.3s ease;
+      flex-wrap: wrap; row-gap: 0.25rem;
+    }
+    .modal-controls.hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+
+    .close-btn {
+      font-size: 2rem; background: none; border: none; color: white; cursor: pointer;
+    }
+
+    /* Post links (X / Nostr / YouTube) in the modal */
+    .modal-link {
+      color: var(--brand);
+      display: inline-flex; align-items: center;
+    }
+    .modal-link svg { fill: currentColor !important; transition: color .2s, opacity .2s; }
+
+    /* Disabled (dead) links */
+    .modal-link.disabled {
+      color: #444; opacity: 0.7; pointer-events: none; cursor: default;
+    }
+    .modal-link.disabled:focus { outline: none; }
+
+    /* Ensure active modal links retain brand color & hover behavior */
+    .modal-controls .modal-link { color: var(--brand); }
+    .modal-controls .modal-link:not(.disabled):hover,
+    .modal-controls .modal-link:not(.disabled):focus {
+      color: var(--brand); opacity: 1;
+    }
+
+    /* Modal favorite button star size/active color */
+    #modal-fav-btn {
+      font-size: 1.3rem; line-height: 1; padding: 0;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      padding-top: 0.1rem;
+    }
+    #modal-fav-btn.filled { color: var(--brand); }
+
+    /* Small-screen landscape: make room above image for control bar */
+    @media (max-width: 900px) and (orientation: landscape) {
+      .modal { padding-top: var(--controls-offset, 1.5rem); }
+      .modal img { max-height: calc(88vh - var(--controls-offset, 1.5rem)); }
+    }
+    @supports (padding: max(0px)) {
+      @media (max-width: 900px) and (orientation: landscape) {
+        .modal { padding-top: max(var(--controls-offset, 1.5rem), env(safe-area-inset-top)); }
+      }
+    }
+
+    /* ===========================
+       DROPDOWN CONTROLS IN MODAL
+       (BVG year / DAL scale / Dominance / Price Of / Coins)
+       =========================== */
+    .year-controls,
+    .scale-controls,
+    .dominance-controls,
+    .priceof-controls,
+    .coin-controls {
+      display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem;
+    }
+    .year-controls.show,
+    .scale-controls.show,
+    .dominance-controls.show,
+    .priceof-controls.show,
+    .coin-controls.show {
+      display: inline-flex;
+    }
+
+    /* Minimal select look */
     .select-wrap { position: relative; display: inline-block; line-height: 1; }
-
-    /* transparent, no border, same font */
-    #year-select {
-      font-family: monospace;
-      font-size: 1rem;
-      color: #fff;
-      background: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding-right: 1.6rem;           /* space for triangles */
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-    }
-
-    #scale-select {
-      font-family: monospace;
-      font-size: 1rem;
-      color: #fff;
-      background: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
+    #year-select, #scale-select, #dominance-select, #priceof-select, #coin-select {
+      font-family: monospace; font-size: 1rem; color: #fff;
+      background: transparent; border: none; outline: none; cursor: pointer;
       padding-right: 1.6rem;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none;
     }
 
-    /* Hide by default; show only when .show is added */
-    .dominance-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
-    .dominance-controls.show { display: inline-flex; }
-
-    @media (max-width: 640px) {
-      #dominance-controls { flex-basis: 100%; margin-left: 0; }
-    }
-
-    /* Match the minimal select look */
-    #dominance-select {
-      font-family: monospace;
-      font-size: 1rem;
-      color: #fff;
-      background: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding-right: 1.6rem;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-    }
-
-    .scale-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
-    .scale-controls.show { display: inline-flex; }
-
-    /* Price-of controls */
-    .priceof-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
-    .priceof-controls.show { display: inline-flex; }
-
-    /* Wrap under the X on small screens */
-    @media (max-width: 640px) {
-      #priceof-controls { flex-basis: 100%; margin-left: 0; }
-    }
-
-    /* Match the minimal select look */
-    #priceof-select {
-      font-family: monospace;
-      font-size: 1rem;
-      color: #fff;
-      background: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding-right: 1.6rem;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-    }
-
-    .coin-controls { display: none; align-items: center; gap: 0.4rem; margin-left: 0.25rem; }
-    .coin-controls.show { display: inline-flex; }
-
-    @media (max-width: 640px) {
-      #coin-controls { flex-basis: 100%; margin-left: 0; }
-    }
-
-    #coin-select {
-      font-family: monospace;
-      font-size: 1rem;
-      color: #fff;
-      background: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding-right: 1.6rem;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-    }
-
-    /* custom ▼ */
+    /* Custom ▲ & ▼ carets */
     .select-wrap::after {
       content: "";
-      position: absolute;
-      right: 0.35rem; top: 50%;
+      position: absolute; right: 0.35rem; top: 50%;
       width: 0; height: 0; pointer-events: none;
       border-left: 5px solid transparent; border-right: 5px solid transparent;
-      border-top: 6px solid #fff;      /* ▼ orange */
+      border-top: 6px solid #fff;
       transform: translateY(25%);
     }
-
-    /* custom ▲ */
     .select-wrap::before {
       content: "";
-      position: absolute;
-      right: 0.35rem; top: 50%;
+      position: absolute; right: 0.35rem; top: 50%;
       width: 0; height: 0; pointer-events: none;
       border-left: 5px solid transparent; border-right: 5px solid transparent;
-      border-bottom: 6px solid #fff;   /* ▲ orange */
+      border-bottom: 6px solid #fff;
       transform: translateY(-125%);
     }
 
+    /* Wrap certain controls under the first row on small screens */
+    @media (max-width: 640px) {
+      #year-controls, #scale-controls, #dominance-controls, #priceof-controls, #coin-controls {
+        flex-basis: 100%; margin-left: 0;
+      }
+    }
   </style>
 </head>
+
 <body>
   <h1>Wicked Smart Bitcoin</h1>
   <p>Bitcoin Visualizations Updated Daily</p>
+
+  <!-- ===========================
+       TOP CONTROLS
+       =========================== -->
   <div class="controls-row">
+    <!-- Grid / List toggles -->
     <div class="toggle-icons" id="toggleIcons">
       <div class="toggle-icon active" id="gridView" onclick="setLayout('grid')">
         <div class="icon-grid">
@@ -612,53 +351,66 @@
         </div>
       </div>
       <div class="toggle-icon" id="listView" onclick="setLayout('list')">
-        <div class="icon-list">
-          <div></div><div></div><div></div><div></div>
-        </div>
+        <div class="icon-list"><div></div><div></div><div></div><div></div></div>
       </div>
     </div>
+
+    <!-- Favorites filter -->
     <div class="toggle-icon" id="favoritesToggle" onclick="toggleFavoritesView()" aria-label="Favorites">
       <span class="favorites-toggle-star">★</span>
     </div>
+
+    <!-- Search (expandable) -->
     <div class="search-container">
       <button id="search-btn" class="search-btn" onclick="toggleSearch()" aria-label="Search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15zm0 2a5.5 5.5 0 1 0 0 11a5.5 5.5 0 0 0 0-11zm8.03 12.47l3.25 3.25a1 1 0 1 1-1.41 1.41l-3.25-3.25a1 1 0 0 1 1.41-1.41z" fill="currentColor"/>
         </svg>
       </button>
-      <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="filterImages()" />
+      <input id="search-input" class="search-input" type="text" placeholder="Search..." oninput="filterImages()" />
     </div>
   </div>
 
+  <!-- ===========================
+       IMAGE GRID
+       =========================== -->
   <div class="image-grid grid" id="image-grid"></div>
   <div id="no-favorites-message" style="display:none; color:#ccc; font-size:1.2rem; margin-top:2rem;">
     No starred visualizations.
   </div>
+
+  <!-- ===========================
+       MODAL (Lightbox)
+       =========================== -->
   <div class="modal" id="modal">
     <div class="modal-controls">
+      <!-- Basic controls -->
       <button class="close-btn" onclick="closeModal()">×</button>
       <button class="close-btn" onclick="prevImage()">&#8249;</button>
       <button class="close-btn" onclick="nextImage()">&#8250;</button>
       <button id="modal-fav-btn" class="close-btn" onclick="toggleFavoriteFromModal()">★</button>
+
+      <!-- Post links -->
       <span style="color:white; font-size: 1rem; padding-left: 0.2rem; padding-top: 0.3rem;">Posts:</span>
       <a id="x-link" class="close-btn modal-link" href="#" target="_blank" aria-label="X/Twitter">
         <svg width="16" height="16" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>
       </a>
-
       <a id="nostr-link" class="close-btn modal-link" href="#" target="_blank" aria-label="Nostr">
         <svg height="20" viewBox="0 0 496 496"><path d="m374.82,278.35c.1,5.47-5.19,22.37-16.81,35.33-11.62,12.96-24.34,9.06-25.39,8.76s-1.34-1.94-3.43-1.64-4.17,2.68-8.19,3.13-7.6.74-11.32-.6c-1.94.3-2.23.31-3.13.97s-7.75,4.69-9.39,4.99c0,3.13-.6,19.37,0,24.29s1.64,11.17,3.28,15.64c1.64,4.47,1.19,4.62,3.28,4.32s5.81.15,6.85,1.79.6,2.83,2.38,3.58,26.37,7.45,43.21,8.34c11.62.3,18.62,1.19,22.65,8.49.6,3.43,3.28,5.66,4.92,6.11s3.58.89,5.21,2.53.45,3.58,2.38,5.07c1.94,1.49,6.41,3.72,11.03,5.96,4.62,2.23,6.56,5.81,6.85,7s.74,4.77.74,4.77c0,0-3.87,0-4.77-.89s-1.19-2.53-1.19-2.53c0,0-2.68.45-3.28,1.49s.3,1.19-3.43.3-5.07-1.64-7.9-3.72-7.15-7.45-10.88-7.3c1.79,3.58,2.53,3.58,4.62,4.77s3.58,2.53,3.58,2.53l-3.13,1.94s-1.94.89-6.41-.3c-4.47-1.19-5.07-1.94-5.51-4.62s0-4.02-1.19-6.26-1.79-6.85-9.68-9.24c-7.9-2.38-28.91-9.24-43.51-10.73-14.6-1.49-9.83-1.19-12.22-.6s-6.85,1.94-11.47-.6c-4.62-2.53-7.3-5.96-7.6-8.79s-.74-4.77,0-8.34,1.49-8.64.74-11.62-6.11-24.29-8.64-27.86c-5.66.45-22.05-.3-22.05-.3,0,0-1.04-.3-7.6,2.53-6.56,2.83-15.85,5.98-20.32,8.66-4.47,2.68-6.26,4.22-7,5.71.05,1.3-.53,3.35-1.21,3.94s-5.42,1.05-5.42,1.05c0,0-2.54,2.54-3.58,4.33-2.98,4.17-23.99,54.38-28.91,65.11-5.89,14.15-4.25,11.92-16.39,11.92s-3.5.13-3.5.13c0,0-5.36,2.55-7.3,2.55s-8.19-1.04-11.47,0-7.15,4.02-10.13,4.47c-2.98.45-2.15-.58-3.64-1.63-1.74-.09-6.2-.05-6.2-.05,0,0,.76-2.83,3.44-4.73,3.58-2.53,11.03-7,15.05-9.24,4.02-2.23,7.6-3.43,10.13-4.02,2.53-.6,8.05-2.68,13.26-4.32s8.49-3.58,12.96-13.71c4.47-10.13,21.9-48.42,22.35-50.51.28-1.29,1.62-2.81,2.09-6.56.29-2.32-1.08-5.67.74-9.83,4.77-10.88,9.39-8.79,11.47-8.79s7.45.15,11.47-.6c4.02-.74,6.7-1.19,10.73-3.43,4.02-2.23,4.92-3.87,4.92-3.87l-8.64-1.49s-8.05.3-10.88-1.94-6.7-6.85-6.7-6.85l-3.28-3.13.45,3.72s-2.23-3.87-2.83-4.47-3.72-2.83-4.92-4.92-3.28-10.88-3.28-10.88l-2.68,5.66-.74-8.19-2.23,3.13-1.19-7-2.09,3.58-1.49-6.26-2.53,1.94-1.04-4.47-2.53-1.49s-6.11-4.02-7.15-4.17-1.94,1.49-1.94,1.49l.6,5.21-5.3-2.72-3.04-5.17s1.02,1.74-4.18,3.27c-8.93,0-9.51-.99-10.83-1.71-.57-2.85-2.42-4.39-2.42-4.39h-8.94l-.15-2.98-3.43,1.34.3-4.47h-6.11l.45-4.92h-3.87s1.34-4.02,11.17-9.98c9.83-5.96,10.88-7.15,20.11-7.45,9.24-.3,14.3,1.19,20.11,3.58,5.81,2.38,16.84,5.96,19.07,7.6,4.92-4.32,12.37-8.64,14.9-8.64.45-1.04,2.69-5.36,7.81-7.65,15.34-6.87,46.99-14.78,57.16-15.45,13.56-.89,3.43-.6,16.99.89,13.56,1.49,23.54,3.28,30.25,5.51,5.46,1.82,10.88,4.17,14.9.89,1.88-.79,5.13-.58,7.75-2.23,13.34-10.9,15.09-14.06,18.96-18.23,3.87-4.17,8.75-10.83,9.8-19.62s1.94-25.33-4.62-38.29c-6.56-12.96-12.52-19.67-15.05-30.1-2.53-10.43-3.58-26.52-2.68-31.74s2.23-9.68,2.98-13.26,4.32-6.41,8.64-7.15c4.32-.74,7.75.6,9.68,2.09s5.06,2.73,5.81,4.47c.15.74-.6,2.83,3.58,3.58s6.97,1.81,6.97,1.81c0,0,6.8,1.87,1.35,3.36-5.51.89-8.92-.31-10.56.74s-3.13,4.38-4.17,4.83-3.13.15-5.21,1.79-4.17,2.98-5.51,6.26-2.38,6.85-1.49,11.62,3.72,13.71,6.26,18.77c2.53,5.07,8.79,17.73,10.58,20.71s6.85,12.81,7.3,23.39.45,19.22,0,23.84c-.45,4.62-4.71,22.45-15.44,37.35-3.54,6.14-10.09,13.86-10.72,15.22s-1.31,2.12-.7,3.32c2.01,3.93,5.59,9.62,6.39,12.7,1,2.89,3.04,7.01,3.14,12.48Z"/></svg>
       </a>
-
       <a id="youtube-link" class="close-btn modal-link" href="#" target="_blank" aria-label="YouTube">
         <svg height="20" viewBox="0 0 576 512"><path d="M549.7 124.1c-6.3-23.8-25-42.4-48.8-48.8C456.5 64 288 64 288 64s-168.5 0-212.9 11.3c-23.8 6.3-42.5 25-48.8 48.8C16 168.5 16 256 16 256s0 87.5 10.3 131.9c6.3 23.8 25 42.4 48.8 48.8C119.5 448 288 448 288 448s168.5 0 212.9-11.3c23.8-6.3 42.5-25 48.8-48.8C560 343.5 560 256 560 256s0-87.5-10.3-131.9zM232 336V176l142 80-142 80z"/></svg>
       </a>
-      <!-- Year dropdown for Bitcoin vs Gold -->
+
+      <!-- BVG: Year -->
       <span class="year-controls" id="year-controls">
         <span style="color:white; font-size: 1rem;">Starting Year:</span>
         <span class="select-wrap">
           <select id="year-select" aria-label="Choose year"></select>
         </span>
       </span>
+
+      <!-- DAL: Scale -->
       <span class="scale-controls" id="scale-controls">
         <span style="color:white; font-size: 1rem;">Scale:</span>
         <span class="select-wrap">
@@ -668,12 +420,16 @@
           </select>
         </span>
       </span>
+
+      <!-- Price Of: item -->
       <span class="priceof-controls" id="priceof-controls">
         <span style="color:white; font-size: 1rem;">Price of:</span>
         <span class="select-wrap">
           <select id="priceof-select" aria-label="Choose item"></select>
         </span>
       </span>
+
+      <!-- Dominance: unit -->
       <span class="dominance-controls" id="dominance-controls">
         <span style="color:white; font-size: 1rem;">Unit of Account:</span>
         <span class="select-wrap">
@@ -683,6 +439,8 @@
           </select>
         </span>
       </span>
+
+      <!-- Coins: type -->
       <span class="coin-controls" id="coin-controls">
         <span style="color:white; font-size: 1rem;">Type of Coin:</span>
         <span class="select-wrap">
@@ -690,15 +448,20 @@
         </span>
       </span>
     </div>
-    <img id="modal-img" src="" alt="Full size image">
+
+    <img id="modal-img" src="" alt="Full size image" />
   </div>
 
+  <!-- ===========================
+       FOOTER
+       =========================== -->
   <footer>
     <div class="social-icons" style="margin: 1rem 0; display: flex; justify-content: center; gap: 1.5rem; font-size: 1.5rem;">
       <a href="https://x.com/w_s_bitcoin" target="_blank" aria-label="X/Twitter" style="color: #444;">
-        <svg width="20" height="20" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>      </a>
+        <svg width="20" height="20" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>
+      </a>
       <a href="https://primal.net/wicked" target="_blank" aria-label="Nostr" style="color: #444;">
-        <svg height="24" viewBox="0 0 496 496" fill="currentColor"><path d="m374.82,278.35c.1,5.47-5.19,22.37-16.81,35.33-11.62,12.96-24.34,9.06-25.39,8.76s-1.34-1.94-3.43-1.64-4.17,2.68-8.19,3.13-7.6.74-11.32-.6c-1.94.3-2.23.31-3.13.97s-7.75,4.69-9.39,4.99c0,3.13-.6,19.37,0,24.29s1.64,11.17,3.28,15.64c1.64,4.47,1.19,4.62,3.28,4.32s5.81.15,6.85,1.79.6,2.83,2.38,3.58,26.37,7.45,43.21,8.34c11.62.3,18.62,1.19,22.65,8.49.6,3.43,3.28,5.66,4.92,6.11s3.58.89,5.21,2.53.45,3.58,2.38,5.07c1.94,1.49,6.41,3.72,11.03,5.96,4.62,2.23,6.56,5.81,6.85,7s.74,4.77.74,4.77c0,0-3.87,0-4.77-.89s-1.19-2.53-1.19-2.53c0,0-2.68.45-3.28,1.49s.3,1.19-3.43.3-5.07-1.64-7.9-3.72-7.15-7.45-10.88-7.3c1.79,3.58,2.53,3.58,4.62,4.77s3.58,2.53,3.58,2.53l-3.13,1.94s-1.94.89-6.41-.3c-4.47-1.19-5.07-1.94-5.51-4.62s0-4.02-1.19-6.26-1.79-6.85-9.68-9.24c-7.9-2.38-28.91-9.24-43.51-10.73-14.6-1.49-9.83-1.19-12.22-.6s-6.85,1.94-11.47-.6c-4.62-2.53-7.3-5.96-7.6-8.79s-.74-4.77,0-8.34,1.49-8.64.74-11.62-6.11-24.29-8.64-27.86c-5.66.45-22.05-.3-22.05-.3,0,0-1.04-.3-7.6,2.53-6.56,2.83-15.85,5.98-20.32,8.66-4.47,2.68-6.26,4.22-7,5.71.05,1.3-.53,3.35-1.21,3.94s-5.42,1.05-5.42,1.05c0,0-2.54,2.54-3.58,4.33-2.98,4.17-23.99,54.38-28.91,65.11-5.89,14.15-4.25,11.92-16.39,11.92s-3.5.13-3.5.13c0,0-5.36,2.55-7.3,2.55s-8.19-1.04-11.47,0-7.15,4.02-10.13,4.47c-2.98.45-2.15-.58-3.64-1.63-1.74-.09-6.2-.05-6.2-.05,0,0,.76-2.83,3.44-4.73,3.58-2.53,11.03-7,15.05-9.24,4.02-2.23,7.6-3.43,10.13-4.02,2.53-.6,8.05-2.68,13.26-4.32s8.49-3.58,12.96-13.71c4.47-10.13,21.9-48.42,22.35-50.51.28-1.29,1.62-2.81,2.09-6.56.29-2.32-1.08-5.67.74-9.83,4.77-10.88,9.39-8.79,11.47-8.79s7.45.15,11.47-.6c4.02-.74,6.7-1.19,10.73-3.43,4.02-2.23,4.92-3.87,4.92-3.87l-8.64-1.49s-8.05.3-10.88-1.94-6.7-6.85-6.7-6.85l-3.28-3.13.45,3.72s-2.23-3.87-2.83-4.47-3.72-2.83-4.92-4.92-3.28-10.88-3.28-10.88l-2.68,5.66-.74-8.19-2.23,3.13-1.19-7-2.09,3.58-1.49-6.26-2.53,1.94-1.04-4.47-2.53-1.49s-6.11-4.02-7.15-4.17-1.94,1.49-1.94,1.49l.6,5.21-5.3-2.72-3.04-5.17s1.02,1.74-4.18,3.27c-8.93,0-9.51-.99-10.83-1.71-.57-2.85-2.42-4.39-2.42-4.39h-8.94l-.15-2.98-3.43,1.34.3-4.47h-6.11l.45-4.92h-3.87s1.34-4.02,11.17-9.98c9.83-5.96,10.88-7.15,20.11-7.45,9.24-.3,14.3,1.19,20.11,3.58,5.81,2.38,16.84,5.96,19.07,7.6,4.92-4.32,12.37-8.64,14.9-8.64.45-1.04,2.69-5.36,7.81-7.65,15.34-6.87,46.99-14.78,57.16-15.45,13.56-.89,3.43-.6,16.99.89,13.56,1.49,23.54,3.28,30.25,5.51,5.46,1.82,10.88,4.17,14.9.89,1.88-.79,5.13-.58,7.75-2.23,13.34-10.9,15.09-14.06,18.96-18.23,3.87-4.17,8.75-10.83,9.8-19.62s1.94-25.33-4.62-38.29c-6.56-12.96-12.52-19.67-15.05-30.1-2.53-10.43-3.58-26.52-2.68-31.74s2.23-9.68,2.98-13.26,4.32-6.41,8.64-7.15c4.32-.74,7.75.6,9.68,2.09s5.06,2.73,5.81,4.47c.15.74-.6,2.83,3.58,3.58s6.97,1.81,6.97,1.81c0,0,6.8,1.87,1.35,3.36-5.51.89-8.92-.31-10.56.74s-3.13,4.38-4.17,4.83-3.13.15-5.21,1.79-4.17,2.98-5.51,6.26-2.38,6.85-1.49,11.62,3.72,13.71,6.26,18.77c2.53,5.07,8.79,17.73,10.58,20.71s6.85,12.81,7.3,23.39.45,19.22,0,23.84c-.45,4.62-4.71,22.45-15.44,37.35-3.54,6.14-10.09,13.86-10.72,15.22s-1.31,2.12-.7,3.32c2.01,3.93,5.59,9.62,6.39,12.7,1,2.89,3.04,7.01,3.14,12.48Z"/></svg>
+        <svg height="24" viewBox="0 0 496 512" fill="currentColor"><path d="m374.82,278.35c.1,5.47-5.19,22.37-16.81,35.33-11.62,12.96-24.34,9.06-25.39,8.76s-1.34-1.94-3.43-1.64-4.17,2.68-8.19,3.13-7.6.74-11.32-.6c-1.94.3-2.23.31-3.13.97s-7.75,4.69-9.39,4.99c0,3.13-.6,19.37,0,24.29s1.64,11.17,3.28,15.64c1.64,4.47,1.19,4.62,3.28,4.32s5.81.15,6.85,1.79.6,2.83,2.38,3.58,26.37,7.45,43.21,8.34c11.62.3,18.62,1.19,22.65,8.49.6,3.43,3.28,5.66,4.92,6.11s3.58.89,5.21,2.53.45,3.58,2.38,5.07c1.94,1.49,6.41,3.72,11.03,5.96,4.62,2.23,6.56,5.81,6.85,7s.74,4.77.74,4.77c0,0-3.87,0-4.77-.89s-1.19-2.53-1.19-2.53c0,0-2.68.45-3.28,1.49s.3,1.19-3.43.3-5.07-1.64-7.9-3.72-7.15-7.45-10.88-7.3c1.79,3.58,2.53,3.58,4.62,4.77s3.58,2.53,3.58,2.53l-3.13,1.94s-1.94.89-6.41-.3c-4.47-1.19-5.07-1.94-5.51-4.62s0-4.02-1.19-6.26-1.79-6.85-9.68-9.24c-7.9-2.38-28.91-9.24-43.51-10.73-14.6-1.49-9.83-1.19-12.22-.6s-6.85,1.94-11.47-.6c-4.62-2.53-7.3-5.96-7.6-8.79s-.74-4.77,0-8.34,1.49-8.64.74-11.62-6.11-24.29-8.64-27.86c-5.66.45-22.05-.3-22.05-.3,0,0-1.04-.3-7.6,2.53-6.56,2.83-15.85,5.98-20.32,8.66-4.47,2.68-6.26,4.22-7,5.71.05,1.3-.53,3.35-1.21,3.94s-5.42,1.05-5.42,1.05c0,0-2.54,2.54-3.58,4.33-2.98,4.17-23.99,54.38-28.91,65.11-5.89,14.15-4.25,11.92-16.39,11.92s-3.5.13-3.5.13c0,0-5.36,2.55-7.3,2.55s-8.19-1.04-11.47,0-7.15,4.02-10.13,4.47c-2.98.45-2.15-.58-3.64-1.63-1.74-.09-6.2-.05-6.2-.05,0,0,.76-2.83,3.44-4.73,3.58-2.53,11.03-7,15.05-9.24,4.02-2.23,7.6-3.43,10.13-4.02,2.53-.6,8.05-2.68,13.26-4.32s8.49-3.58,12.96-13.71c4.47-10.13,21.9-48.42,22.35-50.51.28-1.29,1.62-2.81,2.09-6.56.29-2.32-1.08-5.67.74-9.83,4.77-10.88,9.39-8.79,11.47-8.79s7.45.15,11.47-.6c4.02-.74,6.7-1.19,10.73-3.43,4.02-2.23,4.92-3.87,4.92-3.87l-8.64-1.49s-8.05.3-10.88-1.94-6.7-6.85-6.7-6.85l-3.28-3.13.45,3.72s-2.23-3.87-2.83-4.47-3.72-2.83-4.92-4.92-3.28-10.88-3.28-10.88l-2.68,5.66-.74-8.19-2.23,3.13-1.19-7-2.09,3.58-1.49-6.26-2.53,1.94-1.04-4.47-2.53-1.49s-6.11-4.02-7.15-4.17-1.94,1.49-1.94,1.49l.6,5.21-5.3-2.72-3.04-5.17s1.02,1.74-4.18,3.27c-8.93,0-9.51-.99-10.83-1.71-.57-2.85-2.42-4.39-2.42-4.39h-8.94l-.15-2.98-3.43,1.34.3-4.47h-6.11l.45-4.92h-3.87s1.34-4.02,11.17-9.98c9.83-5.96,10.88-7.15,20.11-7.45,9.24-.3,14.3,1.19,20.11,3.58,5.81,2.38,16.84,5.96,19.07,7.6,4.92-4.32,12.37-8.64,14.9-8.64.45-1.04,2.69-5.36,7.81-7.65,15.34-6.87,46.99-14.78,57.16-15.45,13.56-.89,3.43-.6,16.99.89,13.56,1.49,23.54,3.28,30.25,5.51,5.46,1.82,10.88,4.17,14.9.89,1.88-.79,5.13-.58,7.75-2.23,13.34-10.9,15.09-14.06,18.96-18.23,3.87-4.17,8.75-10.83,9.8-19.62s1.94-25.33-4.62-38.29c-6.56-12.96-12.52-19.67-15.05-30.1-2.53-10.43-3.58-26.52-2.68-31.74s2.23-9.68,2.98-13.26,4.32-6.41,8.64-7.15c4.32-.74,7.75.6,9.68,2.09s5.06,2.73,5.81,4.47c.15.74-.6,2.83,3.58,3.58s6.97,1.81,6.97,1.81c0,0,6.8,1.87,1.35,3.36-5.51.89-8.92-.31-10.56.74s-3.13,4.38-4.17,4.83-3.13.15-5.21,1.79-4.17,2.98-5.51,6.26-2.38,6.85-1.49,11.62,3.72,13.71,6.26,18.77c2.53,5.07,8.79,17.73,10.58,20.71s6.85,12.81,7.3,23.39.45,19.22,0,23.84c-.45,4.62-4.71,22.45-15.44,37.35-3.54,6.14-10.09,13.86-10.72,15.22s-1.31,2.12-.7,3.32c2.01,3.93,5.59,9.62,6.39,12.7,1,2.89,3.04,7.01,3.14,12.48Z"/></svg>
       </a>
       <a href="https://www.youtube.com/@wickedsmartbitcoin" target="_blank" aria-label="YouTube" style="color: #444;">
         <svg height="24" viewBox="0 0 576 512" fill="currentColor"><path d="M549.7 124.1c-6.3-23.8-25-42.4-48.8-48.8C456.5 64 288 64 288 64s-168.5 0-212.9 11.3c-23.8 6.3-42.5 25-48.8 48.8C16 168.5 16 256 16 256s0 87.5 10.3 131.9c6.3 23.8 25 42.4 48.8 48.8C119.5 448 288 448 288 448s168.5 0 212.9-11.3c23.8-6.3 42.5-25 48.8-48.8C560 343.5 560 256 560 256s0-87.5-10.3-131.9zM232 336V176l142 80-142 80z"/></svg>
@@ -712,1344 +475,1290 @@
   </footer>
 
   <script>
-    const imageGrid = document.getElementById('image-grid');
-    const toggleIcons = document.getElementById('toggleIcons');
-    let imageList = [];
-    let visibleImages = [];
-    let currentIndex = 0;
-    let justUnstarredInModal = false;
-    const modalFavBtn = document.getElementById('modal-fav-btn');
-    const gridIcon = document.getElementById('gridView');
-    const listIcon = document.getElementById('listView');
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modal-img');
-    let userSelectedLayout = null;
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let touchStartY = 0;
-    let touchEndY = 0;
-    const yearControls = document.getElementById('year-controls');
-    const yearSelect = document.getElementById('year-select');
-    const DAL_BASE = 'days_at_a_loss';
-    const DAL_STORAGE_KEY = 'dalScale';
-    const scaleControls = document.getElementById('scale-controls');
-    const scaleSelect   = document.getElementById('scale-select');
-    const DOM_BASE = 'bitcoin_dominance';
-    const DOM_STORAGE_KEY = 'dominanceUnit';
-    const dominanceControls = document.getElementById('dominance-controls');
-    const dominanceSelect   = document.getElementById('dominance-select');
-    const DOM_UNITS = ['usd','btc'];
+  /* ============================================================
+   * Gallery UI — Refactored & Organized
+   * - Functionality preserved; no fundamental behavior changes.
+   * - Grouped by purpose, tightened comments, small helpers.
+   * ============================================================
+   */
 
-    const COIN_STORAGE_KEY = 'coinType';  // persist selected coin slug
-    const coinControls = document.getElementById('coin-controls');
-    const coinSelect   = document.getElementById('coin-select');
+  /* ===========================
+   * DOM ELEMENTS
+   * =========================== */
+  const imageGrid         = document.getElementById('image-grid');
+  const toggleIcons       = document.getElementById('toggleIcons');
+  const gridIcon          = document.getElementById('gridView');
+  const listIcon          = document.getElementById('listView');
+  const modal             = document.getElementById('modal');
+  const modalImg          = document.getElementById('modal-img');
+  const modalFavBtn       = document.getElementById('modal-fav-btn');
 
-    // Desired order in dropdown and ↑/↓ cycling
-    const COIN_ORDER = [
-      'wholecoins',     // wholecoins.png
-      'pi_coins',       // pi_coins.png
-      'v_coins',        // v_coins.png
-      'x_coins',        // x_coins.png
-      'l_coins',        // l_coins.png
-      'c_coins',        // c_coins.png
-      'd_coins',        // d_coins.png
-      'm_coins'         // m_coins.png
-    ];
+  // Modal control groups + selects
+  const yearControls      = document.getElementById('year-controls');
+  const yearSelect        = document.getElementById('year-select');
 
-    // Will be filled from image_list.json
-    let COIN_OPTIONS = []; // [{slug, label, filename, title, description, latest_x, latest_nostr, latest_youtube}]
-    let COIN_META = {};    // { slug: { ...same fields... } }
+  const scaleControls     = document.getElementById('scale-controls');
+  const scaleSelect       = document.getElementById('scale-select');
 
-    function isCoinFile(fname) {
-      return /^(.+)\.png$/.test(fname) && COIN_ORDER.some(slug => `${slug}.png` === fname);
+  const dominanceControls = document.getElementById('dominance-controls');
+  const dominanceSelect   = document.getElementById('dominance-select');
+
+  const priceOfControls   = document.getElementById('priceof-controls');
+  const priceOfSelect     = document.getElementById('priceof-select');
+
+  const coinControls      = document.getElementById('coin-controls');
+  const coinSelect        = document.getElementById('coin-select');
+
+  /* ===========================
+   * GLOBAL STATE
+   * =========================== */
+  let imageList = [];            // Full list (post-processed after fetch)
+  let visibleImages = [];        // Filtered list currently rendered
+  let currentIndex = 0;          // Index in visibleImages of open modal
+  let justUnstarredInModal = false;
+
+  // Layout & search state
+  let userSelectedLayout = null; // 'grid' | 'list' when user manually sets
+  let showFavoritesOnly  = localStorage.getItem('showFavoritesOnly') === 'true';
+  let searchWasManuallyOpened = false;
+  let searchWasInitiallyClosed = true;
+
+  // Touch tracking for modal swipe gestures
+  let touchStartX = 0, touchEndX = 0;
+  let touchStartY = 0, touchEndY = 0;
+
+  /* ===========================
+   * CONSTANTS
+   * =========================== */
+
+  // --- Bitcoin vs Gold (BVG) ---
+  const BVG_BASE        = 'bitcoin_vs_gold';
+  const BVG_STORAGE_KEY = 'bvgYear';
+  // Years newest → oldest (2013..2025 inclusive)
+  const BVG_YEARS = Array.from({ length: 2025 - 2013 + 1 }, (_, i) => 2025 - i);
+
+  // --- Days At a Loss (DAL) ---
+  const DAL_BASE        = 'days_at_a_loss';
+  const DAL_STORAGE_KEY = 'dalScale';
+  // Dropdown order and ↑/↓ cycling order
+  const DAL_SCALES      = ['linear', 'log'];
+
+  // --- Dominance (USD/BTC) ---
+  const DOM_BASE         = 'bitcoin_dominance';
+  const DOM_STORAGE_KEY  = 'dominanceUnit';
+  const DOM_UNITS        = ['usd', 'btc'];
+
+  // --- Price Of (POF) group (price_of_*) ---
+  const POF_BASE         = 'price_of_';
+  const POF_STORAGE_KEY  = 'pofItem';          // cookie/localStorage slug (e.g., "ground_beef")
+  const POF_FAV_KEY      = 'price_of_*';       // Group favorite key
+  let PRICE_OF_OPTIONS   = [];                 // [{slug, label, filename}]
+  let PRICE_OF_META      = {};                 // { slug: { label, filename, title, description, latest_* } }
+
+  // --- Coins group (single card representing 8 coin visuals) ---
+  const COIN_STORAGE_KEY = 'coinType';         // Persist selected coin slug
+  const COIN_ORDER = [                          // Desired dropdown & cycling order
+    'wholecoins', 'pi_coins', 'v_coins', 'x_coins',
+    'l_coins', 'c_coins', 'd_coins', 'm_coins'
+  ];
+  let COIN_OPTIONS = [];                       // [{slug, label, filename, title, description, latest_*}]
+  let COIN_META    = {};                       // { slug: {...} }
+
+  /* ===========================
+   * GENERIC HELPERS
+   * =========================== */
+
+  // Cookies (used alongside localStorage for some selectors)
+  function setCookie(name, value, days = 365) {
+    const d = new Date();
+    d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/;SameSite=Lax`;
+  }
+  function getCookie(name) {
+    const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
+    return match ? decodeURIComponent(match.split('=')[1]) : null;
+  }
+
+  // Update URL for current modal (strip .png)
+  function replaceUrlForFilename(newFilename) {
+    history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
+  }
+
+  // Update the currently visible grid thumbnail (for the open modal image)
+  function updateGridThumbAtCurrent(newFilename, newAlt) {
+    const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+    if (thumb) {
+      thumb.src = `final_frames/${newFilename}`;
+      if (newAlt) thumb.alt = newAlt;
     }
-    function coinSlugFromFilename(fname) {
-      const m = fname.match(/^([a-z0-9_]+)\.png$/i);
-      return m ? m[1] : null;
+  }
+
+  // Migrate favorites when a filename-based variant changes (BVG/DAL/DOM/Coins)
+  function migrateFavoriteFilename(oldFilename, newFilename) {
+    let favs = getFavorites();
+    const pos = favs.indexOf(oldFilename);
+    if (pos !== -1) {
+      favs.splice(pos, 1);
+      if (!favs.includes(newFilename)) favs.push(newFilename);
+      saveFavorites(favs);
+      modalFavBtn.classList.add('filled');
+      modalFavBtn.textContent = '★';
     }
-    function coinFilenameForSlug(slug) { return `${slug}.png`; }
+    const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
+    if (gridStar) gridStar.setAttribute('data-filename', newFilename);
+  }
 
-    function getStoredCoinSlug() {
-      return getCookie(COIN_STORAGE_KEY) || localStorage.getItem(COIN_STORAGE_KEY) || 'wholecoins';
+  // Show/hide modal control groups
+  function showYearControls(show)       { yearControls?.classList.toggle('show', !!show); }
+  function showScaleControls(show)      { scaleControls?.classList.toggle('show', !!show); }
+  function showPriceOfControls(show)    { priceOfControls?.classList.toggle('show', !!show); }
+  function showDominanceControls(show)  { dominanceControls?.classList.toggle('show', !!show); }
+  function showCoinControls(show)       { coinControls?.classList.toggle('show', !!show); }
+
+  // Modal post links (X / Nostr / YouTube)
+  function setModalLinks({ x = '', nostr = '', youtube = '' } = {}) {
+    const xLink     = document.getElementById('x-link');
+    const nostrLink = document.getElementById('nostr-link');
+    const ytLink    = document.getElementById('youtube-link');
+
+    // X
+    if (x) {
+      xLink.href = x;
+      xLink.classList.remove('disabled');
+      xLink.removeAttribute('aria-disabled');
+      xLink.removeAttribute('tabindex');
+    } else {
+      xLink.href = '#';
+      xLink.classList.add('disabled');
+      xLink.setAttribute('aria-disabled', 'true');
+      xLink.setAttribute('tabindex', '-1');
     }
-    function setStoredCoinSlug(slug) {
-      setCookie(COIN_STORAGE_KEY, slug, 365);
-      localStorage.setItem(COIN_STORAGE_KEY, slug);
+
+    // Nostr
+    if (nostr) {
+      nostrLink.href = nostr;
+      nostrLink.classList.remove('disabled');
+      nostrLink.removeAttribute('aria-disabled');
+      nostrLink.removeAttribute('tabindex');
+    } else {
+      nostrLink.href = '#';
+      nostrLink.classList.add('disabled');
+      nostrLink.setAttribute('aria-disabled', 'true');
+      nostrLink.setAttribute('tabindex', '-1');
     }
 
-    function showCoinControls(show) {
-      coinControls?.classList.toggle('show', !!show);
+    // YouTube
+    if (youtube) {
+      ytLink.href = youtube;
+      ytLink.classList.remove('disabled');
+      ytLink.removeAttribute('aria-disabled');
+      ytLink.removeAttribute('tabindex');
+    } else {
+      ytLink.href = '#';
+      ytLink.classList.add('disabled');
+      ytLink.setAttribute('aria-disabled', 'true');
+      ytLink.setAttribute('tabindex', '-1');
+    }
+  }
+
+  /* ===========================
+   * LAYOUT / SEARCH
+   * =========================== */
+
+  function setLayout(type, manual = true) {
+    imageGrid.classList.remove('grid', 'list');
+    imageGrid.classList.add(type);
+    if (type === 'grid') {
+      gridIcon.classList.add('active');
+      listIcon.classList.remove('active');
+    } else {
+      listIcon.classList.add('active');
+      gridIcon.classList.remove('active');
+    }
+    if (manual) {
+      userSelectedLayout = type;
+      localStorage.setItem('preferredLayout', type);
+    }
+  }
+
+  function updateLayoutBasedOnWidth() {
+    const containerWidth  = imageGrid.offsetWidth;
+    const columnWidth     = 280 + 32; // card width + gap
+    const columns         = Math.floor(containerWidth / columnWidth);
+
+    const toggleIconsEl   = document.getElementById('toggleIcons');
+    const searchContainer = document.querySelector('.search-container');
+    const searchInput     = document.getElementById('search-input');
+    const searchBtn       = document.getElementById('search-btn');
+
+    if (columns < 2) {
+      toggleIconsEl.style.display = 'none';
+      if (!searchContainer.classList.contains('active')) {
+        searchContainer.classList.add('active');
+        searchBtn.classList.add('active');
+      }
+      searchBtn.disabled = true;
+      if (userSelectedLayout !== 'list') setLayout('list', false);
+    } else {
+      toggleIconsEl.style.display = 'inline-flex';
+      if (searchWasInitiallyClosed && searchInput.value.trim() === '') {
+        searchContainer.classList.remove('active');
+        searchBtn.classList.remove('active');
+      }
+      searchBtn.disabled = false;
+      if (userSelectedLayout === 'list') setLayout('list', false);
+      else setLayout('grid', false);
+    }
+  }
+
+  function toggleSearch() {
+    const container = document.querySelector('.search-container');
+    const input     = document.getElementById('search-input');
+    const button    = document.getElementById('search-btn');
+    const nowActive = !container.classList.contains('active');
+
+    container.classList.toggle('active');
+    button.classList.toggle('active', nowActive);
+
+    if (nowActive) {
+      searchWasManuallyOpened = true;
+      searchWasInitiallyClosed = false;
+      input.focus();
+    } else {
+      input.value = '';
+      searchWasInitiallyClosed = true;
+      filterImages();
+    }
+  }
+
+  /* ===========================
+   * FAVORITES (localStorage)
+   * =========================== */
+
+  function getFavorites() {
+    const stored = localStorage.getItem('favorites');
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  function saveFavorites(favs) {
+    localStorage.setItem('favorites', JSON.stringify(favs));
+  }
+
+  function isFavorite(filename) {
+    const favs = getFavorites();
+    if (filename.startsWith(POF_BASE)) {
+      // Group favorite applies to any price_of_* item (defensively accept legacy per-file entries)
+      return favs.includes(POF_FAV_KEY) || favs.some(f => /^price_of_/.test(f));
+    }
+    return favs.includes(filename);
+  }
+
+  function toggleFavorite(filename, starElem) {
+    const favKey = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
+    let favs = getFavorites();
+    const index = favs.indexOf(favKey);
+
+    if (index !== -1) {
+      favs.splice(index, 1);
+      starElem.textContent = '☆';
+      starElem.classList.remove('filled');
+    } else {
+      // If toggling Price Of, remove any legacy per-file entries and keep only the group key
+      if (favKey === POF_FAV_KEY) {
+        favs = favs.filter(f => !/^price_of_/.test(f));
+      }
+      favs.push(favKey);
+      starElem.textContent = '★';
+      starElem.classList.add('filled');
     }
 
-    function buildCoinOptionsFromList(list) {
-      // pick only the 8 coin visuals
-      const bySlug = new Map();
-      list.forEach(img => {
-        const slug = coinSlugFromFilename(img.filename);
-        if (!slug || !COIN_ORDER.includes(slug)) return;
+    saveFavorites(favs);
 
-        // Use the human-friendly part of title before " (" if available
-        const label = (img.title || slug)
-          .replace(/\s*\(.*?\)\s*$/, ''); // strip " (1 BTC)" etc.
+    // In favorites-only view, remove card immediately if it was unstarred
+    if (showFavoritesOnly && index !== -1) {
+      filterImages();
+    }
+  }
 
+  // One-time migration for legacy price_of_* favorites → group key
+  function migratePriceOfFavorites() {
+    let favs = getFavorites();
+    const hadLegacy = favs.some(f => /^price_of_/.test(f));
+    if (!hadLegacy) return;
+
+    favs = favs.filter(f => !/^price_of_/.test(f));
+    if (!favs.includes(POF_FAV_KEY)) favs.push(POF_FAV_KEY);
+    saveFavorites(favs);
+  }
+
+  /* ===========================
+   * GRID RENDERING & FILTERING
+   * =========================== */
+
+  function filterImages() {
+    const query = document.getElementById('search-input').value.toLowerCase();
+    const grid  = document.getElementById('image-grid');
+    grid.innerHTML = '';
+
+    visibleImages = imageList.filter(({ title, description, filename }) => {
+      const matchesSearch = title.toLowerCase().includes(query) || description.toLowerCase().includes(query);
+      const isFav         = !showFavoritesOnly || isFavorite(filename);
+      return matchesSearch && isFav;
+    });
+
+    // "No favorites" message visibility
+    const message = document.getElementById('no-favorites-message');
+    if (showFavoritesOnly && visibleImages.length === 0) {
+      message.style.display = 'block';
+    } else {
+      message.style.display = 'none';
+    }
+
+    // Build each card
+    visibleImages.forEach(({ filename, title, description }, index) => {
+      const container = document.createElement('div');
+
+      const titleElem = document.createElement('div');
+      titleElem.className = 'chart-title';
+      titleElem.textContent = title;
+      titleElem.dataset.gridIndex = index;
+
+      const chartContainer = document.createElement('div');
+      chartContainer.className = 'chart-container';
+
+      const chartWrapper = document.createElement('div');
+      chartWrapper.className = 'chart-wrapper';
+
+      const spinner = document.createElement('div');
+      spinner.className = 'chart-loading';
+
+      const img = document.createElement('img');
+      img.className = 'grid-thumb';
+      img.dataset.gridIndex = index;
+      img.alt = title;
+      img.style.opacity = 0;
+      img.onload  = () => { spinner.remove(); img.style.opacity = 1; };
+      img.onerror = () => { spinner.remove(); img.style.opacity = 1; };
+      img.onclick = () => openModalByIndex(index);
+      img.src = `final_frames/${filename}`;
+
+      // Star (favorites)
+      const star = document.createElement('div');
+      star.className = 'favorite-star';
+      const favOn = isFavorite(filename);
+      star.textContent = favOn ? '★' : '☆';
+      if (favOn) star.classList.add('filled');
+
+      // Use group key for price_of_* so grid + modal share the same toggle target
+      const favKeyForThisCard = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
+      star.setAttribute('data-filename', favKeyForThisCard);
+      star.onclick = (e) => { e.stopPropagation(); toggleFavorite(filename, star); };
+
+      chartContainer.appendChild(star);
+      chartWrapper.appendChild(spinner);
+      chartWrapper.appendChild(img);
+      chartContainer.appendChild(chartWrapper);
+
+      const desc = document.createElement('div');
+      desc.className = 'chart-description';
+      desc.textContent = description;
+      desc.dataset.gridIndex = index;
+
+      chartContainer.appendChild(desc);
+      container.appendChild(titleElem);
+      container.appendChild(chartContainer);
+      grid.appendChild(container);
+    });
+
+    updateLayoutBasedOnWidth();
+  }
+
+  /* ===========================
+   * MODAL OPEN/CLOSE & SWIPES
+   * =========================== */
+
+  // Adjust safe padding in landscape on small screens so controls don't overlap the image
+  function updateModalSafePadding() {
+    const controls = document.querySelector('.modal-controls');
+    const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
+
+    if (!controls || !isSmallLandscape || modal.style.display !== 'flex') {
+      modal.style.removeProperty('--controls-offset');
+      return;
+    }
+
+    // Measure height; clamp reserved space (a bit under real height to let image tuck)
+    const h = controls.getBoundingClientRect().height;
+    const offset = Math.max(20, Math.min(h - 6, 44));
+    modal.style.setProperty('--controls-offset', offset + 'px');
+  }
+
+  function openModalByIndex(index) {
+    const image = visibleImages[index];
+    if (!image) return;
+
+    currentIndex = index;
+    modal.style.display = 'flex';
+    updateModalSafePadding();
+    setTimeout(updateModalSafePadding, 0); // after layout/wrap
+    document.body.style.overflow = 'hidden';
+
+    // Post links for this image
+    setModalLinks({
+      x: image.latest_x || '',
+      nostr: image.latest_nostr || '',
+      youtube: image.latest_youtube || ''
+    });
+
+    // Populate modal controls according to file type
+    populateYearSelect();
+    const fname = image.filename;
+
+    if (isBvgFile(fname)) {
+      showYearControls(true); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+      const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
+      yearSelect.value = chosenYear;
+      setBvgYear(chosenYear);
+    } else if (isDominanceFile(fname)) {
+      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(true); showCoinControls(false);
+      const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
+      dominanceSelect.value = unit;
+      setDominanceUnit(unit);
+    } else if (isDalFile(fname)) {
+      showYearControls(false); showScaleControls(true); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+      const sc = dalScaleFromFilename(fname) || getStoredDalScale();
+      scaleSelect.value = sc;
+      setDalScale(sc);
+    } else if (isPriceOfFile(fname)) {
+      showYearControls(false); showScaleControls(false); showPriceOfControls(true); showDominanceControls(false); showCoinControls(false);
+      populatePriceOfSelect();
+      let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
+      if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
+        chosenSlug = PRICE_OF_OPTIONS.find(o => o.slug === 'ground_beef')?.slug || PRICE_OF_OPTIONS[0]?.slug;
+      }
+      priceOfSelect.value = chosenSlug;
+      const meta = PRICE_OF_META[chosenSlug];
+      if (meta) applyPostLinksFromMeta(meta);
+      setPriceOfItem(chosenSlug);
+    } else if (isCoinFile(fname)) {
+      // Single "Coins" card
+      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(true);
+      populateCoinSelect();
+      let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
+      if (!COIN_OPTIONS.some(o => o.slug === chosen)) {
+        chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
+      }
+      coinSelect.value = chosen;
+      setCoinType(chosen);
+    } else {
+      // Plain image
+      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+      modalImg.src = `final_frames/${fname}`;
+      modalImg.alt = image.title;
+      replaceUrlForFilename(fname);
+    }
+
+    // Star state (uses possibly-updated filename)
+    const fav = isFavorite(visibleImages[currentIndex].filename);
+    modalFavBtn.textContent = fav ? '★' : '☆';
+    modalFavBtn.classList.toggle('filled', fav);
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+    history.replaceState(null, '', '/');
+    document.body.style.overflow = ''; // re-enable scroll
+    if (justUnstarredInModal) {
+      justUnstarredInModal = false;
+      filterImages();  // remove unstarred image from grid
+    }
+    showYearControls(false);
+    showScaleControls(false);
+    showPriceOfControls(false);
+    modal.style.removeProperty('--controls-offset');
+  }
+
+  // Horizontal swipe → prev/next image
+  function handleSwipe() {
+    const swipeDistance = touchEndX - touchStartX;
+    const minSwipe = 50;
+    if (Math.abs(swipeDistance) > minSwipe) {
+      if (swipeDistance < 0) nextImage();
+      else prevImage();
+    }
+  }
+
+  // Vertical swipe → hide/show modal controls
+  function handleVerticalSwipe() {
+    const deltaY = touchEndY - touchStartY;
+    const threshold = 50;
+    const controls = document.querySelector('.modal-controls');
+
+    if (Math.abs(deltaY) > threshold) {
+      if (deltaY < 0) controls.classList.add('hidden'); // swipe up
+      else controls.classList.remove('hidden');         // swipe down
+    }
+  }
+
+  function prevImage() {
+    if (justUnstarredInModal) {
+      justUnstarredInModal = false;
+      filterImages();  // remove unstarred image now that user moved on
+    }
+    const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
+    openModalByIndex(prevIndex);
+  }
+
+  function nextImage() {
+    if (justUnstarredInModal) {
+      justUnstarredInModal = false;
+      filterImages();  // remove unstarred image now that user moved on
+    }
+    const nextIndex = (currentIndex + 1) % visibleImages.length;
+    openModalByIndex(nextIndex);
+  }
+
+  function toggleFavoriteFromModal() {
+    const filename = visibleImages[currentIndex].filename;
+    const favKey = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
+
+    let favs = getFavorites();
+    const index = favs.indexOf(favKey);
+
+    // The grid star uses the same data-filename key
+    const gridStar = document.querySelector(`.favorite-star[data-filename="${favKey}"]`);
+
+    if (index !== -1) {
+      favs.splice(index, 1);
+      modalFavBtn.textContent = '☆';
+      modalFavBtn.classList.remove('filled');
+      if (gridStar) { gridStar.textContent = '☆'; gridStar.classList.remove('filled'); }
+    } else {
+      if (favKey === POF_FAV_KEY) {
+        favs = favs.filter(f => !/^price_of_/.test(f)); // drop legacy per-file entries
+      }
+      favs.push(favKey);
+      modalFavBtn.textContent = '★';
+      modalFavBtn.classList.add('filled');
+      if (gridStar) { gridStar.textContent = '★'; gridStar.classList.add('filled'); }
+    }
+
+    saveFavorites(favs);
+
+    // If in favorites-only view and unstarred, remove image after user navigates
+    if (showFavoritesOnly && index !== -1) {
+      justUnstarredInModal = true;
+    }
+  }
+
+  /* ===========================
+   * MODULE: Bitcoin vs Gold (BVG)
+   * =========================== */
+
+  function isBvgFile(fname) { return fname.startsWith(BVG_BASE); }
+  function bvgFilenameForYear(y) { return `${BVG_BASE}_${y}.png`; }
+  function extractBvgYear(fname) {
+    const m = fname.match(/bitcoin_vs_gold_(\d{4})\.png$/);
+    return m ? m[1] : null;
+  }
+  function getStoredBvgYear() { return localStorage.getItem(BVG_STORAGE_KEY) || '2018'; }
+  function setStoredBvgYear(y) { localStorage.setItem(BVG_STORAGE_KEY, y); }
+
+  function populateYearSelect() {
+    if (!yearSelect || yearSelect.options.length) return;
+    yearSelect.innerHTML = BVG_YEARS.map(y => `<option value="${y}">${y}</option>`).join('');
+  }
+
+  function isValidBvgYear(yStr) {
+    const y = parseInt(yStr, 10);
+    return Number.isInteger(y) && BVG_YEARS.includes(y);
+  }
+
+  function setBvgYear(year) {
+    const oldFilename = visibleImages[currentIndex].filename;
+    const newFilename = bvgFilenameForYear(year);
+
+    setStoredBvgYear(year);
+
+    modalImg.src = `final_frames/${newFilename}`;
+    modalImg.alt = `Bitcoin vs Gold (${year})`;
+    replaceUrlForFilename(newFilename);
+
+    visibleImages[currentIndex].filename = newFilename;
+    updateGridThumbAtCurrent(newFilename);
+
+    migrateFavoriteFilename(oldFilename, newFilename);
+  }
+
+  function cycleBvgYear(direction) {
+    const current = parseInt(yearSelect.value, 10);
+    const idx = BVG_YEARS.indexOf(current);
+    if (idx === -1) return;
+
+    // BVG_YEARS order is [2025, 2024, ..., 2013]
+    const delta = direction === 'up' ? -1 : 1;
+    const len   = BVG_YEARS.length;
+    const newIdx = (idx + delta + len) % len;
+
+    const newYear = BVG_YEARS[newIdx];
+    yearSelect.value = newYear;
+    setBvgYear(newYear);
+  }
+
+  /* ===========================
+   * MODULE: Days at a Loss (DAL)
+   * =========================== */
+
+  function isDalFile(fname) { return fname.startsWith(DAL_BASE); }
+  function dalScaleFromFilename(fname) { return /_log\.png$/.test(fname) ? 'log' : 'linear'; }
+  function dalFilenameForScale(scale) { return scale === 'log' ? `${DAL_BASE}_log.png` : `${DAL_BASE}.png`; }
+  function getStoredDalScale() { return localStorage.getItem(DAL_STORAGE_KEY) || 'linear'; }
+  function setStoredDalScale(s) { localStorage.setItem(DAL_STORAGE_KEY, s); }
+
+  function setDalScale(scale) {
+    const oldFilename = visibleImages[currentIndex].filename;
+    if (!isDalFile(oldFilename)) return;
+
+    const newFilename = dalFilenameForScale(scale);
+
+    setStoredDalScale(scale);
+
+    modalImg.src = `final_frames/${newFilename}`;
+    modalImg.alt = `Days at a Loss (${scale})`;
+    replaceUrlForFilename(newFilename);
+
+    visibleImages[currentIndex].filename = newFilename;
+    updateGridThumbAtCurrent(newFilename);
+
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+  }
+
+  function cycleDalScale(direction) {
+    const current = (scaleSelect?.value) || getStoredDalScale();
+    const idx = DAL_SCALES.indexOf(current);
+    if (idx === -1) return;
+
+    const delta = direction === 'up' ? -1 : 1;
+    const len   = DAL_SCALES.length;
+    const newIdx = (idx + delta + len) % len;
+
+    const next = DAL_SCALES[newIdx];
+    if (scaleSelect) scaleSelect.value = next;
+    setDalScale(next);
+  }
+
+  /* ===========================
+   * MODULE: Dominance (USD/BTC)
+   * =========================== */
+
+  function isDominanceFile(fname) { return fname.startsWith(DOM_BASE); }
+  function domUnitFromFilename(fname) { return /_btc\.png$/.test(fname) ? 'btc' : 'usd'; }
+  function domFilenameForUnit(u) { return u === 'btc' ? `${DOM_BASE}_btc.png` : `${DOM_BASE}.png`; }
+
+  function getStoredDominanceUnit() {
+    return getCookie(DOM_STORAGE_KEY) || localStorage.getItem(DOM_STORAGE_KEY) || 'usd';
+  }
+  function setStoredDominanceUnit(u) {
+    setCookie(DOM_STORAGE_KEY, u, 365);
+    localStorage.setItem(DOM_STORAGE_KEY, u);
+  }
+
+  function setDominanceUnit(unit) {
+    const oldFilename = visibleImages[currentIndex].filename;
+    if (!isDominanceFile(oldFilename)) return;
+
+    const newFilename = domFilenameForUnit(unit);
+
+    setStoredDominanceUnit(unit);
+
+    modalImg.src = `final_frames/${newFilename}`;
+    modalImg.alt = `Bitcoin Dominance (${unit.toUpperCase()})`;
+    replaceUrlForFilename(newFilename);
+
+    visibleImages[currentIndex].filename = newFilename;
+    updateGridThumbAtCurrent(newFilename);
+
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+  }
+
+  function cycleDominance(direction) {
+    const current = (dominanceSelect?.value) || getStoredDominanceUnit();
+    const idx = DOM_UNITS.indexOf(current);
+    if (idx === -1) return;
+
+    const delta = direction === 'up' ? -1 : 1;
+    const len   = DOM_UNITS.length;
+    const newIdx = (idx + delta + len) % len;
+
+    const next = DOM_UNITS[newIdx];
+    if (dominanceSelect) dominanceSelect.value = next;
+    setDominanceUnit(next);
+  }
+
+  /* ===========================
+   * MODULE: Price Of (price_of_*)
+   * =========================== */
+
+  function isPriceOfFile(fname) { return fname.startsWith(POF_BASE); }
+
+  function pofSlugFromFilename(fname) {
+    const m = fname.match(/^price_of_([a-z0-9_]+)\.png$/);
+    return m ? m[1] : null;
+  }
+
+  function pofFilenameForSlug(slug) { return `${POF_BASE}${slug}.png`; }
+
+  function slugToTitle(slug) {
+    return slug.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function buildPriceOfOptionsFromList(list) {
+    const bySlug = new Map();
+    list.forEach(img => {
+      const m = img.filename.match(/^price_of_([a-z0-9_]+)\.png$/);
+      if (!m) return;
+      const slug = m[1];
+      if (!bySlug.has(slug)) {
         bySlug.set(slug, {
           slug,
-          label,
-          filename: img.filename,
-          title: img.title || label,
-          description: img.description || '',
+          label: slugToTitle(slug),
+          filename: `price_of_${slug}.png`,
+          // capture post links + meta for later swaps
+          title: img.title,
+          description: img.description,
           latest_x: img.latest_x || '',
           latest_nostr: img.latest_nostr || '',
           latest_youtube: img.latest_youtube || ''
         });
+      }
+    });
+
+    PRICE_OF_OPTIONS = Array.from(bySlug.values())
+      .sort((a, b) => a.label.localeCompare(b.label));
+    PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => (acc[o.slug] = o, acc), {});
+  }
+
+  function populatePriceOfSelect() {
+    if (!priceOfSelect) return;
+    priceOfSelect.innerHTML = PRICE_OF_OPTIONS
+      .map(o => `<option value="${o.slug}">${o.label}</option>`)
+      .join('');
+  }
+
+  function applyPostLinksFromMeta(meta) {
+    setModalLinks({
+      x: meta.latest_x || '',
+      nostr: meta.latest_nostr || '',
+      youtube: meta.latest_youtube || ''
+    });
+  }
+
+  function getStoredPofItem() {
+    return getCookie(POF_STORAGE_KEY) || localStorage.getItem(POF_STORAGE_KEY) || 'ground_beef';
+  }
+  function setStoredPofItem(slug) {
+    setCookie(POF_STORAGE_KEY, slug, 365);
+    localStorage.setItem(POF_STORAGE_KEY, slug);
+  }
+
+  function setPriceOfItem(slug) {
+    const oldFilename = visibleImages[currentIndex].filename;
+    if (!isPriceOfFile(oldFilename)) return;
+
+    const newFilename   = pofFilenameForSlug(slug);
+    const fallbackTitle = `Price of ${slugToTitle(slug)}`;
+    const meta          = PRICE_OF_META[slug] || { title: fallbackTitle, description: '' };
+
+    // Persist selection
+    setStoredPofItem(slug);
+
+    // Modal + URL
+    modalImg.src = `final_frames/${newFilename}`;
+    modalImg.alt = meta.title || fallbackTitle;
+    replaceUrlForFilename(newFilename);
+
+    // Modal post links
+    applyPostLinksFromMeta(meta);
+
+    // Update in-memory item (so future opens use correct text/links)
+    Object.assign(visibleImages[currentIndex], {
+      filename: newFilename,
+      title: meta.title || visibleImages[currentIndex].title || fallbackTitle,
+      description: meta.description || visibleImages[currentIndex].description || '',
+      latest_x: meta.latest_x || '',
+      latest_nostr: meta.latest_nostr || '',
+      latest_youtube: meta.latest_youtube || ''
+    });
+
+    // Live update the grid UI for this card
+    const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
+    if (titleEl) titleEl.textContent = meta.title || fallbackTitle;
+
+    const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
+    if (descEl) descEl.textContent = meta.description || '';
+
+    const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+    const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
+    if (cardContainer) {
+      const tip = meta.description || meta.title || fallbackTitle;
+      cardContainer.setAttribute('title', tip);
+      gridImg.alt = meta.title || fallbackTitle;
+    }
+
+    updateGridThumbAtCurrent(newFilename);
+
+    // Reflect group favorite state in both modal + grid star
+    const favOn = isFavorite(newFilename);
+    modalFavBtn.textContent = favOn ? '★' : '☆';
+    modalFavBtn.classList.toggle('filled', favOn);
+
+    const gridStar = document.querySelector(`.favorite-star[data-filename="${POF_FAV_KEY}"]`);
+    if (gridStar) {
+      gridStar.textContent = favOn ? '★' : '☆';
+      gridStar.classList.toggle('filled', favOn);
+    }
+
+    updateModalSafePadding();
+  }
+
+  function cyclePriceOf(direction) {
+    if (!priceOfSelect) return;
+    const opts = Array.from(priceOfSelect.options);
+    if (opts.length === 0) return;
+
+    const slugs = opts.map(o => o.value);
+    const currentSlug = priceOfSelect.value || getStoredPofItem();
+    const idx = slugs.indexOf(currentSlug);
+    if (idx === -1) return;
+
+    const delta = direction === 'up' ? -1 : 1;
+    const len   = slugs.length;
+    const newIdx = (idx + delta + len) % len;
+
+    const nextSlug = slugs[newIdx];
+    priceOfSelect.value = nextSlug;
+    setPriceOfItem(nextSlug);
+  }
+
+  /* ===========================
+   * MODULE: Coins (single card)
+   * =========================== */
+
+  function isCoinFile(fname) {
+    return /^(.+)\.png$/.test(fname) && COIN_ORDER.some(slug => `${slug}.png` === fname);
+  }
+  function coinSlugFromFilename(fname) {
+    const m = fname.match(/^([a-z0-9_]+)\.png$/i);
+    return m ? m[1] : null;
+  }
+  function coinFilenameForSlug(slug) { return `${slug}.png`; }
+
+  function getStoredCoinSlug() {
+    return getCookie(COIN_STORAGE_KEY) || localStorage.getItem(COIN_STORAGE_KEY) || 'wholecoins';
+  }
+  function setStoredCoinSlug(slug) {
+    setCookie(COIN_STORAGE_KEY, slug, 365);
+    localStorage.setItem(COIN_STORAGE_KEY, slug);
+  }
+
+  function buildCoinOptionsFromList(list) {
+    // Pick only the 8 coin visuals (respect COIN_ORDER)
+    const bySlug = new Map();
+    list.forEach(img => {
+      const slug = coinSlugFromFilename(img.filename);
+      if (!slug || !COIN_ORDER.includes(slug)) return;
+
+      // Human-friendly label = title without trailing " (…)" if present
+      const label = (img.title || slug).replace(/\s*\(.*?\)\s*$/, '');
+
+      bySlug.set(slug, {
+        slug,
+        label,
+        filename: img.filename,
+        title: img.title || label,
+        description: img.description || '',
+        latest_x: img.latest_x || '',
+        latest_nostr: img.latest_nostr || '',
+        latest_youtube: img.latest_youtube || ''
       });
+    });
 
-      COIN_OPTIONS = COIN_ORDER
-        .filter(slug => bySlug.has(slug))
-        .map(slug => bySlug.get(slug));
+    COIN_OPTIONS = COIN_ORDER
+      .filter(slug => bySlug.has(slug))
+      .map(slug => bySlug.get(slug));
 
-      COIN_META = COIN_OPTIONS.reduce((acc, o) => (acc[o.slug] = o, acc), {});
+    COIN_META = COIN_OPTIONS.reduce((acc, o) => (acc[o.slug] = o, acc), {});
+  }
+
+  function populateCoinSelect() {
+    if (!coinSelect) return;
+    coinSelect.innerHTML = COIN_OPTIONS
+      .map(o => `<option value="${o.slug}">${o.label}</option>`)
+      .join('');
+  }
+
+  function setCoinType(slug) {
+    const image = visibleImages[currentIndex];
+    if (!image || !isCoinFile(image.filename)) return;
+
+    const meta        = COIN_META[slug];
+    const oldFilename = image.filename;
+    const newFilename = coinFilenameForSlug(slug);
+
+    // Persist
+    setStoredCoinSlug(slug);
+
+    // Modal image + URL
+    modalImg.src = `final_frames/${newFilename}`;
+    modalImg.alt = meta?.title || image.title || slug;
+    replaceUrlForFilename(newFilename);
+
+    // Modal links
+    setModalLinks({
+      x: meta?.latest_x || '',
+      nostr: meta?.latest_nostr || '',
+      youtube: meta?.latest_youtube || ''
+    });
+
+    // Update in-memory model (so grid/modal text is consistent)
+    Object.assign(visibleImages[currentIndex], {
+      filename: newFilename,
+      title: meta?.title || image.title,
+      description: meta?.description || image.description,
+      latest_x: meta?.latest_x || '',
+      latest_nostr: meta?.latest_nostr || '',
+      latest_youtube: meta?.latest_youtube || ''
+    });
+
+    // Live update grid title/desc and thumb
+    const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
+    if (titleEl) titleEl.textContent = meta?.title || image.title;
+
+    const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
+    if (descEl) descEl.textContent = meta?.description || image.description;
+
+    updateGridThumbAtCurrent(newFilename, meta?.title || image.title || slug);
+
+    const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+    const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
+    if (cardContainer) {
+      const tip = (meta?.description || meta?.title || slug);
+      cardContainer.setAttribute('title', tip);
     }
 
-    function populateCoinSelect() {
-      if (!coinSelect) return;
-      coinSelect.innerHTML = COIN_OPTIONS
-        .map(o => `<option value="${o.slug}">${o.label}</option>`)
-        .join('');
-    }
-
-    function setCoinType(slug) {
-      const image = visibleImages[currentIndex];
-      if (!image || !isCoinFile(image.filename)) return;
-
-      const meta = COIN_META[slug];
-      const oldFilename = image.filename;
-      const newFilename = coinFilenameForSlug(slug);
-
-      // persist
-      setStoredCoinSlug(slug);
-
-      // modal image + URL
-      modalImg.src = `final_frames/${newFilename}`;
-      modalImg.alt = meta?.title || image.title || slug;
-      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
-
-      // update modal links
-      setModalLinks({
-        x: meta?.latest_x || '',
-        nostr: meta?.latest_nostr || '',
-        youtube: meta?.latest_youtube || ''
-      });
-
-      // update in-memory model (so grid/modal text is consistent)
-      Object.assign(visibleImages[currentIndex], {
-        filename: newFilename,
-        title: meta?.title || image.title,
-        description: meta?.description || image.description,
-        latest_x: meta?.latest_x || '',
-        latest_nostr: meta?.latest_nostr || '',
-        latest_youtube: meta?.latest_youtube || ''
-      });
-
-      // live update grid title/desc and thumb
-      const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
-      if (titleEl) titleEl.textContent = meta?.title || image.title;
-
-      const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
-      if (descEl) descEl.textContent = meta?.description || image.description;
-
-      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
-      if (thumb) {
-        thumb.src = `final_frames/${newFilename}`;
-        thumb.alt = meta?.title || image.title || slug;
-      }
-      const cardContainer = thumb ? thumb.closest('.chart-container') : null;
-      if (cardContainer) {
-        const tip = (meta?.description || meta?.title || slug);
-        cardContainer.setAttribute('title', tip);
-      }
-
-      // migrate favorites from old -> new filename (same pattern as BVG/DAL)
-      let favs = getFavorites();
-      const pos = favs.indexOf(oldFilename);
-      if (pos !== -1) {
-        favs.splice(pos, 1);
-        if (!favs.includes(newFilename)) favs.push(newFilename);
-        saveFavorites(favs);
-        modalFavBtn.classList.add('filled');
-        modalFavBtn.textContent = '★';
-      }
-      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
-      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
-
-      updateModalSafePadding();
-    }
-
-    coinSelect?.addEventListener('change', (e) => setCoinType(e.target.value));
-
-    function cycleCoinType(direction) {
-      if (!coinSelect || COIN_OPTIONS.length === 0) return;
-      const slugs = COIN_OPTIONS.map(o => o.slug);
-      const currentSlug = coinSelect.value || getStoredCoinSlug();
-      const idx = slugs.indexOf(currentSlug);
-      if (idx === -1) return;
-
-      const delta = direction === 'up' ? -1 : 1;
-      const len = slugs.length;
-      const newIdx = (idx + delta + len) % len;
-
-      const nextSlug = slugs[newIdx];
-      coinSelect.value = nextSlug;
-      setCoinType(nextSlug);
-    }
-
-    function isDominanceFile(fname) { return fname.startsWith(DOM_BASE); }
-    function domUnitFromFilename(fname) { return /_btc\.png$/.test(fname) ? 'btc' : 'usd'; }
-    function domFilenameForUnit(u) { return u === 'btc' ? `${DOM_BASE}_btc.png` : `${DOM_BASE}.png`; }
-
-    function getStoredDominanceUnit() {
-      return getCookie(DOM_STORAGE_KEY) || localStorage.getItem(DOM_STORAGE_KEY) || 'usd';
-    }
-    function setStoredDominanceUnit(u) {
-      setCookie(DOM_STORAGE_KEY, u, 365);
-      localStorage.setItem(DOM_STORAGE_KEY, u);
-    }
-
-    function showDominanceControls(show) {
-      dominanceControls?.classList.toggle('show', !!show);
-    }
-
-    function setDominanceUnit(unit) {
-      const oldFilename = visibleImages[currentIndex].filename;
-      if (!isDominanceFile(oldFilename)) return;
-
-      const newFilename = domFilenameForUnit(unit);
-
-      // persist
-      setStoredDominanceUnit(unit);
-
-      // modal + URL
-      modalImg.src = `final_frames/${newFilename}`;
-      modalImg.alt = `Bitcoin Dominance (${unit.toUpperCase()})`;
-      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
-
-      // in-memory
-      visibleImages[currentIndex].filename = newFilename;
-
-      // grid thumb live swap
-      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
-      if (thumb) thumb.src = `final_frames/${newFilename}`;
-
-      // migrate favorites (preserve star across unit swap)
-      let favs = getFavorites();
-      const pos = favs.indexOf(oldFilename);
-      if (pos !== -1) {
-        favs.splice(pos, 1);
-        if (!favs.includes(newFilename)) favs.push(newFilename);
-        saveFavorites(favs);
-        modalFavBtn.classList.add('filled');
-        modalFavBtn.textContent = '★';
-      }
-
-      // keep grid star targeting the new filename
-      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
-      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
-
-      updateModalSafePadding();
-    }
-
-    dominanceSelect?.addEventListener('change', (e) => setDominanceUnit(e.target.value));
-
-    function cycleDominance(direction) {
-      const current = (dominanceSelect?.value) || getStoredDominanceUnit();
-      const idx = DOM_UNITS.indexOf(current);
-      if (idx === -1) return;
-
-      const delta = direction === 'up' ? -1 : 1;
-      const len = DOM_UNITS.length;
-      const newIdx = (idx + delta + len) % len;
-
-      const next = DOM_UNITS[newIdx];
-      if (dominanceSelect) dominanceSelect.value = next;
-      setDominanceUnit(next);
-    }
-
-    function setModalLinks({ x = '', nostr = '', youtube = '' } = {}) {
-      const xLink     = document.getElementById('x-link');
-      const nostrLink = document.getElementById('nostr-link');
-      const ytLink    = document.getElementById('youtube-link');
-
-      // X
-      if (x) {
-        xLink.href = x;
-        xLink.classList.remove('disabled');
-        xLink.removeAttribute('aria-disabled');
-        xLink.removeAttribute('tabindex');
-      } else {
-        xLink.href = '#';
-        xLink.classList.add('disabled');
-        xLink.setAttribute('aria-disabled', 'true');
-        xLink.setAttribute('tabindex', '-1');
-      }
-
-      // Nostr
-      if (nostr) {
-        nostrLink.href = nostr;
-        nostrLink.classList.remove('disabled');
-        nostrLink.removeAttribute('aria-disabled');
-        nostrLink.removeAttribute('tabindex');
-      } else {
-        nostrLink.href = '#';
-        nostrLink.classList.add('disabled');
-        nostrLink.setAttribute('aria-disabled', 'true');
-        nostrLink.setAttribute('tabindex', '-1');
-      }
-
-      // YouTube
-      if (youtube) {
-        ytLink.href = youtube;
-        ytLink.classList.remove('disabled');
-        ytLink.removeAttribute('aria-disabled');
-        ytLink.removeAttribute('tabindex');
-      } else {
-        ytLink.href = '#';
-        ytLink.classList.add('disabled');
-        ytLink.setAttribute('aria-disabled', 'true');
-        ytLink.setAttribute('tabindex', '-1');
-      }
-    }
-
-    const BVG_BASE = 'bitcoin_vs_gold';
-    // Years newest → oldest
-    const BVG_YEARS = Array.from({ length: 2025 - 2013 + 1 }, (_, i) => 2025 - i);
-    const BVG_STORAGE_KEY = 'bvgYear';
-
-    // Order matches your dropdown: Linear (top/default), then Log
-    const DAL_SCALES = ['linear', 'log'];
-
-    // ---- Price Of (POF) helpers ----
-    const priceOfControls = document.getElementById('priceof-controls');
-    const priceOfSelect   = document.getElementById('priceof-select');
-
-    const POF_BASE = 'price_of_';
-    const POF_STORAGE_KEY = 'pofItem';    // cookie/localStorage slug like "ground_beef"
-    let PRICE_OF_OPTIONS = [];            // [{slug, label, filename}]
-
-    // Group favorite key for all "price_of_*" images
-    const POF_FAV_KEY = 'price_of_*';
-
-    // Migrate any legacy favorites (price_of_*.png) to the group key once
-    function migratePriceOfFavorites() {
-      let favs = getFavorites();
-      const hadLegacy = favs.some(f => /^price_of_/.test(f));
-      if (!hadLegacy) return;
-
-      // Drop old per-file entries and keep the single group key
-      favs = favs.filter(f => !/^price_of_/.test(f));
-      if (!favs.includes(POF_FAV_KEY)) favs.push(POF_FAV_KEY);
-      saveFavorites(favs);
-    }
-
-    function isPriceOfFile(fname) { return fname.startsWith(POF_BASE); }
-
-    function pofSlugFromFilename(fname) {
-      const m = fname.match(/^price_of_([a-z0-9_]+)\.png$/);
-      return m ? m[1] : null;
-    }
-
-    function pofFilenameForSlug(slug) { return `${POF_BASE}${slug}.png`; }
-
-    function slugToTitle(slug) {
-      return slug.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    }
-
-    // Add near your POF helpers
-    let PRICE_OF_META = {};  // { slug: {label, filename, title, description, latest_x, latest_nostr, latest_youtube} }
-
-    function buildPriceOfOptionsFromList(list) {
-      const bySlug = new Map();
-      list.forEach(img => {
-        const m = img.filename.match(/^price_of_([a-z0-9_]+)\.png$/);
-        if (!m) return;
-        const slug = m[1];
-        if (!bySlug.has(slug)) {
-          bySlug.set(slug, {
-            slug,
-            label: slugToTitle(slug),
-            filename: `price_of_${slug}.png`,
-            // capture post links + meta for later swaps
-            title: img.title,
-            description: img.description,
-            latest_x: img.latest_x || '',
-            latest_nostr: img.latest_nostr || '',
-            latest_youtube: img.latest_youtube || ''
-          });
-        }
-      });
-
-      PRICE_OF_OPTIONS = Array.from(bySlug.values())
-        .sort((a, b) => a.label.localeCompare(b.label));
-
-      // easy lookup by slug
-      PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => (acc[o.slug] = o, acc), {});
-    }
-
-    function applyPostLinksFromMeta(meta) {
-      setModalLinks({
-        x: meta.latest_x || '',
-        nostr: meta.latest_nostr || '',
-        youtube: meta.latest_youtube || ''
-      });
-    }
-
-    function populatePriceOfSelect() {
-      if (!priceOfSelect) return;
-      priceOfSelect.innerHTML = PRICE_OF_OPTIONS
-        .map(o => `<option value="${o.slug}">${o.label}</option>`)
-        .join('');
-    }
-
-    // Persist like your other filters (cookie + localStorage)
-    function getStoredPofItem() {
-      return getCookie(POF_STORAGE_KEY) || localStorage.getItem(POF_STORAGE_KEY) || 'ground_beef';
-    }
-    function setStoredPofItem(slug) {
-      setCookie(POF_STORAGE_KEY, slug, 365);
-      localStorage.setItem(POF_STORAGE_KEY, slug);
-    }
-
-    function showPriceOfControls(show) {
-      priceOfControls?.classList.toggle('show', !!show);
-    }
-
-    function setPriceOfItem(slug) {
-      const oldFilename = visibleImages[currentIndex].filename;
-      if (!isPriceOfFile(oldFilename)) return;
-
-      const newFilename = pofFilenameForSlug(slug);
-      const fallbackTitle = `Price of ${slugToTitle(slug)}`;
-      const meta = PRICE_OF_META[slug] || { title: fallbackTitle, description: '' };
-
-      // Persist selection
-      setStoredPofItem(slug);
-
-      // Modal + URL
-      modalImg.src = `final_frames/${newFilename}`;
-      modalImg.alt = meta.title || fallbackTitle;
-      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
-
-      // Modal post links
-      applyPostLinksFromMeta(meta);
-
-      // Update in-memory item (so future opens use correct text/links)
-      Object.assign(visibleImages[currentIndex], {
-        filename: newFilename,
-        title: meta.title || visibleImages[currentIndex].title || fallbackTitle,
-        description: meta.description || visibleImages[currentIndex].description || '',
-        latest_x: meta.latest_x || '',
-        latest_nostr: meta.latest_nostr || '',
-        latest_youtube: meta.latest_youtube || ''
-      });
-
-      // --- NEW: update the grid UI for this card ---
-      // Title
-      const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
-      if (titleEl) titleEl.textContent = meta.title || fallbackTitle;
-
-      // Tooltip overlay text
-      const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
-      if (descEl) descEl.textContent = meta.description || '';
-
-      // Optional: native browser tooltip via title= on the card container
-      const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
-      const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
-      if (cardContainer) {
-        const tip = meta.description || meta.title || fallbackTitle;
-        cardContainer.setAttribute('title', tip);
-        // also keep the image's alt aligned
-        gridImg.alt = meta.title || fallbackTitle;
-      }
-
-      // Update the grid thumbnail (live)
-      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
-      if (thumb) thumb.src = `final_frames/${newFilename}`;
-
-      // Reflect group favorite state in both modal + grid star (your group-star logic)
-      const favOn = isFavorite(newFilename);
-      modalFavBtn.textContent = favOn ? '★' : '☆';
-      modalFavBtn.classList.toggle('filled', favOn);
-
-      const gridStar = document.querySelector(`.favorite-star[data-filename="${POF_FAV_KEY}"]`);
-      if (gridStar) {
-        gridStar.textContent = favOn ? '★' : '☆';
-        gridStar.classList.toggle('filled', favOn);
-      }
-
-      updateModalSafePadding();
-    }
-
-    priceOfSelect?.addEventListener('change', (e) => setPriceOfItem(e.target.value));
-
-    // Cycle "Price of" selection (alphabetical order of the dropdown options), clamped at ends
-    function cyclePriceOf(direction) {
-      if (!priceOfSelect) return;
-      const opts = Array.from(priceOfSelect.options);
-      if (opts.length === 0) return;
-
-      const slugs = opts.map(o => o.value);
-      const currentSlug = priceOfSelect.value || getStoredPofItem();
-      const idx = slugs.indexOf(currentSlug);
-      if (idx === -1) return;
-
-      const delta = direction === 'up' ? -1 : 1;
-      const len = slugs.length;
-      const newIdx = (idx + delta + len) % len;
-
-      const nextSlug = slugs[newIdx];
-      priceOfSelect.value = nextSlug;
-      setPriceOfItem(nextSlug);
-    }
-
-    function cycleDalScale(direction) {
-      const current = (scaleSelect?.value) || getStoredDalScale();
-      const idx = DAL_SCALES.indexOf(current);
-      if (idx === -1) return;
-
-      const delta = direction === 'up' ? -1 : 1;
-      const len = DAL_SCALES.length;
-      const newIdx = (idx + delta + len) % len;
-
-      const next = DAL_SCALES[newIdx];
-      if (scaleSelect) scaleSelect.value = next;
-      setDalScale(next);
-    }
-
-    function isDalFile(fname) {
-      return fname.startsWith(DAL_BASE);
-    }
-
-    function dalScaleFromFilename(fname) {
-      // days_at_a_loss_log.png -> 'log', otherwise 'linear'
-      return /_log\.png$/.test(fname) ? 'log' : 'linear';
-    }
-
-    function dalFilenameForScale(scale) {
-      return scale === 'log' ? `${DAL_BASE}_log.png` : `${DAL_BASE}.png`;
-    }
-
-    function getStoredDalScale() {
-      return localStorage.getItem(DAL_STORAGE_KEY) || 'linear';
-    }
-
-    function setStoredDalScale(s) {
-      localStorage.setItem(DAL_STORAGE_KEY, s);
-    }
-
-    function showScaleControls(show) {
-      scaleControls?.classList.toggle('show', !!show);
-    }
-
-    // Swap the DAL image, persist, update grid & favorites like Year does
-    function setDalScale(scale) {
-      const oldFilename = visibleImages[currentIndex].filename;
-      if (!isDalFile(oldFilename)) return;
-
-      const newFilename = dalFilenameForScale(scale);
-
-      // Persist
-      setStoredDalScale(scale);
-
-      // Update modal image + URL
-      modalImg.src = `final_frames/${newFilename}`;
-      modalImg.alt = `Days at a Loss (${scale})`;
-      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
-
-      // Update in-memory model
-      visibleImages[currentIndex].filename = newFilename;
-
-      // Update the grid thumbnail for this card (live)
-      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
-      if (thumb) thumb.src = `final_frames/${newFilename}`;
-
-      // Migrate favorites to the new filename
-      let favs = getFavorites();
-      const pos = favs.indexOf(oldFilename);
-      if (pos !== -1) {
-        favs.splice(pos, 1);
-        if (!favs.includes(newFilename)) favs.push(newFilename);
-        saveFavorites(favs);
-        modalFavBtn.classList.add('filled');
-        modalFavBtn.textContent = '★';
-      }
-
-      // Update the grid star target
-      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
-      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
-
-      // Recompute modal padding if needed
-      updateModalSafePadding();
-    }
-
-    // --- Cookies ---
-    function setCookie(name, value, days = 365) {
-      const d = new Date();
-      d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-      document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/;SameSite=Lax`;
-    }
-
-    function getCookie(name) {
-      const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
-      return match ? decodeURIComponent(match.split('=')[1]) : null;
-    }
-
-    function setBvgYear(year) {
-      const oldFilename = visibleImages[currentIndex].filename;
-      const newFilename = bvgFilenameForYear(year);
-
-      // Persist
-      setStoredBvgYear(year);
-
-      // Update modal + URL
-      modalImg.src = `final_frames/${newFilename}`;
-      modalImg.alt = `Bitcoin vs Gold (${year})`;
-      history.replaceState(null, '', `/${newFilename.replace('.png', '')}`);
-
-      // Update the in-memory item
-      visibleImages[currentIndex].filename = newFilename;
-
-      // Update the grid thumbnail for this card (live, no reload)
-      const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
-      if (thumb) thumb.src = `final_frames/${newFilename}`;
-
-      // Migrate favorites from old filename to new filename
-      let favs = getFavorites();
-      const pos = favs.indexOf(oldFilename);
-      if (pos !== -1) {
-        favs.splice(pos, 1);
-        if (!favs.includes(newFilename)) favs.push(newFilename);
-        saveFavorites(favs);
-        // ensure the modal star reflects the migrated state
-        modalFavBtn.classList.add('filled');
-        modalFavBtn.textContent = '★';
-      }
-
-      // Also update the grid star's data-filename so future toggles act on the new filename
-      const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
-      if (gridStar) gridStar.setAttribute('data-filename', newFilename);
-    }
-
-    // Dropdown change
-    yearSelect?.addEventListener('change', (e) => setBvgYear(e.target.value));
-    scaleSelect?.addEventListener('change', (e) => setDalScale(e.target.value));
-
-    function isBvgFile(fname) { return fname.startsWith(BVG_BASE); }
-    function bvgFilenameForYear(y) { return `${BVG_BASE}_${y}.png`; }
-    function extractBvgYear(fname) {
-      const m = fname.match(/bitcoin_vs_gold_(\d{4})\.png$/);
-      return m ? m[1] : null;
-    }
-    function getStoredBvgYear() { return localStorage.getItem(BVG_STORAGE_KEY) || '2018'; }
-    function setStoredBvgYear(y) { localStorage.setItem(BVG_STORAGE_KEY, y); }
-
-    function populateYearSelect() {
-      if (!yearSelect || yearSelect.options.length) return;
-      yearSelect.innerHTML = BVG_YEARS.map(y => `<option value="${y}">${y}</option>`).join('');
-    }
-
-    function showYearControls(show) {
-      yearControls.classList.toggle('show', !!show);
-    }
-
-    function cycleBvgYear(direction) {
-      const current = parseInt(yearSelect.value, 10);
-      const idx = BVG_YEARS.indexOf(current);
-      if (idx === -1) return;
-
-      // array is [2025, 2024, ..., 2013]
-      const delta = direction === 'up' ? -1 : 1;
-      const len = BVG_YEARS.length;
-      const newIdx = (idx + delta + len) % len;   // wrap-around
-
-      const newYear = BVG_YEARS[newIdx];
-      yearSelect.value = newYear;
-      setBvgYear(newYear);
-    }
-
-    function isValidBvgYear(yStr) {
-      const y = parseInt(yStr, 10);
-      return Number.isInteger(y) && BVG_YEARS.includes(y);
-    }
-
-    function setLayout(type, manual = true) {
-      imageGrid.classList.remove('grid', 'list');
-      imageGrid.classList.add(type);
-      if (type === 'grid') {
-        gridIcon.classList.add('active');
-        listIcon.classList.remove('active');
-      } else {
-        listIcon.classList.add('active');
-        gridIcon.classList.remove('active');
-      }
-      if (manual) {
-        userSelectedLayout = type;
-        localStorage.setItem('preferredLayout', type); // <-- save preference
-      }
-    }
-
-    function updateLayoutBasedOnWidth() {
-      const containerWidth = imageGrid.offsetWidth;
-      const columnWidth = 280 + 32;
-      const columns = Math.floor(containerWidth / columnWidth);
-      const toggleIcons = document.getElementById('toggleIcons');
-      const searchContainer = document.querySelector('.search-container');
-      const searchInput = document.getElementById('search-input');
-      const searchBtn = document.getElementById('search-btn');
-
-      if (columns < 2) {
-        toggleIcons.style.display = 'none';
-        if (!searchContainer.classList.contains('active')) {
-          searchContainer.classList.add('active');
-          searchBtn.classList.add('active');
-        }
-        searchBtn.disabled = true;
-        if (userSelectedLayout !== 'list') setLayout('list', false);
-      } else {
-        toggleIcons.style.display = 'inline-flex';
-        if (searchWasInitiallyClosed && searchInput.value.trim() === '') {
-          searchContainer.classList.remove('active');
-          searchBtn.classList.remove('active');
-        }
-        searchBtn.disabled = false;
-        if (userSelectedLayout === 'list') {
-          setLayout('list', false);
-        } else {
-          setLayout('grid', false);
+    // Preserve favorites across variant swap
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+  }
+
+  function cycleCoinType(direction) {
+    if (!coinSelect || COIN_OPTIONS.length === 0) return;
+    const slugs = COIN_OPTIONS.map(o => o.slug);
+    const currentSlug = coinSelect.value || getStoredCoinSlug();
+    const idx = slugs.indexOf(currentSlug);
+    if (idx === -1) return;
+
+    const delta = direction === 'up' ? -1 : 1;
+    const len   = slugs.length;
+    const newIdx = (idx + delta + len) % len;
+
+    const nextSlug = slugs[newIdx];
+    coinSelect.value = nextSlug;
+    setCoinType(nextSlug);
+  }
+
+  /* ===========================
+   * FETCH LIST / BUILD VIEW / DEEP LINKS
+   * =========================== */
+
+  function getImageNameFromPath() {
+    const path = window.location.pathname.replace(/^\/+|\/+$/g, ''); // remove leading/trailing slashes
+    if (!path) return null;
+    return path + '.png';
+  }
+
+  fetch("final_frames/image_list.json")
+    .then(res => res.json())
+    .then(data => {
+      imageList = data;
+
+      // Build dynamic option lists
+      buildPriceOfOptionsFromList(imageList);
+      populatePriceOfSelect();
+
+      buildCoinOptionsFromList(imageList);
+      populateCoinSelect();
+
+      // Extract coins and non-coins
+      const coinSet  = new Set(COIN_ORDER.map(s => `${s}.png`));
+      const coinsAll = imageList.filter(img => coinSet.has(img.filename));
+      const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
+
+      // Determine where to insert the single coin card:
+      //   - at index of first coin originally
+      //   - fallback: after Dominance; else end
+      const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
+      let insertIdx = firstCoinIdx !== -1
+        ? firstCoinIdx
+        : nonCoins.findIndex(img => img.filename.startsWith('bitcoin_dominance')) + 1;
+      if (insertIdx < 0) insertIdx = nonCoins.length;
+
+      // Deep-link handling
+      const initialFilename = getImageNameFromPath();
+      let urlPofSlug  = null;
+      let urlCoinSlug = null;
+
+      if (initialFilename && initialFilename.startsWith(POF_BASE)) {
+        const s = pofSlugFromFilename(initialFilename);
+        if (s && PRICE_OF_OPTIONS.some(o => o.slug === s)) {
+          urlPofSlug = s;
+          setStoredPofItem(s); // persist only if valid
         }
       }
-    }
-
-    let showFavoritesOnly = localStorage.getItem('showFavoritesOnly') === 'true';
-
-    function toggleFavoritesView() {
-      showFavoritesOnly = !showFavoritesOnly;
-      localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
-      document.getElementById('favoritesToggle').classList.toggle('active', showFavoritesOnly);
-      filterImages();
-    }
-
-    let searchWasManuallyOpened = false;
-    let searchWasInitiallyClosed = true;
-
-    function openModalByIndex(index) {
-      const image = visibleImages[index];
-      if (!image) return;
-
-      currentIndex = index;
-      modal.style.display = 'flex';
-      updateModalSafePadding();
-      setTimeout(updateModalSafePadding, 0); // ensure after layout/wrap
-      document.body.style.overflow = 'hidden';
-
-      setModalLinks({
-        x: image.latest_x || '',
-        nostr: image.latest_nostr || '',
-        youtube: image.latest_youtube || ''
-      });
-
-      // BVG / DAL / POF handling
-      populateYearSelect();
-      const fname = image.filename;
-
-      if (isBvgFile(fname)) {
-        showYearControls(true); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
-        const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
-        yearSelect.value = chosenYear;
-        setBvgYear(chosenYear);
-      } else if (isDominanceFile(fname)) {
-        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(true); showCoinControls(false);
-        const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
-        dominanceSelect.value = unit;
-        setDominanceUnit(unit);
-      } else if (isDalFile(fname)) {
-        showYearControls(false); showScaleControls(true); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
-        const sc = dalScaleFromFilename(fname) || getStoredDalScale();
-        scaleSelect.value = sc;
-        setDalScale(sc);
-      } else if (isPriceOfFile(fname)) {
-        showYearControls(false); showScaleControls(false); showPriceOfControls(true); showDominanceControls(false); showCoinControls(false);
-        populatePriceOfSelect();
-        let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
-        if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
-          chosenSlug = PRICE_OF_OPTIONS.find(o => o.slug === 'ground_beef')?.slug || PRICE_OF_OPTIONS[0]?.slug;
-        }
-        priceOfSelect.value = chosenSlug;
-        const meta = PRICE_OF_META[chosenSlug];
-        if (meta) applyPostLinksFromMeta(meta);
-        setPriceOfItem(chosenSlug);
-      } else if (isCoinFile(fname)) {
-        // --- NEW: Coins ---
-        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(true);
-        populateCoinSelect();
-        let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
-        if (!COIN_OPTIONS.some(o => o.slug === chosen)) {
-          chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
-        }
-        coinSelect.value = chosen;
-        setCoinType(chosen);
-      } else {
-        // Normal images
-        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
-        modalImg.src = `final_frames/${fname}`;
-        modalImg.alt = image.title;
-        history.replaceState(null, '', `/${fname.replace('.png', '')}`);
-      }
-
-      // Star state (uses possibly-updated filename)
-      const isFav = isFavorite(visibleImages[currentIndex].filename);
-      modalFavBtn.textContent = isFav ? '★' : '☆';
-      modalFavBtn.classList.toggle('filled', isFav);
-    }
-
-    function toggleFavoriteFromModal() {
-      const filename = visibleImages[currentIndex].filename;
-      const favKey = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
-
-      let favs = getFavorites();
-      const index = favs.indexOf(favKey);
-
-      // Find the grid star for this card (uses the same key we assign below)
-      const gridStar = document.querySelector(`.favorite-star[data-filename="${favKey}"]`);
-
-      if (index !== -1) {
-        favs.splice(index, 1);
-        modalFavBtn.textContent = '☆';
-        modalFavBtn.classList.remove('filled');
-        if (gridStar) {
-          gridStar.textContent = '☆';
-          gridStar.classList.remove('filled');
-        }
-      } else {
-        if (favKey === POF_FAV_KEY) {
-          favs = favs.filter(f => !/^price_of_/.test(f)); // drop legacy per-file entries
-        }
-        favs.push(favKey);
-        modalFavBtn.textContent = '★';
-        modalFavBtn.classList.add('filled');
-        if (gridStar) {
-          gridStar.textContent = '★';
-          gridStar.classList.add('filled');
+      if (initialFilename && coinSet.has(initialFilename)) {
+        const s = coinSlugFromFilename(initialFilename);
+        if (s && COIN_ORDER.includes(s)) {
+          urlCoinSlug = s;
+          setStoredCoinSlug(s);
         }
       }
 
-      saveFavorites(favs);
+      // Build coin card seeded with stored/URL selection; default to 'wholecoins'
+      const storedCoinSlug = getStoredCoinSlug();
+      const repCoinMeta    = COIN_META[storedCoinSlug] || COIN_META['wholecoins'] || COIN_OPTIONS[0];
 
-      // If in favorites view and unstarred, remove image from modal
-      if (showFavoritesOnly && index !== -1) {
-        justUnstarredInModal = true;
-      }
-    }
-
-    function prevImage() {
-      if (justUnstarredInModal) {
-        justUnstarredInModal = false;
-        filterImages();  // remove unstarred image now that user moved on
-      }
-      const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
-      openModalByIndex(prevIndex);
-    }
-
-    function nextImage() {
-      if (justUnstarredInModal) {
-        justUnstarredInModal = false;
-        filterImages();  // remove unstarred image now that user moved on
-      }
-      const nextIndex = (currentIndex + 1) % visibleImages.length;
-      openModalByIndex(nextIndex);
-    }
-
-    function updateModalSafePadding() {
-      const controls = document.querySelector('.modal-controls');
-      const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
-
-      if (!controls || !isSmallLandscape || modal.style.display !== 'flex') {
-        modal.style.removeProperty('--controls-offset');
-        return;
-      }
-
-      // Measure real height but clamp the reserved space so it isn't aggressive
-      const h = controls.getBoundingClientRect().height;   // actual pixels
-      // Clamp between 20px and 44px; subtract a few px since image can tuck a bit under
-      const offset = Math.max(20, Math.min(h - 6, 44));
-
-      modal.style.setProperty('--controls-offset', offset + 'px');
-    }
-
-    function closeModal() {
-      modal.style.display = 'none';
-      history.replaceState(null, '', '/');
-      document.body.style.overflow = ''; // re-enable scroll
-      if (justUnstarredInModal) {
-        justUnstarredInModal = false;
-        filterImages();  // remove unstarred image from grid
-      }
-      showYearControls(false);
-      showScaleControls(false);
-      showPriceOfControls(false);
-      modal.style.removeProperty('--controls-offset');
-    }
-
-    function toggleSearch() {
-      const container = document.querySelector('.search-container');
-      const input = document.getElementById('search-input');
-      const button = document.getElementById('search-btn');
-      const nowActive = !container.classList.contains('active');
-
-      container.classList.toggle('active');
-      button.classList.toggle('active', nowActive);
-
-      if (nowActive) {
-        searchWasManuallyOpened = true;
-        searchWasInitiallyClosed = false;
-        input.focus();
-      } else {
-        input.value = '';
-        searchWasInitiallyClosed = true;
-        filterImages();
-      }
-    }
-
-    function getFavorites() {
-      const stored = localStorage.getItem('favorites');
-      return stored ? JSON.parse(stored) : [];
-    }
-
-    function saveFavorites(favs) {
-      localStorage.setItem('favorites', JSON.stringify(favs));
-    }
-
-    function isFavorite(filename) {
-      const favs = getFavorites();
-      if (filename.startsWith(POF_BASE)) {
-        // Group favorite applies to any price_of_* item (also accept legacy entries defensively)
-        return favs.includes(POF_FAV_KEY) || favs.some(f => /^price_of_/.test(f));
-      }
-      return favs.includes(filename);
-    }
-
-    function toggleFavorite(filename, starElem) {
-      const favKey = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
-
-      let favs = getFavorites();
-      const index = favs.indexOf(favKey);
-
-      if (index !== -1) {
-        favs.splice(index, 1);
-        starElem.textContent = '☆';
-        starElem.classList.remove('filled');
-      } else {
-        // If toggling Price of, remove any legacy per-file entries and keep only the group key
-        if (favKey === POF_FAV_KEY) {
-          favs = favs.filter(f => !/^price_of_/.test(f));
-        }
-        favs.push(favKey);
-        starElem.textContent = '★';
-        starElem.classList.add('filled');
-      }
-
-      saveFavorites(favs);
-
-      // If we're in favorites-only view and item was just unstarred, refresh the grid
-      if (showFavoritesOnly && index !== -1) {
-        filterImages();
-      }
-    }
-
-    function filterImages() {
-      const query = document.getElementById('search-input').value.toLowerCase();
-      const grid = document.getElementById('image-grid');
-      grid.innerHTML = '';
-
-      visibleImages = imageList.filter(({ title, description, filename }) => {
-        const matchesSearch = title.toLowerCase().includes(query) || description.toLowerCase().includes(query);
-        const isFav = !showFavoritesOnly || isFavorite(filename);
-        return matchesSearch && isFav;
-      });
-
-      // Show "no favorites" message if applicable
-      const message = document.getElementById('no-favorites-message');
-      if (showFavoritesOnly && visibleImages.length === 0) {
-        message.style.display = 'block';
-      } else {
-        message.style.display = 'none';
-      }
-
-      visibleImages.forEach(({ filename, title, description }, index) => {
-        const container = document.createElement('div');
-
-        const titleElem = document.createElement('div');
-        titleElem.className = 'chart-title';
-        titleElem.textContent = title;
-        titleElem.dataset.gridIndex = index;
-
-        const chartContainer = document.createElement('div');
-        chartContainer.className = 'chart-container';
-
-        const chartWrapper = document.createElement('div');
-        chartWrapper.className = 'chart-wrapper';
-
-        const spinner = document.createElement('div');
-        spinner.className = 'chart-loading';
-
-        const img = document.createElement('img');
-        img.className = 'grid-thumb';
-        img.dataset.gridIndex = index;
-        img.alt = title;
-        img.style.opacity = 0;
-        img.onload = () => {
-          spinner.remove();
-          img.style.opacity = 1;
+      let coinCard = null;
+      if (repCoinMeta) {
+        coinCard = {
+          filename: coinFilenameForSlug(repCoinMeta.slug),
+          title: repCoinMeta.title,
+          description: repCoinMeta.description,
+          latest_x: repCoinMeta.latest_x || '',
+          latest_nostr: repCoinMeta.latest_nostr || '',
+          latest_youtube: repCoinMeta.latest_youtube || ''
         };
-        img.onerror = () => {
-          spinner.remove();
-          img.style.opacity = 1;
-        };
-        img.onclick = () => openModalByIndex(index);
-        img.src = `final_frames/${filename}`;
-
-        const star = document.createElement('div');
-        star.className = 'favorite-star';
-        const isFav = isFavorite(filename);
-        star.textContent = isFav ? '★' : '☆';
-        if (isFav) star.classList.add('filled');
-
-        // Use the group key for price_of_* so grid + modal share the same toggle target
-        const favKeyForThisCard = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
-        star.setAttribute('data-filename', favKeyForThisCard);
-
-        star.onclick = (e) => {
-          e.stopPropagation();
-          toggleFavorite(filename, star);
-        };
-        chartContainer.appendChild(star);
-
-        chartWrapper.appendChild(spinner);
-        chartWrapper.appendChild(img);
-        chartContainer.appendChild(chartWrapper);
-
-        const desc = document.createElement('div');
-        desc.className = 'chart-description';
-        desc.textContent = description;
-        desc.dataset.gridIndex = index;
-
-        chartContainer.appendChild(desc);
-        container.appendChild(titleElem);
-        container.appendChild(chartContainer);
-        grid.appendChild(container);
-      });
-
-      updateLayoutBasedOnWidth();
-    }
-
-    function getImageNameFromPath() {
-      const path = window.location.pathname.replace(/^\/+|\/+$/g, ''); // remove leading/trailing slashes
-      if (!path) return null;
-      return path + '.png';
-    }
-
-    function handleSwipe() {
-      const swipeDistance = touchEndX - touchStartX;
-      const minSwipe = 50; // minimum distance to trigger
-
-      if (Math.abs(swipeDistance) > minSwipe) {
-        if (swipeDistance < 0) {
-          nextImage();
-        } else {
-          prevImage();
-        }
       }
-    }
 
-    function handleVerticalSwipe() {
-      const deltaY = touchEndY - touchStartY;
-      const threshold = 50; // minimum distance
-
-      const controls = document.querySelector('.modal-controls');
-
-      if (Math.abs(deltaY) > threshold) {
-        if (deltaY < 0) {
-          // swipe up
-          controls.classList.add('hidden');
-        } else {
-          // swipe down
-          controls.classList.remove('hidden');
-        }
+      // Compose new imageList with ONE coin card
+      if (coinCard) {
+        imageList = [
+          ...nonCoins.slice(0, insertIdx),
+          coinCard,
+          ...nonCoins.slice(insertIdx)
+        ];
+      } else {
+        imageList = nonCoins; // if somehow no coin data exists
       }
-    }
 
-    fetch("final_frames/image_list.json")
-      .then(res => res.json())
-      .then(data => {
-        imageList = data;
+      // Build representative "Price Of" card (after global_wealth)
+      const storedPofSlug = getStoredPofItem();
+      const repFilename   = pofFilenameForSlug(storedPofSlug);
+      const repMeta       = PRICE_OF_META[storedPofSlug];
 
-        // Auto-build the list of "price_of_*" options from imageList
-        buildPriceOfOptionsFromList(imageList);
-        populatePriceOfSelect();
-        
-        /* ---------- NEW: Coins group setup ---------- */
-        buildCoinOptionsFromList(imageList);
-        populateCoinSelect();
+      const nonPof = imageList.filter(img => !isPriceOfFile(img.filename));
+      const pofAll = imageList.filter(img => isPriceOfFile(img.filename));
 
-        // Extract coins and non-coins
-        const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
-        const coinsAll = imageList.filter(img => coinSet.has(img.filename));
-        const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
+      let pofCard = null;
+      if (pofAll.length) {
+        const chosen = pofAll.find(img => img.filename === repFilename) || pofAll[0];
+        // Seed card with stored selection's filename AND its posts/meta
+        pofCard = {
+          ...chosen,
+          filename: repFilename,
+          title: repMeta?.title || chosen.title,
+          description: repMeta?.description || chosen.description,
+          latest_x: repMeta?.latest_x || '',
+          latest_nostr: repMeta?.latest_nostr || '',
+          latest_youtube: repMeta?.latest_youtube || ''
+        };
+      }
 
-        // Determine where to insert the single coin card:
-        // place it at the index where the first coin originally appeared (fallback: after Dominance; or end)
-        const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
-        let insertIdx = firstCoinIdx !== -1 ? firstCoinIdx
-                      : nonCoins.findIndex(img => img.filename.startsWith('bitcoin_dominance')) + 1;
-        if (insertIdx < 0) insertIdx = nonCoins.length;
-
-        // Deep-link handling
-        const initialFilename = getImageNameFromPath(); // you already have this
-        let urlPofSlug = null;
-        if (initialFilename && initialFilename.startsWith(POF_BASE)) {
-          const s = pofSlugFromFilename(initialFilename);
-          if (s && PRICE_OF_OPTIONS.some(o => o.slug === s)) {
-            urlPofSlug = s;
-            setStoredPofItem(s); // persist only if valid
-          }
-        }
-        let urlCoinSlug = null;
-        if (initialFilename && coinSet.has(initialFilename)) {
-          const s = coinSlugFromFilename(initialFilename);
-          if (s && COIN_ORDER.includes(s)) {
-            urlCoinSlug = s;
-            setStoredCoinSlug(s);
-          }
-        }
-        // Build coin card seeded with stored/URL selection; default to 'wholecoins'
-        const storedCoinSlug = getStoredCoinSlug();
-        const repCoinMeta = COIN_META[storedCoinSlug] || COIN_META['wholecoins'] || COIN_OPTIONS[0];
-
-        let coinCard = null;
-        if (repCoinMeta) {
-          coinCard = {
-            filename: coinFilenameForSlug(repCoinMeta.slug),
-            title: repCoinMeta.title,
-            description: repCoinMeta.description,
-            latest_x: repCoinMeta.latest_x || '',
-            latest_nostr: repCoinMeta.latest_nostr || '',
-            latest_youtube: repCoinMeta.latest_youtube || ''
-          };
-        }
-
-        // Compose new imageList with ONE coin card
-        if (coinCard) {
+      // Insert POF card after global_wealth (or at end)
+      if (pofCard) {
+        const gwIdx = nonPof.findIndex(img => img.filename.startsWith('global_wealth'));
+        if (gwIdx !== -1) {
           imageList = [
-            ...nonCoins.slice(0, insertIdx),
-            coinCard,
-            ...nonCoins.slice(insertIdx)
+            ...nonPof.slice(0, gwIdx + 1),
+            pofCard,
+            ...nonPof.slice(gwIdx + 1)
           ];
         } else {
-          imageList = nonCoins; // if somehow no coin data exists
+          imageList = [...nonPof, pofCard];
         }
+      } else {
+        imageList = nonPof;
+      }
 
-        const storedPofSlug = getStoredPofItem();
-        const repFilename   = pofFilenameForSlug(storedPofSlug);
-        const repMeta       = PRICE_OF_META[storedPofSlug];
+      // Initial render
+      visibleImages = [...imageList];
+      migratePriceOfFavorites();
+      filterImages();
 
-        const nonPof = imageList.filter(img => !isPriceOfFile(img.filename));
-        const pofAll = imageList.filter(img => isPriceOfFile(img.filename));
-
-        let pofCard = null;
-        if (pofAll.length) {
-          const chosen = pofAll.find(img => img.filename === repFilename) || pofAll[0];
-          // Seed the card with the stored selection's filename AND its posts/meta
-          pofCard = {
-            ...chosen,
-            filename: repFilename,
-            title: repMeta?.title || chosen.title,
-            description: repMeta?.description || chosen.description,
-            latest_x: repMeta?.latest_x || '',
-            latest_nostr: repMeta?.latest_nostr || '',
-            latest_youtube: repMeta?.latest_youtube || ''
-          };
-        }
-
-        // Insert after global_wealth
-        if (pofCard) {
-          const gwIdx = nonPof.findIndex(img => img.filename.startsWith('global_wealth'));
-          if (gwIdx !== -1) {
-            imageList = [
-              ...nonPof.slice(0, gwIdx + 1),
-              pofCard,
-              ...nonPof.slice(gwIdx + 1),
-            ];
-          } else {
-            imageList = [...nonPof, pofCard];
-          }
-        } else {
-          imageList = nonPof;
-}
-
-        // Continue as usual:
-        visibleImages = [...imageList];
-        migratePriceOfFavorites();
-        filterImages();
-
-        // Check URL for a specific BVG year (e.g., /bitcoin_vs_gold_2013)
-        let urlBvgYear = null;
-        if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
-          const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
-          if (m && isValidBvgYear(m[1])) {
-            urlBvgYear = m[1];                  // valid direct-link year
-            setStoredBvgYear(urlBvgYear);       // persist only if valid
-          } else {
-            // Invalid year in URL → treat as if no deep link was provided
-            // (Do NOT change cookies/localStorage or open a modal)
-          }
-        }
-        let urlDalScale = null;
-        if (initialFilename && initialFilename.startsWith(DAL_BASE)) {
-          if (initialFilename === `${DAL_BASE}_log.png`) {
-            urlDalScale = 'log';
-          } else if (initialFilename === `${DAL_BASE}.png`) {
-            urlDalScale = 'linear';
-          }
-          if (urlDalScale) {
-            setStoredDalScale(urlDalScale);  // persist only if valid
-          }
-        }
-        let urlDomUnit = null;
-        if (initialFilename && initialFilename.startsWith(DOM_BASE)) {
-          if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = 'btc';
-          else if (initialFilename === `${DOM_BASE}.png`) urlDomUnit = 'usd';
-          if (urlDomUnit) setStoredDominanceUnit(urlDomUnit); // persist only if valid
-        }
-
-        // Remap BVG grid card to stored/URL-valid year
-        const storedBvgYear = getStoredBvgYear();
-        imageList = imageList.map(img => {
-          if (img.filename.startsWith('bitcoin_vs_gold')) {
-            return { ...img, filename: `bitcoin_vs_gold_${storedBvgYear}.png` };
-          }
-          return img;
-        });
-
-        // NEW: Remap DAL grid card to stored/URL-valid scale
-        const storedDalScale = getStoredDalScale(); // 'linear' | 'log'
-        imageList = imageList.map(img => {
-          if (img.filename.startsWith(DAL_BASE)) {
-            return { ...img, filename: dalFilenameForScale(storedDalScale) };
-          }
-          return img;
-        });
-        const storedDomUnit = getStoredDominanceUnit(); // 'usd' | 'btc'
-        imageList = imageList.map(img => {
-          if (img.filename.startsWith(DOM_BASE)) {
-            return { ...img, filename: domFilenameForUnit(storedDomUnit) };
-          }
-          return img;
-        });
-
-        // Render grid
-        visibleImages = [...imageList];
-        filterImages();
-
-        // Restore layout & favorites toggle
-        const savedLayout = localStorage.getItem('preferredLayout');
-        if (savedLayout === 'list' || savedLayout === 'grid') setLayout(savedLayout, false);
-        if (showFavoritesOnly) document.getElementById('favoritesToggle').classList.add('active');
-
-        // Open modal only when there is a valid target
-        if (initialFilename) {
-          let openIdx = -1;
-          if (urlBvgYear) {
-            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-            if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
-          } else if (urlDalScale) {
-            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-            if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DAL_BASE));
-          } else if (urlPofSlug) {
-            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-            if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POF_BASE));
-          } else if (urlDomUnit) {
-            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-            if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DOM_BASE));
-          } else if (coinSet.has(initialFilename)) {
-            // NEW: coin deep links
-            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-            if (openIdx === -1) {
-              // find the single coin card by checking any coin filename match
-              openIdx = visibleImages.findIndex(img => isCoinFile(img.filename));
-            }
-          } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
-            openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-          }
-
-          if (openIdx !== -1) {
-            openModalByIndex(openIdx);
-          } else {
-            history.replaceState(null, '', '/');
-          }
-        }
-      })
-      .catch(err => {
-        imageGrid.textContent = "Failed to load visualizations.";
-        console.error(err);
-      });
-
-    window.addEventListener('resize', updateLayoutBasedOnWidth);
-    window.addEventListener('resize', updateModalSafePadding);
-    window.addEventListener('load', updateLayoutBasedOnWidth);
-    window.addEventListener('orientationchange', updateModalSafePadding);
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
-
-    modal.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    });
-
-    modal.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-
-      handleSwipe();
-      handleVerticalSwipe();
-    });
-
-    /* ===== Key handling: add coins to ↑/↓ cycling ===== */
-    document.addEventListener('keydown', (e) => {
-      if (modal.style.display === 'flex') {
-        if (e.key === 'ArrowLeft') {
-          prevImage();
-        } else if (e.key === 'ArrowRight') {
-          nextImage();
-        } else if (e.key === ' ' || e.code === 'Space') {
-          e.preventDefault();
-          closeModal();
-        } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-          const currentFile = visibleImages[currentIndex]?.filename || "";
-          if (isBvgFile(currentFile)) {
-            e.preventDefault(); e.key === 'ArrowUp' ? cycleBvgYear('up') : cycleBvgYear('down');
-          } else if (isDalFile(currentFile)) {
-            e.preventDefault(); e.key === 'ArrowUp' ? cycleDalScale('up') : cycleDalScale('down');
-          } else if (isDominanceFile(currentFile)) {
-            e.preventDefault(); e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
-          } else if (isPriceOfFile(currentFile)) {
-            e.preventDefault(); e.key === 'ArrowUp' ? cyclePriceOf('up') : cyclePriceOf('down');
-          } else if (isCoinFile(currentFile)) {
-            // --- NEW: coin cycle ---
-            e.preventDefault(); e.key === 'ArrowUp' ? cycleCoinType('up') : cycleCoinType('down');
-          }
+      // Handle deep links for BVG / DAL / DOM
+      let urlBvgYear = null;
+      if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
+        const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
+        if (m && isValidBvgYear(m[1])) {
+          urlBvgYear = m[1];
+          setStoredBvgYear(urlBvgYear); // persist only if valid
         }
       }
+
+      let urlDalScale = null;
+      if (initialFilename && initialFilename.startsWith(DAL_BASE)) {
+        if (initialFilename === `${DAL_BASE}_log.png`) urlDalScale = 'log';
+        else if (initialFilename === `${DAL_BASE}.png`)   urlDalScale = 'linear';
+        if (urlDalScale) setStoredDalScale(urlDalScale);
+      }
+
+      let urlDomUnit = null;
+      if (initialFilename && initialFilename.startsWith(DOM_BASE)) {
+        if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = 'btc';
+        else if (initialFilename === `${DOM_BASE}.png`) urlDomUnit = 'usd';
+        if (urlDomUnit) setStoredDominanceUnit(urlDomUnit);
+      }
+
+      // Normalize grid cards to stored/URL selections
+      const storedBvgYear = getStoredBvgYear();
+      imageList = imageList.map(img => {
+        if (img.filename.startsWith(BVG_BASE)) {
+          return { ...img, filename: `${BVG_BASE}_${storedBvgYear}.png` };
+        }
+        return img;
+      });
+
+      const storedDalScale = getStoredDalScale();
+      imageList = imageList.map(img => {
+        if (img.filename.startsWith(DAL_BASE)) {
+          return { ...img, filename: dalFilenameForScale(storedDalScale) };
+        }
+        return img;
+      });
+
+      const storedDomUnit = getStoredDominanceUnit();
+      imageList = imageList.map(img => {
+        if (img.filename.startsWith(DOM_BASE)) {
+          return { ...img, filename: domFilenameForUnit(storedDomUnit) };
+        }
+        return img;
+      });
+
+      // Re-render grid after normalization
+      visibleImages = [...imageList];
+      filterImages();
+
+      // Restore layout & favorites toggle
+      const savedLayout = localStorage.getItem('preferredLayout');
+      if (savedLayout === 'list' || savedLayout === 'grid') setLayout(savedLayout, false);
+      if (showFavoritesOnly) document.getElementById('favoritesToggle').classList.add('active');
+
+      // Open modal only when there is a valid target
+      if (initialFilename) {
+        let openIdx = -1;
+        if (urlBvgYear) {
+          openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+          if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
+        } else if (urlDalScale) {
+          openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+          if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DAL_BASE));
+        } else if (urlPofSlug) {
+          openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+          if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POF_BASE));
+        } else if (urlDomUnit) {
+          openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+          if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DOM_BASE));
+        } else if (coinSet.has(initialFilename)) {
+          // Coin deep links → target the single coin card
+          openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+          if (openIdx === -1) {
+            openIdx = visibleImages.findIndex(img => isCoinFile(img.filename));
+          }
+        } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
+          openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+        }
+
+        if (openIdx !== -1) {
+          openModalByIndex(openIdx);
+        } else {
+          history.replaceState(null, '', '/');
+        }
+      }
+    })
+    .catch(err => {
+      imageGrid.textContent = "Failed to load visualizations.";
+      console.error(err);
     });
-  </script>
+
+  /* ===========================
+   * EVENT LISTENERS
+   * =========================== */
+
+  // Window/UI responsiveness
+  window.addEventListener('resize', updateLayoutBasedOnWidth);
+  window.addEventListener('resize', updateModalSafePadding);
+  window.addEventListener('load', updateLayoutBasedOnWidth);
+  window.addEventListener('orientationchange', updateModalSafePadding);
+
+  // Modal backdrop click → close
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Modal touch gestures
+  modal.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  });
+  modal.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipe();
+    handleVerticalSwipe();
+  });
+
+  // Dropdown changes
+  yearSelect?.addEventListener('change',    (e) => setBvgYear(e.target.value));
+  scaleSelect?.addEventListener('change',   (e) => setDalScale(e.target.value));
+  dominanceSelect?.addEventListener('change', (e) => setDominanceUnit(e.target.value));
+  priceOfSelect?.addEventListener('change', (e) => setPriceOfItem(e.target.value));
+  coinSelect?.addEventListener('change',    (e) => setCoinType(e.target.value));
+
+  // Favorites filter toggle (header star)
+  function toggleFavoritesView() {
+    showFavoritesOnly = !showFavoritesOnly;
+    localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
+    document.getElementById('favoritesToggle').classList.toggle('active', showFavoritesOnly);
+    filterImages();
+  }
+
+  // Keyboard shortcuts within modal
+  document.addEventListener('keydown', (e) => {
+    if (modal.style.display === 'flex') {
+      if (e.key === 'ArrowLeft') {
+        prevImage();
+      } else if (e.key === 'ArrowRight') {
+        nextImage();
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        closeModal();
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const currentFile = visibleImages[currentIndex]?.filename || '';
+        if (isBvgFile(currentFile)) {
+          e.preventDefault(); (e.key === 'ArrowUp') ? cycleBvgYear('up') : cycleBvgYear('down');
+        } else if (isDalFile(currentFile)) {
+          e.preventDefault(); (e.key === 'ArrowUp') ? cycleDalScale('up') : cycleDalScale('down');
+        } else if (isDominanceFile(currentFile)) {
+          e.preventDefault(); (e.key === 'ArrowUp') ? cycleDominance('up') : cycleDominance('down');
+        } else if (isPriceOfFile(currentFile)) {
+          e.preventDefault(); (e.key === 'ArrowUp') ? cyclePriceOf('up') : cyclePriceOf('down');
+        } else if (isCoinFile(currentFile)) {
+          e.preventDefault(); (e.key === 'ArrowUp') ? cycleCoinType('up') : cycleCoinType('down');
+        }
+      }
+    }
+  });
+</script>
 </body>
 </html>
