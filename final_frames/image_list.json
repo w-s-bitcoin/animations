@@ -319,9 +319,9 @@
     "filename": "d_coins.png",
     "title": "D-coins (500 BTC)",
     "description": "Shows the history of D-coins (UTXOs worth exactly 500 BTC)",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
+    "latest_x": "https://x.com/w_s_bitcoin/status/1972714820672610728",
+    "latest_nostr": "https://primal.net/e/nevent1qqsdjefrvd99g7tw9sk2k7k794zwk5r9r7t0nat2v8pjunxtt2f5rqqs6c0d7",
+    "latest_youtube": "https://youtu.be/4d4OE7D2hqA"
   },
   {
     "filename": "m_coins.png",
