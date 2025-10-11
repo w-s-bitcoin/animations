@@ -246,9 +246,17 @@
     }
     .modal-link svg { fill: currentColor !important; transition: color .2s, opacity .2s; }
 
-    /* Disabled (dead) links */
-    .modal-link.disabled {
-      color: #444; opacity: 0.7; pointer-events: none; cursor: default;
+    /* Disabled (dead) links — ensure they stay gray instead of orange */
+    .modal-controls .modal-link.disabled {
+      color: #888 !important;     /* solid gray tone */
+      opacity: 0.6 !important;    /* visibly faded */
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .modal-controls .modal-link.disabled svg {
+      fill: #888 !important;      /* gray icon */
+      opacity: 0.6 !important;
     }
     .modal-link.disabled:focus { outline: none; }
 
