@@ -332,6 +332,14 @@
     "latest_youtube": "https://youtu.be/hzPSxy55MPE"
   },
   {
+    "filename": "monthly_yearly_returns.png",
+    "title": "Monthly & Yearly Returns",
+    "description": "Shows the last 5 years of monthly and yearly returns",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "quarterly_yearly_returns.png",
     "title": "Quarterly & Yearly Returns",
     "description": "Shows the quarterly and yearly returns",
