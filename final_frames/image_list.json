@@ -332,6 +332,14 @@
     "latest_youtube": "https://youtu.be/hzPSxy55MPE"
   },
   {
+    "filename": "quarterly_returns.png",
+    "title": "Quarterly & Yearly Returns",
+    "description": "Shows the quarterly and yearly returns",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "monthly_candles.png",
     "title": "Monthly Candles",
     "description": "Shows the monthly candles chart",
