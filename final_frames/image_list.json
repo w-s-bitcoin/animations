@@ -236,6 +236,14 @@
     "latest_youtube": "https://youtu.be/CmogAUugkDo"
   },
   {
+    "filename": "cagr_table.png",
+    "title": "Bitcoin & Traditional Assets CAGR",
+    "description": "Shows the 1-15 year compound annual growth rates for bitcoin and traditional assets",
+    "latest_x": "",
+    "latest_nostr": "",
+    "latest_youtube": ""
+  },
+  {
     "filename": "dca_cost_basis.png",
     "title": "Daily DCA Cost Basis",
     "description": "Shows the cost basis of every daily dollar cost average starting point",
