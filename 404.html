@@ -233,12 +233,15 @@
     .modal img { max-width: 95vw; max-height: 88vh; }
     /* Enable custom gestures on the lightbox image */
     #modal-img {
-      touch-action: none;          /* we handle pinch/pan ourselves */
+      touch-action: none;          /* you already have this */
       will-change: transform;
       cursor: default;
 
-      user-select: none;           /* prevent highlighting while dragging */
-      -webkit-user-drag: none;     /* stop ghost image drag on Safari/Chrome */
+      user-select: none;           /* added last time */
+      -webkit-user-drag: none;     /* added last time */
+
+      display: block;              /* avoids baseline/centering shifts */
+      transform-origin: 0 0;       /* keep origin fixed to top-left */
     }
 
     #modal.zoomed #modal-img {
@@ -1137,8 +1140,6 @@
       const { u, v, xRel, yRel } = screenPointToImageLocal(x, y);
       pinchFocus = { u, v, xRel, yRel }; // store for move phase
 
-      // Keep math simple: always use 0 0 origin
-      modalImg.style.transformOrigin = '0 0';
       modal.classList.add('zoomed');
     } else if (e.touches.length === 1 && currentScale > 1) {
       // Begin pan
