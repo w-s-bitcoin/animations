@@ -1238,11 +1238,9 @@
       // Snap back to identity if basically not zoomed
       if (currentScale <= 1.001) {
         currentScale = 1;
-        translateX = 0;
-        translateY = 0;
-        modalImg.style.transform = '';
-        modalImg.style.transformOrigin = '';
         modal.classList.remove('zoomed');
+        // Keep using a transform at scale 1 so the image stays centered
+        centerImageAtScale1();
       }
       // Allow swipes again on next gesture
       setTimeout(() => { gestureConsumed = false; }, 0);
@@ -1256,11 +1254,9 @@
     // optional: snap back if nearly identity
     if (currentScale <= 1.001) {
       currentScale = 1;
-      translateX = 0;
-      translateY = 0;
-      modalImg.style.transform = '';
-      modalImg.style.transformOrigin = '';
       modal.classList.remove('zoomed');
+      // Keep centered instead of clearing the transform
+      centerImageAtScale1();
     }
     gestureConsumed = false;
   });
