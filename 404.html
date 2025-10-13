@@ -233,9 +233,12 @@
     .modal img { max-width: 95vw; max-height: 88vh; }
     /* Enable custom gestures on the lightbox image */
     #modal-img {
-      touch-action: none;          /* we will handle pinch/pan ourselves */
+      touch-action: none;          /* we handle pinch/pan ourselves */
       will-change: transform;
       cursor: default;
+
+      user-select: none;           /* prevent highlighting while dragging */
+      -webkit-user-drag: none;     /* stop ghost image drag on Safari/Chrome */
     }
 
     #modal.zoomed #modal-img {
@@ -473,7 +476,7 @@
       </span>
     </div>
 
-    <img id="modal-img" src="" alt="Full size image" />
+    <img id="modal-img" src="" alt="Full size image" draggable="false" />
   </div>
 
   <!-- ===========================
@@ -728,15 +731,39 @@
 
   // Clamp pan so you can't drag the image totally off screen
   function clampPanToBounds() {
-    const rect = modalImg.getBoundingClientRect();
-    // Approx bounds using the unscaled size derived from current scaled rect
-    const unscaledW = rect.width / currentScale;
-    const unscaledH = rect.height / currentScale;
-    const maxX = (unscaledW * (currentScale - 1)) / 2;
-    const maxY = (unscaledH * (currentScale - 1)) / 2;
-    translateX = clamp(translateX, -maxX, maxX);
-    translateY = clamp(translateY, -maxY, maxY);
+    const vp = modal.getBoundingClientRect();              // viewport we want to fill
+    const imgRect = modalImg.getBoundingClientRect();      // current (scaled) box
+    // Recover the unscaled display size (the size the browser laid out at scale=1)
+    const baseW = imgRect.width / currentScale;
+    const baseH = imgRect.height / currentScale;
+
+    const scaledW = baseW * currentScale;
+    const scaledH = baseH * currentScale;
+
+    // For origin 0 0, the image’s screen X range is [translateX, translateX + scaledW]
+    // We clamp so there is no blank space unless the image is smaller than the viewport,
+    // in which case we center and disable panning in that axis.
+    const minTx = Math.min(0, vp.width  - scaledW);
+    const maxTx = 0;
+
+    const minTy = Math.min(0, vp.height - scaledH);
+    const maxTy = 0;
+
+    if (scaledW <= vp.width) {
+      // Center horizontally
+      translateX = (vp.width - scaledW) / 2;
+    } else {
+      translateX = Math.max(minTx, Math.min(translateX, maxTx));
+    }
+
+    if (scaledH <= vp.height) {
+      // Center vertically
+      translateY = (vp.height - scaledH) / 2;
+    } else {
+      translateY = Math.max(minTy, Math.min(translateY, maxTy));
+    }
   }
+
 
   /* ===========================
    * LAYOUT / SEARCH
