@@ -198,6 +198,12 @@
       overflow-wrap: break-word; word-break: break-word; text-align: center;
       box-sizing: border-box;
     }
+    /* Always show the per-card star on mobile, even when not selected */
+    @media (max-width: 640px) {
+      .favorite-star {
+        opacity: 1 !important;   /* override default hidden state */
+      }
+    }
     /* Hide image-card descriptions on mobile */
     @media (max-width: 640px) {
       .chart-description {
