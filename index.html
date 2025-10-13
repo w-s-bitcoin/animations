@@ -748,15 +748,25 @@
     return { u, v, xRel, yRel };
   }
 
+  function computeBaseSizeAtScale1() {
+    const vp = modal.getBoundingClientRect();
+    const nw = modalImg.naturalWidth  || 1;
+    const nh = modalImg.naturalHeight || 1;
+
+    // Respect your CSS constraints: max-width:95vw; max-height:88vh;
+    const maxW = vp.width  * 0.95;
+    const maxH = vp.height * 0.88;
+
+    const fit = Math.min(maxW / nw, maxH / nh, 1); // don't upscale past 1
+    return { baseW: nw * fit, baseH: nh * fit, vpW: vp.width, vpH: vp.height };
+  }
+
   function centerImageAtScale1() {
+    const { baseW, baseH, vpW, vpH } = computeBaseSizeAtScale1();
     currentScale = 1;
-    translateX = 0;
-    translateY = 0;
-    // Wait until the image has layout (in case it just loaded)
-    requestAnimationFrame(() => {
-      clampPanToBounds();
-      applyTransform();
-    });
+    translateX = (vpW - baseW) / 2;
+    translateY = (vpH - baseH) / 2;
+    applyTransform();
   }
 
   // Clamp pan so you can't drag the image totally off screen
@@ -1249,33 +1259,48 @@
     }
   });
 
-  // ----- Double-tap to reset zoom -----
+  // ----- Double-tap to reset & perfectly center -----
   modalImg.addEventListener('touchend', (e) => {
     const now = Date.now();
 
-    // Only count quick single-finger taps (ignore pinch/pan)
     if (e.touches.length === 0 && e.changedTouches.length === 1 && !isPinching && !isPanning) {
       const delta = now - lastTapTime;
       lastTapTime = now;
 
-      if (delta < 300) { // double-tap threshold (ms)
+      if (delta < 300) { // double-tap
         e.preventDefault();
 
-        // Smoothly zoom back out to centered position
-        modalImg.style.transition = 'transform 0.25s ease-out';
-        currentScale = 1;
-        translateX = 0;
-        translateY = 0;
-        pinchFocus = null;
-        modal.classList.remove('zoomed');
-        centerImageAtScale1();
+        // Compute exact centered target first, then animate to it
+        const { baseW, baseH, vpW, vpH } = computeBaseSizeAtScale1();
 
-        // Remove transition after animation
-        setTimeout(() => {
-          modalImg.style.transition = '';
-        }, 300);
+        currentScale = 1;
+        translateX = (vpW - baseW) / 2;
+        translateY = (vpH - baseH) / 2;
+
+        modalImg.style.transition = 'transform 0.25s ease-out';
+        applyTransform();
+        modal.classList.remove('zoomed');
+        pinchFocus = null;
+
+        setTimeout(() => { modalImg.style.transition = ''; }, 300);
       }
     }
+  });
+
+  modalImg.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+    const { baseW, baseH, vpW, vpH } = computeBaseSizeAtScale1();
+
+    currentScale = 1;
+    translateX = (vpW - baseW) / 2;
+    translateY = (vpH - baseH) / 2;
+
+    modalImg.style.transition = 'transform 0.25s ease-out';
+    applyTransform();
+    modal.classList.remove('zoomed');
+    pinchFocus = null;
+
+    setTimeout(() => { modalImg.style.transition = ''; }, 300);
   });
 
   modalImg.addEventListener('touchcancel', () => {
