@@ -231,6 +231,16 @@
       touch-action: pan-y;
     }
     .modal img { max-width: 95vw; max-height: 88vh; }
+    /* Enable custom gestures on the lightbox image */
+    #modal-img {
+      touch-action: none;          /* we will handle pinch/pan ourselves */
+      will-change: transform;
+      cursor: default;
+    }
+
+    #modal.zoomed #modal-img {
+      cursor: grab;                /* hint to user they can drag while zoomed */
+    }
 
     /* Modal controls bar */
     .modal-controls {
@@ -533,6 +543,22 @@
   // Touch tracking for modal swipe gestures
   let touchStartX = 0, touchEndX = 0;
   let touchStartY = 0, touchEndY = 0;
+  // --- Pinch & Pan state for modal image ---
+  let isPinching = false;
+  let isPanning  = false;
+  let gestureConsumed = false;     // stops swipe handlers when true this gesture
+  let startPinchDistance = 0;
+  let startScale = 1;
+  let currentScale = 1;
+
+  let translateX = 0;
+  let translateY = 0;
+  let panStartX = 0;
+  let panStartY = 0;
+
+  const MIN_SCALE = 1;
+  const MAX_SCALE = 5;
+
 
   /* ===========================
    * CONSTANTS
@@ -666,6 +692,37 @@
       ytLink.setAttribute('aria-disabled', 'true');
       ytLink.setAttribute('tabindex', '-1');
     }
+  }
+
+  // ----- Pinch & Pan helpers -----
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function distance(touches) {
+    const [a, b] = touches;
+    const dx = b.clientX - a.clientX, dy = b.clientY - a.clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  function midpoint(touches) {
+    const [a, b] = touches;
+    return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+  }
+
+  // Keep the image transformed
+  function applyTransform() {
+    modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+  }
+
+  // Clamp pan so you can't drag the image totally off screen
+  function clampPanToBounds() {
+    const rect = modalImg.getBoundingClientRect();
+    // Approx bounds using the unscaled size derived from current scaled rect
+    const unscaledW = rect.width / currentScale;
+    const unscaledH = rect.height / currentScale;
+    const maxX = (unscaledW * (currentScale - 1)) / 2;
+    const maxY = (unscaledH * (currentScale - 1)) / 2;
+    translateX = clamp(translateX, -maxX, maxX);
+    translateY = clamp(translateY, -maxY, maxY);
   }
 
   /* ===========================
@@ -982,11 +1039,22 @@
     showYearControls(false);
     showScaleControls(false);
     showPriceOfControls(false);
+    // Reset zoom/pan state on close
+    isPinching = false;
+    isPanning  = false;
+    gestureConsumed = false;
+    currentScale = 1;
+    translateX = 0;
+    translateY = 0;
+    modalImg.style.transform = '';
+    modalImg.style.transformOrigin = '';
+    modal.classList.remove('zoomed');
     modal.style.removeProperty('--controls-offset');
   }
 
   // Horizontal swipe → prev/next image
   function handleSwipe() {
+    if (isPinching || currentScale > 1.001 || modalImg.classList.contains('zoomed')) return;
     const swipeDistance = touchEndX - touchStartX;
     const minSwipe = 50;
     if (Math.abs(swipeDistance) > minSwipe) {
@@ -997,6 +1065,7 @@
 
   // Vertical swipe → hide/show modal controls
   function handleVerticalSwipe() {
+    if (isPinching || currentScale > 1.001 || modalImg.classList.contains('zoomed')) return;
     const deltaY = touchEndY - touchStartY;
     const threshold = 50;
     const controls = document.querySelector('.modal-controls');
@@ -1006,6 +1075,82 @@
       else controls.classList.remove('hidden');         // swipe down
     }
   }
+
+  /* ===== Pinch to Zoom (two-finger) on modal image ===== */
+
+  // Distance between two touch points
+  function pinchDistance(touches) {
+    const [a, b] = touches;
+    const dx = b.clientX - a.clientX;
+    const dy = b.clientY - a.clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  // Midpoint between two touch points (used as transform origin)
+  function pinchMidpoint(touches) {
+    const [a, b] = touches;
+    return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+  }
+
+  // ----- Pinch & Pan on the full-size image -----
+  modalImg.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      // Begin pinch
+      isPinching = true;
+      gestureConsumed = true;               // don't let this gesture become a swipe
+      startPinchDistance = distance(e.touches);
+      startScale = currentScale;
+
+      // Zoom toward the midpoint between fingers (transform-origin)
+      const { x, y } = midpoint(e.touches);
+      modalImg.style.transformOrigin = `${x}px ${y}px`;
+      modal.classList.add('zoomed');
+    } else if (e.touches.length === 1 && currentScale > 1) {
+      // Begin pan
+      isPanning = true;
+      gestureConsumed = true;
+      panStartX = e.touches[0].clientX - translateX;
+      panStartY = e.touches[0].clientY - translateY;
+    }
+  }, { passive: false });
+
+  modalImg.addEventListener('touchmove', (e) => {
+    if (isPinching && e.touches.length === 2) {
+      e.preventDefault(); // stop scrolling while pinching
+      const scale = clamp(startScale * (distance(e.touches) / startPinchDistance), MIN_SCALE, MAX_SCALE);
+      currentScale = scale;
+      // When scaling down close to 1, reset pan so the image recenters nicely
+      if (currentScale === 1) { translateX = 0; translateY = 0; }
+      clampPanToBounds();
+      applyTransform();
+    } else if (isPanning && e.touches.length === 1 && currentScale > 1) {
+      e.preventDefault(); // stop scrolling while panning
+      translateX = e.touches[0].clientX - panStartX;
+      translateY = e.touches[0].clientY - panStartY;
+      clampPanToBounds();
+      applyTransform();
+    }
+  }, { passive: false });
+
+  modalImg.addEventListener('touchend', (e) => {
+    // If all fingers lifted
+    if (e.touches.length === 0) {
+      isPinching = false;
+      isPanning = false;
+
+      // Snap back to identity if basically not zoomed
+      if (currentScale <= 1.001) {
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+        modalImg.style.transform = '';
+        modalImg.style.transformOrigin = '';
+        modal.classList.remove('zoomed');
+      }
+      // Allow swipes again on next gesture
+      setTimeout(() => { gestureConsumed = false; }, 0);
+    }
+  });
 
   function prevImage() {
     if (justUnstarredInModal) {
@@ -1721,8 +1866,10 @@
   modal.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
     touchEndY = e.changedTouches[0].screenY;
-    handleSwipe();
-    handleVerticalSwipe();
+    if (!gestureConsumed) {
+      handleSwipe();
+      handleVerticalSwipe();
+    }
   });
 
   // Dropdown changes
