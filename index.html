@@ -495,7 +495,7 @@
       </a>
     </div>
     <p>© 2025 Wicked Smart Bitcoin <span id="version-info">(v0.1.2)</span></p>
-    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on October 13, 2025 at 20:19 UTC</p>
+    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on October 13, 2025 at 21:19 UTC</p>
   </footer>
 
   <script>
@@ -550,6 +550,7 @@
   let startPinchDistance = 0;
   let startScale = 1;
   let currentScale = 1;
+  let pinchFocus = null; // {u,v,xRel,yRel} captured at pinch start
 
   let translateX = 0;
   let translateY = 0;
@@ -708,9 +709,21 @@
     return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
   }
 
-  // Keep the image transformed
+  // Replace your applyTransform with this version
   function applyTransform() {
-    modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+    // translate first, then scale (your code already uses this order)
+    modalImg.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${currentScale})`;
+  }
+
+  // Convert a screen point to image-local coords given the current transform
+  function screenPointToImageLocal(clientX, clientY) {
+    const rect = modalImg.getBoundingClientRect();
+    const xRel = clientX - rect.left;  // point relative to image top-left in screen space
+    const yRel = clientY - rect.top;
+    // For transform: translate(tx,ty) scale(s), the mapping is: screen = local*s + translate
+    const u = (xRel - translateX) / currentScale;  // image-local x
+    const v = (yRel - translateY) / currentScale;  // image-local y
+    return { u, v, xRel, yRel };
   }
 
   // Clamp pan so you can't drag the image totally off screen
@@ -1031,14 +1044,17 @@
   function closeModal() {
     modal.style.display = 'none';
     history.replaceState(null, '', '/');
-    document.body.style.overflow = ''; // re-enable scroll
+    document.body.style.overflow = '';
+
     if (justUnstarredInModal) {
       justUnstarredInModal = false;
-      filterImages();  // remove unstarred image from grid
+      filterImages();
     }
+
     showYearControls(false);
     showScaleControls(false);
     showPriceOfControls(false);
+
     // Reset zoom/pan state on close
     isPinching = false;
     isPanning  = false;
@@ -1046,6 +1062,7 @@
     currentScale = 1;
     translateX = 0;
     translateY = 0;
+    pinchFocus = null; // <-- add this line
     modalImg.style.transform = '';
     modalImg.style.transformOrigin = '';
     modal.classList.remove('zoomed');
@@ -1078,32 +1095,23 @@
 
   /* ===== Pinch to Zoom (two-finger) on modal image ===== */
 
-  // Distance between two touch points
-  function pinchDistance(touches) {
-    const [a, b] = touches;
-    const dx = b.clientX - a.clientX;
-    const dy = b.clientY - a.clientY;
-    return Math.hypot(dx, dy);
-  }
-
-  // Midpoint between two touch points (used as transform origin)
-  function pinchMidpoint(touches) {
-    const [a, b] = touches;
-    return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
-  }
-
   // ----- Pinch & Pan on the full-size image -----
   modalImg.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
-      // Begin pinch
       isPinching = true;
-      gestureConsumed = true;               // don't let this gesture become a swipe
+      gestureConsumed = true;
+
       startPinchDistance = distance(e.touches);
       startScale = currentScale;
 
-      // Zoom toward the midpoint between fingers (transform-origin)
+      // Use the midpoint of the two touches as the zoom focus
       const { x, y } = midpoint(e.touches);
-      modalImg.style.transformOrigin = `${x}px ${y}px`;
+      // Find the content point (u,v) under that screen point
+      const { u, v, xRel, yRel } = screenPointToImageLocal(x, y);
+      pinchFocus = { u, v, xRel, yRel }; // store for move phase
+
+      // Keep math simple: always use 0 0 origin
+      modalImg.style.transformOrigin = '0 0';
       modal.classList.add('zoomed');
     } else if (e.touches.length === 1 && currentScale > 1) {
       // Begin pan
@@ -1116,11 +1124,25 @@
 
   modalImg.addEventListener('touchmove', (e) => {
     if (isPinching && e.touches.length === 2) {
-      e.preventDefault(); // stop scrolling while pinching
-      const scale = clamp(startScale * (distance(e.touches) / startPinchDistance), MIN_SCALE, MAX_SCALE);
-      currentScale = scale;
-      // When scaling down close to 1, reset pan so the image recenters nicely
-      if (currentScale === 1) { translateX = 0; translateY = 0; }
+      e.preventDefault();
+
+      const rawScale = startScale * (distance(e.touches) / startPinchDistance);
+      currentScale = clamp(rawScale, MIN_SCALE, MAX_SCALE);
+
+      if (pinchFocus) {
+        // Maintain: pinchFocus.u * currentScale + translateX = pinchFocus.xRel
+        // ⇒ translateX = xRel - u * currentScale  (same for Y)
+        translateX = pinchFocus.xRel - pinchFocus.u * currentScale;
+        translateY = pinchFocus.yRel - pinchFocus.v * currentScale;
+      }
+
+      // When scale nearly identity, recenter
+      if (currentScale <= 1.0001) {
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+      }
+
       clampPanToBounds();
       applyTransform();
     } else if (isPanning && e.touches.length === 1 && currentScale > 1) {
@@ -1133,11 +1155,23 @@
   }, { passive: false });
 
   modalImg.addEventListener('touchend', (e) => {
+    // If we went from 2 touches to 1, end pinch and start a pan from the remaining finger
+    if (isPinching && e.touches.length === 1) {
+      isPinching = false;
+      pinchFocus = null; // prevent stale reuse
+      isPanning = currentScale > 1;
+      if (isPanning) {
+        const t = e.touches[0];
+        panStartX = t.clientX - translateX;
+        panStartY = t.clientY - translateY;
+      }
+      return; // we handled this path
+    }
     // If all fingers lifted
     if (e.touches.length === 0) {
       isPinching = false;
       isPanning = false;
-
+      pinchFocus = null;
       // Snap back to identity if basically not zoomed
       if (currentScale <= 1.001) {
         currentScale = 1;
@@ -1150,6 +1184,22 @@
       // Allow swipes again on next gesture
       setTimeout(() => { gestureConsumed = false; }, 0);
     }
+  });
+
+  modalImg.addEventListener('touchcancel', () => {
+    isPinching = false;
+    isPanning  = false;
+    pinchFocus = null;
+    // optional: snap back if nearly identity
+    if (currentScale <= 1.001) {
+      currentScale = 1;
+      translateX = 0;
+      translateY = 0;
+      modalImg.style.transform = '';
+      modalImg.style.transformOrigin = '';
+      modal.classList.remove('zoomed');
+    }
+    gestureConsumed = false;
   });
 
   function prevImage() {
@@ -1895,6 +1945,9 @@
       } else if (e.key === 'ArrowRight') {
         nextImage();
       } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        closeModal();
+      } else if (e.key === 'Escape') {
         e.preventDefault();
         closeModal();
       } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
