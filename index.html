@@ -569,6 +569,8 @@
   let startScale = 1;
   let currentScale = 1;
   let pinchFocus = null; // {u,v,xRel,yRel} captured at pinch start
+  let lastTapTime = 0;
+  const DOUBLE_TAP_DELAY = 300; // milliseconds between taps
 
   let translateX = 0;
   let translateY = 0;
@@ -1244,6 +1246,35 @@
       }
       // Allow swipes again on next gesture
       setTimeout(() => { gestureConsumed = false; }, 0);
+    }
+  });
+
+  // ----- Double-tap to reset zoom -----
+  modalImg.addEventListener('touchend', (e) => {
+    const now = Date.now();
+
+    // Only count quick single-finger taps (ignore pinch/pan)
+    if (e.touches.length === 0 && e.changedTouches.length === 1 && !isPinching && !isPanning) {
+      const delta = now - lastTapTime;
+      lastTapTime = now;
+
+      if (delta < 300) { // double-tap threshold (ms)
+        e.preventDefault();
+
+        // Smoothly zoom back out to centered position
+        modalImg.style.transition = 'transform 0.25s ease-out';
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+        pinchFocus = null;
+        modal.classList.remove('zoomed');
+        centerImageAtScale1();
+
+        // Remove transition after animation
+        setTimeout(() => {
+          modalImg.style.transition = '';
+        }, 300);
+      }
     }
   });
 
