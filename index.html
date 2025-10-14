@@ -692,6 +692,7 @@
   function showPriceOfControls(show)    { priceOfControls?.classList.toggle('show', !!show); }
   function showDominanceControls(show)  { dominanceControls?.classList.toggle('show', !!show); }
   function showCoinControls(show)       { coinControls?.classList.toggle('show', !!show); }
+  function showMyrControls(show)        { myrControls?.classList.toggle('show', !!show); }
 
   // Modal post links (X / Nostr / YouTube)
   function setModalLinks({ x = '', nostr = '', youtube = '' } = {}) {
@@ -1094,22 +1095,22 @@
     const fname = image.filename;
 
     if (isBvgFile(fname)) {
-      showYearControls(true); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+      showYearControls(true); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
       const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
       yearSelect.value = chosenYear;
       setBvgYear(chosenYear);
     } else if (isDominanceFile(fname)) {
-      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(true); showCoinControls(false);
+      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(true); showCoinControls(false); showMyrControls(false);
       const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
       dominanceSelect.value = unit;
       setDominanceUnit(unit);
     } else if (isDalFile(fname)) {
-      showYearControls(false); showScaleControls(true); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+      showYearControls(false); showScaleControls(true); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
       const sc = dalScaleFromFilename(fname) || getStoredDalScale();
       scaleSelect.value = sc;
       setDalScale(sc);
     } else if (isPriceOfFile(fname)) {
-      showYearControls(false); showScaleControls(false); showPriceOfControls(true); showDominanceControls(false); showCoinControls(false);
+      showYearControls(false); showScaleControls(false); showPriceOfControls(true); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
       populatePriceOfSelect();
       let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
       if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
@@ -1121,7 +1122,7 @@
       setPriceOfItem(chosenSlug);
     } else if (isCoinFile(fname)) {
       // Single "Coins" card
-      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(true);
+      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(true); showMyrControls(false);
       populateCoinSelect();
       let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
       if (!COIN_OPTIONS.some(o => o.slug === chosen)) {
@@ -1129,9 +1130,20 @@
       }
       coinSelect.value = chosen;
       setCoinType(chosen);
+    } else if (isMyrFile(fname)) {
+      // Monthly/Yearly Returns dropdown
+      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(true);
+
+      // Build options (once)
+      populateMyrSelect();
+
+      // Select from filename if it has a range; otherwise default
+      const chosenRange = myrRangeFromFilename(fname) || MYR_DEFAULT_RANGE;
+      myrSelect.value = chosenRange;
+      setMyrRange(chosenRange);
     } else {
       // Plain image
-      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false);
+      showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
       modalImg.src = `final_frames/${fname}`;
       modalImg.alt = image.title;
       replaceUrlForFilename(fname);
@@ -1157,6 +1169,17 @@
     showYearControls(false);
     showScaleControls(false);
     showPriceOfControls(false);
+    showMyrControls(false);
+
+    // If closing on a MYR variant, reset grid/model back to default png
+    try {
+      const cur = visibleImages[currentIndex];
+      if (cur && isMyrFile(cur.filename) && cur.filename !== `${MYR_BASE}.png`) {
+        const defaultFile = `${MYR_BASE}.png`;
+        cur.filename = defaultFile;
+        updateGridThumbAtCurrent(defaultFile);
+      }
+    } catch (e) { /* ignore if index changed */ }
 
     // Reset zoom/pan state on close
     isPinching = false;
@@ -1816,6 +1839,69 @@
   }
 
   /* ===========================
+   * MODULE: Monthly/Yearly Returns (MYR)
+   * =========================== */
+
+  function isMyrFile(fname) { return fname.startsWith(MYR_BASE); }
+
+  // Parse "monthly_yearly_returns_2010_2014.png" → "2010 - 2014"
+  // "monthly_yearly_returns.png" → MYR_DEFAULT_RANGE
+  function myrRangeFromFilename(fname) {
+    if (fname === `${MYR_BASE}.png`) return MYR_DEFAULT_RANGE;
+    const m = fname.match(/^monthly_yearly_returns_(\d{4})_(\d{4})\.png$/);
+    return m ? `${m[1]} - ${m[2]}` : MYR_DEFAULT_RANGE;
+  }
+
+  // "2010 - 2014" → "monthly_yearly_returns_2010_2014.png"
+  // default → "monthly_yearly_returns.png"
+  function myrFilenameForRange(rangeLabel) {
+    if (!rangeLabel || rangeLabel === MYR_DEFAULT_RANGE) return `${MYR_BASE}.png`;
+    const m = rangeLabel.match(/^(\d{4})\s*-\s*(\d{4})$/);
+    return m ? `${MYR_BASE}_${m[1]}_${m[2]}.png` : `${MYR_BASE}.png`;
+  }
+
+  function populateMyrSelect() {
+    if (!myrSelect) return;
+    // Build once; allow re-run safely
+    const opts = MYR_RANGES.length ? MYR_RANGES : [MYR_DEFAULT_RANGE];
+    myrSelect.innerHTML = opts.map(r => `<option value="${r}">${r}</option>`).join('');
+  }
+
+  function setMyrRange(rangeLabel) {
+    const oldFilename = visibleImages[currentIndex].filename;
+    if (!isMyrFile(oldFilename)) return;
+
+    const newFilename = myrFilenameForRange(rangeLabel);
+
+    modalImg.src = `final_frames/${newFilename}`;
+    modalImg.alt = `Monthly & Yearly Returns (${rangeLabel})`;
+    replaceUrlForFilename(newFilename);
+    centerImageAtScale1();
+
+    visibleImages[currentIndex].filename = newFilename;
+    updateGridThumbAtCurrent(newFilename);
+
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+  }
+
+  // Arrow-key cycling for the MYR dropdown
+  function cycleMyrRange(direction) {
+    if (!myrSelect) return;
+    const opts = Array.from(myrSelect.options).map(o => o.value);
+    if (!opts.length) return;
+
+    const cur = myrSelect.value || MYR_DEFAULT_RANGE;
+    const idx = opts.indexOf(cur);
+    const delta = direction === 'up' ? -1 : 1;
+    const newIdx = ( (idx === -1 ? 0 : idx) + delta + opts.length ) % opts.length;
+
+    const next = opts[newIdx];
+    myrSelect.value = next;
+    setMyrRange(next);
+  }
+
+  /* ===========================
    * FETCH LIST / BUILD VIEW / DEEP LINKS
    * =========================== */
 
@@ -1829,6 +1915,22 @@
     .then(res => res.json())
     .then(data => {
       imageList = data;
+
+      // Discover available MYR ranges from filenames; always include the default label
+      MYR_RANGES = [MYR_DEFAULT_RANGE];
+      data.forEach(img => {
+        const m = img.filename.match(/^monthly_yearly_returns_(\d{4})_(\d{4})\.png$/);
+        if (m) {
+          const label = `${m[1]} - ${m[2]}`;
+          if (!MYR_RANGES.includes(label)) MYR_RANGES.push(label);
+        }
+      });
+      // Optional: keep ranges sorted newest → oldest by end year
+      MYR_RANGES.sort((a, b) => {
+        const ae = parseInt(a.split('-')[1], 10);  // end year
+        const be = parseInt(b.split('-')[1], 10);
+        return (be || 0) - (ae || 0);
+      });
 
       // Build dynamic option lists
       buildPriceOfOptionsFromList(imageList);
@@ -2067,11 +2169,12 @@
   });
 
   // Dropdown changes
-  yearSelect?.addEventListener('change',    (e) => setBvgYear(e.target.value));
-  scaleSelect?.addEventListener('change',   (e) => setDalScale(e.target.value));
+  yearSelect?.addEventListener('change',      (e) => setBvgYear(e.target.value));
+  scaleSelect?.addEventListener('change',     (e) => setDalScale(e.target.value));
   dominanceSelect?.addEventListener('change', (e) => setDominanceUnit(e.target.value));
-  priceOfSelect?.addEventListener('change', (e) => setPriceOfItem(e.target.value));
-  coinSelect?.addEventListener('change',    (e) => setCoinType(e.target.value));
+  priceOfSelect?.addEventListener('change',   (e) => setPriceOfItem(e.target.value));
+  coinSelect?.addEventListener('change',      (e) => setCoinType(e.target.value));
+  myrSelect?.addEventListener('change',       (e) => setMyrRange(e.target.value));
 
   // Favorites filter toggle (header star)
   function toggleFavoritesView() {
@@ -2106,6 +2209,8 @@
           e.preventDefault(); (e.key === 'ArrowUp') ? cyclePriceOf('up') : cyclePriceOf('down');
         } else if (isCoinFile(currentFile)) {
           e.preventDefault(); (e.key === 'ArrowUp') ? cycleCoinType('up') : cycleCoinType('down');
+        } else if (isMyrFile(currentFile)) {
+          e.preventDefault(); (e.key === 'ArrowUp') ? cycleMyrRange('up') : cycleMyrRange('down');
         }
       }
     }
