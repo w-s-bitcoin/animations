@@ -498,9 +498,9 @@
         </span>
       </span>
 
-      <!-- Monthly/Yearly Returns: Starting & Ending Year -->
+      <!-- Monthly/Yearly Returns: Years -->
       <span class="myr-controls" id="myr-controls">
-        <span style="color:white; font-size: 1rem;">Starting & Ending Year:</span>
+        <span style="color:white; font-size: 1rem;">Years:</span>
         <span class="select-wrap">
           <select id="myr-select" aria-label="Choose year range"></select>
         </span>
@@ -606,6 +606,7 @@
   const BVG_BASE        = 'bitcoin_vs_gold';
   const BVG_STORAGE_KEY = 'bvgYear';
   // Years newest → oldest (2013..2025 inclusive)
+  const THIS_YEAR = new Date().getFullYear();
   const BVG_YEARS = Array.from({ length: THIS_YEAR - 2013 + 1 }, (_, i) => THIS_YEAR - i);
 
   // --- Days At a Loss (DAL) ---
@@ -638,12 +639,12 @@
   // --- Monthly Yearly Returns (MYR) ---
   const MYR_BASE = 'monthly_yearly_returns';
   const MYR_START_YEAR = 2010;
-  const THIS_YEAR = new Date().getFullYear();
 
   // Default is the last 5-year window (e.g., 2021 - 2025)
   const MYR_DEFAULT_RANGE = `${THIS_YEAR - 4} - ${THIS_YEAR}`;
 
-  // Build 5-year windows plus the default “2010 - <this year>”
+  // Build rolling 5-year windows oldest → newest (e.g., 2010-2014 ... 2021-2025)
+  // The default (base PNG) is always the last window (e.g., 2021-2025).
   function buildMyrRanges(startYear, endYear) {
     const ranges = [];
     // rolling windows: 2010-2014, 2011-2015, ... , 2021-2025
@@ -652,8 +653,6 @@
     }
     return ranges; // already oldest → newest; default will be the last one
   }
-
-  let MYR_RANGES = buildMyrRanges(MYR_START_YEAR, THIS_YEAR);
 
   /* ===========================
    * GENERIC HELPERS
