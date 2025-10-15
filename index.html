@@ -754,6 +754,29 @@
     }
   }
 
+  let tempNonFavInjected = false;
+
+  /** Try to open a modal by filename even if it's filtered out by favorites. */
+  function openByFilenameAllowingNonFav(filename) {
+    // If it's already in the current visible list, open normally.
+    let idx = visibleImages.findIndex(img => img.filename === filename);
+    if (idx !== -1) {
+      openModalByIndex(idx);
+      return true;
+    }
+
+    // Otherwise, look it up in the full (unfiltered) list.
+    const fullIdx = imageList.findIndex(img => img.filename === filename);
+    if (fullIdx !== -1) {
+      // Inject it at the front of visibleImages temporarily so nav works.
+      visibleImages = [ imageList[fullIdx], ...visibleImages ];
+      tempNonFavInjected = true;
+      openModalByIndex(0);
+      return true;
+    }
+    return false;
+  }
+
   function setModalImageAndCenter(filename, altText = "") {
     modalImg.alt = altText || "";
     modalImg.src = `final_frames/${filename}`;
@@ -1211,6 +1234,12 @@
         updateGridThumbAtCurrent(defaultFile);
       }
     } catch (e) { /* ignore if index changed */ }
+
+    if (tempNonFavInjected) {
+      tempNonFavInjected = false;
+      // Rebuild the grid and visibleImages according to the active filters
+      filterImages();
+    }
 
     // Reset zoom/pan state on close
     isPinching = false;
@@ -2108,6 +2137,9 @@
 
       // Open modal only when there is a valid target
       if (initialFilename) {
+        let opened = false;
+
+        // Try your existing index logic first (it respects variants & stored prefs)
         let openIdx = -1;
         if (urlBvgYear) {
           openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
@@ -2122,19 +2154,22 @@
           openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
           if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DOM_BASE));
         } else if (coinSet.has(initialFilename)) {
-          // Coin deep links → target the single coin card
           openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-          if (openIdx === -1) {
-            openIdx = visibleImages.findIndex(img => isCoinFile(img.filename));
-          }
+          if (openIdx === -1) openIdx = visibleImages.findIndex(img => isCoinFile(img.filename));
         } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
           openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
         }
 
         if (openIdx !== -1) {
           openModalByIndex(openIdx);
-        } else {
-          history.replaceState(null, '', '/');
+          opened = true;
+        }
+
+        // If not found (e.g., filtered out by favorites), open it anyway temporarily.
+        if (!opened) {
+          if (!openByFilenameAllowingNonFav(initialFilename)) {
+            history.replaceState(null, '', '/');
+          }
         }
       }
     })
