@@ -754,6 +754,23 @@
     }
   }
 
+  function setModalImageAndCenter(filename, altText = "") {
+    modalImg.alt = altText || "";
+    modalImg.src = `final_frames/${filename}`;
+
+    // If the image is already cached, natural sizes exist now.
+    if (modalImg.complete && modalImg.naturalWidth) {
+      if (currentScale <= 1.001) centerImageAtScale1();
+      return;
+    }
+
+    const onLoad = () => {
+      if (currentScale <= 1.001) centerImageAtScale1();
+      modalImg.removeEventListener('load', onLoad);
+    };
+    modalImg.addEventListener('load', onLoad);
+  }
+
   // ----- Pinch & Pan helpers -----
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -1157,10 +1174,9 @@
     } else {
       // Plain image
       showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
-      modalImg.src = `final_frames/${fname}`;
+      setModalImageAndCenter(fname, image.title);
       modalImg.alt = image.title;
       replaceUrlForFilename(fname);
-      centerImageAtScale1();
     }
 
     // Star state (uses possibly-updated filename)
@@ -1459,10 +1475,8 @@
 
     setStoredBvgYear(year);
 
-    modalImg.src = `final_frames/${newFilename}`;
-    modalImg.alt = `Bitcoin vs Gold (${year})`;
+    setModalImageAndCenter(newFilename, `Bitcoin vs Gold (${year})`);
     replaceUrlForFilename(newFilename);
-    centerImageAtScale1();
 
     visibleImages[currentIndex].filename = newFilename;
     updateGridThumbAtCurrent(newFilename);
@@ -1503,10 +1517,8 @@
 
     setStoredDalScale(scale);
 
-    modalImg.src = `final_frames/${newFilename}`;
-    modalImg.alt = `Days at a Loss (${scale})`;
+    setModalImageAndCenter(newFilename, `Days at a Loss (${scale})`);
     replaceUrlForFilename(newFilename);
-    centerImageAtScale1();
 
     visibleImages[currentIndex].filename = newFilename;
     updateGridThumbAtCurrent(newFilename);
@@ -1553,10 +1565,8 @@
 
     setStoredDominanceUnit(unit);
 
-    modalImg.src = `final_frames/${newFilename}`;
-    modalImg.alt = `Bitcoin Dominance (${unit.toUpperCase()})`;
+    setModalImageAndCenter(newFilename, `Bitcoin Dominance (${unit.toUpperCase()})`);
     replaceUrlForFilename(newFilename);
-    centerImageAtScale1();
 
     visibleImages[currentIndex].filename = newFilename;
     updateGridThumbAtCurrent(newFilename);
@@ -1657,10 +1667,8 @@
     setStoredPofItem(slug);
 
     // Modal + URL
-    modalImg.src = `final_frames/${newFilename}`;
-    modalImg.alt = meta.title || fallbackTitle;
+    setModalImageAndCenter(newFilename, meta.title || fallbackTitle);
     replaceUrlForFilename(newFilename);
-    centerImageAtScale1();
 
     // Modal post links
     applyPostLinksFromMeta(meta);
@@ -1794,10 +1802,8 @@
     setStoredCoinSlug(slug);
 
     // Modal image + URL
-    modalImg.src = `final_frames/${newFilename}`;
-    modalImg.alt = meta?.title || image.title || slug;
+    setModalImageAndCenter(newFilename, meta?.title || image.title || slug);
     replaceUrlForFilename(newFilename);
-    centerImageAtScale1();
 
     // Modal links
     setModalLinks({
@@ -1885,10 +1891,8 @@
 
     const newFilename = myrFilenameForRange(rangeLabel);
 
-    modalImg.src = `final_frames/${newFilename}`;
-    modalImg.alt = `Monthly & Yearly Returns (${rangeLabel})`;
+    setModalImageAndCenter(newFilename, `Monthly & Yearly Returns (${rangeLabel})`);
     replaceUrlForFilename(newFilename);
-    centerImageAtScale1();
 
     visibleImages[currentIndex].filename = newFilename;
     updateGridThumbAtCurrent(newFilename);
