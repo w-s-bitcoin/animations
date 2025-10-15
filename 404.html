@@ -756,25 +756,39 @@
 
   let tempNonFavInjected = false;
 
-  /** Try to open a modal by filename even if it's filtered out by favorites. */
+  /** Open a modal by filename even if it's filtered out by favorites,
+   * inserting it into visibleImages at the correct position.
+   */
   function openByFilenameAllowingNonFav(filename) {
-    // If it's already in the current visible list, open normally.
+    // If it's already in the filtered list, open normally
     let idx = visibleImages.findIndex(img => img.filename === filename);
     if (idx !== -1) {
       openModalByIndex(idx);
       return true;
     }
 
-    // Otherwise, look it up in the full (unfiltered) list.
+    // Find it in the full list
     const fullIdx = imageList.findIndex(img => img.filename === filename);
-    if (fullIdx !== -1) {
-      // Inject it at the front of visibleImages temporarily so nav works.
-      visibleImages = [ imageList[fullIdx], ...visibleImages ];
-      tempNonFavInjected = true;
-      openModalByIndex(0);
-      return true;
+    if (fullIdx === -1) return false;
+
+    // Compute where this item belongs among the current favorites,
+    // using the global order from imageList.
+    let insertion = visibleImages.length; // default append
+    for (let i = 0; i < visibleImages.length; i++) {
+      const viFullIdx = imageList.findIndex(img => img.filename === visibleImages[i].filename);
+      if (viFullIdx > fullIdx) { insertion = i; break; }
     }
-    return false;
+
+    // Inject temporarily at its global-order position
+    visibleImages = [
+      ...visibleImages.slice(0, insertion),
+      imageList[fullIdx],
+      ...visibleImages.slice(insertion),
+    ];
+    tempNonFavInjected = true;
+
+    openModalByIndex(insertion);
+    return true;
   }
 
   function setModalImageAndCenter(filename, altText = "") {
