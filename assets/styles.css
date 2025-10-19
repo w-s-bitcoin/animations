@@ -1,6 +1,6 @@
-/* ===========================
-    THEME / GLOBAL ELEMENTS
-    =========================== */
+/* =========================================================
+   1) THEME / GLOBAL ELEMENTS
+   ========================================================= */
 :root {
     --bg: #0f0f0f;
     --fg: #f4f4f4;
@@ -38,9 +38,9 @@ footer {
     font-family: monospace;
 }
 
-/* ===========================
-    TOP CONTROLS (layout/search/favorites)
-    =========================== */
+/* =========================================================
+   2) TOP CONTROLS (layout / search / favorites)
+   ========================================================= */
 .controls-row {
     display: flex;
     justify-content: center;
@@ -50,7 +50,7 @@ footer {
     flex-wrap: wrap;
 }
 
-/* Toggle icons (grid/list) */
+/* -- Layout toggles (grid/list) -- */
 .toggle-icons {
     display: inline-flex;
     gap: 1rem;
@@ -72,7 +72,7 @@ footer {
 }
 .toggle-icon.active { box-shadow: 0 0 8px var(--brand); background-color: #333; }
 
-/* Grid icon visual */
+/* icon visuals */
 .icon-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -82,10 +82,10 @@ footer {
 }
 .icon-grid div { background-color: var(--brand); width: 100%; height: 100%; }
 
-/* List icon visual */
 .icon-list { display: flex; flex-direction: column; gap: 1px; width: 20px; }
 .icon-list div { background-color: var(--brand); height: 2px; width: 100%; }
 
+/* -- Favorites toggle + long-press menu -- */
 /* Favorites "★" in the top row */
 #favoritesToggle { font-size: 1.5rem; line-height: 1; }
 #favoritesToggle.active { box-shadow: 0 0 8px var(--brand); background-color: #333; color: var(--brand); }
@@ -131,7 +131,7 @@ footer {
     .favorites-menu-item { padding: 0.8rem 1rem; }
 }
 
-/* Search affordance */
+/* -- Search affordance (button, field, menu) -- */
 .search-container {
     display: flex; align-items: center; gap: 0.5rem; position: relative;
 }
@@ -199,10 +199,11 @@ footer {
     cursor: pointer;
 }
 
-/* ===========================
-    GRID / LIST LAYOUT
-    =========================== */
+/* =========================================================
+   3) GRID / LIST LAYOUT
+   ========================================================= */
 .image-grid { margin-top: 2rem; gap: 2rem; }
+
 .image-grid.grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -213,9 +214,9 @@ footer {
 .image-grid.list { display: flex; flex-direction: column; align-items: center; }
 .image-grid.list > div { width: 90vw; display: flex; flex-direction: column; align-items: center; }
 
-/* ===========================
-    CHART CARDS
-    =========================== */
+/* =========================================================
+   4) CHART CARDS (titles, wrapper, images, overlays)
+   ========================================================= */
 .chart-title {
     margin-bottom: 0.5rem;
     min-height: 2.5rem;
@@ -267,18 +268,6 @@ footer {
     overflow-wrap: break-word; word-break: break-word; text-align: center;
     box-sizing: border-box;
 }
-/* Always show the per-card star on mobile, even when not selected */
-@media (max-width: 640px) {
-    .favorite-star {
-    opacity: 1 !important;   /* override default hidden state */
-    }
-}
-/* Hide image-card descriptions on mobile */
-@media (max-width: 640px) {
-    .chart-description {
-    display: none !important;
-    }
-}
 .chart-container:hover .chart-description { opacity: 1; }
 .image-grid.grid .chart-description { font-size: 0.9rem; }
 .image-grid.list .chart-description { font-size: 1.4rem; }
@@ -294,9 +283,9 @@ footer {
 }
 .chart-container:hover .favorite-star, .favorite-star.filled { opacity: 1; }
 
-/* ===========================
-    MODAL (lightbox)
-    =========================== */
+/* =========================================================
+   5) MODAL (lightbox) & CONTROLS
+   ========================================================= */
 /* Modal container should not center the image; it’s our viewport */
 .modal {
     position: fixed; inset: 0;
@@ -384,6 +373,9 @@ footer {
 }
 #modal-fav-btn.filled { color: var(--brand); }
 
+/* =========================================================
+   6) MODAL: RESPONSIVE ADJUSTMENTS
+   ========================================================= */
 /* Small-screen landscape: make room above image for control bar */
 @media (max-width: 900px) and (orientation: landscape) {
     .modal { padding-top: var(--controls-offset, 1.5rem); }
@@ -395,10 +387,10 @@ footer {
     }
 }
 
-/* ===========================
-    DROPDOWN CONTROLS IN MODAL
-    (BVG year / DAL scale / Dominance / Price Of / Coins)
-    =========================== */
+/* =========================================================
+   7) DROPDOWN CONTROLS IN MODAL
+      (BVG year / DAL scale / Dominance / Price Of / Coins)
+   ========================================================= */
 .year-controls,
 .scale-controls,
 .dominance-controls,
@@ -450,5 +442,24 @@ footer {
     }
 }
 
+/* =========================================================
+   8) MOBILE-SPECIFIC CARD RULES
+   ========================================================= */
+/* Always show the per-card star on mobile, even when not selected */
+@media (max-width: 640px) {
+    .favorite-star {
+    opacity: 1 !important;   /* override default hidden state */
+    }
+}
+/* Hide image-card descriptions on mobile */
+@media (max-width: 640px) {
+    .chart-description {
+    display: none !important;
+    }
+}
+
+/* =========================================================
+   9) MISC. INTERACTION CUES
+   ========================================================= */
 .chart-wrapper { cursor: pointer; }
 .chart-title, .chart-description { cursor: pointer; }
