@@ -99,6 +99,46 @@
     #favoritesToggle { font-size: 1.5rem; line-height: 1; }
     #favoritesToggle.active { box-shadow: 0 0 8px var(--brand); background-color: #333; color: var(--brand); }
     .favorites-toggle-star { display: inline-block; transform: translateY(-1.5px); }
+    /* Prevent the header star from highlighting/selecting on press-drag */
+    #favoritesToggle,
+    #favoritesToggle .favorites-toggle-star {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      caret-color: transparent;
+    }
+    /* Long-press dropdown under the favorites star */
+    .favorites-menu {
+      position: absolute;
+      display: none;
+      min-width: 160px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 2000;
+      overflow: hidden;
+    }
+
+    .favorites-menu-item {
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      cursor: pointer;
+      user-select: none;
+      font-family: monospace;
+      color: var(--fg);
+      background: transparent;
+    }
+
+    .favorites-menu-item:hover,
+    .favorites-menu-item.active {
+      background: #2a2a2a;
+    }
+
+    @media (pointer: coarse) {
+      .favorites-menu-item { padding: 0.8rem 1rem; }
+    }
 
     /* Search affordance */
     .search-container {
@@ -410,6 +450,11 @@
       <span class="favorites-toggle-star">★</span>
     </div>
 
+    <div id="favoritesMenu" class="favorites-menu" role="menu" aria-hidden="true">
+      <div class="favorites-menu-item" data-action="select-all">Select all</div>
+      <div class="favorites-menu-item" data-action="unselect-all">Unselect all</div>
+    </div>
+
     <!-- Search (expandable) -->
     <div class="search-container">
       <button id="search-btn" class="search-btn" onclick="toggleSearch()" aria-label="Search">
@@ -529,7 +574,7 @@
       </a>
     </div>
     <p>© 2025 Wicked Smart Bitcoin <span id="version-info">(v0.1.3)</span></p>
-    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on October 19, 2025 at 18:19 UTC</p>
+    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on October 19, 2025 at 19:19 UTC</p>
   </footer>
 
   <script>
@@ -542,6 +587,11 @@
   const modal             = document.getElementById('modal');
   const modalImg          = document.getElementById('modal-img');
   const modalFavBtn       = document.getElementById('modal-fav-btn');
+  const favoritesToggleBtn = document.getElementById('favoritesToggle');
+  const favoritesMenu = document.getElementById('favoritesMenu');
+  // Stop text selection / drag highlighting on the header star
+  favoritesToggleBtn.addEventListener('selectstart', (e) => e.preventDefault());
+  favoritesToggleBtn.addEventListener('dragstart', (e) => e.preventDefault());
 
   // Modal control groups + selects
   const yearControls      = document.getElementById('year-controls');
@@ -597,6 +647,12 @@
   const MIN_SCALE = 1;
   const MAX_SCALE = 5;
 
+  // --- Favorites long-press dropdown state ---
+  let favoritesLongPressTimer = null;
+  let favoritesMenuOpen = false;
+  let favoritesMenuSelected = null;
+  let suppressFavoritesToggleOnce = false;
+  const LONG_PRESS_MS = 450;
 
   /* ===========================
    * CONSTANTS
@@ -683,6 +739,90 @@
       thumb.src = `final_frames/${newFilename}`;
       if (newAlt) thumb.alt = newAlt;
     }
+  }
+
+  function openFavoritesMenu() {
+    if (!favoritesToggleBtn || !favoritesMenu) return;
+    favoritesToggleBtn.blur(); // keep focus off the star while menu is open
+
+    // --- absorb the SAME-PRESS click on the star (mouse/touch synth click) ---
+    const absorbSamePressClick = (ev) => {
+      if (favoritesToggleBtn.contains(ev.target)) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation?.();
+      }
+      document.removeEventListener('click', absorbSamePressClick, true);
+    };
+    document.addEventListener('click', absorbSamePressClick, true);
+
+    // Make sure no “next click” is suppressed after this menu interaction
+    suppressFavoritesToggleOnce = false;
+
+    const rect = favoritesToggleBtn.getBoundingClientRect();
+    favoritesMenu.style.display = 'block';
+    favoritesMenu.style.left = `${rect.left + window.scrollX}px`;
+    favoritesMenu.style.top  = `${rect.bottom + window.scrollY + 6}px`;
+    favoritesMenu.setAttribute('aria-hidden', 'false');
+    favoritesMenuOpen = true;
+    favoritesMenuSelected = null;
+    highlightFavoritesMenuItem(null);
+  }
+
+  function closeFavoritesMenu() {
+    if (!favoritesMenuOpen) return;
+    favoritesMenu.style.display = 'none';
+    favoritesMenu.setAttribute('aria-hidden', 'true');
+    favoritesMenuOpen = false;
+    favoritesMenuSelected = null;
+    highlightFavoritesMenuItem(null);
+  }
+
+  function highlightFavoritesMenuItem(action) {
+    document.querySelectorAll('.favorites-menu-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.action === action);
+    });
+  }
+
+  function updateAllStarsFromFavorites() {
+    const favs = getFavorites();
+    document.querySelectorAll('.favorite-star').forEach(el => {
+      const key = el.getAttribute('data-filename'); // note: price_of uses group key
+      const on = favs.includes(key) || (key !== POF_FAV_KEY && isFavorite(key));
+      el.textContent = on ? '★' : '☆';
+      el.classList.toggle('filled', on);
+    });
+
+    // Update modal star if open
+    if (modal.style.display === 'flex' && visibleImages[currentIndex]) {
+      const fname = visibleImages[currentIndex].filename;
+      const on = isFavorite(fname);
+      modalFavBtn.textContent = on ? '★' : '☆';
+      modalFavBtn.classList.toggle('filled', on);
+    }
+  }
+
+  function selectAllFavorites() {
+    // Star every non-PriceOf file, plus one group key for PriceOf if present
+    const favs = new Set(getFavorites());
+    let sawPriceOf = false;
+    imageList.forEach(img => {
+      if (isPriceOfFile(img.filename)) {
+        sawPriceOf = true;
+      } else {
+        favs.add(img.filename);
+      }
+    });
+    if (sawPriceOf) favs.add(POF_FAV_KEY);
+    saveFavorites([...favs]);
+    updateAllStarsFromFavorites();
+    if (showFavoritesOnly) filterImages();
+  }
+
+  function unselectAllFavorites() {
+    saveFavorites([]);
+    updateAllStarsFromFavorites();
+    if (showFavoritesOnly) filterImages();
   }
 
   // Migrate favorites when a filename-based variant changes (BVG/DAL/DOM/Coins)
@@ -2202,6 +2342,77 @@
   window.addEventListener('load', updateLayoutBasedOnWidth);
   window.addEventListener('orientationchange', updateModalSafePadding);
 
+  function onFavoritesPointerDown(e) {
+    // Prevent browser from starting text selection / focus highlight
+    e.preventDefault();
+    // Allow touch/pen/mouse
+    if (favoritesLongPressTimer) clearTimeout(favoritesLongPressTimer);
+    favoritesLongPressTimer = setTimeout(() => {
+      // Long-press recognized
+      openFavoritesMenu(); // we'll absorb the same-press click inside this function
+    }, LONG_PRESS_MS);
+
+    // If this is touch, prevent ghost click after long-press
+    if (e.type === 'touchstart') e.preventDefault();
+  }
+
+  function onFavoritesPointerMove(e) {
+    if (!favoritesMenuOpen) return;
+
+    // Track which menu item is under the pointer/finger
+    const point = (e.touches && e.touches[0]) || e;
+    const el = document.elementFromPoint(point.clientX, point.clientY);
+    if (el && el.classList && el.classList.contains('favorites-menu-item')) {
+      favoritesMenuSelected = el.dataset.action;
+      highlightFavoritesMenuItem(favoritesMenuSelected);
+    } else {
+      favoritesMenuSelected = null;
+      highlightFavoritesMenuItem(null);
+    }
+  }
+
+  function onFavoritesPointerUp(e) {
+    if (favoritesLongPressTimer) {
+      clearTimeout(favoritesLongPressTimer);
+      favoritesLongPressTimer = null;
+    }
+
+    if (favoritesMenuOpen) {
+      // Execute selection if one is active
+      if (favoritesMenuSelected === 'select-all') {
+        selectAllFavorites();
+      } else if (favoritesMenuSelected === 'unselect-all') {
+        unselectAllFavorites();
+      }
+      closeFavoritesMenu();
+      // Make sure the very next normal click works immediately
+      suppressFavoritesToggleOnce = false;
+    }
+  }
+
+  // Open/close behavior outside clicks / Esc
+  document.addEventListener('mousedown', (e) => {
+    if (!favoritesMenuOpen) return;
+    if (!favoritesMenu.contains(e.target) && e.target !== favoritesToggleBtn) {
+      closeFavoritesMenu();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (favoritesMenuOpen && e.key === 'Escape') closeFavoritesMenu();
+  });
+
+  // Bind events on the favorites button
+  favoritesToggleBtn.addEventListener('mousedown', onFavoritesPointerDown);
+  favoritesToggleBtn.addEventListener('touchstart', onFavoritesPointerDown, { passive: false });
+
+  // Track pointer while menu is open
+  document.addEventListener('mousemove', onFavoritesPointerMove);
+  document.addEventListener('touchmove', onFavoritesPointerMove, { passive: false });
+
+  // Release
+  document.addEventListener('mouseup', onFavoritesPointerUp);
+  document.addEventListener('touchend', onFavoritesPointerUp);
+
   // Modal backdrop click → close
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
@@ -2231,6 +2442,12 @@
 
   // Favorites filter toggle (header star)
   function toggleFavoritesView() {
+    // Ignore clicks while the long-press menu is open
+    if (favoritesMenuOpen) return;
+    if (suppressFavoritesToggleOnce) {
+      suppressFavoritesToggleOnce = false; // consume the suppression
+      return; // skip normal toggle because long-press menu handled this press
+    }
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
     document.getElementById('favoritesToggle').classList.toggle('active', showFavoritesOnly);
