@@ -157,6 +157,13 @@
       display: flex; align-items: center; justify-content: center;
     }
     .search-btn.active { box-shadow: 0 0 8px var(--brand); background-color: #333; }
+    #search-btn {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      caret-color: transparent;
+    }
 
     .search-input {
       height: 32px; width: 0; opacity: 0;
@@ -169,6 +176,37 @@
       border-radius: 6px;
     }
     .search-container.active .search-input { width: 200px; opacity: 1; }
+
+    /* Long-press dropdown under the Search button */
+    .search-menu {
+      position: absolute;
+      display: none;
+      min-width: 180px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 2000;
+      padding: 0.35rem 0.4rem;
+    }
+
+    .search-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.4rem;
+      cursor: pointer;
+      user-select: none;
+      color: var(--fg);
+      border-radius: 6px;
+    }
+
+    .search-menu-item:hover { background: #2a2a2a; }
+
+    .search-menu input[type="checkbox"] {
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
 
     /* ===========================
        GRID / LIST LAYOUT
@@ -464,6 +502,17 @@
       </button>
       <input id="search-input" class="search-input" type="text" placeholder="Search..." oninput="filterImages()" />
     </div>
+
+    <div id="searchMenu" class="search-menu" role="menu" aria-hidden="true">
+      <label class="search-menu-item">
+        <input type="checkbox" id="chkSearchTitles" checked />
+        Titles
+      </label>
+      <label class="search-menu-item">
+        <input type="checkbox" id="chkSearchDescriptions" checked />
+        Descriptions
+      </label>
+    </div>
   </div>
 
   <!-- ===========================
@@ -587,11 +636,19 @@
   const modal             = document.getElementById('modal');
   const modalImg          = document.getElementById('modal-img');
   const modalFavBtn       = document.getElementById('modal-fav-btn');
+  const searchBtn       = document.getElementById('search-btn');
+  const searchInput     = document.getElementById('search-input');
+  const searchContainer = document.querySelector('.search-container');
+  const searchMenu      = document.getElementById('searchMenu');
+  const chkSearchTitles = document.getElementById('chkSearchTitles');
+  const chkSearchDescs  = document.getElementById('chkSearchDescriptions');
   const favoritesToggleBtn = document.getElementById('favoritesToggle');
   const favoritesMenu = document.getElementById('favoritesMenu');
   // Stop text selection / drag highlighting on the header star
   favoritesToggleBtn.addEventListener('selectstart', (e) => e.preventDefault());
   favoritesToggleBtn.addEventListener('dragstart', (e) => e.preventDefault());
+  searchBtn.addEventListener('selectstart', (e) => e.preventDefault());
+  searchBtn.addEventListener('dragstart', (e) => e.preventDefault());
 
   // Modal control groups + selects
   const yearControls      = document.getElementById('year-controls');
@@ -653,6 +710,19 @@
   let favoritesMenuSelected = null;
   let suppressFavoritesToggleOnce = false;
   const LONG_PRESS_MS = 450;
+
+  // --- Search long-press dropdown state & prefs ---
+  let searchLongPressTimer = null;
+  let searchMenuOpen = false;
+  const SEARCH_LONG_PRESS_MS = 450;
+
+  const SEARCH_TITLES_KEY = 'searchInTitles';
+  const SEARCH_DESCS_KEY  = 'searchInDescriptions';
+
+  let searchInTitles = localStorage.getItem(SEARCH_TITLES_KEY);
+  let searchInDescs  = localStorage.getItem(SEARCH_DESCS_KEY);
+  searchInTitles = (searchInTitles === null) ? true : (searchInTitles === 'true');
+  searchInDescs  = (searchInDescs  === null) ? true : (searchInDescs  === 'true');
 
   /* ===========================
    * CONSTANTS
@@ -823,6 +893,85 @@
     saveFavorites([]);
     updateAllStarsFromFavorites();
     if (showFavoritesOnly) filterImages();
+  }
+
+  function openSearchMenu() {
+    if (!searchBtn || !searchMenu) return;
+
+    // Ensure the search UI is open (but don't focus yet).
+    const justActivated = !searchContainer.classList.contains('active');
+    if (justActivated) {
+      searchContainer.classList.add('active');
+      searchBtn.classList.add('active');
+      searchWasInitiallyClosed = false;
+    }
+
+    // Prepare the menu hidden so we can position it before showing (no snap).
+    searchMenu.style.display = 'block';
+    searchMenu.style.visibility = 'hidden';
+    searchMenu.setAttribute('aria-hidden', 'false');
+    searchMenuOpen = true;
+
+    // Sync checkboxes to prefs
+    chkSearchTitles.checked = !!searchInTitles;
+    chkSearchDescs.checked  = !!searchInDescs;
+
+    // Absorb the synthetic click that follows long-press so we don't toggle the bar.
+    const absorbSamePressClick = (ev) => {
+      if (searchBtn.contains(ev.target)) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation?.();
+      }
+      document.removeEventListener('click', absorbSamePressClick, true);
+    };
+    document.addEventListener('click', absorbSamePressClick, true);
+
+    // If we just opened the bar, wait for its width transition to finish, then place+show.
+    const input = searchInput;
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      positionSearchMenu();              // <-- compute with final layout
+      searchMenu.style.visibility = '';  // show
+    };
+
+    if (justActivated) {
+      // Try the real transitionend first (most accurate).
+      const onEnd = (e) => {
+        if (e.propertyName === 'width') {
+          input.removeEventListener('transitionend', onEnd);
+          finish();
+        }
+      };
+      input.addEventListener('transitionend', onEnd);
+
+      // Fallback guard: if transitionend doesn’t fire (browser quirks), use rAF+timeout.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // If still not finished after ~2 frames, force placement after 280ms (≈CSS 300ms)
+          setTimeout(finish, 280);
+        });
+      });
+    } else {
+      // Bar was already open — position immediately, no flicker.
+      positionSearchMenu();
+      searchMenu.style.visibility = '';
+    }
+  }
+
+  function closeSearchMenu() {
+    if (!searchMenuOpen) return;
+    searchMenu.style.display = 'none';
+    searchMenu.setAttribute('aria-hidden', 'true');
+    searchMenuOpen = false;
+  }
+
+  function positionSearchMenu() {
+    const rect = searchBtn.getBoundingClientRect();
+    searchMenu.style.left = `${rect.left + window.scrollX}px`;
+    searchMenu.style.top  = `${rect.bottom + window.scrollY + 6}px`;
   }
 
   // Migrate favorites when a filename-based variant changes (BVG/DAL/DOM/Coins)
@@ -1078,7 +1227,9 @@
       if (userSelectedLayout !== 'list') setLayout('list', false);
     } else {
       toggleIconsEl.style.display = 'inline-flex';
-      if (searchWasInitiallyClosed && searchInput.value.trim() === '') {
+      // Do not auto-close if the long-press checklist is open,
+      // or if we've already marked the search as user-opened.
+      if (!searchMenuOpen && searchWasInitiallyClosed && searchInput.value.trim() === '') {
         searchContainer.classList.remove('active');
         searchBtn.classList.remove('active');
       }
@@ -1098,11 +1249,21 @@
     button.classList.toggle('active', nowActive);
 
     if (nowActive) {
+      // Search bar opened
       searchWasInitiallyClosed = false;
       input.focus();
+
+      // If the checklist menu is already open, re-align it after layout shifts
+      if (searchMenuOpen) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(positionSearchMenu);
+        });
+      }
     } else {
+      // Search bar closed — clear query and close the checklist menu
       input.value = '';
       searchWasInitiallyClosed = true;
+      closeSearchMenu(); // 👈 NEW: hide the checklist menu when search is closed
       filterImages();
     }
   }
@@ -1177,7 +1338,14 @@
     grid.innerHTML = '';
 
     visibleImages = imageList.filter(({ title, description, filename }) => {
-      const matchesSearch = title.toLowerCase().includes(query) || description.toLowerCase().includes(query);
+      let matchesSearch = true;
+      if (query !== '') {
+        const inTitle = searchInTitles && title.toLowerCase().includes(query);
+        const inDesc  = searchInDescs  && description.toLowerCase().includes(query);
+        // If neither box is selected, treat as both selected (safety valve)
+        const anySelected = searchInTitles || searchInDescs;
+        matchesSearch = anySelected ? (inTitle || inDesc) : (title.toLowerCase().includes(query) || description.toLowerCase().includes(query));
+      }
       const isFav         = !showFavoritesOnly || isFavorite(filename);
       return matchesSearch && isFav;
     });
@@ -2341,6 +2509,8 @@
   window.addEventListener('resize', updateModalSafePadding);
   window.addEventListener('load', updateLayoutBasedOnWidth);
   window.addEventListener('orientationchange', updateModalSafePadding);
+  window.addEventListener('resize', positionSearchMenu);
+  window.addEventListener('orientationchange', positionSearchMenu);
 
   function onFavoritesPointerDown(e) {
     // Prevent browser from starting text selection / focus highlight
@@ -2390,6 +2560,29 @@
     }
   }
 
+  function onSearchPointerDown(e) {
+    // Prevent text selection highlight while long-pressing
+    e.preventDefault();
+    if (searchLongPressTimer) clearTimeout(searchLongPressTimer);
+    searchLongPressTimer = setTimeout(() => {
+      openSearchMenu();
+      // Do NOT focus the input yet—clicking into it will close the menu
+    }, SEARCH_LONG_PRESS_MS);
+  }
+
+  function onSearchPointerUp() {
+    if (searchLongPressTimer) {
+      clearTimeout(searchLongPressTimer);
+      searchLongPressTimer = null;
+    }
+  }
+
+  // Open checklist on long press (mouse/touch/pen)
+  searchBtn.addEventListener('mousedown', onSearchPointerDown);
+  searchBtn.addEventListener('touchstart', onSearchPointerDown, { passive: false });
+  document.addEventListener('mouseup', onSearchPointerUp);
+  document.addEventListener('touchend', onSearchPointerUp);
+
   // Open/close behavior outside clicks / Esc
   document.addEventListener('mousedown', (e) => {
     if (!favoritesMenuOpen) return;
@@ -2397,8 +2590,69 @@
       closeFavoritesMenu();
     }
   });
+  searchInput.addEventListener('focus', closeSearchMenu);
+  searchInput.addEventListener('mousedown', closeSearchMenu);
+  searchInput.addEventListener('touchstart', closeSearchMenu, { passive: true });
+  searchInput.addEventListener('transitionend', (e) => {
+    if (e.propertyName === 'width') positionSearchMenu();
+  });
   document.addEventListener('keydown', (e) => {
     if (favoritesMenuOpen && e.key === 'Escape') closeFavoritesMenu();
+  });
+
+  function setSearchPref(key, val) {
+    localStorage.setItem(key, String(val));
+  }
+
+  // Close the SEARCH checklist when the press starts outside it.
+  // Capture phase ensures we run before other handlers, and pointerdown
+  // ensures we don't swallow checkbox clicks inside the menu.
+  function handleOutsideCloseForSearch(e) {
+    if (!searchMenuOpen) return;
+    const t = e.target;
+    const clickedInsideMenu = searchMenu.contains(t);
+    if (!clickedInsideMenu) {
+      closeSearchMenu();
+    }
+  }
+
+  // Listen in capture phase so it always runs first; pointerdown works for mouse/touch/pen.
+  document.addEventListener('pointerdown', handleOutsideCloseForSearch, true);
+
+  chkSearchTitles.addEventListener('change', () => {
+    // Apply the toggle the user just made
+    searchInTitles = chkSearchTitles.checked;
+
+    // If both are now false, flip to the other (keep exactly one selected)
+    if (!searchInTitles && !chkSearchDescs.checked) {
+      searchInDescs = true;
+      chkSearchDescriptions.checked = true;
+    } else {
+      // otherwise just mirror current check states
+      searchInDescs = chkSearchDescriptions.checked;
+    }
+
+    setSearchPref(SEARCH_TITLES_KEY, searchInTitles);
+    setSearchPref(SEARCH_DESCS_KEY,  searchInDescs);
+    filterImages();
+  });
+
+  chkSearchDescs.addEventListener('change', () => {
+    // Apply the toggle the user just made
+    searchInDescs = chkSearchDescriptions.checked;
+
+    // If both are now false, flip to the other (keep exactly one selected)
+    if (!searchInDescs && !chkSearchTitles.checked) {
+      searchInTitles = true;
+      chkSearchTitles.checked = true;
+    } else {
+      // otherwise just mirror current check states
+      searchInTitles = chkSearchTitles.checked;
+    }
+
+    setSearchPref(SEARCH_TITLES_KEY, searchInTitles);
+    setSearchPref(SEARCH_DESCS_KEY,  searchInDescs);
+    filterImages();
   });
 
   // Bind events on the favorites button
