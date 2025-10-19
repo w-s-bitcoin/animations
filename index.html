@@ -1249,22 +1249,14 @@
     button.classList.toggle('active', nowActive);
 
     if (nowActive) {
-      // Search bar opened
       searchWasInitiallyClosed = false;
       input.focus();
-
-      // If the checklist menu is already open, re-align it after layout shifts
-      if (searchMenuOpen) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(positionSearchMenu);
-        });
-      }
     } else {
-      // Search bar closed — clear query and close the checklist menu
+      const hadQuery = input.value.trim() !== '';
       input.value = '';
       searchWasInitiallyClosed = true;
-      closeSearchMenu(); // 👈 NEW: hide the checklist menu when search is closed
-      filterImages();
+      if (hadQuery) filterImages();   // only rerender if results actually change
+      // if there was no query, skip rebuilding to avoid flashes
     }
   }
 
@@ -1375,15 +1367,30 @@
 
       const spinner = document.createElement('div');
       spinner.className = 'chart-loading';
+      spinner.style.display = 'none'; // don't show immediately
 
       const img = document.createElement('img');
       img.className = 'grid-thumb';
       img.dataset.gridIndex = index;
       img.alt = title;
       img.style.opacity = 0;
-      img.onload  = () => { spinner.remove(); img.style.opacity = 1; };
-      img.onerror = () => { spinner.remove(); img.style.opacity = 1; };
-      img.onclick = () => openModalByIndex(index);
+
+      // Only show spinner if load takes > 120ms
+      const showSpinTimer = setTimeout(() => { spinner.style.display = ''; }, 120);
+
+      img.onload  = () => {
+        clearTimeout(showSpinTimer);
+        spinner.remove();
+        img.style.opacity = 1;
+      };
+      img.onerror = () => {
+        clearTimeout(showSpinTimer);
+        spinner.remove();
+        img.style.opacity = 1;
+      };
+
+      // set src AFTER handlers so cached images skip the spinner path
+      img.decoding = 'async';
       img.src = `final_frames/${filename}`;
 
       // Star (favorites)
