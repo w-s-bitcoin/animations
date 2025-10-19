@@ -1,6 +1,4 @@
-/* ===========================
-* DOM ELEMENTS
-* =========================== */
+/* =========================== DOM ELEMENTS =========================== */
 const imageGrid = document.getElementById('image-grid');
 const gridIcon = document.getElementById('gridView');
 const listIcon = document.getElementById('listView');
@@ -40,9 +38,7 @@ const coinSelect = document.getElementById('coin-select');
 const myrControls = document.getElementById('myr-controls');
 const myrSelect = document.getElementById('myr-select');
 
-/* ===========================
-* GLOBAL STATE
-* =========================== */
+/* =========================== GLOBAL STATE =========================== */
 let imageList = [];            // Full list (post-processed after fetch)
 let visibleImages = [];        // Filtered list currently rendered
 let currentIndex = 0;          // Index in visibleImages of open modal
@@ -95,9 +91,7 @@ let searchInDescs = localStorage.getItem(SEARCH_DESCS_KEY);
 searchInTitles = (searchInTitles === null) ? true : (searchInTitles === 'true');
 searchInDescs = (searchInDescs === null) ? true : (searchInDescs === 'true');
 
-/* ===========================
-* CONSTANTS
-* =========================== */
+/* =========================== CONSTANTS =========================== */
 
 // --- Bitcoin vs Gold (BVG) ---
 const BVG_BASE = 'bitcoin_vs_gold';
@@ -151,9 +145,7 @@ function buildMyrRanges(startYear, endYear) {
     return ranges; // already oldest → newest; default will be the last one
 }
 
-/* ===========================
-* GENERIC HELPERS
-* =========================== */
+/* =========================== GENERIC HELPERS =========================== */
 
 // Cookies (used alongside localStorage for some selectors)
 function setCookie(name, value, days = 365) {
@@ -557,10 +549,7 @@ function clampPanToBounds() {
     }
 }
 
-
-/* ===========================
-* LAYOUT / SEARCH
-* =========================== */
+/* =========================== LAYOUT / SEARCH =========================== */
 
 function setLayout(type, manual = true) {
     imageGrid.classList.remove('grid', 'list');
@@ -631,9 +620,7 @@ function toggleSearch() {
     }
 }
 
-/* ===========================
-* FAVORITES (localStorage)
-* =========================== */
+/* =========================== FAVORITES (localStorage) =========================== */
 
 function getFavorites() {
     const stored = localStorage.getItem('favorites');
@@ -691,9 +678,7 @@ function migratePriceOfFavorites() {
     saveFavorites(favs);
 }
 
-/* ===========================
-* GRID RENDERING & FILTERING
-* =========================== */
+/* =========================== GRID RENDERING & FILTERING =========================== */
 
 function filterImages() {
     const query = document.getElementById('search-input').value.toLowerCase();
@@ -849,9 +834,7 @@ function filterImages() {
     updateLayoutBasedOnWidth();
 }
 
-/* ===========================
-* MODAL OPEN/CLOSE & SWIPES
-* =========================== */
+/* =========================== MODAL OPEN/CLOSE & SWIPES =========================== */
 
 // Adjust safe padding in landscape on small screens so controls don't overlap the image
 function updateModalSafePadding() {
@@ -1229,9 +1212,7 @@ function toggleFavoriteFromModal() {
     }
 }
 
-/* ===========================
-* MODULE: Bitcoin vs Gold (BVG)
-* =========================== */
+/* =========================== MODULE: Bitcoin vs Gold (BVG) =========================== */
 
 function isBvgFile(fname) { return fname.startsWith(BVG_BASE); }
 function bvgFilenameForYear(y) { return `${BVG_BASE}_${y}.png`; }
@@ -1282,9 +1263,7 @@ function cycleBvgYear(direction) {
     setBvgYear(newYear);
 }
 
-/* ===========================
-* MODULE: Days at a Loss (DAL)
-* =========================== */
+/* =========================== MODULE: Days at a Loss (DAL) =========================== */
 
 function isDalFile(fname) { return fname.startsWith(DAL_BASE); }
 function dalScaleFromFilename(fname) { return /_log\.png$/.test(fname) ? 'log' : 'linear'; }
@@ -1324,9 +1303,7 @@ function cycleDalScale(direction) {
     setDalScale(next);
 }
 
-/* ===========================
-* MODULE: Dominance (USD/BTC)
-* =========================== */
+/* =========================== MODULE: Dominance (USD/BTC) =========================== */
 
 function isDominanceFile(fname) { return fname.startsWith(DOM_BASE); }
 function domUnitFromFilename(fname) { return /_btc\.png$/.test(fname) ? 'btc' : 'usd'; }
@@ -1372,9 +1349,7 @@ function cycleDominance(direction) {
     setDominanceUnit(next);
 }
 
-/* ===========================
-* MODULE: Price Of (price_of_*)
-* =========================== */
+/* =========================== MODULE: Price Of (price_of_*) =========================== */
 
 function isPriceOfFile(fname) { return fname.startsWith(POF_BASE); }
 
@@ -1516,9 +1491,7 @@ function cyclePriceOf(direction) {
     setPriceOfItem(nextSlug);
 }
 
-/* ===========================
-* MODULE: Coins (single card)
-* =========================== */
+/* =========================== MODULE: Coins (single card) =========================== */
 
 function isCoinFile(fname) {
     return /^(.+)\.png$/.test(fname) && COIN_ORDER.some(slug => `${slug}.png` === fname);
@@ -1642,9 +1615,7 @@ function cycleCoinType(direction) {
     setCoinType(nextSlug);
 }
 
-/* ===========================
-* MODULE: Monthly/Yearly Returns (MYR)
-* =========================== */
+/* =========================== MODULE: Monthly/Yearly Returns (MYR) =========================== */
 
 function isMyrFile(fname) { return fname.startsWith(MYR_BASE); }
 
@@ -1700,9 +1671,7 @@ function cycleMyrRange(direction) {
     setMyrRange(next);
 }
 
-/* ===========================
-* FETCH LIST / BUILD VIEW / DEEP LINKS
-* =========================== */
+/* =========================== FETCH LIST / BUILD VIEW / DEEP LINKS =========================== */
 
 function getImageNameFromPath() {
     const path = window.location.pathname.replace(/^\/+|\/+$/g, ''); // remove leading/trailing slashes
@@ -1932,9 +1901,7 @@ fetch("final_frames/image_list.json")
         console.error(err);
     });
 
-/* ===========================
-* EVENT LISTENERS
-* =========================== */
+/* =========================== EVENT LISTENERS =========================== */
 
 // Window/UI responsiveness
 window.addEventListener('resize', updateLayoutBasedOnWidth);
