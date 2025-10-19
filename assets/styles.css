@@ -244,6 +244,13 @@ footer {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
     object-fit: contain; border-radius: 8px;
+    /* Prevent text selection / drag ghost on grid thumbs */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Loading spinner (hidden after image load) */
@@ -280,6 +287,15 @@ footer {
     border-radius: 50%; width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
     opacity: 0; transition: opacity 0.3s ease; cursor: pointer; z-index: 2;
+    /* Prevent selecting or long-press text callout on the star */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    caret-color: transparent;
 }
 .chart-container:hover .favorite-star, .favorite-star.filled { opacity: 1; }
 

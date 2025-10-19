@@ -767,6 +767,9 @@ function filterImages() {
         img.alt = title;
         img.style.opacity = 0;
 
+        // Prevent select highlight on grid image
+        img.addEventListener('selectstart', (e) => e.preventDefault());
+
         // Only show spinner if load takes > 120ms
         const showSpinTimer = setTimeout(() => { spinner.style.display = ''; }, 120);
 
@@ -797,6 +800,10 @@ function filterImages() {
         const favOn = isFavorite(filename);
         star.textContent = favOn ? '★' : '☆';
         if (favOn) star.classList.add('filled');
+
+        // Prevent selecting/dragging the star overlay
+        star.addEventListener('dragstart', (e) => e.preventDefault());
+        star.addEventListener('selectstart', (e) => e.preventDefault());
 
         // Use group key for price_of_* so grid + modal share the same toggle target
         const favKeyForThisCard = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
