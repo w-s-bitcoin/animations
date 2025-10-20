@@ -744,42 +744,36 @@ function filterImages() {
         const chartWrapper = document.createElement('div');
         chartWrapper.className = 'chart-wrapper';
 
+        // --- loading spinner (show immediately) ---
         const spinner = document.createElement('div');
         spinner.className = 'chart-loading';
-        spinner.style.display = 'none'; // don't show immediately
+        chartWrapper.appendChild(spinner);
 
         const img = document.createElement('img');
         img.className = 'grid-thumb';
         img.dataset.gridIndex = index;
         img.alt = title;
         img.style.opacity = 0;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+
+        const settle = () => {
+        // remove spinner and fade in image
+        if (spinner && spinner.parentNode) spinner.remove();
+        img.style.opacity = 1;
+        };
+
+        img.onload = settle;
+        img.onerror = settle;
+
+        img.src = `final_frames/${filename}`;
+        chartWrapper.appendChild(img);
+
+        // If it was already cached & complete, settle immediately
+        if (img.complete) settle();
 
         // Prevent select highlight on grid image
         img.addEventListener('selectstart', (e) => e.preventDefault());
-
-        // Only show spinner if load takes > 120ms
-        const showSpinTimer = setTimeout(() => { spinner.style.display = ''; }, 120);
-
-        img.onload = () => {
-            clearTimeout(showSpinTimer);
-            spinner.remove();
-            img.style.opacity = 1;
-        };
-        img.onerror = () => {
-            clearTimeout(showSpinTimer);
-            spinner.remove();
-            img.style.opacity = 1;
-        };
-
-        // set src AFTER handlers so cached images skip the spinner path
-        img.decoding = 'async';
-        img.src = `final_frames/${filename}`;
-
-        if (img.complete) {
-            clearTimeout(showSpinTimer);
-            spinner.remove();
-            img.style.opacity = 1;
-        }
 
         // Star (favorites)
         const star = document.createElement('div');
@@ -798,8 +792,6 @@ function filterImages() {
         star.onclick = (e) => { e.stopPropagation(); toggleFavorite(filename, star); };
 
         chartContainer.appendChild(star);
-        chartWrapper.appendChild(spinner);
-        chartWrapper.appendChild(img);
         chartContainer.appendChild(chartWrapper);
 
         const desc = document.createElement('div');
