@@ -77,11 +77,13 @@ let favoritesMenuOpen = false;
 let favoritesMenuSelected = null;
 let suppressFavoritesToggleOnce = false;
 const LONG_PRESS_MS = 450;
+let favoritesPressStart = 0;
 
 // --- Search long-press dropdown state & prefs ---
 let searchLongPressTimer = null;
 let searchMenuOpen = false;
 const SEARCH_LONG_PRESS_MS = 450;
+let searchPressStart = 0;
 
 const SEARCH_TITLES_KEY = 'searchInTitles';
 const SEARCH_DESCS_KEY = 'searchInDescriptions';
@@ -583,17 +585,12 @@ function updateLayoutBasedOnWidth() {
             searchContainer.classList.add('active');
             searchBtn.classList.add('active');
         }
-        searchBtn.disabled = true;
+        // searchBtn.disabled = true;                 // <-- remove this
         if (userSelectedLayout !== 'list') setLayout('list', false);
     } else {
         toggleIconsEl.style.display = 'inline-flex';
-        // Do not auto-close if the long-press checklist is open,
-        // or if we've already marked the search as user-opened.
-        if (!searchMenuOpen && searchWasInitiallyClosed && searchInput.value.trim() === '') {
-            searchContainer.classList.remove('active');
-            searchBtn.classList.remove('active');
-        }
-        searchBtn.disabled = false;
+        // ...
+        // searchBtn.disabled = false;                // <-- remove this too
         if (userSelectedLayout === 'list') setLayout('list', false);
         else setLayout('grid', false);
     }
@@ -1917,28 +1914,41 @@ window.addEventListener('resize', positionSearchMenu);
 window.addEventListener('orientationchange', positionSearchMenu);
 
 function onFavoritesPointerDown(e) {
-    // Start long-press timer; do NOT preventDefault here on touch,
-    // or the quick tap's synthetic click will be canceled on mobile.
+    if (e.pointerType === 'mouse' && e.button !== 0) return; // primary only
+    favoritesPressStart = performance.now();
     if (favoritesLongPressTimer) clearTimeout(favoritesLongPressTimer);
     favoritesLongPressTimer = setTimeout(() => {
-        // Long-press recognized (this function installs a capture handler
-        // to absorb the same-press synthetic click)
-        openFavoritesMenu();
+        openFavoritesMenu(); // long-press
     }, LONG_PRESS_MS);
 }
 
-function onFavoritesPointerMove(e) {
-    if (!favoritesMenuOpen) return;
 
-    // Track which menu item is under the pointer/finger
-    const point = (e.touches && e.touches[0]) || e;
-    const el = document.elementFromPoint(point.clientX, point.clientY);
-    if (el && el.classList && el.classList.contains('favorites-menu-item')) {
-        favoritesMenuSelected = el.dataset.action;
-        highlightFavoritesMenuItem(favoritesMenuSelected);
-    } else {
-        favoritesMenuSelected = null;
-        highlightFavoritesMenuItem(null);
+function onFavoritesPointerUp(e) {
+    if (favoritesLongPressTimer) {
+        clearTimeout(favoritesLongPressTimer);
+        favoritesLongPressTimer = null;
+    }
+
+    const pressMs = performance.now() - favoritesPressStart;
+
+    if (favoritesMenuOpen) {
+        if (favoritesMenuSelected === 'select-all') selectAllFavorites();
+        else if (favoritesMenuSelected === 'unselect-all') unselectAllFavorites();
+        closeFavoritesMenu();
+        suppressFavoritesToggleOnce = false;
+        return;
+    }
+
+    // Short-press
+    if (pressMs < LONG_PRESS_MS) {
+        toggleFavoritesView();
+    }
+}
+
+function onFavoritesPointerCancel() {
+    if (favoritesLongPressTimer) {
+        clearTimeout(favoritesLongPressTimer);
+        favoritesLongPressTimer = null;
     }
 }
 
@@ -1948,52 +1958,64 @@ function onFavoritesPointerUp(e) {
         favoritesLongPressTimer = null;
     }
 
+    const pressMs = performance.now() - favoritesPressStart;
+
     if (favoritesMenuOpen) {
         // Execute selection if one is active
-        if (favoritesMenuSelected === 'select-all') {
-            selectAllFavorites();
-        } else if (favoritesMenuSelected === 'unselect-all') {
-            unselectAllFavorites();
-        }
+        if (favoritesMenuSelected === 'select-all') selectAllFavorites();
+        else if (favoritesMenuSelected === 'unselect-all') unselectAllFavorites();
         closeFavoritesMenu();
-        // Make sure the very next normal click works immediately
         suppressFavoritesToggleOnce = false;
+        return;
+    }
+
+    // Short-press: fire the normal toggle immediately (don’t rely on click)
+    if (pressMs < LONG_PRESS_MS) {
+        toggleFavoritesView();
     }
 }
 
 function onSearchPointerDown(e) {
-    // Do NOT call preventDefault() here — we want the quick tap's synthetic
-    // click to fire on mobile so a short press toggles the search bar.
+    if (e.pointerType === 'mouse' && e.button !== 0) return; // primary only
+    searchPressStart = performance.now();
     if (searchLongPressTimer) clearTimeout(searchLongPressTimer);
     searchLongPressTimer = setTimeout(() => {
-        openSearchMenu(); // this installs a capture listener to absorb the same-press click
+        openSearchMenu(); // long-press
         // Do NOT focus the input yet—clicking into it will close the menu
     }, SEARCH_LONG_PRESS_MS);
 }
 
-function onSearchPointerUp() {
+function onSearchPointerUp(e) {
+    if (searchLongPressTimer) {
+        clearTimeout(searchLongPressTimer);
+        searchLongPressTimer = null;
+    }
+
+    const pressMs = performance.now() - searchPressStart;
+
+    if (searchMenuOpen) {
+        closeSearchMenu();
+        toggleSearch();                       // keep your current behavior
+        return;
+    }
+
+    if (pressMs < SEARCH_LONG_PRESS_MS) {
+        toggleSearch();                       // short-press path
+    }
+}
+
+function onSearchPointerCancel() {
     if (searchLongPressTimer) {
         clearTimeout(searchLongPressTimer);
         searchLongPressTimer = null;
     }
 }
 
-// Open checklist on long press (mouse/touch/pen)
-searchBtn.addEventListener('mousedown', onSearchPointerDown);
-searchBtn.addEventListener('touchstart', onSearchPointerDown, { passive: false });
-document.addEventListener('mouseup', onSearchPointerUp);
-document.addEventListener('touchend', onSearchPointerUp);
-
-// Ensure quick tap toggles search on all devices
-searchBtn.addEventListener('click', () => {
-    if (searchMenuOpen) {
-        // When the checklist is open, a tap on the button should hide both
-        // the menu and the bar (your stated preference in prior iterations).
-        closeSearchMenu();
-        toggleSearch();   // closes the bar (and clears if needed)
-        return;
-    }
-    toggleSearch();       // normal open/close
+// Search button: unified pointer bindings
+searchBtn.addEventListener('pointerdown', onSearchPointerDown);
+searchBtn.addEventListener('pointerup', onSearchPointerUp);
+searchBtn.addEventListener('pointercancel', () => {
+  if (searchLongPressTimer) { clearTimeout(searchLongPressTimer); searchLongPressTimer = null; }
 });
 
 // Open/close behavior outside clicks / Esc
@@ -2068,27 +2090,16 @@ chkSearchDescs.addEventListener('change', () => {
     filterImages();
 });
 
-// Bind events on the favorites button
-favoritesToggleBtn.addEventListener('mousedown', onFavoritesPointerDown);
-favoritesToggleBtn.addEventListener('touchstart', onFavoritesPointerDown, { passive: false });
-
-// Ensure quick tap toggles favorites on all devices
-favoritesToggleBtn.addEventListener('click', () => {
-    if (favoritesMenuOpen) return;                 // don't toggle while menu is open
-    if (suppressFavoritesToggleOnce) {             // if a long-press just happened, skip once
-        suppressFavoritesToggleOnce = false;
-        return;
-    }
-    toggleFavoritesView();
+// Favorites button: unified pointer bindings
+favoritesToggleBtn.addEventListener('pointerdown', onFavoritesPointerDown);
+favoritesToggleBtn.addEventListener('pointerup', onFavoritesPointerUp);
+favoritesToggleBtn.addEventListener('pointercancel', () => {
+  if (favoritesLongPressTimer) { clearTimeout(favoritesLongPressTimer); favoritesLongPressTimer = null; }
 });
 
-// Track pointer while menu is open
+// Keep move tracking while menu is open (document is fine here)
 document.addEventListener('mousemove', onFavoritesPointerMove);
 document.addEventListener('touchmove', onFavoritesPointerMove, { passive: false });
-
-// Release
-document.addEventListener('mouseup', onFavoritesPointerUp);
-document.addEventListener('touchend', onFavoritesPointerUp);
 
 // Modal backdrop click → close
 modal.addEventListener('click', (e) => {

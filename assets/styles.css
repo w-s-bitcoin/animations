@@ -99,6 +99,11 @@ footer {
     outline: none;
     caret-color: transparent;
 }
+#favoritesToggle,
+#search-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
 /* Long-press dropdown under the favorites star */
 .favorites-menu {
     position: absolute;
