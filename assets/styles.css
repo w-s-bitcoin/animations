@@ -1,6 +1,6 @@
-/* =========================================================
-   1) THEME / GLOBAL ELEMENTS
-   ========================================================= */
+/* ===========================
+    THEME / GLOBAL ELEMENTS
+    =========================== */
 :root {
     --bg: #0f0f0f;
     --fg: #f4f4f4;
@@ -38,9 +38,9 @@ footer {
     font-family: monospace;
 }
 
-/* =========================================================
-   2) TOP CONTROLS (layout / search / favorites)
-   ========================================================= */
+/* ===========================
+    TOP CONTROLS (layout/search/favorites)
+    =========================== */
 .controls-row {
     display: flex;
     justify-content: center;
@@ -50,7 +50,7 @@ footer {
     flex-wrap: wrap;
 }
 
-/* -- Layout toggles (grid/list) -- */
+/* Toggle icons (grid/list) */
 .toggle-icons {
     display: inline-flex;
     gap: 1rem;
@@ -72,7 +72,7 @@ footer {
 }
 .toggle-icon.active { box-shadow: 0 0 8px var(--brand); background-color: #333; }
 
-/* icon visuals */
+/* Grid icon visual */
 .icon-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -82,61 +82,16 @@ footer {
 }
 .icon-grid div { background-color: var(--brand); width: 100%; height: 100%; }
 
+/* List icon visual */
 .icon-list { display: flex; flex-direction: column; gap: 1px; width: 20px; }
 .icon-list div { background-color: var(--brand); height: 2px; width: 100%; }
 
-/* -- Favorites toggle + long-press menu -- */
 /* Favorites "★" in the top row */
 #favoritesToggle { font-size: 1.5rem; line-height: 1; }
 #favoritesToggle.active { box-shadow: 0 0 8px var(--brand); background-color: #333; color: var(--brand); }
 .favorites-toggle-star { display: inline-block; transform: translateY(-1.5px); }
-/* Prevent the header star from highlighting/selecting on press-drag */
-#favoritesToggle,
-#favoritesToggle .favorites-toggle-star {
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
-    caret-color: transparent;
-}
-#favoritesToggle,
-#search-btn {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-/* Long-press dropdown under the favorites star */
-.favorites-menu {
-    position: absolute;
-    display: none;
-    min-width: 160px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    z-index: 2000;
-    overflow: hidden;
-}
 
-.favorites-menu-item {
-    padding: 0.6rem 0.9rem;
-    text-align: left;
-    cursor: pointer;
-    user-select: none;
-    font-family: monospace;
-    color: var(--fg);
-    background: transparent;
-}
-
-.favorites-menu-item:hover,
-.favorites-menu-item.active {
-    background: #2a2a2a;
-}
-
-@media (pointer: coarse) {
-    .favorites-menu-item { padding: 0.8rem 1rem; }
-}
-
-/* -- Search affordance (button, field, menu) -- */
+/* Search affordance */
 .search-container {
     display: flex; align-items: center; gap: 0.5rem; position: relative;
 }
@@ -153,13 +108,6 @@ footer {
     display: flex; align-items: center; justify-content: center;
 }
 .search-btn.active { box-shadow: 0 0 8px var(--brand); background-color: #333; }
-#search-btn {
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
-    caret-color: transparent;
-}
 
 .search-input {
     height: 32px; width: 0; opacity: 0;
@@ -173,42 +121,10 @@ footer {
 }
 .search-container.active .search-input { width: 200px; opacity: 1; }
 
-/* Long-press dropdown under the Search button */
-.search-menu {
-    position: absolute;
-    display: none;
-    min-width: 180px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    z-index: 2000;
-    padding: 0.35rem 0.4rem;
-}
-
-.search-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.4rem;
-    cursor: pointer;
-    user-select: none;
-    color: var(--fg);
-    border-radius: 6px;
-}
-
-.search-menu-item:hover { background: #2a2a2a; }
-
-.search-menu input[type="checkbox"] {
-    accent-color: var(--brand);
-    cursor: pointer;
-}
-
-/* =========================================================
-   3) GRID / LIST LAYOUT
-   ========================================================= */
+/* ===========================
+    GRID / LIST LAYOUT
+    =========================== */
 .image-grid { margin-top: 2rem; gap: 2rem; }
-
 .image-grid.grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -219,9 +135,9 @@ footer {
 .image-grid.list { display: flex; flex-direction: column; align-items: center; }
 .image-grid.list > div { width: 90vw; display: flex; flex-direction: column; align-items: center; }
 
-/* =========================================================
-   4) CHART CARDS (titles, wrapper, images, overlays)
-   ========================================================= */
+/* ===========================
+    CHART CARDS
+    =========================== */
 .chart-title {
     margin-bottom: 0.5rem;
     min-height: 2.5rem;
@@ -249,13 +165,6 @@ footer {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
     object-fit: contain; border-radius: 8px;
-    /* Prevent text selection / drag ghost on grid thumbs */
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 /* Loading spinner (hidden after image load) */
@@ -280,6 +189,18 @@ footer {
     overflow-wrap: break-word; word-break: break-word; text-align: center;
     box-sizing: border-box;
 }
+/* Always show the per-card star on mobile, even when not selected */
+@media (max-width: 640px) {
+    .favorite-star {
+    opacity: 1 !important;   /* override default hidden state */
+    }
+}
+/* Hide image-card descriptions on mobile */
+@media (max-width: 640px) {
+    .chart-description {
+    display: none !important;
+    }
+}
 .chart-container:hover .chart-description { opacity: 1; }
 .image-grid.grid .chart-description { font-size: 0.9rem; }
 .image-grid.list .chart-description { font-size: 1.4rem; }
@@ -292,21 +213,12 @@ footer {
     border-radius: 50%; width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
     opacity: 0; transition: opacity 0.3s ease; cursor: pointer; z-index: 2;
-    /* Prevent selecting or long-press text callout on the star */
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
-    caret-color: transparent;
 }
 .chart-container:hover .favorite-star, .favorite-star.filled { opacity: 1; }
 
-/* =========================================================
-   5) MODAL (lightbox) & CONTROLS
-   ========================================================= */
+/* ===========================
+    MODAL (lightbox)
+    =========================== */
 /* Modal container should not center the image; it’s our viewport */
 .modal {
     position: fixed; inset: 0;
@@ -394,9 +306,6 @@ footer {
 }
 #modal-fav-btn.filled { color: var(--brand); }
 
-/* =========================================================
-   6) MODAL: RESPONSIVE ADJUSTMENTS
-   ========================================================= */
 /* Small-screen landscape: make room above image for control bar */
 @media (max-width: 900px) and (orientation: landscape) {
     .modal { padding-top: var(--controls-offset, 1.5rem); }
@@ -408,10 +317,10 @@ footer {
     }
 }
 
-/* =========================================================
-   7) DROPDOWN CONTROLS IN MODAL
-      (BVG year / DAL scale / Dominance / Price Of / Coins)
-   ========================================================= */
+/* ===========================
+    DROPDOWN CONTROLS IN MODAL
+    (BVG year / DAL scale / Dominance / Price Of / Coins)
+    =========================== */
 .year-controls,
 .scale-controls,
 .dominance-controls,
@@ -462,25 +371,3 @@ footer {
     flex-basis: 100%; margin-left: 0;
     }
 }
-
-/* =========================================================
-   8) MOBILE-SPECIFIC CARD RULES
-   ========================================================= */
-/* Always show the per-card star on mobile, even when not selected */
-@media (max-width: 640px) {
-    .favorite-star {
-    opacity: 1 !important;   /* override default hidden state */
-    }
-}
-/* Hide image-card descriptions on mobile */
-@media (max-width: 640px) {
-    .chart-description {
-    display: none !important;
-    }
-}
-
-/* =========================================================
-   9) MISC. INTERACTION CUES
-   ========================================================= */
-.chart-wrapper { cursor: pointer; }
-.chart-title, .chart-description { cursor: pointer; }
