@@ -1941,22 +1941,34 @@ function onFavoritesPointerMove(e) {
 }
 
 function onFavoritesPointerUp(e) {
-    if (favoritesLongPressTimer) {
-        clearTimeout(favoritesLongPressTimer);
-        favoritesLongPressTimer = null;
-    }
+  if (favoritesLongPressTimer) {
+    clearTimeout(favoritesLongPressTimer);
+    favoritesLongPressTimer = null;
+  }
 
-    if (favoritesMenuOpen) {
-        // Execute selection if one is active
-        if (favoritesMenuSelected === 'select-all') {
-            selectAllFavorites();
-        } else if (favoritesMenuSelected === 'unselect-all') {
-            unselectAllFavorites();
-        }
-        closeFavoritesMenu();
-        // Make sure the very next normal click works immediately
-        suppressFavoritesToggleOnce = false;
+  if (favoritesMenuOpen) {
+    // Execute selection if one is active
+    if (favoritesMenuSelected === 'select-all') {
+      selectAllFavorites();
+    } else if (favoritesMenuSelected === 'unselect-all') {
+      unselectAllFavorites();
     }
+    closeFavoritesMenu();
+    // Make sure the very next normal click works immediately
+    suppressFavoritesToggleOnce = false;
+    return; // <-- keep existing early return if you have it
+  }
+
+  // >>> ADD THIS BLOCK: short tap on touch should toggle favorites view
+  if (e.type === 'touchend') {
+    // We suppressed the synthetic click with preventDefault() on touchstart,
+    // so we must toggle manually for short presses.
+    toggleFavoritesView();
+
+    // Guard against any stray ghost click on some browsers
+    suppressFavoritesToggleOnce = true;
+  }
+  // <<< END ADD
 }
 
 function onSearchPointerDown(e) {
