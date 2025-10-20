@@ -216,6 +216,27 @@ footer {
 }
 .chart-container:hover .favorite-star, .favorite-star.filled { opacity: 1; }
 
+/* Prevent text/image selection and highlight flashes on key elements */
+.image-grid img,
+.favorite-star,
+#favoritesToggle {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Keep images draggable (so users can still drag to new tab) */
+.image-grid img {
+  -webkit-user-drag: auto;
+  user-drag: auto;
+}
+
+/* Prevent accidental highlighting when pressing the top star */
+#favoritesToggle {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ===========================
     MODAL (lightbox)
     =========================== */
