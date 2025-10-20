@@ -130,7 +130,7 @@ If you find this project valuable and want to support continued development,
 you can send a Lightning payment using the Lightning address or QR code below.
 
 **Lightning Address:**  
-[`wicked@getalby.com`](mailto:wicked@getalby.com)
+`wicked@getalby.com`
 
 **QR Code:**  
 ![Lightning Donation QR](assets/lightning_donation_qr.png)
