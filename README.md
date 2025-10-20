@@ -41,8 +41,8 @@ Interactive dropdowns appear dynamically in the modal for special chart groups:
 - **Bitcoin vs Gold** → Choose starting year  
 - **Days at a Loss** → Linear / Log scale  
 - **Dominance** → USD / BTC units  
-- **Price Of** → Select items (e.g., gold, beef, oil, etc.)  
-- **Coins** → Select coin type (whole, milli, etc.)  
+- **Price Of** → Select items (e.g., beef, electricity, eggs, etc.)  
+- **Coins** → Select coin type (wholecoin, pi-coin, etc.)  
 - **Monthly / Yearly Returns** → Choose 5-year window  
 
 ### 🖐️ Touch & Gesture Support
