@@ -702,7 +702,9 @@ function filterImages() {
         nextVisible.length === visibleImages.length &&
         nextVisible.every((v, i) => v.filename === visibleImages[i].filename);
 
-    if (same) return;
+    // Only skip re-rendering if the grid already has content
+    if (same && imageGrid.childElementCount > 0) return;
+
     const grid = document.getElementById('image-grid');
     grid.innerHTML = '';
 
