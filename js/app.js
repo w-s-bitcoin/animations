@@ -1917,17 +1917,14 @@ window.addEventListener('resize', positionSearchMenu);
 window.addEventListener('orientationchange', positionSearchMenu);
 
 function onFavoritesPointerDown(e) {
-    // Prevent browser from starting text selection / focus highlight
-    e.preventDefault();
-    // Allow touch/pen/mouse
+    // Start long-press timer; do NOT preventDefault here on touch,
+    // or the quick tap's synthetic click will be canceled on mobile.
     if (favoritesLongPressTimer) clearTimeout(favoritesLongPressTimer);
     favoritesLongPressTimer = setTimeout(() => {
-        // Long-press recognized
-        openFavoritesMenu(); // we'll absorb the same-press click inside this function
+        // Long-press recognized (this function installs a capture handler
+        // to absorb the same-press synthetic click)
+        openFavoritesMenu();
     }, LONG_PRESS_MS);
-
-    // If this is touch, prevent ghost click after long-press
-    if (e.type === 'touchstart') e.preventDefault();
 }
 
 function onFavoritesPointerMove(e) {
@@ -1965,11 +1962,11 @@ function onFavoritesPointerUp(e) {
 }
 
 function onSearchPointerDown(e) {
-    // Prevent text selection highlight while long-pressing
-    e.preventDefault();
+    // Do NOT call preventDefault() here — we want the quick tap's synthetic
+    // click to fire on mobile so a short press toggles the search bar.
     if (searchLongPressTimer) clearTimeout(searchLongPressTimer);
     searchLongPressTimer = setTimeout(() => {
-        openSearchMenu();
+        openSearchMenu(); // this installs a capture listener to absorb the same-press click
         // Do NOT focus the input yet—clicking into it will close the menu
     }, SEARCH_LONG_PRESS_MS);
 }
@@ -1986,6 +1983,18 @@ searchBtn.addEventListener('mousedown', onSearchPointerDown);
 searchBtn.addEventListener('touchstart', onSearchPointerDown, { passive: false });
 document.addEventListener('mouseup', onSearchPointerUp);
 document.addEventListener('touchend', onSearchPointerUp);
+
+// Ensure quick tap toggles search on all devices
+searchBtn.addEventListener('click', () => {
+    if (searchMenuOpen) {
+        // When the checklist is open, a tap on the button should hide both
+        // the menu and the bar (your stated preference in prior iterations).
+        closeSearchMenu();
+        toggleSearch();   // closes the bar (and clears if needed)
+        return;
+    }
+    toggleSearch();       // normal open/close
+});
 
 // Open/close behavior outside clicks / Esc
 document.addEventListener('mousedown', (e) => {
@@ -2062,6 +2071,16 @@ chkSearchDescs.addEventListener('change', () => {
 // Bind events on the favorites button
 favoritesToggleBtn.addEventListener('mousedown', onFavoritesPointerDown);
 favoritesToggleBtn.addEventListener('touchstart', onFavoritesPointerDown, { passive: false });
+
+// Ensure quick tap toggles favorites on all devices
+favoritesToggleBtn.addEventListener('click', () => {
+    if (favoritesMenuOpen) return;                 // don't toggle while menu is open
+    if (suppressFavoritesToggleOnce) {             // if a long-press just happened, skip once
+        suppressFavoritesToggleOnce = false;
+        return;
+    }
+    toggleFavoritesView();
+});
 
 // Track pointer while menu is open
 document.addEventListener('mousemove', onFavoritesPointerMove);
