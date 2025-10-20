@@ -1,4 +1,4 @@
-# 🧠 Wicked Smart Bitcoin
+# 🍎 Wicked Smart Bitcoin
 
 **Live Site:** [https://wickedsmartbitcoin.com](https://wickedsmartbitcoin.com)  
 **Repository:** [https://github.com/w-s-bitcoin/animations](https://github.com/w-s-bitcoin/animations)
