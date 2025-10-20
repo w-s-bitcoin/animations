@@ -124,6 +124,21 @@ Then visit:
 
 ---
 
+## ⚡ Bitcoin Lightning Donations
+
+If you find this project valuable and want to support continued development,  
+you can send a Lightning payment using the Lightning address or QR code below.
+
+**Lightning Address:**  
+[`wicked@getalby.com`](mailto:wicked@getalby.com)
+
+**QR Code:**  
+![Lightning Donation QR](assets/lightning_donation_qr.png)
+
+✌️🍎🍻
+
+---
+
 ## 🧾 License
 
 All original visualizations and source code © 2025 Wicked Smart Bitcoin.  
@@ -131,12 +146,12 @@ Openly viewable for educational purposes; redistribution or reuse of images requ
 
 ---
 
-## 🧠 Author
+## 🍎 Author
 
 **Wicked**  
-Bitcoin researcher & data analyst  
+Bitcoin researcher & data analyst
 🌐 [wickedsmartbitcoin.com](https://wickedsmartbitcoin.com)  
-🐦 [@w_s_bitcoin](https://x.com/w_s_bitcoin)  
-📺 [YouTube](https://www.youtube.com/@wickedsmartbitcoin)  
-💜 [Nostr](https://primal.net/wicked)  
-💻 [GitHub](https://github.com/w-s-bitcoin)
+🐦 [X @w_s_bitcoin](https://x.com/w_s_bitcoin)  
+📺 [YouTube @wickedsmartbitcoin](https://www.youtube.com/@wickedsmartbitcoin)  
+💜 [Nostr @wicked](https://primal.net/wicked)  
+💻 [GitHub @w-s-bitcoin](https://github.com/w-s-bitcoin)
