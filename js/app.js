@@ -757,20 +757,31 @@ function filterImages() {
         img.loading = 'lazy';
         img.decoding = 'async';
 
-        const settle = () => {
-        // remove spinner and fade in image
+        function settle() {
         if (spinner && spinner.parentNode) spinner.remove();
         img.style.opacity = 1;
+        }
+
+        // Wait for real readiness to paint.
+        // 1) 'load' can precede decode; 2) ensure we’ve had a paint tick.
+        img.addEventListener('load', () => {
+        const finalize = () => {
+            // two RAFs = next frame after layout/paint opportunities
+            requestAnimationFrame(() => requestAnimationFrame(settle));
         };
 
-        img.onload = settle;
-        img.onerror = settle;
+        if (typeof img.decode === 'function') {
+            img.decode().then(finalize).catch(finalize); // fallback to finalize on errors
+        } else {
+            finalize();
+        }
+        });
+
+        // Still settle on network error (no image will appear anyway)
+        img.addEventListener('error', settle);
 
         img.src = `final_frames/${filename}`;
         chartWrapper.appendChild(img);
-
-        // If it was already cached & complete, settle immediately
-        if (img.complete) settle();
 
         // Prevent select highlight on grid image
         img.addEventListener('selectstart', (e) => e.preventDefault());
