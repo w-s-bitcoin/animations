@@ -81,6 +81,7 @@ const LONG_PRESS_MS = 450;
 // --- Search long-press dropdown state & prefs ---
 let searchLongPressTimer = null;
 let searchMenuOpen = false;
+let suppressSearchToggleOnce = false;
 const SEARCH_LONG_PRESS_MS = 450;
 
 const SEARCH_TITLES_KEY = 'searchInTitles';
@@ -600,6 +601,10 @@ function updateLayoutBasedOnWidth() {
 }
 
 function toggleSearch() {
+    if (suppressSearchToggleOnce) {
+        suppressSearchToggleOnce = false;
+        return;
+    }
     const container = document.querySelector('.search-container');
     const input = document.getElementById('search-input');
     const button = document.getElementById('search-btn');
@@ -1981,16 +1986,29 @@ function onSearchPointerDown(e) {
     }, SEARCH_LONG_PRESS_MS);
 }
 
-function onSearchPointerUp() {
-    if (searchLongPressTimer) {
-        clearTimeout(searchLongPressTimer);
-        searchLongPressTimer = null;
-    }
+function onSearchPointerUp(e) {
+  if (searchLongPressTimer) {
+    clearTimeout(searchLongPressTimer);
+    searchLongPressTimer = null;
+  }
+
+  // If the long-press menu opened, do nothing here.
+  if (searchMenuOpen) return;
+
+  // On touch, the synthetic click is suppressed by preventDefault() on touchstart,
+  // so we must toggle manually to make short taps work.
+  if (e && e.type === 'touchend') {
+    toggleSearch();
+    // Guard against any stray ghost click
+    suppressSearchToggleOnce = true;
+  }
 }
 
 // Open checklist on long press (mouse/touch/pen)
 searchBtn.addEventListener('mousedown', onSearchPointerDown);
 searchBtn.addEventListener('touchstart', onSearchPointerDown, { passive: false });
+searchBtn.addEventListener('mouseup', onSearchPointerUp);
+searchBtn.addEventListener('touchend', onSearchPointerUp);
 document.addEventListener('mouseup', onSearchPointerUp);
 document.addEventListener('touchend', onSearchPointerUp);
 
@@ -2069,6 +2087,8 @@ chkSearchDescs.addEventListener('change', () => {
 // Bind events on the favorites button
 favoritesToggleBtn.addEventListener('mousedown', onFavoritesPointerDown);
 favoritesToggleBtn.addEventListener('touchstart', onFavoritesPointerDown, { passive: false });
+favoritesToggleBtn.addEventListener('mouseup', onFavoritesPointerUp);
+favoritesToggleBtn.addEventListener('touchend', onFavoritesPointerUp);
 
 // Track pointer while menu is open
 document.addEventListener('mousemove', onFavoritesPointerMove);
