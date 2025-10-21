@@ -7,6 +7,8 @@
   const modal             = document.getElementById('modal');
   const modalImg          = document.getElementById('modal-img');
   const modalFavBtn       = document.getElementById('modal-fav-btn');
+  const kebabBtn          = document.getElementById('kebabBtn');
+  const kebabMenu         = document.getElementById('kebabMenu');
 
   // Modal control groups + selects
   const yearControls      = document.getElementById('year-controls');
@@ -429,6 +431,66 @@
 
   function saveFavorites(favs) {
     localStorage.setItem('favorites', JSON.stringify(favs));
+  }
+
+  /** Return the set of favorite keys representing "all images".
+   *  - normal files use their filename
+   *  - price_of_* collapses to the single group key POF_FAV_KEY
+   */
+  function getAllFavoriteKeys() {
+    const keys = new Set();
+    if (!Array.isArray(imageList) || imageList.length === 0) return keys;
+
+    let hasPriceOf = false;
+    for (const img of imageList) {
+      if (!img || !img.filename) continue;
+      if (img.filename.startsWith(POF_BASE)) {
+        hasPriceOf = true;
+      } else {
+        keys.add(img.filename);
+      }
+    }
+    if (hasPriceOf) keys.add(POF_FAV_KEY);
+    return keys;
+  }
+
+  /** Update all grid stars + modal star to reflect current favorites array. */
+  function refreshFavoriteStarsUI() {
+    const favs = new Set(getFavorites());
+
+    // Grid stars
+    document.querySelectorAll('.favorite-star').forEach(star => {
+      const key = star.getAttribute('data-filename'); // may be POF_FAV_KEY
+      const on = favs.has(key) || (key !== POF_FAV_KEY && favs.has(POF_FAV_KEY) && /^price_of_/.test(key));
+      star.textContent = on ? '★' : '☆';
+      star.classList.toggle('filled', on);
+    });
+
+    // Modal star
+    if (modal && modal.style.display === 'flex') {
+      const cur = visibleImages[currentIndex];
+      if (cur) {
+        const key = cur.filename.startsWith(POF_BASE) ? POF_FAV_KEY : cur.filename;
+        const on  = favs.has(key);
+        modalFavBtn.textContent = on ? '★' : '☆';
+        modalFavBtn.classList.toggle('filled', on);
+      }
+    }
+  }
+
+  function favoriteAll() {
+    const all = Array.from(getAllFavoriteKeys());
+    saveFavorites(all);
+    refreshFavoriteStarsUI();
+    // If currently filtering by favorites, re-render to reveal everything
+    if (showFavoritesOnly) filterImages();
+  }
+
+  function unfavoriteAll() {
+    saveFavorites([]);
+    refreshFavoriteStarsUI();
+    // If filtering by favorites, the grid could go empty → re-render for message
+    if (showFavoritesOnly) filterImages();
   }
 
   function isFavorite(filename) {
@@ -1652,6 +1714,10 @@
   window.addEventListener('resize', updateModalSafePadding);
   window.addEventListener('load', updateLayoutBasedOnWidth);
   window.addEventListener('orientationchange', updateModalSafePadding);
+  window.addEventListener('load', () => {
+    kebabMenu?.classList.add('hidden');
+    kebabBtn?.setAttribute('aria-expanded', 'false');
+  });
 
   // Modal backdrop click → close
   modal.addEventListener('click', (e) => {
@@ -1669,6 +1735,52 @@
     if (!gestureConsumed) {
       handleSwipe();
       handleVerticalSwipe();
+    }
+  });
+
+  /* ===========================
+   * KEBAB MENU (⋯) EVENTS
+   * =========================== */
+
+  // Open/close menu
+  kebabBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = !kebabMenu.classList.contains('hidden');
+    kebabMenu.classList.toggle('hidden', isOpen); // close if open, open if closed
+    kebabBtn.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  // Click on a menu item
+  kebabMenu?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.menu-item');
+    if (!btn) return;
+    const action = btn.dataset.action;
+
+    if (action === 'star-all') {
+      favoriteAll();
+    } else if (action === 'unstar-all') {
+      unfavoriteAll();
+    }
+
+    // Close after action
+    kebabMenu.classList.add('hidden');
+    kebabBtn.setAttribute('aria-expanded', 'false');
+  });
+
+  // Click outside → close
+  document.addEventListener('click', (e) => {
+    if (!kebabMenu || kebabMenu.classList.contains('hidden')) return;
+    if (e.target === kebabBtn || kebabBtn.contains(e.target)) return;
+    if (kebabMenu.contains(e.target)) return;
+    kebabMenu.classList.add('hidden');
+    kebabBtn.setAttribute('aria-expanded', 'false');
+  });
+
+  // Escape key closes menu (unless modal is open and using Esc there)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && kebabMenu && !kebabMenu.classList.contains('hidden')) {
+      kebabMenu.classList.add('hidden');
+      kebabBtn.setAttribute('aria-expanded', 'false');
     }
   });
 

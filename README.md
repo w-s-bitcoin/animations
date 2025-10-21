@@ -27,14 +27,14 @@ The site dynamically loads an `image_list.json` manifest containing metadata for
 ### ⭐ Favorites
 - Users can star images to mark favorites.
 - Favorites persist via `localStorage` and can be toggled in the header.
-- Long-press on the star icon for **“Select all”** or **“Unselect all.”**
+- A **⋯ menu** in the top-right corner includes:
+  - **★ Star All** — adds every visualization to favorites  
+  - **☆ Unstar All** — removes all favorites  
 
 ### 🔍 Search & Filtering
 - Expandable search bar with smooth animation.
-- Long-press the search icon to open a filter menu:
-  - Search in **Titles**
-  - Search in **Descriptions**
-- Preferences are saved between sessions.
+- Filters images by title and description text in real time.
+- Favorites-only view can be toggled via the top star button.
 
 ### 🔢 Dropdown Controls
 Interactive dropdowns appear dynamically in the modal for special chart groups:
@@ -88,7 +88,7 @@ Interactive dropdowns appear dynamically in the modal for special chart groups:
 2. **Frontend Rendering (Static Site)**
    - On page load, `app.js` fetches `final_frames/image_list.json`.
    - Images are rendered dynamically with interactive behavior.
-   - State (favorites, filters, dropdowns) is managed using `localStorage` and cookies.
+   - State (favorites, layout, filters, dropdowns) is managed using `localStorage` and cookies.
 
 3. **Hosting**
    - The website is hosted via GitHub Pages at  
@@ -149,7 +149,7 @@ Openly viewable for educational purposes; redistribution or reuse of images requ
 ## 🍎 Author
 
 **Wicked**  
-Bitcoin researcher & data analyst
+Bitcoin researcher & data analyst  
 🌐 [wickedsmartbitcoin.com](https://wickedsmartbitcoin.com)  
 🐦 [X @w_s_bitcoin](https://x.com/w_s_bitcoin)  
 📺 [YouTube @wickedsmartbitcoin](https://www.youtube.com/@wickedsmartbitcoin)  

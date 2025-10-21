@@ -122,6 +122,99 @@ footer {
 .search-container.active .search-input { width: 200px; opacity: 1; }
 
 /* ===========================
+    SITE MENU (top-right kebab)
+    =========================== */
+/* Wrapper fixed to the top-right of the viewport */
+.site-kebab {
+  position: fixed;
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
+  z-index: 2000; /* above page UI, below modal (modal is 9999) */
+}
+
+/* The ⋯ button */
+.kebab-btn {
+  width: 32px; height: 32px;
+  padding: 0; line-height: 1;
+  border: 1px solid var(--brand);
+  border-radius: 6px;
+  background-color: var(--panel);
+  color: var(--brand);
+  font-size: 1.3rem;            /* nice, bold ⋯ */
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Dropdown */
+.kebab-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+  padding: 0.3rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Menu items */
+.kebab-menu .menu-item {
+  background: none;
+  border: none;
+  color: var(--fg);
+  text-align: left;
+  padding: 0.6rem 0.9rem;
+  font-family: monospace;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.kebab-menu .menu-item:hover,
+.kebab-menu .menu-item:focus {
+  background-color: var(--brand);
+  color: var(--bg);
+  outline: none;
+}
+
+/* Match kebab button star size & keep stars orange */
+.kebab-menu .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menu-star {
+  color: var(--brand);         /* orange for both ★ and ☆ */
+  font-size: 1.3rem;           /* same as .kebab-btn font-size */
+  line-height: 1;
+  display: inline-block;
+  width: 1.3rem;               /* keeps text aligned regardless of ★ vs ☆ width */
+  text-align: center;
+}
+
+/* Keep hover feeling, but preserve orange stars and readable contrast */
+.kebab-menu .menu-item:hover,
+.kebab-menu .menu-item:focus {
+  background-color: rgba(247, 147, 26, 0.15); /* subtle orange wash, not full brand fill */
+  color: var(--fg);
+}
+
+.kebab-menu .menu-item:hover .menu-star,
+.kebab-menu .menu-item:focus .menu-star {
+  color: var(--brand); /* stay orange on hover/focus */
+}
+
+
+/* Utility */
+.hidden { display: none !important; }
+
+/* ===========================
     GRID / LIST LAYOUT
     =========================== */
 .image-grid { margin-top: 2rem; gap: 2rem; }
