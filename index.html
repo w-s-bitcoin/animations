@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Wicked Smart Bitcoin</title>
   <link rel="icon" type="image/png" href="assets/favicon.png" />
   <link rel="stylesheet" href="assets/styles.css" />
@@ -14,12 +14,23 @@
     <button id="kebabBtn" class="kebab-btn"
             aria-haspopup="menu" aria-expanded="false" aria-label="More options">⋯</button>
     <div id="kebabMenu" class="kebab-menu hidden" role="menu" aria-labelledby="kebabBtn">
-      <button class="menu-item" data-action="star-all" role="menuitem">
-        <span class="menu-star" aria-hidden="true">★</span> Star All
-      </button>
-      <button class="menu-item" data-action="unstar-all" role="menuitem">
-        <span class="menu-star" aria-hidden="true">☆</span> Unstar All
-      </button>
+
+      <div class="menu-section" role="group" aria-labelledby="menu-header-favorites">
+        <div class="menu-header" id="menu-header-favorites">Favorites</div>
+
+        <button class="menu-item" data-action="star-all" role="menuitem">
+          <span class="menu-star" aria-hidden="true">★</span> Star All
+        </button>
+        <button class="menu-item" data-action="unstar-all" role="menuitem">
+          <span class="menu-star" aria-hidden="true">☆</span> Unstar All
+        </button>
+      </div>
+
+      <div class="menu-divider" role="separator" aria-hidden="true"></div>
+
+      <div class="menu-section" role="group" aria-labelledby="menu-header-search">
+        <div class="menu-header" id="menu-header-search">Search</div>
+      </div>
     </div>
   </div>
   <h1>Wicked Smart Bitcoin</h1>

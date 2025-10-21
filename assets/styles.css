@@ -38,6 +38,11 @@ footer {
     font-family: monospace;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 /* ===========================
     TOP CONTROLS (layout/search/favorites)
     =========================== */
@@ -161,55 +166,76 @@ footer {
   padding: 0.3rem 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* row highlight reaches rounded corners */
 }
 
-/* Menu items */
+/* Section wrapper */
+.kebab-menu .menu-section {
+  padding: 0.25rem 0; /* vertical-only padding so highlight can span full width */
+}
+
+/* Section header */
+.kebab-menu .menu-header {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.45rem 0.9rem 0.25rem;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none; /* not clickable */
+}
+
+/* Thin divider between groups */
+.kebab-menu .menu-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border), transparent);
+  margin: 0.25rem 0.5rem;
+  border-radius: 1px;
+}
+
+/* Menu items (single, consolidated rule) */
 .kebab-menu .menu-item {
   background: none;
   border: none;
   color: var(--fg);
   text-align: left;
-  padding: 0.6rem 0.9rem;
   font-family: monospace;
   font-size: 0.95rem;
   cursor: pointer;
-}
 
-.kebab-menu .menu-item:hover,
-.kebab-menu .menu-item:focus {
-  background-color: var(--brand);
-  color: var(--bg);
-  outline: none;
-}
-
-/* Match kebab button star size & keep stars orange */
-.kebab-menu .menu-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.9rem; /* all horizontal spacing lives on the button */
+  margin: 0;
+  border-radius: 0;
 }
 
+/* Star icon style */
 .menu-star {
-  color: var(--brand);         /* orange for both ★ and ☆ */
-  font-size: 1.3rem;           /* same as .kebab-btn font-size */
+  color: var(--brand);           /* orange for both ★ and ☆ */
+  font-size: 1.3rem;             /* matches .kebab-btn font-size */
   line-height: 1;
   display: inline-block;
-  width: 1.3rem;               /* keeps text aligned regardless of ★ vs ☆ width */
+  width: 1.3rem;                 /* keeps text aligned regardless of ★ vs ☆ width */
   text-align: center;
 }
 
-/* Keep hover feeling, but preserve orange stars and readable contrast */
+/* Hover/focus highlight spans full row; keep stars orange */
 .kebab-menu .menu-item:hover,
 .kebab-menu .menu-item:focus {
-  background-color: rgba(247, 147, 26, 0.15); /* subtle orange wash, not full brand fill */
+  background-color: rgba(247, 147, 26, 0.15);
   color: var(--fg);
+  outline: none;
 }
-
 .kebab-menu .menu-item:hover .menu-star,
 .kebab-menu .menu-item:focus .menu-star {
-  color: var(--brand); /* stay orange on hover/focus */
+  color: var(--brand);
 }
-
 
 /* Utility */
 .hidden { display: none !important; }
@@ -293,6 +319,30 @@ footer {
     .chart-description {
     display: none !important;
     }
+}
+/* Ensure initial grid behaves exactly like list on mobile (before JS runs) */
+@media (max-width: 640px) {
+  .image-grid.grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Match .image-grid.list > div sizing so cards don’t collapse to different widths */
+  .image-grid.grid > div {
+    width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Use the larger list-style title size on mobile */
+  .image-grid.grid .chart-title {
+    font-size: 1.6rem;
+  }
+
+  /* (Optional: if you ever show descriptions on mobile, mirror list size) */
+  /* .image-grid.grid .chart-description { font-size: 1.4rem; } */
 }
 .chart-container:hover .chart-description { opacity: 1; }
 .image-grid.grid .chart-description { font-size: 0.9rem; }
