@@ -9,6 +9,8 @@
   const modalFavBtn       = document.getElementById('modal-fav-btn');
   const kebabBtn          = document.getElementById('kebabBtn');
   const kebabMenu         = document.getElementById('kebabMenu');
+  const chkSearchTitles       = document.getElementById('chkSearchTitles');
+  const chkSearchDescriptions = document.getElementById('chkSearchDescriptions');
 
   // Modal control groups + selects
   const yearControls      = document.getElementById('year-controls');
@@ -64,6 +66,79 @@
   const MIN_SCALE = 1;
   const MAX_SCALE = 5;
 
+  /* ===========================
+   * SEARCH PREFS (Title / Description)
+   * =========================== */
+
+  // Read booleans with defaults = true
+  function readSearchPrefs() {
+    const t = localStorage.getItem('searchTitles');
+    const d = localStorage.getItem('searchDescriptions');
+    let inTitle = (t === null) ? true : (t === 'true');
+    let inDesc  = (d === null) ? true : (d === 'true');
+
+    // Enforce: at least one must be true
+    if (!inTitle && !inDesc) {
+      inTitle = true; inDesc = false; // your rule: if both off → Title reselects
+    }
+    return { inTitle, inDesc };
+  }
+
+  function writeSearchPrefs(inTitle, inDesc) {
+    localStorage.setItem('searchTitles', String(inTitle));
+    localStorage.setItem('searchDescriptions', String(inDesc));
+  }
+
+  function applySearchPrefsToUI(inTitle, inDesc) {
+    if (chkSearchTitles) {
+      chkSearchTitles.classList.toggle('checked', inTitle);
+      chkSearchTitles.setAttribute('aria-checked', String(inTitle));
+    }
+    if (chkSearchDescriptions) {
+      chkSearchDescriptions.classList.toggle('checked', inDesc);
+      chkSearchDescriptions.setAttribute('aria-checked', String(inDesc));
+    }
+  }
+
+  function initSearchPrefsAndUI() {
+    const { inTitle, inDesc } = readSearchPrefs();
+    writeSearchPrefs(inTitle, inDesc);
+    applySearchPrefsToUI(inTitle, inDesc);
+  }
+
+function toggleSearchPref(which) {
+  let { inTitle, inDesc } = readSearchPrefs();
+
+  if (which === 'title') {
+    if (inTitle && !inDesc) {
+      // Edge case: Title is the only one selected → flip to Description
+      inTitle = false;
+      inDesc  = true;
+    } else {
+      // Normal toggle
+      inTitle = !inTitle;
+    }
+  } else {
+    if (inDesc && !inTitle) {
+      // Edge case: Description is the only one selected → flip to Title
+      inDesc  = false;
+      inTitle = true;
+    } else {
+      // Normal toggle
+      inDesc = !inDesc;
+    }
+  }
+
+  // Safety net: never allow both false. Prefer to re-enable the one the user touched.
+  if (!inTitle && !inDesc) {
+    if (which === 'title') inTitle = true;
+    else inDesc = true;
+  }
+
+  writeSearchPrefs(inTitle, inDesc);
+  applySearchPrefsToUI(inTitle, inDesc);
+  filterImages(); // re-run search with new scope
+}
 
   /* ===========================
    * CONSTANTS
@@ -550,8 +625,17 @@
     grid.innerHTML = '';
 
     visibleImages = imageList.filter(({ title, description, filename }) => {
-      const matchesSearch = title.toLowerCase().includes(query) || description.toLowerCase().includes(query);
-      const isFav         = !showFavoritesOnly || isFavorite(filename);
+      const { inTitle, inDesc } = readSearchPrefs();
+
+      // If query is empty, match everything (then favorites filter applies)
+      let matchesSearch = true;
+      if (query) {
+        const hayTitle = inTitle ? (title || '').toLowerCase() : '';
+        const hayDesc  = inDesc  ? (description || '').toLowerCase() : '';
+        matchesSearch  = hayTitle.includes(query) || hayDesc.includes(query);
+      }
+
+      const isFav = !showFavoritesOnly || isFavorite(filename);
       return matchesSearch && isFav;
     });
 
@@ -1717,7 +1801,12 @@
   window.addEventListener('load', () => {
     kebabMenu?.classList.add('hidden');
     kebabBtn?.setAttribute('aria-expanded', 'false');
+    // Initialize Title/Description checkbox state (defaults to both on)
+    initSearchPrefsAndUI();
   });
+  // Direct click listeners on the two menu-check rows (keep menu open)
+  chkSearchTitles?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('title'); });
+  chkSearchDescriptions?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('desc'); });
 
   // Modal backdrop click → close
   modal.addEventListener('click', (e) => {
@@ -1754,15 +1843,27 @@
   kebabMenu?.addEventListener('click', (e) => {
     const btn = e.target.closest('.menu-item');
     if (!btn) return;
-    const action = btn.dataset.action;
 
+    // 1) Checkbox items: toggle without closing menu
+    if (btn.classList.contains('menu-check')) {
+      e.stopPropagation();
+      if (btn.id === 'chkSearchTitles') {
+        toggleSearchPref('title');
+      } else if (btn.id === 'chkSearchDescriptions') {
+        toggleSearchPref('desc');
+      }
+      return; // keep menu open
+    }
+
+    // 2) Regular action items
+    const action = btn.dataset.action;
     if (action === 'star-all') {
       favoriteAll();
     } else if (action === 'unstar-all') {
       unfavoriteAll();
     }
 
-    // Close after action
+    // Close after action items
     kebabMenu.classList.add('hidden');
     kebabBtn.setAttribute('aria-expanded', 'false');
   });

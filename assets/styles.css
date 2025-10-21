@@ -215,6 +215,63 @@ html {
   border-radius: 0;
 }
 
+/* Checkbox-style items inside kebab menu */
+.kebab-menu .menu-item.menu-check {
+  align-items: center;
+  gap: 0.6rem;
+  /* Larger touch target, matches your existing padding rhythm */
+  padding: 0.6rem 0.9rem;
+}
+
+/* The square box left of the label */
+.kebab-menu .menu-checkmark {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--brand);
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+  flex: 0 0 16px;         /* keep column aligned */
+}
+
+/* Checked state — filled square + tick */
+.kebab-menu .menu-check.checked .menu-checkmark {
+  background-color: var(--brand);
+  border-color: var(--brand);
+}
+
+/* Simple tick mark (CSS only) */
+.kebab-menu .menu-check.checked .menu-checkmark::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 6px;
+  height: 10px;
+  border-right: 2px solid #000;   /* black tick reads on orange */
+  border-bottom: 2px solid #000;
+  transform: rotate(45deg);
+}
+
+/* Keep row hover highlight behavior you already have */
+.kebab-menu .menu-item.menu-check:hover,
+.kebab-menu .menu-item.menu-check:focus {
+  background-color: rgba(247, 147, 26, 0.15);
+  outline: none;
+}
+
+/* High-contrast focus ring for keyboard users */
+.kebab-menu .menu-item.menu-check:focus-visible {
+  box-shadow: 0 0 0 2px rgba(247,147,26,0.5) inset;
+}
+
+/* Ensure minimum tap size on small screens */
+@media (max-width: 640px) {
+  .kebab-menu .menu-item.menu-check {
+    min-height: 44px;
+  }
+}
+
 /* Star icon style */
 .menu-star {
   color: var(--brand);           /* orange for both ★ and ☆ */
@@ -231,6 +288,12 @@ html {
   background-color: rgba(247, 147, 26, 0.15);
   color: var(--fg);
   outline: none;
+}
+/* Disable hover highlight for checkbox (menu-check) items */
+.kebab-menu .menu-item.menu-check:hover,
+.kebab-menu .menu-item.menu-check:focus {
+  background-color: transparent !important;
+  color: var(--fg);
 }
 .kebab-menu .menu-item:hover .menu-star,
 .kebab-menu .menu-item:focus .menu-star {
