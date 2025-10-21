@@ -106,25 +106,29 @@
     applySearchPrefsToUI(inTitle, inDesc);
   }
 
+// Returns true only when the search UI is open AND there's a non-empty query
+function isSearchHappening() {
+  const container = document.querySelector('.search-container');
+  const input     = document.getElementById('search-input');
+  if (!container || !input) return false;
+  return container.classList.contains('active') && input.value.trim().length > 0;
+}
+
 function toggleSearchPref(which) {
   let { inTitle, inDesc } = readSearchPrefs();
 
   if (which === 'title') {
     if (inTitle && !inDesc) {
-      // Edge case: Title is the only one selected → flip to Description
       inTitle = false;
       inDesc  = true;
     } else {
-      // Normal toggle
       inTitle = !inTitle;
     }
   } else {
     if (inDesc && !inTitle) {
-      // Edge case: Description is the only one selected → flip to Title
       inDesc  = false;
       inTitle = true;
     } else {
-      // Normal toggle
       inDesc = !inDesc;
     }
   }
@@ -137,7 +141,11 @@ function toggleSearchPref(which) {
 
   writeSearchPrefs(inTitle, inDesc);
   applySearchPrefsToUI(inTitle, inDesc);
-  filterImages(); // re-run search with new scope
+
+  // Only rebuild the grid if a search is actually happening
+  if (isSearchHappening()) {
+    filterImages();
+  }
 }
 
   /* ===========================
