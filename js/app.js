@@ -72,7 +72,6 @@ let panStartY = 0;
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
-const LAST_VIEWED_KEY = 'wsb:lastViewedFilename';
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -291,19 +290,6 @@ function clampPanToBounds() {
     else translateX = Math.max(minTx, Math.min(translateX, maxTx));
     if (scaledH <= vp.height) translateY = (vp.height - scaledH) / 2;
     else translateY = Math.max(minTy, Math.min(translateY, maxTy));
-}
-
-// Avoid stealing keys when the user is typing
-function isTypingInField() {
-  const el = document.activeElement;
-  if (!el) return false;
-  const tag = el.tagName.toLowerCase();
-  return tag === 'input' || tag === 'textarea' || el.isContentEditable || tag === 'select';
-}
-
-// Store the most recently viewed filename (call when closing the modal)
-function rememberLastViewedFilename(fn) {
-  try { sessionStorage.setItem(LAST_VIEWED_KEY, fn || ''); } catch (_) {}
 }
 
 /* ===========================
@@ -598,10 +584,6 @@ function openModalByIndex(index) {
     modalFavBtn.classList.toggle('filled', fav);
 }
 function closeModal() {
-    try {
-        const cur = visibleImages[currentIndex];
-        if (cur && cur.filename) rememberLastViewedFilename(cur.filename);
-    } catch (_) {}
     modal.style.display = 'none';
     history.replaceState(null, '', '/');
     document.body.style.overflow = '';
@@ -1484,6 +1466,41 @@ function onFullscreenChangeAutoClose() {
 
 slideRange?.addEventListener('change', () => restartSlideshowTimer());
 slideRange?.addEventListener('input', () => restartSlideshowTimer());
+
+/* ===========================
+ * SITE-WIDE: Option(Alt)+S starts slideshow (robust for macOS 'ß')
+ * =========================== */
+function onOptionSStartSlideshow(e) {
+  // Only Alt/Option held (no Ctrl/Cmd/Shift)
+  if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+  // Use physical key so macOS Option+S (ß) still matches
+  if (e.code !== 'KeyS') return;
+
+  // Don't hijack when typing in a control
+  const a = document.activeElement;
+  if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.isContentEditable)) return;
+
+  // If slideshow is already open, let its own keys handle things
+  const slideshowOpen = !!slideshowEl && !slideshowEl.classList.contains('hidden');
+  if (slideshowOpen) return;
+
+  // Stop other listeners from interfering
+  e.preventDefault();
+  e.stopPropagation();
+
+  // Tidy UI & state
+  kebabMenu?.classList.add('hidden');
+  kebabBtn?.setAttribute('aria-expanded', 'false');
+  if (modal && modal.style.display === 'flex') closeModal();
+
+  // Launch slideshow
+  if (startSlideshowBtn) startSlideshowBtn.click();
+  else if (typeof openSlideshow === 'function') openSlideshow(0, true);
+}
+
+// Use capture phase so we see the event before other handlers consume it
+document.addEventListener('keydown', onOptionSStartSlideshow, true);
 
 /* ===========================
  * KEBAB MENU (⋯) EVENTS
