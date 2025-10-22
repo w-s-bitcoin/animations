@@ -343,6 +343,11 @@ footer {
     display: none !important;
 }
 
+body.slideshow-open.hide-cursor .slideshow,
+body.slideshow-open.hide-cursor .slideshow * {
+  cursor: none !important;
+}
+
 /* ===========================
    KEBAB → SLIDESHOW SETTINGS
    =========================== */
@@ -965,6 +970,9 @@ body.slideshow-open {
     opacity: 1;
     pointer-events: auto;
 }
+
+.slideshow-controls { transition: opacity 0.25s ease, transform 0.25s ease; }
+.ss-edge { transition: opacity 0.25s ease, transform 0.25s ease; }
 
 .slideshow-hint {
     position: absolute;

@@ -1352,10 +1352,24 @@ function updatePlayButton() {
     }
 }
 function playSlideshow() {
-    if (!slideshowEl || !visibleImages?.length) return;
-    slideshowPlaying = true; updatePlayButton(); scheduleNextSlide();
+  if (!slideshowEl || !visibleImages?.length) return;
+  slideshowPlaying = true;
+  updatePlayButton();
+  showSlideshowUI(true);        // ⬅️ show & arm timer (only while playing)
+  scheduleNextSlide();
 }
-function pauseSlideshow() { slideshowPlaying = false; updatePlayButton(); clearSlideshowTimer(); }
+
+function pauseSlideshow() {
+  slideshowPlaying = false;
+  updatePlayButton();
+  clearSlideshowTimer();
+
+  // Keep controls visible when paused and ensure no pending hide fires
+  clearTimeout(slideshowUiTimer);
+  slideshowUiTimer = null;
+  showSlideshowUI(false); // show UI and DO NOT arm idle timer
+}
+
 function togglePlayPause() { if (slideshowPlaying) pauseSlideshow(); else playSlideshow(); }
 async function enterFullscreen(el) {
     try {
@@ -1365,6 +1379,70 @@ async function enterFullscreen(el) {
         }
     } catch (_) { }
 }
+
+
+/* ===========================
+ * SLIDESHOW: auto-hide UI + cursor after inactivity (pause-aware)
+ * =========================== */
+const UI_HIDE_DELAY_MS = 1500; // 1.5s
+let slideshowUiTimer = null;
+
+function showSlideshowUI(armTimer = true) {
+  if (!slideshowEl) return;
+  slideshowEl.classList.add('show-ui');
+  document.body.classList.remove('hide-cursor');
+
+  // Only (re)arm the idle timer while playing
+  clearTimeout(slideshowUiTimer);
+  if (armTimer && slideshowPlaying) {
+    slideshowUiTimer = setTimeout(() => {
+      // Guard: if paused by the time this fires, do nothing
+      if (!slideshowPlaying) return;
+      hideSlideshowUI();
+    }, UI_HIDE_DELAY_MS);
+  } else {
+    slideshowUiTimer = null;
+  }
+}
+
+function hideSlideshowUI() {
+  if (!slideshowEl) return;
+  // Don't hide while paused
+  if (!slideshowPlaying) return;
+
+  slideshowEl.classList.remove('show-ui');
+  if (document.body.classList.contains('slideshow-open')) {
+    document.body.classList.add('hide-cursor');
+  }
+  clearTimeout(slideshowUiTimer);
+  slideshowUiTimer = null;
+}
+
+function resetSlideshowUiHideTimer() {
+  // Keep behavior consistent with showSlideshowUI
+  showSlideshowUI(true);
+}
+
+// Pointer/touch/wheel activity should reveal UI.
+// If paused, keep it visible with NO timer. If playing, re-arm timer.
+function onSlideshowActivity() {
+  showSlideshowUI(slideshowPlaying);
+}
+
+function bindSlideshowUiActivityListeners() {
+  slideshowEl?.addEventListener('pointermove', onSlideshowActivity, { passive: true });
+  slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, { passive: true });
+  slideshowEl?.addEventListener('wheel', onSlideshowActivity, { passive: true });
+  slideshowEl?.addEventListener('mousemove', onSlideshowActivity, { passive: true }); // legacy
+}
+
+function unbindSlideshowUiActivityListeners() {
+  slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
+  slideshowEl?.removeEventListener('pointerdown', onSlideshowActivity);
+  slideshowEl?.removeEventListener('wheel', onSlideshowActivity);
+  slideshowEl?.removeEventListener('mousemove', onSlideshowActivity);
+}
+
 async function exitFullscreen() { try { if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen(); } catch (_) { } }
 async function openSlideshow(startAt = 0, startPlaying = true) {
     if (!slideshowEl) return;
@@ -1386,7 +1464,8 @@ async function openSlideshow(startAt = 0, startPlaying = true) {
     // NEW: focus the shell so Esc always reaches us next.
     // Do it on the next frame to ensure the element is focusable/visible.
     requestAnimationFrame(focusSlideshowShell);
-
+    showSlideshowUI(slideshowPlaying);
+    bindSlideshowUiActivityListeners();
     if (startPlaying) {
         slideshowPlaying = true;
         updatePlayButton();
@@ -1402,7 +1481,13 @@ async function closeSlideshow() {
     // Stop timers/playback first
     pauseSlideshow();
     clearSlideshowTimer();
-
+    // Clean up auto-hide state
+    unbindSlideshowUiActivityListeners();
+    clearTimeout(slideshowUiTimer);
+    slideshowUiTimer = null;
+    document.body.classList.remove('hide-cursor');
+    // Ensure visible next time we open
+    slideshowEl.classList.add('show-ui');
     // Hide UI + restore page state
     slideshowEl.classList.add('hidden');
     slideshowEl.classList.remove('show-ui');
@@ -1448,6 +1533,10 @@ ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); closeSlidesho
 ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowNext(true); });
 ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowPrev(true); });
 ssPlayPauseBtn?.addEventListener('click', (e) => { e.stopPropagation(); togglePlayPause(); });
+ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); closeSlideshow(); });
+ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowNext(true); });
+ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowPrev(true); });
+ssPlayPauseBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); togglePlayPause(); });
 
 document.addEventListener('keydown', (e) => {
     if (!slideshowEl || slideshowEl.classList.contains('hidden')) return;
