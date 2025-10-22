@@ -244,8 +244,8 @@ html {
 .kebab-menu .menu-check.checked .menu-checkmark::after {
   content: "";
   position: absolute;
-  left: 3px;
-  top: 0px;
+  left: 2px;
+  top: -2px;
   width: 6px;
   height: 10px;
   border-right: 2px solid #000;   /* black tick reads on orange */
@@ -280,8 +280,8 @@ html {
   display: inline-block;
   width: 1.3rem;                 /* keeps text aligned regardless of ★ vs ☆ width */
   text-align: center;
+  transform: translateY(-2.5px);
 }
-
 /* Hover/focus highlight spans full row; keep stars orange */
 .kebab-menu .menu-item:hover,
 .kebab-menu .menu-item:focus {
@@ -298,6 +298,13 @@ html {
 .kebab-menu .menu-item:hover .menu-star,
 .kebab-menu .menu-item:focus .menu-star {
   color: var(--brand);
+}
+
+.kebab-menu .menu-item.slideshow-row:hover,
+.kebab-menu .menu-item.slideshow-row:focus,
+.kebab-menu .menu-item.slideshow-row:focus-visible {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Utility */
@@ -338,12 +345,16 @@ html {
 .slideshow-start-btn:focus {
   background-color: rgba(247, 147, 26, 0.15);
 }
+.slideshow-start-btn span:first-child {
+  color: var(--brand);
+}
 
 .slideshow-range-wrap {
   position: relative;
   display: block;
   width: 100%;
   padding: 1.6rem var(--ss-sidepad) 0 var(--ss-sidepad);
+  touch-action: pan-y;
 }
 
 .slideshow-bubble {
@@ -385,7 +396,7 @@ html {
   background: var(--brand);
   border: 2px solid #000;
   cursor: pointer;
-  margin-top: calc((var(--ss-track) - var(--ss-thumb)) / 2);
+  margin-top: calc((var(--ss-track) - var(--ss-thumb)) / 2 - 11px);
 }
 
 .slideshow-range::-moz-range-thumb {
@@ -408,7 +419,7 @@ html {
   grid-template-columns: repeat(6, 1fr);
   justify-items: center;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   margin-top: 0.35rem;
   font-size: 0.75rem;
   color: var(--muted);
@@ -416,6 +427,13 @@ html {
   -webkit-user-select: none;
   padding: 0 var(--ss-sidepad);
 }
+
+.slideshow-ticks span:nth-child(1) { transform: translateX(-1px); }
+.slideshow-ticks span:nth-child(2) { transform: translateX(0px); }
+.slideshow-ticks span:nth-child(3) { transform: translateX(1.5px); }
+.slideshow-ticks span:nth-child(4) { transform: translateX(3px); }
+.slideshow-ticks span:nth-child(5) { transform: translateX(5px); }
+.slideshow-ticks span:nth-child(6) { transform: translateX(6px); }
 
 .kebab-menu { min-width: 220px; }
 
