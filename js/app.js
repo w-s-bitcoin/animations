@@ -11,6 +11,8 @@
   const kebabMenu         = document.getElementById('kebabMenu');
   const chkSearchTitles       = document.getElementById('chkSearchTitles');
   const chkSearchDescriptions = document.getElementById('chkSearchDescriptions');
+  const slideRange  = document.getElementById('slideDuration');
+  const slideBubble = document.getElementById('slideDurationBubble');
 
   // Modal control groups + selects
   const yearControls      = document.getElementById('year-controls');
@@ -1797,6 +1799,99 @@ function toggleSearchPref(which) {
       console.error(err);
     });
 
+    /* ===========================
+    * SLIDESHOW: Duration control (2^x seconds; x = 0..6)
+    * =========================== */
+    const EXP_MIN = 0;
+    const EXP_MAX = 6;
+    const THUMB_PX = 16; // keep in sync with CSS thumb size
+
+    function expToSecs(exp)     { return Math.pow(2, exp); } // 1,2,4,8,16,32,64
+    function clampExp(val)      { return Math.max(EXP_MIN, Math.min(EXP_MAX, Math.round(val))); }
+
+    function positionBubble(rangeEl, bubbleEl) {
+    if (!rangeEl || !bubbleEl) return;
+    const rect = rangeEl.getBoundingClientRect();
+    if (rect.width < 1) return;
+
+    const min = Number(rangeEl.min || EXP_MIN);
+    const max = Number(rangeEl.max || EXP_MAX);
+    const val = Number(rangeEl.value || 0);
+    const pct = (val - min) / (max - min);
+
+    const x = pct * (rect.width - THUMB_PX) + (THUMB_PX / 2);
+    bubbleEl.style.left = `${x}px`;
+    }
+
+    function updateSlideDurationUI(fromUser = false) {
+    if (!slideRange || !slideBubble) return;
+
+    // Snap to integer exponent 0..6 when user drags
+    if (fromUser) {
+        const snapped = clampExp(Number(slideRange.value));
+        if (snapped !== Number(slideRange.value)) {
+        slideRange.value = String(snapped);
+        }
+    }
+
+    const exp  = clampExp(Number(slideRange.value));
+    const secs = expToSecs(exp);
+
+    // Accessibility reflects seconds (the real unit shown to users)
+    slideRange.setAttribute('aria-valuenow', String(secs));
+    slideRange.setAttribute('aria-valuemin', String(expToSecs(EXP_MIN)));
+    slideRange.setAttribute('aria-valuemax', String(expToSecs(EXP_MAX)));
+
+    // Bubble text (e.g., "8s")
+    slideBubble.textContent = `${secs}s`;
+
+    positionBubble(slideRange, slideBubble);
+    }
+
+    // Initialize once layout exists; guard if elements aren’t present
+    function initSlideDurationControl() {
+    if (!slideRange || !slideBubble) return;
+
+    // Ensure default is valid and UI is correct on first paint
+    slideRange.value = String(clampExp(Number(slideRange.value || 3)));
+    requestAnimationFrame(() => updateSlideDurationUI(false));
+
+    // Reposition on resize/orientation
+    window.addEventListener('resize', () => positionBubble(slideRange, slideBubble));
+
+    // Track while dragging
+    slideRange.addEventListener('input',  () => updateSlideDurationUI(true));
+    slideRange.addEventListener('change', () => updateSlideDurationUI(true));
+    }
+
+    // Prevent outside-click handlers from seeing slider interactions
+    function bindSliderEventGuards() {
+    if (!slideRange) return;
+
+    const stop = (ev) => { ev.stopPropagation(); };
+    ['pointerdown','pointerup','pointercancel','mousedown','mouseup','click','touchstart','touchend']
+        .forEach(type => slideRange.addEventListener(type, stop, { passive: true }));
+
+    // The wrapper may also get clicks; guard it too
+    const wrap = slideRange.closest('.slideshow-row');
+    if (wrap) {
+        ['click','pointerdown','pointerup','touchstart','touchend'].forEach(type =>
+        wrap.addEventListener(type, stop, { passive: true })
+        );
+    }
+    }
+
+    // Call from your load initializer alongside the slider init
+    window.addEventListener('load', () => {
+    kebabMenu?.classList.add('hidden');
+    kebabBtn?.setAttribute('aria-expanded', 'false');
+    initSearchPrefsAndUI();
+
+    // Initialize slideshow duration slider UI/bubble
+    initSlideDurationControl();
+    bindSliderEventGuards();  // <-- add this line
+    });
+
   /* ===========================
    * EVENT LISTENERS
    * =========================== */
@@ -1807,10 +1902,13 @@ function toggleSearchPref(which) {
   window.addEventListener('load', updateLayoutBasedOnWidth);
   window.addEventListener('orientationchange', updateModalSafePadding);
   window.addEventListener('load', () => {
-    kebabMenu?.classList.add('hidden');
-    kebabBtn?.setAttribute('aria-expanded', 'false');
-    // Initialize Title/Description checkbox state (defaults to both on)
-    initSearchPrefsAndUI();
+  kebabMenu?.classList.add('hidden');
+  kebabBtn?.setAttribute('aria-expanded', 'false');
+  // Initialize Title/Description checkbox state (defaults to both on)
+  initSearchPrefsAndUI();
+
+  // Initialize slideshow duration slider UI/bubble
+  initSlideDurationControl();
   });
   // Direct click listeners on the two menu-check rows (keep menu open)
   chkSearchTitles?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('title'); });
@@ -1844,37 +1942,52 @@ function toggleSearchPref(which) {
     e.stopPropagation();
     const isOpen = !kebabMenu.classList.contains('hidden');
     kebabMenu.classList.toggle('hidden', isOpen); // close if open, open if closed
-    kebabBtn.setAttribute('aria-expanded', String(!isOpen));
-  });
+    const nowOpen = !isOpen;
+    kebabBtn.setAttribute('aria-expanded', String(nowOpen));
+
+    // If menu just opened, give layout a tick and position the bubble
+    if (nowOpen) {
+      requestAnimationFrame(() => {
+        // one more frame helps after CSS transitions (if any)
+        requestAnimationFrame(() => updateSlideDurationUI(false));
+      });
+    }
+ });
 
   // Click on a menu item
-  kebabMenu?.addEventListener('click', (e) => {
+    kebabMenu?.addEventListener('click', (e) => {
     const btn = e.target.closest('.menu-item');
     if (!btn) return;
 
+    // 0) Slideshow duration row: never close the menu
+    if (btn.classList.contains('slideshow-row') || btn.closest('.slideshow-row')) {
+        e.stopPropagation();
+        return; // keep menu open while using the slider
+    }
+
     // 1) Checkbox items: toggle without closing menu
     if (btn.classList.contains('menu-check')) {
-      e.stopPropagation();
-      if (btn.id === 'chkSearchTitles') {
+        e.stopPropagation();
+        if (btn.id === 'chkSearchTitles') {
         toggleSearchPref('title');
-      } else if (btn.id === 'chkSearchDescriptions') {
+        } else if (btn.id === 'chkSearchDescriptions') {
         toggleSearchPref('desc');
-      }
-      return; // keep menu open
+        }
+        return; // keep menu open
     }
 
     // 2) Regular action items
     const action = btn.dataset.action;
     if (action === 'star-all') {
-      favoriteAll();
+        favoriteAll();
     } else if (action === 'unstar-all') {
-      unfavoriteAll();
+        unfavoriteAll();
     }
 
     // Close after action items
     kebabMenu.classList.add('hidden');
     kebabBtn.setAttribute('aria-expanded', 'false');
-  });
+    });
 
   // Click outside → close
   document.addEventListener('click', (e) => {
