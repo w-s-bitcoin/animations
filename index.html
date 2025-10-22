@@ -71,10 +71,10 @@
               id="slideDuration"
               class="slideshow-range"
               type="range"
-              min="0"
+              min="1"
               max="6"
               step="1"
-              value="2"
+              value="1"
               list="durationTicks"
               aria-valuemin="1"
               aria-valuemax="64"
@@ -83,10 +83,8 @@
             />
           </div>
 
-          <!-- Evenly spaced ticks 0..6 (exponents) -->
+          <!-- Evenly spaced ticks 1..6 (exponents) -->
           <datalist id="durationTicks">
-            <option value="0"></option>
-            <option value="1"></option>
             <option value="2"></option>
             <option value="3"></option>
             <option value="4"></option>
@@ -96,7 +94,7 @@
 
           <!-- Labels display 2^x (seconds) -->
           <div class="slideshow-ticks" id="slideDurationTicks" aria-hidden="true">
-            <span>1s</span><span>2</span><span>4</span><span>8</span><span>16</span><span>32</span><span>64</span>
+            <span>2</span><span>4</span><span>8</span><span>16</span><span>32</span><span>64</span>
           </div>
         </div>
 

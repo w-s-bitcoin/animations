@@ -499,7 +499,7 @@ html {
 /* Tick labels align under the same width as slider */
 .slideshow-ticks {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   align-items: center;
   justify-items: center;
   gap: 0.25rem;
@@ -776,6 +776,13 @@ html {
   max-height: 90vh;
   user-select: none;
   -webkit-user-drag: none;
+
+  /* NEW: fade transition */
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+#slideshow-img.ss-img-hidden {
+  opacity: 0;
 }
 
 /* Controls cluster: top-left (exit + play/pause) */
