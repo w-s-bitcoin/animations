@@ -946,7 +946,7 @@ footer {
     white-space: nowrap;
 }
 
-@media (hover: hover) and (pointer: fine)) {
+@media (hover: hover) and (pointer: fine) {
 
     .ss-btn:hover,
     .ss-edge:hover {
