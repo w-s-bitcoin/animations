@@ -1316,6 +1316,7 @@ function _applySlide(idx) {
     slideshowImg.alt = alt;
     slideshowImg.src = `final_frames/${item.filename}`;
 }
+
 function setSlideshowImage(idx, restartTimer = false) {
     _applySlide(idx);
     if (restartTimer) restartSlideshowTimer();
