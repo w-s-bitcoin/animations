@@ -1262,7 +1262,7 @@ function updateSlideDurationUI(fromUser = false) {
 function initSlideDurationControl() {
     if (!slideRange || !slideBubble) return;
     const saved = Number(localStorage.getItem(SLIDE_EXP_KEY));
-    const initial = Number.isFinite(saved) ? clampExp(saved) : clampExp(Number(slideRange.value || 2));
+    const initial = Number.isFinite(saved) ? clampExp(saved) : 2; // Default exponent → 2^2 = 4 seconds
     slideRange.value = String(initial);
     requestAnimationFrame(() => updateSlideDurationUI(false));
     window.addEventListener('resize', () => positionBubble(slideRange, slideBubble));
@@ -1296,6 +1296,13 @@ window.addEventListener('load', () => {
 let slideshowIndex = 0;
 let slideshowPlaying = false;
 let slideshowTimer = null;
+function isSlideshowOpen() {
+    return !!slideshowEl && !slideshowEl.classList.contains('hidden');
+}
+function focusSlideshowShell() {
+    // Ensure the first Esc keypress reaches us (even after entering fullscreen)
+    try { slideshowEl?.focus(); } catch (_) { }
+}
 function getSlideDurationSecs() {
     if (!slideRange) return 4;
     const exp = Number(slideRange.value || 2);
@@ -1363,22 +1370,47 @@ async function openSlideshow(startAt = 0, startPlaying = true) {
     if (!slideshowEl) return;
     if (!visibleImages || visibleImages.length === 0) return;
     if (modal && modal.style.display === 'flex') closeModal();
+
     slideshowEl.classList.remove('hidden');
     slideshowEl.classList.add('show-ui');
     slideshowEl.setAttribute('aria-hidden', 'false');
+
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('slideshow-open');   // NEW: lock scroll via CSS
+
     _applySlide(startAt);
+
+    // Try to enter fullscreen; some browsers will consume the first Esc to exit FS.
     await enterFullscreen(slideshowEl);
-    if (startPlaying) { slideshowPlaying = true; updatePlayButton(); scheduleNextSlide(); }
-    else { slideshowPlaying = false; updatePlayButton(); }
+
+    // NEW: focus the shell so Esc always reaches us next.
+    // Do it on the next frame to ensure the element is focusable/visible.
+    requestAnimationFrame(focusSlideshowShell);
+
+    if (startPlaying) {
+        slideshowPlaying = true;
+        updatePlayButton();
+        scheduleNextSlide();
+    } else {
+        slideshowPlaying = false;
+        updatePlayButton();
+    }
 }
 async function closeSlideshow() {
     if (!slideshowEl) return;
+
+    // Stop timers/playback first
+    pauseSlideshow();
+    clearSlideshowTimer();
+
+    // Hide UI + restore page state
     slideshowEl.classList.add('hidden');
     slideshowEl.classList.remove('show-ui');
     slideshowEl.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    pauseSlideshow();
+    document.body.classList.remove('slideshow-open');
+
+    // Try to exit fullscreen if still in it (no-op if not)
     await exitFullscreen();
 }
 
@@ -1424,6 +1456,13 @@ document.addEventListener('keydown', (e) => {
     else if (e.key === 'ArrowLeft') { e.preventDefault(); slideshowPrev(true); }
     else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePlayPause(); }
 });
+function onFullscreenChangeAutoClose() {
+    if (!document.fullscreenElement && isSlideshowOpen()) {
+        closeSlideshow();
+    }
+}
+['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange']
+    .forEach(evt => document.addEventListener(evt, onFullscreenChangeAutoClose));
 
 slideRange?.addEventListener('change', () => restartSlideshowTimer());
 slideRange?.addEventListener('input', () => restartSlideshowTimer());
