@@ -1808,13 +1808,13 @@ fetch("final_frames/image_list.json")
     });
 
 /* ===========================
-* SLIDESHOW: Duration control (2^x seconds; x = 0..6)
+* SLIDESHOW: Duration control (2^x seconds; x = 1..6)
 * =========================== */
 const EXP_MIN = 1;
 const EXP_MAX = 6;
 const THUMB_PX = 16; // keep in sync with CSS thumb size
 
-function expToSecs(exp) { return Math.pow(2, exp); } // 1,2,4,8,16,32,64
+function expToSecs(exp) { return Math.pow(2, exp); } // 2,4,8,16,32,64
 function clampExp(val) { return Math.max(EXP_MIN, Math.min(EXP_MAX, Math.round(val))); }
 
 function positionBubble(rangeEl, bubbleEl) {
@@ -1863,7 +1863,7 @@ function initSlideDurationControl() {
   if (!slideRange || !slideBubble) return;
 
   const saved = Number(localStorage.getItem(SLIDE_EXP_KEY));
-  const initial = Number.isFinite(saved) ? clampExp(saved) : clampExp(Number(slideRange.value || 3));
+  const initial = Number.isFinite(saved) ? clampExp(saved) : clampExp(Number(slideRange.value || 2));
   slideRange.value = String(initial);
 
   requestAnimationFrame(() => updateSlideDurationUI(false));
@@ -1914,11 +1914,11 @@ let slideshowIndex   = 0;
 let slideshowPlaying = false;
 let slideshowTimer   = null;
 
-// Reuse duration mapping (2^exp seconds); default to 8s if control missing
+// Reuse duration mapping (2^exp seconds); default to 4s if control missing
 function getSlideDurationSecs() {
-  if (!slideRange) return 8;
-  const exp = Number(slideRange.value || 3);
-  return Math.pow(2, Math.max(0, Math.min(6, Math.round(exp))));
+  if (!slideRange) return 4;
+  const exp = Number(slideRange.value || 2);
+  return Math.pow(2, Math.max(1, Math.min(6, Math.round(exp))));
 }
 
 // Internal: actually point the <img> to the given index (no fade logic)

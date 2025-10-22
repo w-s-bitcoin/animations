@@ -882,6 +882,21 @@ footer {
     cursor: pointer;
 }
 
+.ss-prev,
+.ss-next {
+  font-size: 1.4rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border);
+  color: #fff;
+  cursor: pointer;
+}
+
 .ss-exit {
     font-size: 2rem;
     line-height: 1;

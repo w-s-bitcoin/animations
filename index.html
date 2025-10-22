@@ -58,11 +58,11 @@
 
           <div class="slideshow-range-wrap">
             <output id="slideDurationBubble" class="slideshow-bubble" for="slideDuration" aria-live="polite">
-              2s
+              4s
             </output>
 
-            <input id="slideDuration" class="slideshow-range" type="range" min="1" max="6" step="1" value="1"
-              list="durationTicks" aria-valuemin="2" aria-valuemax="64" aria-valuenow="2"
+            <input id="slideDuration" class="slideshow-range" type="range" min="1" max="6" step="1" value="2"
+              list="durationTicks" aria-valuemin="2" aria-valuemax="64" aria-valuenow="4"
               aria-describedby="slideDurationTicks" />
           </div>
 
@@ -195,13 +195,10 @@
   <div id="slideshow" class="slideshow hidden" aria-hidden="true">
     <div class="slideshow-controls" id="slideshowControls" aria-label="Slideshow controls">
       <button class="ss-btn ss-exit" id="ssExitBtn" aria-label="Exit slideshow">×</button>
-      <button class="ss-btn ss-play" id="ssPlayPauseBtn" aria-label="Pause slideshow" data-state="playing">
-        ❚❚
-      </button>
+      <button class="ss-btn ss-prev" id="ssPrevBtn" aria-label="Previous slide">‹</button>
+      <button class="ss-btn ss-play" id="ssPlayPauseBtn" aria-label="Pause slideshow" data-state="playing">❚❚</button>
+      <button class="ss-btn ss-next" id="ssNextBtn" aria-label="Next slide">›</button>
     </div>
-
-    <button class="ss-edge ss-prev" id="ssPrevBtn" aria-label="Previous slide">‹</button>
-    <button class="ss-edge ss-next" id="ssNextBtn" aria-label="Next slide">›</button>
 
     <div class="slideshow-viewport">
       <img id="slideshow-img" alt="Slideshow image" draggable="false" />
