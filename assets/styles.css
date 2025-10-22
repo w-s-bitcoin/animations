@@ -131,7 +131,7 @@ html {
     =========================== */
 /* Wrapper fixed to the top-right of the viewport */
 .site-kebab {
-  position: fixed;
+  position: absolute;
   top: max(0.75rem, env(safe-area-inset-top));
   right: max(0.75rem, env(safe-area-inset-right));
   z-index: 2000; /* above page UI, below modal (modal is 9999) */
