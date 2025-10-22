@@ -65,8 +65,13 @@
           <label for="slideDuration" class="slideshow-label">Slide duration</label>
 
           <div class="slideshow-range-wrap">
-            <output id="slideDurationBubble" class="slideshow-bubble" for="slideDuration" aria-live="polite">8s</output>
+            <!-- Bubble starts at 2s -->
+            <output id="slideDurationBubble"
+                    class="slideshow-bubble"
+                    for="slideDuration"
+                    aria-live="polite">2s</output>
 
+            <!-- Range: exponent 1→6 (2→64 s), default=1 (2 s) -->
             <input
               id="slideDuration"
               class="slideshow-range"
@@ -76,15 +81,16 @@
               step="1"
               value="1"
               list="durationTicks"
-              aria-valuemin="1"
+              aria-valuemin="2"
               aria-valuemax="64"
-              aria-valuenow="4"
+              aria-valuenow="2"
               aria-describedby="slideDurationTicks"
             />
           </div>
 
-          <!-- Evenly spaced ticks 1..6 (exponents) -->
+          <!-- Tick marks for exponents 1–6 -->
           <datalist id="durationTicks">
+            <option value="1"></option>
             <option value="2"></option>
             <option value="3"></option>
             <option value="4"></option>
@@ -92,7 +98,7 @@
             <option value="6"></option>
           </datalist>
 
-          <!-- Labels display 2^x (seconds) -->
+          <!-- Labels show 2^x seconds -->
           <div class="slideshow-ticks" id="slideDurationTicks" aria-hidden="true">
             <span>2</span><span>4</span><span>8</span><span>16</span><span>32</span><span>64</span>
           </div>
@@ -102,7 +108,6 @@
           ▶ Start Slideshow
         </button>
       </div>
-
     </div>
   </div>
   <h1>Wicked Smart Bitcoin</h1>
@@ -275,7 +280,7 @@
       </a>
     </div>
     <p>© 2025 Wicked Smart Bitcoin <span id="version-info">(v0.1.3)</span></p>
-    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on October 22, 2025 at 11:22 UTC</p>
+    <p id="last-updated" style="font-size: 0.75rem; color: #666;">Last updated on October 22, 2025 at 12:18 UTC</p>
   </footer>
   <script src="js/app.js" defer></script>
 </body>

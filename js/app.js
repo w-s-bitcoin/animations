@@ -1810,7 +1810,7 @@ fetch("final_frames/image_list.json")
 /* ===========================
 * SLIDESHOW: Duration control (2^x seconds; x = 0..6)
 * =========================== */
-const EXP_MIN = 0;
+const EXP_MIN = 1;
 const EXP_MAX = 6;
 const THUMB_PX = 16; // keep in sync with CSS thumb size
 
@@ -1818,17 +1818,23 @@ function expToSecs(exp) { return Math.pow(2, exp); } // 1,2,4,8,16,32,64
 function clampExp(val) { return Math.max(EXP_MIN, Math.min(EXP_MAX, Math.round(val))); }
 
 function positionBubble(rangeEl, bubbleEl) {
-    if (!rangeEl || !bubbleEl) return;
-    const rect = rangeEl.getBoundingClientRect();
-    if (rect.width < 1) return;
+  if (!rangeEl || !bubbleEl) return;
 
-    const min = Number(rangeEl.min || EXP_MIN);
-    const max = Number(rangeEl.max || EXP_MAX);
-    const val = Number(rangeEl.value || 0);
-    const pct = (val - min) / (max - min);
+  const wrap = rangeEl.parentElement; // .ss-track
+  const rect = rangeEl.getBoundingClientRect();
+  const padL = parseFloat(getComputedStyle(wrap).paddingLeft) || 0;
 
-    const x = pct * (rect.width - THUMB_PX) + (THUMB_PX / 2);
-    bubbleEl.style.left = `${x}px`;
+  const min = Number(rangeEl.min || 0);
+  const max = Number(rangeEl.max || 6);
+  const val = Number(rangeEl.value || 0);
+  const pct = (val - min) / (max - min);
+
+  // The bubble is absolutely positioned inside .ss-row (sibling), but we want
+  // it to align over the thumb center, which lives inside .ss-track with padL.
+  const xWithinTrack = pct * (rect.width - THUMB_PX) + THUMB_PX / 2;
+
+  // place the bubble relative to the padded track left edge
+  bubbleEl.style.left = `${padL + xWithinTrack}px`;
 }
 
 function updateSlideDurationUI(fromUser = false) {

@@ -306,50 +306,25 @@ html {
 /* ===========================
    KEBAB → SLIDESHOW SETTINGS
    =========================== */
+
+:root {
+  --ss-thumb: 16px;
+  --ss-track: 4px;
+  --ss-sidepad: calc(var(--ss-thumb) / 1.5);
+}
+
 .kebab-menu .slideshow-row {
-  gap: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.55rem;
   padding: 0.6rem 0.9rem;
-  align-items: center;
 }
 
 .slideshow-label {
   font-size: 0.9rem;
   color: var(--ink-dim);
-  flex: 0 0 auto;
-}
-
-.slideshow-range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  max-width: 140px;
-  height: 4px;
-  background: #444;
-  border-radius: 999px;
-  outline: none;
-}
-.slideshow-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--brand);
-  border: 2px solid #000;
-  cursor: pointer;
-}
-.slideshow-range::-moz-range-thumb {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--brand);
-  border: 2px solid #000;
-  cursor: pointer;
-}
-.slideshow-range::-moz-range-track {
-  height: 4px; background: #444; border-radius: 999px;
-}
-
-.slideshow-value {
-  width: 2.5rem; text-align: right;
-  font-variant-numeric: tabular-nums;
-  color: var(--fg);
+  text-align: center;
 }
 
 .slideshow-start-btn {
@@ -364,99 +339,18 @@ html {
   background-color: rgba(247, 147, 26, 0.15);
 }
 
-/* Stack the label above the slider */
-.slideshow-row {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.5rem;
-}
-
-/* Label text */
-.slideshow-label {
-  font-size: 0.9rem;
-  color: var(--ink-dim);
-}
-
-/* Slider + live value on one row */
 .slideshow-range-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-/* Slider track */
-.slideshow-range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 4px;
-  background: #444;
-  border-radius: 999px;
-  outline: none;
-}
-.slideshow-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--brand);
-  border: 2px solid #000;
-  cursor: pointer;
-}
-.slideshow-range::-moz-range-thumb {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--brand);
-  border: 2px solid #000;
-  cursor: pointer;
-}
-.slideshow-range::-moz-range-track {
-  height: 4px; background: #444; border-radius: 999px;
-}
-
-/* Live value */
-.slideshow-value {
-  width: 3rem;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  color: var(--fg);
-}
-
-/* Custom tick labels under the slider */
-.slideshow-ticks {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  align-items: center;
-  justify-items: center;
-  gap: 0.25rem;
-  margin-top: -0.15rem; /* snug under track */
-  font-size: 0.75rem;
-  color: var(--muted);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Optional: widen the menu slightly for the slider */
-.kebab-menu { min-width: 220px; }
-
-/* Stack label, then slider, then ticks */
-.slideshow-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.slideshow-range-wrap {
-  position: relative;            /* bubble positions inside this box */
+  position: relative;
   display: block;
-  padding-top: 1.6rem;           /* room for bubble above the track */
+  width: 100%;
+  padding: 1.6rem var(--ss-sidepad) 0 var(--ss-sidepad);
 }
 
-/* Bubble that follows the thumb */
 .slideshow-bubble {
   position: absolute;
-  top: 0;                        /* sits in the reserved space */
-  left: 0;                       /* JS will move the left % */
-  transform: translateX(-50%);   /* center over thumb */
+  top: 0;
+  left: 0;
+  transform: translateX(-50%);
   background: rgba(0,0,0,0.85);
   color: #fff;
   border: 1px solid var(--border);
@@ -468,46 +362,62 @@ html {
   white-space: nowrap;
 }
 
-/* Slider track & thumb */
 .slideshow-range {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 4px;
+  height: var(--ss-track);
   background: #444;
   border-radius: 999px;
   outline: none;
 }
+.slideshow-range:hover,
+.slideshow-range:focus {
+  background: #444;
+}
+
 .slideshow-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px; height: 16px; border-radius: 50%;
+  width: var(--ss-thumb);
+  height: var(--ss-thumb);
+  border-radius: 50%;
   background: var(--brand);
   border: 2px solid #000;
   cursor: pointer;
-}
-.slideshow-range::-moz-range-thumb {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--brand);
-  border: 2px solid #000;
-  cursor: pointer;
-}
-.slideshow-range::-moz-range-track {
-  height: 4px; background: #444; border-radius: 999px;
+  margin-top: calc((var(--ss-track) - var(--ss-thumb)) / 2);
 }
 
-/* Tick labels align under the same width as slider */
+.slideshow-range::-moz-range-thumb {
+  width: var(--ss-thumb);
+  height: var(--ss-thumb);
+  border-radius: 50%;
+  background: var(--brand);
+  border: 2px solid #000;
+  cursor: pointer;
+}
+
+.slideshow-range::-moz-range-track {
+  height: var(--ss-track);
+  background: #444;
+  border-radius: 999px;
+}
+
 .slideshow-ticks {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  align-items: center;
   justify-items: center;
-  gap: 0.25rem;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 0.35rem;
   font-size: 0.75rem;
   color: var(--muted);
   user-select: none;
+  -webkit-user-select: none;
+  padding: 0 var(--ss-sidepad);
 }
+
+.kebab-menu { min-width: 220px; }
 
 /* ===========================
     GRID / LIST LAYOUT
