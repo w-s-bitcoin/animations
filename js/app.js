@@ -72,6 +72,7 @@ let panStartY = 0;
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
+const LAST_VIEWED_KEY = 'wsb:lastViewedFilename';
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -290,6 +291,19 @@ function clampPanToBounds() {
     else translateX = Math.max(minTx, Math.min(translateX, maxTx));
     if (scaledH <= vp.height) translateY = (vp.height - scaledH) / 2;
     else translateY = Math.max(minTy, Math.min(translateY, maxTy));
+}
+
+// Avoid stealing keys when the user is typing
+function isTypingInField() {
+  const el = document.activeElement;
+  if (!el) return false;
+  const tag = el.tagName.toLowerCase();
+  return tag === 'input' || tag === 'textarea' || el.isContentEditable || tag === 'select';
+}
+
+// Store the most recently viewed filename (call when closing the modal)
+function rememberLastViewedFilename(fn) {
+  try { sessionStorage.setItem(LAST_VIEWED_KEY, fn || ''); } catch (_) {}
 }
 
 /* ===========================
@@ -584,6 +598,10 @@ function openModalByIndex(index) {
     modalFavBtn.classList.toggle('filled', fav);
 }
 function closeModal() {
+    try {
+        const cur = visibleImages[currentIndex];
+        if (cur && cur.filename) rememberLastViewedFilename(cur.filename);
+    } catch (_) {}
     modal.style.display = 'none';
     history.replaceState(null, '', '/');
     document.body.style.overflow = '';
@@ -1342,11 +1360,11 @@ function restartSlideshowTimer() { if (!slideshowPlaying) return; scheduleNextSl
 function updatePlayButton() {
     if (!ssPlayPauseBtn) return;
     if (slideshowPlaying) {
-        ssPlayPauseBtn.textContent = '❚❚';
+        ssPlayPauseBtn.textContent = '။';
         ssPlayPauseBtn.setAttribute('aria-label', 'Pause slideshow');
         ssPlayPauseBtn.dataset.state = 'playing';
     } else {
-        ssPlayPauseBtn.textContent = '▶';
+        ssPlayPauseBtn.textContent = '▸';
         ssPlayPauseBtn.setAttribute('aria-label', 'Play slideshow');
         ssPlayPauseBtn.dataset.state = 'paused';
     }
