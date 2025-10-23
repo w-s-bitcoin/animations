@@ -1532,11 +1532,43 @@ startSlideshowBtn?.addEventListener('click', () => {
 ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); closeSlideshow(); });
 ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowNext(true); });
 ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowPrev(true); });
-ssPlayPauseBtn?.addEventListener('click', (e) => { e.stopPropagation(); togglePlayPause(); });
 ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); closeSlideshow(); });
 ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowNext(true); });
 ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowPrev(true); });
-ssPlayPauseBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); togglePlayPause(); });
+// Robust Play/Pause button handler (click + keyboard)
+function onPlayPauseActivate(e) {
+  // Make button work with mouse AND keyboard (Enter/Space)
+  if (e.type === 'keydown' && !(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
+
+  e.stopPropagation();
+  e.preventDefault();
+
+  if (slideshowPlaying) {
+    pauseSlideshow();                 // sets slideshowPlaying=false and updates UI
+    showSlideshowUI(false);           // keep controls visible while paused (no idle timer)
+  } else {
+    playSlideshow();                  // sets slideshowPlaying=true and updates UI
+    showSlideshowUI(true);            // visible & arm idle timer
+  }
+}
+
+if (!ssPlayPauseBtn) {
+  console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
+} else {
+  ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
+  ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
+  ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
+  ssPlayPauseBtn.setAttribute('role', 'button');
+}
+
+if (!ssPlayPauseBtn) {
+  console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
+} else {
+  ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
+  ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
+  ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
+  ssPlayPauseBtn.setAttribute('role', 'button');
+}
 
 document.addEventListener('keydown', (e) => {
     if (!slideshowEl || slideshowEl.classList.contains('hidden')) return;

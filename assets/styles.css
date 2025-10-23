@@ -956,6 +956,16 @@ body.slideshow-open {
 .ss-next {
     right: max(0.75rem, env(safe-area-inset-right));
 }
+.ss-btn,
+.ss-edge,
+.ss-prev,
+.ss-next {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
 
 .slideshow .slideshow-controls,
 .slideshow .ss-edge,
