@@ -1,390 +1,378 @@
 [
-  {
-    "filename": "uoa.png",
-    "title": "Unit of Account",
-    "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of dollars",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1945906813968298283",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqypvng2f8pa2laesr3vcdanfplczkljns7zxc4m8t9j7u0p8m8jjgwzncgnt",
-    "latest_youtube": "https://youtu.be/CZKA01K3vig"
-  },
-  {
-    "filename": "price_distribution.png",
-    "title": "Price Distribution",
-    "description": "Shows the number of daily closes in between each price range",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1931532722142368206",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qy88wumn8ghj7mn0wvhxcmmv9uqzp8akh7gfkd2kf0f9xhkrtqslxp22deklqa60p52kxxv7j7ep2jnpx9c64z",
-    "latest_youtube": "https://youtu.be/WwpJY5rmP_A"
-  },
-  {
-    "filename": "mcap_distribution.png",
-    "title": "Market Cap Distribution",
-    "description": "Shows the number of daily closes in between each market cap range",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1895886293097464282",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyq826zwnry94u2f3vz975zcn7323z424ldw3mpkn7wjtx3z8ja84s3qh6vk",
-    "latest_youtube": "https://youtu.be/wuGElsNvHZU"
-    
-  },
-  {
-    "filename": "days_since_ath.png",
-    "title": "Days Since All-Time High",
-    "description": "Shows the number of days since Bitcoin's last all-time high",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1959695610346455280",
-    "latest_nostr": "https://primal.net/e/nevent1qqswt5etklghyxv7aqu48ml9u6324xmg6zm9nur4ds98hz97v5aqj4cmfxqws",
-    "latest_youtube": "https://youtu.be/INLz3aHUKiM"
-  },
-  {
-    "filename": "days_at_a_loss.png",
-    "title": "Days at a Loss",
-    "description": "Shows the number of days purchases made at each daily high were at a loss",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1896640862580601174",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyq3g4waja09xdu93vvwfcvh28tfv2znuxmx9dtgszeahasydndd8zkju68a",
-    "latest_youtube": "https://youtu.be/yb2p0WnP53M"
-  },
-  {
-    "filename": "mined_supply_price.png",
-    "title": "Mined Supply & Price",
-    "description": "Shows the mined supply and price, colored by the epoch",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1907423798309122064",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyppvslly58w9l4k7jtywzruhch7g8zfkta9w77qj3lnqmmdrr4s5q8xg3u5",
-    "latest_youtube": "https://youtu.be/MzxIZ4_f3e0"
-  },
-  {
-    "filename": "eoe_growth.png",
-    "title": "Epoch-Over-Epoch Growth",
-    "description": "Shows the epoch-over-epoch growth based on block height",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1903791287846711591",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyr7v5tnafyk25qph5edlfk235gh2mu8qn05l82y5dm9067wg3vfqjcmmt7s",
-    "latest_youtube": "https://youtu.be/ieiwq2m9aWg"
-  },
-  {
-    "filename": "halving_progress.png",
-    "title": "Halving Progress",
-    "description": "Shows the relative halving progress based on block height through each epoch",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1964505623548350655",
-    "latest_nostr": "https://primal.net/e/nevent1qqsdyrjzv79smqevlv7tp8nudnk5phg6yxf30uqua7cgsf8awp87dmc9xzfx7",
-    "latest_youtube": "https://youtu.be/lN0vjNEIRJA"
-  },
-  {
-    "filename": "target_and_block_hashes.png",
-    "title": "Target & Block Hashes",
-    "description": "Shows every block hash as an orange dot and the difficulty targets in white",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1925974203527762141",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyp0djcnun2uumjq23dszhwp4yruw5yh8g9e87htgrsp2tsujmgy5s9mfjke",
-    "latest_youtube": "https://youtu.be/HD6vcASMA8o"
-  },
-  {
-    "filename": "issuance_rate.png",
-    "title": "Issuance Rate",
-    "description": "Shows Bitcoin's annualized issuance rate",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1970199968364614031",
-    "latest_nostr": "https://primal.net/e/nevent1qqsd4s757v2syhwx5j9ll2wup925nm3ufpykzkf5kl3a02waehzlvjczvu2en",
-    "latest_youtube": "https://youtu.be/VN3h0gmsuL4"
-  },
-  {
-    "filename": "global_wealth.png",
-    "title": "Global Wealth",
-    "description": "Shows the estimated total global wealth in terms of bitcoin",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1946395544663765360",
-    "latest_nostr": "https://primal.net/e/nevent1qqs2jx8y08fextanzh69zzklg0sltn0r4hxx8927fv9lds4xdykcuuse52d54",
-    "latest_youtube": "https://youtu.be/D7uSIlNXYag"
-  },
-  {
-    "filename": "price_of_ground_beef.png",
-    "title": "Price of Ground Beef",
-    "description": "Shows the price of ground beef in terms of bitcoin and in terms of dollars",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1951799963996045422",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzc67s5rfwhtm80wx9q4sm53f5f2wfxmycmqmd2sg3pce5ctz4s9wuctswy",
-    "latest_youtube": "https://youtu.be/LpccPgtC56g"
-    
-  },
-  {
-    "filename": "price_of_eggs.png",
-    "title": "Price of Eggs",
-    "description": "Shows the price of eggs in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_steak.png",
-    "title": "Price of Steak",
-    "description": "Shows the price of sirloin steak in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_chicken.png",
-    "title": "Price of Chicken",
-    "description": "Shows the price of one whole chicken in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_electricity.png",
-    "title": "Price of Electricity",
-    "description": "Shows the price of one kWh of electricity in terms of bitcoin and in terms of dollars",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1965530824578838723",
-    "latest_nostr": "https://primal.net/e/nevent1qqsf8d4tl39jetxjfyv6tfzesjzzv8sak7hxsjkmsdhfp3hgmz6cg5sd5wwx8",
-    "latest_youtube": "https://youtu.be/77GH63y-UnY"
-    
-  },
-  {
-    "filename": "price_of_hourly_earnings.png",
-    "title": "Price of Hourly Earnings",
-    "description": "Shows the price of one hour of earnings in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_ca_min_wage.png",
-    "title": "Price of CA Min Wage",
-    "description": "Shows the price of one hour of California minimum wage in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_milk.png",
-    "title": "Price of Milk",
-    "description": "Shows the price of milk in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_rice.png",
-    "title": "Price of Rice",
-    "description": "Shows the price of rice in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_sugar.png",
-    "title": "Price of Sugar",
-    "description": "Shows the price of sugar in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "price_of_unleaded_gasoline.png",
-    "title": "Price of Unleaded Gasoline",
-    "description": "Shows the price of unleaded gasoline in terms of bitcoin and in terms of dollars",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-    
-  },
-  {
-    "filename": "node_count.png",
-    "title": "Node Count",
-    "description": "Shows each node count by software and version",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "block_size.png",
-    "title": "Block Size",
-    "description": "Shows each block size with smaller epoch windows on the side",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1888583534903738596",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyphh48hhwtsmekjymzux0hq4rqkhkru30mj6m5j0fy0mg5ldls92z9aak38",
-    "latest_youtube": "https://youtu.be/k7baducIk-Y"
-  },
-  {
-    "filename": "utxo_distributions.png",
-    "title": "UTXO Distributions",
-    "description": "Shows the distributions of non-zero UTXOs, both by counts and by value",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1886828292017131951",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzy8hqk0cnvjax5ch60q3fc6wpu6993qmfk4f0gk44vdeqyjaz2n78qsvsv",
-    "latest_youtube": "https://youtu.be/iU2I1TchOB8"
-  },
-  {
-    "filename": "hodl_waves.png",
-    "title": "HODL Waves",
-    "description": "Shows UTXO age distribution over time to visualize HODLing behavior",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1921017614085640222",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyqay7cwxttnjukqq22w63qk3pwf9uaz68a0fqjd4qtwsw2kkm98njxa6h3g",
-    "latest_youtube": "https://youtu.be/ZMmq4zYUviY"
-  },
-  {
-    "filename": "supply_distribution.png",
-    "title": "Supply Distribution & Age By Realized Price",
-    "description": "Shows the prices and ages of the circulating bitcoin supply",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1954193219119358290",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyqep0al4r4r5d3ykc7na0snvc5vd5fszjsrhzfxdrzmhhayeq8hfz3fzttl",
-    "latest_youtube": "https://youtu.be/iEzOIb8oCPc"
-  },
-  {
-    "filename": "cagr.png",
-    "title": "CAGR",
-    "description": "Shows the 4, 6, 8, 10, and 12 year compound annual growth rates",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1899422307778453933",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzx4u2qy9szds7sgpq8rqu7adxw88qx68u97tswyejl7jsm5vvvfc0ly7nv",
-    "latest_youtube": "https://youtu.be/CmogAUugkDo"
-  },
-  {
-    "filename": "cagr_table.png",
-    "title": "Bitcoin & Traditional Assets CAGR",
-    "description": "Shows the 1-15 year compound annual growth rates for bitcoin and traditional assets",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "dca_cost_basis.png",
-    "title": "Daily DCA Cost Basis",
-    "description": "Shows the cost basis of every daily dollar cost average starting point",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1936505784680210796",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyq0yfdwutp86f933wft3taa9zysq0ergz4jf85a540jufdlqm69lyayxe0y",
-    "latest_youtube": "https://youtu.be/xauqhLkJF3c"
-  },
-  {
-    "filename": "bitcoin_vs_gold_2018.png",
-    "title": "Bitcoin vs Gold $50 Weekly DCA",
-    "description": "Compares the returns of a $50 weekly DCA in bitcoin vs gold",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1962856483370025254",
-    "latest_nostr": "https://primal.net/e/nevent1qqstknktvf8649f9jv77y4ca2gsgdx9lnmzad2slyakxeg44xqqxxagznf7u9",
-    "latest_youtube": "https://youtu.be/BP4zLPhZIj4"
-  },
-  {
-    "filename": "200_dma_200_wma.png",
-    "title": "200 DMA & 200 WMA",
-    "description": "Shows the 200 daily and the 200 weekly moving averages",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1891599845720301793",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzyqldexw6x7kfr8vvefyzgsyc3g22g0h53k2l3srzvwqw5u7rfuqaah0xg",
-    "latest_youtube": "https://youtu.be/2qjF6A68oi0"
-  },
-  {
-    "filename": "bitcoin_dominance.png",
-    "title": "Bitcoin Dominance",
-    "description": "Shows Bitcoin's market cap compared to the top 9 shitcoins (excluding stablecoins)",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1968700559780651451",
-    "latest_nostr": "https://primal.net/e/nevent1qqsy8d6dgy6dqfjy7z3yjwmt59q0ru0l49z2hyq5l6kjfy94vn5t76qepl576",
-    "latest_youtube": "https://youtu.be/kBoSO7612v0"
-  },
-  {
-    "filename": "wholecoins.png",
-    "title": "Wholecoins (1 BTC)",
-    "description": "Shows the history of Wholecoins (UTXOs worth exactly 1 BTC)",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1894174834365460525",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "pi_coins.png",
-    "title": "Pi-coins (3.14 BTC)",
-    "description": "Shows the history of Pi-coins (UTXOs worth exactly 3.14 BTC or 3.14159265 BTC)",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1900530426726273294",
-    "latest_nostr": "",
-    "latest_youtube": "https://youtu.be/4yFjOoDp6zY"
-  },
-  {
-    "filename": "v_coins.png",
-    "title": "V-coins (5 BTC)",
-    "description": "Shows the history of V-coins (UTXOs worth exactly 5 BTC)",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "x_coins.png",
-    "title": "X-coins (10 BTC)",
-    "description": "Shows the history of X-coins (UTXOs worth exactly 10 BTC)",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "l_coins.png",
-    "title": "L-coins (50 BTC)",
-    "description": "Shows the history of L-coins (UTXOs worth exactly 50 BTC)",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1971692610172699018",
-    "latest_nostr": "",
-    "latest_youtube": "https://youtu.be/ecy7lLjDK6s"
-  },
-  {
-    "filename": "c_coins.png",
-    "title": "C-coins (100 BTC)",
-    "description": "Shows the history of C-coins (UTXOs worth exactly 100 BTC)",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "d_coins.png",
-    "title": "D-coins (500 BTC)",
-    "description": "Shows the history of D-coins (UTXOs worth exactly 500 BTC)",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1972714820672610728",
-    "latest_nostr": "https://primal.net/e/nevent1qqsdjefrvd99g7tw9sk2k7k794zwk5r9r7t0nat2v8pjunxtt2f5rqqs6c0d7",
-    "latest_youtube": "https://youtu.be/4d4OE7D2hqA"
-  },
-  {
-    "filename": "m_coins.png",
-    "title": "M-coins (1,000 BTC)",
-    "description": "Shows the history of M-coins (UTXOs worth exactly 1,000 BTC)",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1971988248554885395",
-    "latest_nostr": "",
-    "latest_youtube": "https://youtu.be/hzPSxy55MPE"
-  },
-  {
-    "filename": "monthly_yearly_returns.png",
-    "title": "Monthly & Yearly Returns",
-    "description": "Shows the last 5 years of monthly and yearly returns",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "quarterly_yearly_returns.png",
-    "title": "Quarterly & Yearly Returns",
-    "description": "Shows the quarterly and yearly returns",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "monthly_candles.png",
-    "title": "Monthly Candles",
-    "description": "Shows the monthly candles chart",
-    "latest_x": "",
-    "latest_nostr": "",
-    "latest_youtube": "https://youtu.be/k-58GrK6A8k"
-  },
-  {
-    "filename": "yearly_candles.png",
-    "title": "Yearly Candles",
-    "description": "Shows the yearly candles chart",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1885706520416968789",
-    "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyz8c0cqqd09mkzt49cgldmch7z7c0g98kj0zeejuwp276pe6tad6740escp",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "epoch_candles.png",
-    "title": "Epoch Candles",
-    "description": "Shows the epoch candles chart",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1851638646312472955",
-    "latest_nostr": "",
-    "latest_youtube": ""
-  },
-  {
-    "filename": "yearly_windows.png",
-    "title": "Yearly Windows",
-    "description": "Chart with 1 year, 2 year, 3 year, & 4 year windows",
-    "latest_x": "https://x.com/w_s_bitcoin/status/1780570971520291069",
-    "latest_nostr": "",
-    "latest_youtube": "https://youtu.be/zob5dUOAcv0"
-  }
+    {
+        "filename": "uoa.png",
+        "title": "Unit of Account",
+        "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of dollars",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1945906813968298283",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqypvng2f8pa2laesr3vcdanfplczkljns7zxc4m8t9j7u0p8m8jjgwzncgnt",
+        "latest_youtube": "https://youtu.be/CZKA01K3vig"
+    },
+    {
+        "filename": "price_distribution.png",
+        "title": "Price Distribution",
+        "description": "Shows the number of daily closes in between each price range",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1931532722142368206",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qy88wumn8ghj7mn0wvhxcmmv9uqzp8akh7gfkd2kf0f9xhkrtqslxp22deklqa60p52kxxv7j7ep2jnpx9c64z",
+        "latest_youtube": "https://youtu.be/WwpJY5rmP_A"
+    },
+    {
+        "filename": "mcap_distribution.png",
+        "title": "Market Cap Distribution",
+        "description": "Shows the number of daily closes in between each market cap range",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1895886293097464282",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyq826zwnry94u2f3vz975zcn7323z424ldw3mpkn7wjtx3z8ja84s3qh6vk",
+        "latest_youtube": "https://youtu.be/wuGElsNvHZU"
+    },
+    {
+        "filename": "days_since_ath.png",
+        "title": "Days Since All-Time High",
+        "description": "Shows the number of days since Bitcoin's last all-time high",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1959695610346455280",
+        "latest_nostr": "https://primal.net/e/nevent1qqswt5etklghyxv7aqu48ml9u6324xmg6zm9nur4ds98hz97v5aqj4cmfxqws",
+        "latest_youtube": "https://youtu.be/INLz3aHUKiM"
+    },
+    {
+        "filename": "days_at_a_loss.png",
+        "title": "Days at a Loss",
+        "description": "Shows the number of days purchases made at each daily high were at a loss",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1896640862580601174",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyq3g4waja09xdu93vvwfcvh28tfv2znuxmx9dtgszeahasydndd8zkju68a",
+        "latest_youtube": "https://youtu.be/yb2p0WnP53M"
+    },
+    {
+        "filename": "mined_supply_price.png",
+        "title": "Mined Supply & Price",
+        "description": "Shows the mined supply and price, colored by the epoch",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1907423798309122064",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyppvslly58w9l4k7jtywzruhch7g8zfkta9w77qj3lnqmmdrr4s5q8xg3u5",
+        "latest_youtube": "https://youtu.be/MzxIZ4_f3e0"
+    },
+    {
+        "filename": "eoe_growth.png",
+        "title": "Epoch-Over-Epoch Growth",
+        "description": "Shows the epoch-over-epoch growth based on block height",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1903791287846711591",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyr7v5tnafyk25qph5edlfk235gh2mu8qn05l82y5dm9067wg3vfqjcmmt7s",
+        "latest_youtube": "https://youtu.be/ieiwq2m9aWg"
+    },
+    {
+        "filename": "halving_progress.png",
+        "title": "Halving Progress",
+        "description": "Shows the relative halving progress based on block height through each epoch",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1964505623548350655",
+        "latest_nostr": "https://primal.net/e/nevent1qqsdyrjzv79smqevlv7tp8nudnk5phg6yxf30uqua7cgsf8awp87dmc9xzfx7",
+        "latest_youtube": "https://youtu.be/lN0vjNEIRJA"
+    },
+    {
+        "filename": "target_and_block_hashes.png",
+        "title": "Target & Block Hashes",
+        "description": "Shows every block hash as an orange dot and the difficulty targets in white",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1925974203527762141",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyp0djcnun2uumjq23dszhwp4yruw5yh8g9e87htgrsp2tsujmgy5s9mfjke",
+        "latest_youtube": "https://youtu.be/HD6vcASMA8o"
+    },
+    {
+        "filename": "issuance_rate.png",
+        "title": "Issuance Rate",
+        "description": "Shows Bitcoin's annualized issuance rate",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1970199968364614031",
+        "latest_nostr": "https://primal.net/e/nevent1qqsd4s757v2syhwx5j9ll2wup925nm3ufpykzkf5kl3a02waehzlvjczvu2en",
+        "latest_youtube": "https://youtu.be/VN3h0gmsuL4"
+    },
+    {
+        "filename": "global_wealth.png",
+        "title": "Global Wealth",
+        "description": "Shows the estimated total global wealth in terms of bitcoin",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1946395544663765360",
+        "latest_nostr": "https://primal.net/e/nevent1qqs2jx8y08fextanzh69zzklg0sltn0r4hxx8927fv9lds4xdykcuuse52d54",
+        "latest_youtube": "https://youtu.be/D7uSIlNXYag"
+    },
+    {
+        "filename": "price_of_ground_beef.png",
+        "title": "Price of Ground Beef",
+        "description": "Shows the price of ground beef in terms of bitcoin and in terms of dollars",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1951799963996045422",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzc67s5rfwhtm80wx9q4sm53f5f2wfxmycmqmd2sg3pce5ctz4s9wuctswy",
+        "latest_youtube": "https://youtu.be/LpccPgtC56g"
+    },
+    {
+        "filename": "price_of_eggs.png",
+        "title": "Price of Eggs",
+        "description": "Shows the price of eggs in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_steak.png",
+        "title": "Price of Steak",
+        "description": "Shows the price of sirloin steak in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_chicken.png",
+        "title": "Price of Chicken",
+        "description": "Shows the price of one whole chicken in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_electricity.png",
+        "title": "Price of Electricity",
+        "description": "Shows the price of one kWh of electricity in terms of bitcoin and in terms of dollars",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1965530824578838723",
+        "latest_nostr": "https://primal.net/e/nevent1qqsf8d4tl39jetxjfyv6tfzesjzzv8sak7hxsjkmsdhfp3hgmz6cg5sd5wwx8",
+        "latest_youtube": "https://youtu.be/77GH63y-UnY"
+    },
+    {
+        "filename": "price_of_hourly_earnings.png",
+        "title": "Price of Hourly Earnings",
+        "description": "Shows the price of one hour of earnings in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_ca_min_wage.png",
+        "title": "Price of CA Min Wage",
+        "description": "Shows the price of one hour of California minimum wage in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_milk.png",
+        "title": "Price of Milk",
+        "description": "Shows the price of milk in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_rice.png",
+        "title": "Price of Rice",
+        "description": "Shows the price of rice in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_sugar.png",
+        "title": "Price of Sugar",
+        "description": "Shows the price of sugar in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_unleaded_gasoline.png",
+        "title": "Price of Unleaded Gasoline",
+        "description": "Shows the price of unleaded gasoline in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "node_count.png",
+        "title": "Node Count",
+        "description": "Shows each node count by software and version",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "block_size.png",
+        "title": "Block Size",
+        "description": "Shows each block size with smaller epoch windows on the side",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1888583534903738596",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyphh48hhwtsmekjymzux0hq4rqkhkru30mj6m5j0fy0mg5ldls92z9aak38",
+        "latest_youtube": "https://youtu.be/k7baducIk-Y"
+    },
+    {
+        "filename": "utxo_distributions.png",
+        "title": "UTXO Distributions",
+        "description": "Shows the distributions of non-zero UTXOs, both by counts and by value",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1886828292017131951",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzy8hqk0cnvjax5ch60q3fc6wpu6993qmfk4f0gk44vdeqyjaz2n78qsvsv",
+        "latest_youtube": "https://youtu.be/iU2I1TchOB8"
+    },
+    {
+        "filename": "hodl_waves.png",
+        "title": "HODL Waves",
+        "description": "Shows UTXO age distribution over time to visualize HODLing behavior",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1921017614085640222",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyqay7cwxttnjukqq22w63qk3pwf9uaz68a0fqjd4qtwsw2kkm98njxa6h3g",
+        "latest_youtube": "https://youtu.be/ZMmq4zYUviY"
+    },
+    {
+        "filename": "supply_distribution.png",
+        "title": "Supply Distribution & Age By Realized Price",
+        "description": "Shows the prices and ages of the circulating bitcoin supply",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1954193219119358290",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyqep0al4r4r5d3ykc7na0snvc5vd5fszjsrhzfxdrzmhhayeq8hfz3fzttl",
+        "latest_youtube": "https://youtu.be/iEzOIb8oCPc"
+    },
+    {
+        "filename": "cagr.png",
+        "title": "CAGR",
+        "description": "Shows the 4, 6, 8, 10, and 12 year compound annual growth rates",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1899422307778453933",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzx4u2qy9szds7sgpq8rqu7adxw88qx68u97tswyejl7jsm5vvvfc0ly7nv",
+        "latest_youtube": "https://youtu.be/CmogAUugkDo"
+    },
+    {
+        "filename": "cagr_table.png",
+        "title": "Bitcoin & Traditional Assets CAGR",
+        "description": "Shows the 1-15 year compound annual growth rates for bitcoin and traditional assets",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "dca_cost_basis.png",
+        "title": "Daily DCA Cost Basis",
+        "description": "Shows the cost basis of every daily dollar cost average starting point",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1936505784680210796",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyq0yfdwutp86f933wft3taa9zysq0ergz4jf85a540jufdlqm69lyayxe0y",
+        "latest_youtube": "https://youtu.be/xauqhLkJF3c"
+    },
+    {
+        "filename": "bitcoin_vs_gold_2018.png",
+        "title": "Bitcoin vs Gold $50 Weekly DCA",
+        "description": "Compares the returns of a $50 weekly DCA in bitcoin vs gold",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1962856483370025254",
+        "latest_nostr": "https://primal.net/e/nevent1qqstknktvf8649f9jv77y4ca2gsgdx9lnmzad2slyakxeg44xqqxxagznf7u9",
+        "latest_youtube": "https://youtu.be/BP4zLPhZIj4"
+    },
+    {
+        "filename": "200_dma_200_wma.png",
+        "title": "200 DMA & 200 WMA",
+        "description": "Shows the 200 daily and the 200 weekly moving averages",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1891599845720301793",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzyqldexw6x7kfr8vvefyzgsyc3g22g0h53k2l3srzvwqw5u7rfuqaah0xg",
+        "latest_youtube": "https://youtu.be/2qjF6A68oi0"
+    },
+    {
+        "filename": "bitcoin_dominance.png",
+        "title": "Bitcoin Dominance",
+        "description": "Shows Bitcoin's market cap compared to the top 9 shitcoins (excluding stablecoins)",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1968700559780651451",
+        "latest_nostr": "https://primal.net/e/nevent1qqsy8d6dgy6dqfjy7z3yjwmt59q0ru0l49z2hyq5l6kjfy94vn5t76qepl576",
+        "latest_youtube": "https://youtu.be/kBoSO7612v0"
+    },
+    {
+        "filename": "wholecoins.png",
+        "title": "Wholecoins (1 BTC)",
+        "description": "Shows the history of Wholecoins (UTXOs worth exactly 1 BTC)",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1894174834365460525",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "pi_coins.png",
+        "title": "Pi-coins (3.14 BTC)",
+        "description": "Shows the history of Pi-coins (UTXOs worth exactly 3.14 BTC or 3.14159265 BTC)",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1900530426726273294",
+        "latest_nostr": "",
+        "latest_youtube": "https://youtu.be/4yFjOoDp6zY"
+    },
+    {
+        "filename": "v_coins.png",
+        "title": "V-coins (5 BTC)",
+        "description": "Shows the history of V-coins (UTXOs worth exactly 5 BTC)",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "x_coins.png",
+        "title": "X-coins (10 BTC)",
+        "description": "Shows the history of X-coins (UTXOs worth exactly 10 BTC)",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "l_coins.png",
+        "title": "L-coins (50 BTC)",
+        "description": "Shows the history of L-coins (UTXOs worth exactly 50 BTC)",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1971692610172699018",
+        "latest_nostr": "",
+        "latest_youtube": "https://youtu.be/ecy7lLjDK6s"
+    },
+    {
+        "filename": "c_coins.png",
+        "title": "C-coins (100 BTC)",
+        "description": "Shows the history of C-coins (UTXOs worth exactly 100 BTC)",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "d_coins.png",
+        "title": "D-coins (500 BTC)",
+        "description": "Shows the history of D-coins (UTXOs worth exactly 500 BTC)",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1972714820672610728",
+        "latest_nostr": "https://primal.net/e/nevent1qqsdjefrvd99g7tw9sk2k7k794zwk5r9r7t0nat2v8pjunxtt2f5rqqs6c0d7",
+        "latest_youtube": "https://youtu.be/4d4OE7D2hqA"
+    },
+    {
+        "filename": "m_coins.png",
+        "title": "M-coins (1,000 BTC)",
+        "description": "Shows the history of M-coins (UTXOs worth exactly 1,000 BTC)",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1971988248554885395",
+        "latest_nostr": "",
+        "latest_youtube": "https://youtu.be/hzPSxy55MPE"
+    },
+    {
+        "filename": "monthly_yearly_returns.png",
+        "title": "Monthly & Yearly Returns",
+        "description": "Shows the last 5 years of monthly and yearly returns",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "quarterly_yearly_returns.png",
+        "title": "Quarterly & Yearly Returns",
+        "description": "Shows the quarterly and yearly returns",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "monthly_candles.png",
+        "title": "Monthly Candles",
+        "description": "Shows the monthly candles chart",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "https://youtu.be/k-58GrK6A8k"
+    },
+    {
+        "filename": "yearly_candles.png",
+        "title": "Yearly Candles",
+        "description": "Shows the yearly candles chart",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1885706520416968789",
+        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyz8c0cqqd09mkzt49cgldmch7z7c0g98kj0zeejuwp276pe6tad6740escp",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "epoch_candles.png",
+        "title": "Epoch Candles",
+        "description": "Shows the epoch candles chart",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1851638646312472955",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "yearly_windows.png",
+        "title": "Yearly Windows",
+        "description": "Chart with 1 year, 2 year, 3 year, & 4 year windows",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1780570971520291069",
+        "latest_nostr": "",
+        "latest_youtube": "https://youtu.be/zob5dUOAcv0"
+    }
 ]

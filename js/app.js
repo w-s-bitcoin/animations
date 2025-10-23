@@ -44,8 +44,10 @@ let justUnstarredInModal = false;
 let userSelectedLayout = null;
 let showFavoritesOnly = localStorage.getItem('showFavoritesOnly') === 'true';
 let searchWasInitiallyClosed = true;
-let touchStartX = 0, touchEndX = 0;
-let touchStartY = 0, touchEndY = 0;
+let touchStartX = 0,
+    touchEndX = 0;
+let touchStartY = 0,
+    touchEndY = 0;
 let isPinching = false;
 let isPanning = false;
 let isMousePanning = false;
@@ -74,10 +76,13 @@ const MAX_TAP_MOVE_PX = 12;
 function readSearchPrefs() {
     const t = localStorage.getItem('searchTitles');
     const d = localStorage.getItem('searchDescriptions');
-    let inTitle = (t === null) ? true : (t === 'true');
-    let inDesc = (d === null) ? true : (d === 'true');
-    if (!inTitle && !inDesc) { inTitle = true; inDesc = false; }
-    return { inTitle, inDesc };
+    let inTitle = t === null ? true : t === 'true';
+    let inDesc = d === null ? true : d === 'true';
+    if (!inTitle && !inDesc) {
+        inTitle = true;
+        inDesc = false;
+    }
+    return {inTitle, inDesc};
 }
 function writeSearchPrefs(inTitle, inDesc) {
     localStorage.setItem('searchTitles', String(inTitle));
@@ -94,7 +99,7 @@ function applySearchPrefsToUI(inTitle, inDesc) {
     }
 }
 function initSearchPrefsAndUI() {
-    const { inTitle, inDesc } = readSearchPrefs();
+    const {inTitle, inDesc} = readSearchPrefs();
     writeSearchPrefs(inTitle, inDesc);
     applySearchPrefsToUI(inTitle, inDesc);
 }
@@ -105,15 +110,22 @@ function isSearchHappening() {
     return container.classList.contains('active') && input.value.trim().length > 0;
 }
 function toggleSearchPref(which) {
-    let { inTitle, inDesc } = readSearchPrefs();
+    let {inTitle, inDesc} = readSearchPrefs();
     if (which === 'title') {
-        if (inTitle && !inDesc) { inTitle = false; inDesc = true; }
-        else inTitle = !inTitle;
+        if (inTitle && !inDesc) {
+            inTitle = false;
+            inDesc = true;
+        } else inTitle = !inTitle;
     } else {
-        if (inDesc && !inTitle) { inDesc = false; inTitle = true; }
-        else inDesc = !inDesc;
+        if (inDesc && !inTitle) {
+            inDesc = false;
+            inTitle = true;
+        } else inDesc = !inDesc;
     }
-    if (!inTitle && !inDesc) { if (which === 'title') inTitle = true; else inDesc = true; }
+    if (!inTitle && !inDesc) {
+        if (which === 'title') inTitle = true;
+        else inDesc = true;
+    }
     writeSearchPrefs(inTitle, inDesc);
     applySearchPrefsToUI(inTitle, inDesc);
     if (isSearchHappening()) filterImages();
@@ -125,7 +137,7 @@ function toggleSearchPref(which) {
 const BVG_BASE = 'bitcoin_vs_gold';
 const BVG_STORAGE_KEY = 'bvgYear';
 const THIS_YEAR = new Date().getFullYear();
-const BVG_YEARS = Array.from({ length: THIS_YEAR - 2013 + 1 }, (_, i) => THIS_YEAR - i);
+const BVG_YEARS = Array.from({length: THIS_YEAR - 2013 + 1}, (_, i) => THIS_YEAR - i);
 const DAL_BASE = 'days_at_a_loss';
 const DAL_STORAGE_KEY = 'dalScale';
 const DAL_SCALES = ['linear', 'log'];
@@ -191,27 +203,69 @@ function migrateFavoriteFilename(oldFilename, newFilename) {
     const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
     if (gridStar) gridStar.setAttribute('data-filename', newFilename);
 }
-function showYearControls(show) { yearControls?.classList.toggle('show', !!show); }
-function showScaleControls(show) { scaleControls?.classList.toggle('show', !!show); }
-function showPriceOfControls(show) { priceOfControls?.classList.toggle('show', !!show); }
-function showDominanceControls(show) { dominanceControls?.classList.toggle('show', !!show); }
-function showCoinControls(show) { coinControls?.classList.toggle('show', !!show); }
-function showMyrControls(show) { myrControls?.classList.toggle('show', !!show); }
-function setModalLinks({ x = '', nostr = '', youtube = '' } = {}) {
+function showYearControls(show) {
+    yearControls?.classList.toggle('show', !!show);
+}
+function showScaleControls(show) {
+    scaleControls?.classList.toggle('show', !!show);
+}
+function showPriceOfControls(show) {
+    priceOfControls?.classList.toggle('show', !!show);
+}
+function showDominanceControls(show) {
+    dominanceControls?.classList.toggle('show', !!show);
+}
+function showCoinControls(show) {
+    coinControls?.classList.toggle('show', !!show);
+}
+function showMyrControls(show) {
+    myrControls?.classList.toggle('show', !!show);
+}
+function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
     const xLink = document.getElementById('x-link');
     const nostrLink = document.getElementById('nostr-link');
     const ytLink = document.getElementById('youtube-link');
-    if (x) { xLink.href = x; xLink.classList.remove('disabled'); xLink.removeAttribute('aria-disabled'); xLink.removeAttribute('tabindex'); }
-    else { xLink.href = '#'; xLink.classList.add('disabled'); xLink.setAttribute('aria-disabled', 'true'); xLink.setAttribute('tabindex', '-1'); }
-    if (nostr) { nostrLink.href = nostr; nostrLink.classList.remove('disabled'); nostrLink.removeAttribute('aria-disabled'); nostrLink.removeAttribute('tabindex'); }
-    else { nostrLink.href = '#'; nostrLink.classList.add('disabled'); nostrLink.setAttribute('aria-disabled', 'true'); nostrLink.setAttribute('tabindex', '-1'); }
-    if (youtube) { ytLink.href = youtube; ytLink.classList.remove('disabled'); ytLink.removeAttribute('aria-disabled'); ytLink.removeAttribute('tabindex'); }
-    else { ytLink.href = '#'; ytLink.classList.add('disabled'); ytLink.setAttribute('aria-disabled', 'true'); ytLink.setAttribute('tabindex', '-1'); }
+    if (x) {
+        xLink.href = x;
+        xLink.classList.remove('disabled');
+        xLink.removeAttribute('aria-disabled');
+        xLink.removeAttribute('tabindex');
+    } else {
+        xLink.href = '#';
+        xLink.classList.add('disabled');
+        xLink.setAttribute('aria-disabled', 'true');
+        xLink.setAttribute('tabindex', '-1');
+    }
+    if (nostr) {
+        nostrLink.href = nostr;
+        nostrLink.classList.remove('disabled');
+        nostrLink.removeAttribute('aria-disabled');
+        nostrLink.removeAttribute('tabindex');
+    } else {
+        nostrLink.href = '#';
+        nostrLink.classList.add('disabled');
+        nostrLink.setAttribute('aria-disabled', 'true');
+        nostrLink.setAttribute('tabindex', '-1');
+    }
+    if (youtube) {
+        ytLink.href = youtube;
+        ytLink.classList.remove('disabled');
+        ytLink.removeAttribute('aria-disabled');
+        ytLink.removeAttribute('tabindex');
+    } else {
+        ytLink.href = '#';
+        ytLink.classList.add('disabled');
+        ytLink.setAttribute('aria-disabled', 'true');
+        ytLink.setAttribute('tabindex', '-1');
+    }
 }
 let tempNonFavInjected = false;
 function openByFilenameAllowingNonFav(filename) {
     let idx = visibleImages.findIndex(img => img.filename === filename);
-    if (idx !== -1) { openModalByIndex(idx); return true; }
+    if (idx !== -1) {
+        openModalByIndex(idx);
+        return true;
+    }
     const fullIdx = imageList.findIndex(img => img.filename === filename);
     if (fullIdx !== -1) {
         visibleImages = [imageList[fullIdx], ...visibleImages];
@@ -221,8 +275,8 @@ function openByFilenameAllowingNonFav(filename) {
     }
     return false;
 }
-function setModalImageAndCenter(filename, altText = "") {
-    modalImg.alt = altText || "";
+function setModalImageAndCenter(filename, altText = '') {
+    modalImg.alt = altText || '';
     modalImg.src = `final_frames/${filename}`;
     if (modalImg.complete && modalImg.naturalWidth) {
         if (currentScale <= 1.001) centerImageAtScale1();
@@ -234,13 +288,18 @@ function setModalImageAndCenter(filename, altText = "") {
     };
     modalImg.addEventListener('load', onLoad);
 }
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function clamp(v, lo, hi) {
+    return Math.max(lo, Math.min(hi, v));
+}
 function distance(touches) {
-    const [a, b] = touches; const dx = b.clientX - a.clientX, dy = b.clientY - a.clientY;
+    const [a, b] = touches;
+    const dx = b.clientX - a.clientX,
+        dy = b.clientY - a.clientY;
     return Math.hypot(dx, dy);
 }
 function midpoint(touches) {
-    const [a, b] = touches; return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+    const [a, b] = touches;
+    return {x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2};
 }
 function applyTransform() {
     modalImg.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${currentScale})`;
@@ -251,7 +310,7 @@ function screenPointToImageLocal(clientX, clientY) {
     const yRel = clientY - rect.top;
     const u = xRel / currentScale;
     const v = yRel / currentScale;
-    return { u, v, xRel, yRel };
+    return {u, v, xRel, yRel};
 }
 function computeBaseSizeAtScale1() {
     const vp = modal.getBoundingClientRect();
@@ -262,28 +321,30 @@ function computeBaseSizeAtScale1() {
     const availH = Math.max(0, vp.height - offset);
     const maxH = availH * 0.88;
     const fit = Math.min(maxW / nw, maxH / nh, 1);
-    return { baseW: nw * fit, baseH: nh * fit, vpW: vp.width, vpH: vp.height, offset, availH };
+    return {baseW: nw * fit, baseH: nh * fit, vpW: vp.width, vpH: vp.height, offset, availH};
 }
 function centerImageAtScale1() {
-    const { baseW, baseH, vpW, vpH, offset } = computeBaseSizeAtScale1();
+    const {baseW, baseH, vpW, vpH, offset} = computeBaseSizeAtScale1();
     currentScale = 1;
     translateX = (vpW - baseW) / 2;
-    translateY = offset + ((vpH - offset) - baseH) / 2;
+    translateY = offset + (vpH - offset - baseH) / 2;
     applyTransform();
 }
 function resetZoomAndCenterAnimated() {
-    const { baseW, baseH, vpW, vpH, offset } = computeBaseSizeAtScale1();
+    const {baseW, baseH, vpW, vpH, offset} = computeBaseSizeAtScale1();
     currentScale = 1;
     translateX = (vpW - baseW) / 2;
-    translateY = offset + ((vpH - offset) - baseH) / 2;
+    translateY = offset + (vpH - offset - baseH) / 2;
     modalImg.style.transition = 'transform 0.25s ease-out';
     applyTransform();
     modal.classList.remove('zoomed');
     pinchFocus = null;
-    setTimeout(() => { modalImg.style.transition = ''; }, 300);
+    setTimeout(() => {
+        modalImg.style.transition = '';
+    }, 300);
 }
 function zoomToPoint(targetScale, clientX, clientY) {
-    const { u, v, xRel, yRel } = screenPointToImageLocal(clientX, clientY);
+    const {u, v, xRel, yRel} = screenPointToImageLocal(clientX, clientY);
     currentScale = clamp(targetScale, MIN_SCALE, MAX_SCALE);
     translateX = xRel - u * currentScale;
     translateY = yRel - v * currentScale;
@@ -291,7 +352,9 @@ function zoomToPoint(targetScale, clientX, clientY) {
     clampPanToBounds();
     modalImg.style.transition = 'transform 0.2s ease-out';
     applyTransform();
-    setTimeout(() => { modalImg.style.transition = ''; }, 220);
+    setTimeout(() => {
+        modalImg.style.transition = '';
+    }, 220);
 }
 function handleDoubleTap(clientX, clientY) {
     gestureConsumed = true;
@@ -319,7 +382,7 @@ function handleModalViewportChange() {
     });
 }
 function clampPanToBounds() {
-    const { baseW, baseH, vpW, availH, offset } = computeBaseSizeAtScale1();
+    const {baseW, baseH, vpW, availH, offset} = computeBaseSizeAtScale1();
     const scaledW = baseW * currentScale;
     const scaledH = baseH * currentScale;
     const minTx = Math.min(0, vpW - scaledW);
@@ -350,8 +413,13 @@ function getControlsOffset() {
 function setLayout(type, manual = true) {
     imageGrid.classList.remove('grid', 'list');
     imageGrid.classList.add(type);
-    if (type === 'grid') { gridIcon.classList.add('active'); listIcon.classList.remove('active'); }
-    else { listIcon.classList.add('active'); gridIcon.classList.remove('active'); }
+    if (type === 'grid') {
+        gridIcon.classList.add('active');
+        listIcon.classList.remove('active');
+    } else {
+        listIcon.classList.add('active');
+        gridIcon.classList.remove('active');
+    }
     if (manual) {
         userSelectedLayout = type;
         localStorage.setItem('preferredLayout', type);
@@ -391,8 +459,14 @@ function toggleSearch() {
     const nowActive = !container.classList.contains('active');
     container.classList.toggle('active');
     button.classList.toggle('active', nowActive);
-    if (nowActive) { searchWasInitiallyClosed = false; input.focus(); }
-    else { input.value = ''; searchWasInitiallyClosed = true; filterImages(); }
+    if (nowActive) {
+        searchWasInitiallyClosed = false;
+        input.focus();
+    } else {
+        input.value = '';
+        searchWasInitiallyClosed = true;
+        filterImages();
+    }
 }
 
 /* ===========================
@@ -486,8 +560,8 @@ function filterImages() {
     const query = document.getElementById('search-input').value.toLowerCase();
     const grid = document.getElementById('image-grid');
     grid.innerHTML = '';
-    visibleImages = imageList.filter(({ title, description, filename }) => {
-        const { inTitle, inDesc } = readSearchPrefs();
+    visibleImages = imageList.filter(({title, description, filename}) => {
+        const {inTitle, inDesc} = readSearchPrefs();
         let matchesSearch = true;
         if (query) {
             const hayTitle = inTitle ? (title || '').toLowerCase() : '';
@@ -498,8 +572,8 @@ function filterImages() {
         return matchesSearch && isFav;
     });
     const message = document.getElementById('no-favorites-message');
-    message.style.display = (showFavoritesOnly && visibleImages.length === 0) ? 'block' : 'none';
-    visibleImages.forEach(({ filename, title, description }, index) => {
+    message.style.display = showFavoritesOnly && visibleImages.length === 0 ? 'block' : 'none';
+    visibleImages.forEach(({filename, title, description}, index) => {
         const container = document.createElement('div');
         const titleElem = document.createElement('div');
         titleElem.className = 'chart-title';
@@ -516,8 +590,14 @@ function filterImages() {
         img.dataset.gridIndex = index;
         img.alt = title;
         img.style.opacity = 0;
-        img.onload = () => { spinner.remove(); img.style.opacity = 1; };
-        img.onerror = () => { spinner.remove(); img.style.opacity = 1; };
+        img.onload = () => {
+            spinner.remove();
+            img.style.opacity = 1;
+        };
+        img.onerror = () => {
+            spinner.remove();
+            img.style.opacity = 1;
+        };
         img.onclick = () => openModalByIndex(index);
         img.src = `final_frames/${filename}`;
         const star = document.createElement('div');
@@ -527,7 +607,10 @@ function filterImages() {
         if (favOn) star.classList.add('filled');
         const favKeyForThisCard = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
         star.setAttribute('data-filename', favKeyForThisCard);
-        star.onclick = (e) => { e.stopPropagation(); toggleFavorite(filename, star); };
+        star.onclick = e => {
+            e.stopPropagation();
+            toggleFavorite(filename, star);
+        };
         chartContainer.appendChild(star);
         chartWrapper.appendChild(spinner);
         chartWrapper.appendChild(img);
@@ -563,34 +646,59 @@ function openModalByIndex(index) {
     if (!image) return;
     currentIndex = index;
     modal.style.display = 'flex';
-    isPinching = false; isPanning = false; gestureConsumed = false;
-    currentScale = 1; translateX = 0; translateY = 0; pinchFocus = null;
+    isPinching = false;
+    isPanning = false;
+    gestureConsumed = false;
+    currentScale = 1;
+    translateX = 0;
+    translateY = 0;
+    pinchFocus = null;
     modalImg.style.transform = '';
     modalImg.style.transformOrigin = '0 0';
     modal.classList.remove('zoomed');
     updateModalSafePadding();
     setTimeout(updateModalSafePadding, 0);
     document.body.style.overflow = 'hidden';
-    setModalLinks({ x: image.latest_x || '', nostr: image.latest_nostr || '', youtube: image.latest_youtube || '' });
+    setModalLinks({x: image.latest_x || '', nostr: image.latest_nostr || '', youtube: image.latest_youtube || ''});
     populateYearSelect();
     const fname = image.filename;
     if (isBvgFile(fname)) {
-        showYearControls(true); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
+        showYearControls(true);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
         const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
         yearSelect.value = chosenYear;
         setBvgYear(chosenYear);
     } else if (isDominanceFile(fname)) {
-        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(true); showCoinControls(false); showMyrControls(false);
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(true);
+        showCoinControls(false);
+        showMyrControls(false);
         const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
         dominanceSelect.value = unit;
         setDominanceUnit(unit);
     } else if (isDalFile(fname)) {
-        showYearControls(false); showScaleControls(true); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
+        showYearControls(false);
+        showScaleControls(true);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
         const sc = dalScaleFromFilename(fname) || getStoredDalScale();
         scaleSelect.value = sc;
         setDalScale(sc);
     } else if (isPriceOfFile(fname)) {
-        showYearControls(false); showScaleControls(false); showPriceOfControls(true); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(true);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
         populatePriceOfSelect();
         let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
         if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
@@ -601,20 +709,35 @@ function openModalByIndex(index) {
         if (meta) applyPostLinksFromMeta(meta);
         setPriceOfItem(chosenSlug);
     } else if (isCoinFile(fname)) {
-        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(true); showMyrControls(false);
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(true);
+        showMyrControls(false);
         populateCoinSelect();
         let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
         if (!COIN_OPTIONS.some(o => o.slug === chosen)) chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
         coinSelect.value = chosen;
         setCoinType(chosen);
     } else if (isMyrFile(fname)) {
-        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(true);
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(true);
         populateMyrSelect();
         const chosenRange = myrRangeFromFilename(fname) || MYR_DEFAULT_RANGE;
         myrSelect.value = chosenRange;
         setMyrRange(chosenRange);
     } else {
-        showYearControls(false); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
         setModalImageAndCenter(fname, image.title);
         modalImg.alt = image.title;
         replaceUrlForFilename(fname);
@@ -627,8 +750,16 @@ function closeModal() {
     modal.style.display = 'none';
     history.replaceState(null, '', '/');
     document.body.style.overflow = '';
-    if (justUnstarredInModal) { justUnstarredInModal = false; filterImages(); }
-    showYearControls(false); showScaleControls(false); showPriceOfControls(false); showMyrControls(false); showDominanceControls(false); showCoinControls(false);
+    if (justUnstarredInModal) {
+        justUnstarredInModal = false;
+        filterImages();
+    }
+    showYearControls(false);
+    showScaleControls(false);
+    showPriceOfControls(false);
+    showMyrControls(false);
+    showDominanceControls(false);
+    showCoinControls(false);
     try {
         const cur = visibleImages[currentIndex];
         if (cur && isMyrFile(cur.filename) && cur.filename !== `${MYR_BASE}.png`) {
@@ -636,18 +767,31 @@ function closeModal() {
             cur.filename = defaultFile;
             updateGridThumbAtCurrent(defaultFile);
         }
-    } catch (_) { }
-    if (tempNonFavInjected) { tempNonFavInjected = false; filterImages(); }
-    isPinching = false; isPanning = false; gestureConsumed = false;
-    currentScale = 1; translateX = 0; translateY = 0; pinchFocus = null;
-    modalImg.style.transform = ''; modalImg.style.transformOrigin = '';
-    modal.classList.remove('zoomed'); modal.style.removeProperty('--controls-offset');
+    } catch (_) {}
+    if (tempNonFavInjected) {
+        tempNonFavInjected = false;
+        filterImages();
+    }
+    isPinching = false;
+    isPanning = false;
+    gestureConsumed = false;
+    currentScale = 1;
+    translateX = 0;
+    translateY = 0;
+    pinchFocus = null;
+    modalImg.style.transform = '';
+    modalImg.style.transformOrigin = '';
+    modal.classList.remove('zoomed');
+    modal.style.removeProperty('--controls-offset');
 }
 function handleSwipe() {
     if (isPinching || currentScale > 1.001 || modal.classList.contains('zoomed')) return;
     const swipeDistance = touchEndX - touchStartX;
     const minSwipe = 50;
-    if (Math.abs(swipeDistance) > minSwipe) { if (swipeDistance < 0) nextImage(); else prevImage(); }
+    if (Math.abs(swipeDistance) > minSwipe) {
+        if (swipeDistance < 0) nextImage();
+        else prevImage();
+    }
 }
 function handleVerticalSwipe() {
     if (isPinching || currentScale > 1.001 || modal.classList.contains('zoomed')) return;
@@ -659,51 +803,70 @@ function handleVerticalSwipe() {
         else controls.classList.remove('hidden');
     }
 }
-modalImg.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) {
-        isPinching = true; gestureConsumed = true;
-        modal.classList.add('zoomed');
-        startPinchDistance = distance(e.touches);
-        startScale = currentScale;
-        const { x, y } = midpoint(e.touches);
-        const { u, v, xRel, yRel } = screenPointToImageLocal(x, y);
-        pinchFocus = { u, v, xRel, yRel };
-    } else if (e.touches.length === 1) {
-        singleTapMoved = false;
-        modalImg.style.transition = '';
-        if (currentScale > 1) {
-            isPanning = true; gestureConsumed = true;
-            panStartX = e.touches[0].clientX - translateX;
-            panStartY = e.touches[0].clientY - translateY;
+modalImg.addEventListener(
+    'touchstart',
+    e => {
+        if (e.touches.length === 2) {
+            isPinching = true;
+            gestureConsumed = true;
+            modal.classList.add('zoomed');
+            startPinchDistance = distance(e.touches);
+            startScale = currentScale;
+            const {x, y} = midpoint(e.touches);
+            const {u, v, xRel, yRel} = screenPointToImageLocal(x, y);
+            pinchFocus = {u, v, xRel, yRel};
+        } else if (e.touches.length === 1) {
+            singleTapMoved = false;
+            modalImg.style.transition = '';
+            if (currentScale > 1) {
+                isPanning = true;
+                gestureConsumed = true;
+                panStartX = e.touches[0].clientX - translateX;
+                panStartY = e.touches[0].clientY - translateY;
+            }
         }
-    }
-}, { passive: false });
-modalImg.addEventListener('touchmove', (e) => {
-    if (isPinching && e.touches.length === 2) {
-        e.preventDefault();
-        const rawScale = startScale * (distance(e.touches) / startPinchDistance);
-        currentScale = clamp(rawScale, MIN_SCALE, MAX_SCALE);
-        if (pinchFocus) {
-            translateX = pinchFocus.xRel - pinchFocus.u * currentScale;
-            translateY = pinchFocus.yRel - pinchFocus.v * currentScale;
+    },
+    {passive: false}
+);
+modalImg.addEventListener(
+    'touchmove',
+    e => {
+        if (isPinching && e.touches.length === 2) {
+            e.preventDefault();
+            const rawScale = startScale * (distance(e.touches) / startPinchDistance);
+            currentScale = clamp(rawScale, MIN_SCALE, MAX_SCALE);
+            if (pinchFocus) {
+                translateX = pinchFocus.xRel - pinchFocus.u * currentScale;
+                translateY = pinchFocus.yRel - pinchFocus.v * currentScale;
+            }
+            if (currentScale <= 1.0001) {
+                currentScale = 1;
+                translateX = 0;
+                translateY = 0;
+            }
+            clampPanToBounds();
+            applyTransform();
+        } else if (isPanning && e.touches.length === 1 && currentScale > 1) {
+            e.preventDefault();
+            const cx = e.touches[0].clientX,
+                cy = e.touches[0].clientY;
+            translateX = cx - panStartX;
+            translateY = cy - panStartY;
+            clampPanToBounds();
+            applyTransform();
+        } else if (e.touches.length === 1 && currentScale <= 1.001) {
+            const dx = Math.abs(e.touches[0].clientX - (lastTapX || e.touches[0].clientX));
+            const dy = Math.abs(e.touches[0].clientY - (lastTapY || e.touches[0].clientY));
+            if (dx > MAX_TAP_MOVE_PX || dy > MAX_TAP_MOVE_PX) singleTapMoved = true;
         }
-        if (currentScale <= 1.0001) { currentScale = 1; translateX = 0; translateY = 0; }
-        clampPanToBounds(); applyTransform();
-    } else if (isPanning && e.touches.length === 1 && currentScale > 1) {
-        e.preventDefault();
-        const cx = e.touches[0].clientX, cy = e.touches[0].clientY;
-        translateX = cx - panStartX;
-        translateY = cy - panStartY;
-        clampPanToBounds(); applyTransform();
-    } else if (e.touches.length === 1 && currentScale <= 1.001) {
-        const dx = Math.abs(e.touches[0].clientX - (lastTapX || e.touches[0].clientX));
-        const dy = Math.abs(e.touches[0].clientY - (lastTapY || e.touches[0].clientY));
-        if (dx > MAX_TAP_MOVE_PX || dy > MAX_TAP_MOVE_PX) singleTapMoved = true;
-    }
-}, { passive: false });
-modalImg.addEventListener('touchend', (e) => {
+    },
+    {passive: false}
+);
+modalImg.addEventListener('touchend', e => {
     if (isPinching && e.touches.length === 1) {
-        isPinching = false; pinchFocus = null; isPanning = currentScale > 1;
+        isPinching = false;
+        pinchFocus = null;
+        isPanning = currentScale > 1;
         if (isPanning) {
             const t = e.touches[0];
             panStartX = t.clientX - translateX;
@@ -715,9 +878,7 @@ modalImg.addEventListener('touchend', (e) => {
         const now = Date.now();
         const t = e.changedTouches[0];
         const dt = now - lastTapTime;
-        const closeToLast =
-            Math.abs(t.clientX - lastTapX) < 12 &&
-            Math.abs(t.clientY - lastTapY) < 12;
+        const closeToLast = Math.abs(t.clientX - lastTapX) < 12 && Math.abs(t.clientY - lastTapY) < 12;
         if (!singleTapMoved && dt > 0 && dt <= DOUBLE_TAP_DELAY && closeToLast) {
             gestureConsumed = true;
             modalImg.style.transition = '';
@@ -726,50 +887,60 @@ modalImg.addEventListener('touchend', (e) => {
             } else {
                 resetZoomAndCenterAnimated();
             }
-            lastTapTime = 0; lastTapX = lastTapY = 0;
+            lastTapTime = 0;
+            lastTapX = lastTapY = 0;
             return;
         }
         lastTapTime = now;
         lastTapX = t.clientX;
         lastTapY = t.clientY;
-        isPinching = false; isPanning = false; pinchFocus = null;
+        isPinching = false;
+        isPanning = false;
+        pinchFocus = null;
         if (currentScale <= 1.001) {
             currentScale = 1;
             modal.classList.remove('zoomed');
             centerImageAtScale1();
         }
-        setTimeout(() => { gestureConsumed = false; }, 0);
+        setTimeout(() => {
+            gestureConsumed = false;
+        }, 0);
     }
 });
 let lastDownTime = 0;
 let lastDownX = 0;
 let lastDownY = 0;
-modalImg.addEventListener('pointerdown', (e) => {
-    if (e.pointerType !== 'mouse') return;
-    modalImg.style.transition = '';
-    const now = Date.now();
-    const x = e.clientX, y = e.clientY;
-    const dt = now - lastDownTime;
-    const closeToLast =
-        Math.abs(x - lastDownX) <= 12 &&
-        Math.abs(y - lastDownY) <= 12;
-    if (dt > 0 && dt <= DOUBLE_TAP_DELAY && closeToLast) {
-        e.preventDefault();
-        e.stopPropagation();
-        gestureConsumed = true;
-        if (currentScale <= 1.001) {
-            zoomToPoint(3, x, y);
-        } else {
-            resetZoomAndCenterAnimated();
+modalImg.addEventListener(
+    'pointerdown',
+    e => {
+        if (e.pointerType !== 'mouse') return;
+        modalImg.style.transition = '';
+        const now = Date.now();
+        const x = e.clientX,
+            y = e.clientY;
+        const dt = now - lastDownTime;
+        const closeToLast = Math.abs(x - lastDownX) <= 12 && Math.abs(y - lastDownY) <= 12;
+        if (dt > 0 && dt <= DOUBLE_TAP_DELAY && closeToLast) {
+            e.preventDefault();
+            e.stopPropagation();
+            gestureConsumed = true;
+            if (currentScale <= 1.001) {
+                zoomToPoint(3, x, y);
+            } else {
+                resetZoomAndCenterAnimated();
+            }
+            lastDownTime = 0;
+            lastDownX = 0;
+            lastDownY = 0;
+            return;
         }
-        lastDownTime = 0; lastDownX = 0; lastDownY = 0;
-        return;
-    }
-    lastDownTime = now;
-    lastDownX = x;
-    lastDownY = y;
-}, { passive: false });
-modalImg.addEventListener('mousedown', (e) => {
+        lastDownTime = now;
+        lastDownX = x;
+        lastDownY = y;
+    },
+    {passive: false}
+);
+modalImg.addEventListener('mousedown', e => {
     if (e.button !== 0 || currentScale <= 1.001) return;
     e.preventDefault();
     gestureConsumed = true;
@@ -780,7 +951,7 @@ modalImg.addEventListener('mousedown', (e) => {
     modalImg.style.cursor = 'grabbing';
     modal.classList.add('zoomed');
 });
-window.addEventListener('mousemove', (e) => {
+window.addEventListener('mousemove', e => {
     if (!isMousePanning) return;
     const nx = e.clientX - panStartX;
     const ny = e.clientY - panStartY;
@@ -796,30 +967,48 @@ function endMousePan() {
     if (!isMousePanning) return;
     isMousePanning = false;
     modalImg.style.cursor = '';
-    setTimeout(() => { gestureConsumed = false; }, 0);
+    setTimeout(() => {
+        gestureConsumed = false;
+    }, 0);
 }
 window.addEventListener('mouseup', endMousePan);
 window.addEventListener('mouseleave', endMousePan);
-modalImg.addEventListener('click', (e) => {
-    if (mouseHadMoved) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    mouseHadMoved = false;
-}, true);
+modalImg.addEventListener(
+    'click',
+    e => {
+        if (mouseHadMoved) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        mouseHadMoved = false;
+    },
+    true
+);
 modalImg.addEventListener('touchcancel', () => {
-    isPinching = false; isPanning = false; pinchFocus = null;
-    if (currentScale <= 1.001) { currentScale = 1; modal.classList.remove('zoomed'); centerImageAtScale1(); }
+    isPinching = false;
+    isPanning = false;
+    pinchFocus = null;
+    if (currentScale <= 1.001) {
+        currentScale = 1;
+        modal.classList.remove('zoomed');
+        centerImageAtScale1();
+    }
     gestureConsumed = false;
 });
-modalImg.addEventListener('dragstart', (e) => e.preventDefault());
+modalImg.addEventListener('dragstart', e => e.preventDefault());
 function prevImage() {
-    if (justUnstarredInModal) { justUnstarredInModal = false; filterImages(); }
+    if (justUnstarredInModal) {
+        justUnstarredInModal = false;
+        filterImages();
+    }
     const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
     openModalByIndex(prevIndex);
 }
 function nextImage() {
-    if (justUnstarredInModal) { justUnstarredInModal = false; filterImages(); }
+    if (justUnstarredInModal) {
+        justUnstarredInModal = false;
+        filterImages();
+    }
     const nextIndex = (currentIndex + 1) % visibleImages.length;
     openModalByIndex(nextIndex);
 }
@@ -831,13 +1020,21 @@ function toggleFavoriteFromModal() {
     const gridStar = document.querySelector(`.favorite-star[data-filename="${favKey}"]`);
     if (index !== -1) {
         favs.splice(index, 1);
-        modalFavBtn.textContent = '☆'; modalFavBtn.classList.remove('filled');
-        if (gridStar) { gridStar.textContent = '☆'; gridStar.classList.remove('filled'); }
+        modalFavBtn.textContent = '☆';
+        modalFavBtn.classList.remove('filled');
+        if (gridStar) {
+            gridStar.textContent = '☆';
+            gridStar.classList.remove('filled');
+        }
     } else {
         if (favKey === POF_FAV_KEY) favs = favs.filter(f => !/^price_of_/.test(f));
         favs.push(favKey);
-        modalFavBtn.textContent = '★'; modalFavBtn.classList.add('filled');
-        if (gridStar) { gridStar.textContent = '★'; gridStar.classList.add('filled'); }
+        modalFavBtn.textContent = '★';
+        modalFavBtn.classList.add('filled');
+        if (gridStar) {
+            gridStar.textContent = '★';
+            gridStar.classList.add('filled');
+        }
     }
     saveFavorites(favs);
     if (showFavoritesOnly && index !== -1) justUnstarredInModal = true;
@@ -846,16 +1043,30 @@ function toggleFavoriteFromModal() {
 /* ===========================
  * MODULE: Bitcoin vs Gold (BVG)
  * =========================== */
-function isBvgFile(fname) { return fname.startsWith(BVG_BASE); }
-function bvgFilenameForYear(y) { return `${BVG_BASE}_${y}.png`; }
-function extractBvgYear(fname) { const m = fname.match(/bitcoin_vs_gold_(\d{4})\.png$/); return m ? m[1] : null; }
-function getStoredBvgYear() { return localStorage.getItem(BVG_STORAGE_KEY) || '2018'; }
-function setStoredBvgYear(y) { localStorage.setItem(BVG_STORAGE_KEY, y); }
+function isBvgFile(fname) {
+    return fname.startsWith(BVG_BASE);
+}
+function bvgFilenameForYear(y) {
+    return `${BVG_BASE}_${y}.png`;
+}
+function extractBvgYear(fname) {
+    const m = fname.match(/bitcoin_vs_gold_(\d{4})\.png$/);
+    return m ? m[1] : null;
+}
+function getStoredBvgYear() {
+    return localStorage.getItem(BVG_STORAGE_KEY) || '2018';
+}
+function setStoredBvgYear(y) {
+    localStorage.setItem(BVG_STORAGE_KEY, y);
+}
 function populateYearSelect() {
     if (!yearSelect || yearSelect.options.length) return;
     yearSelect.innerHTML = BVG_YEARS.map(y => `<option value="${y}">${y}</option>`).join('');
 }
-function isValidBvgYear(yStr) { const y = parseInt(yStr, 10); return Number.isInteger(y) && BVG_YEARS.includes(y); }
+function isValidBvgYear(yStr) {
+    const y = parseInt(yStr, 10);
+    return Number.isInteger(y) && BVG_YEARS.includes(y);
+}
 function setBvgYear(year) {
     const oldFilename = visibleImages[currentIndex].filename;
     const newFilename = bvgFilenameForYear(year);
@@ -881,11 +1092,21 @@ function cycleBvgYear(direction) {
 /* ===========================
  * MODULE: Days at a Loss (DAL)
  * =========================== */
-function isDalFile(fname) { return fname.startsWith(DAL_BASE); }
-function dalScaleFromFilename(fname) { return /_log\.png$/.test(fname) ? 'log' : 'linear'; }
-function dalFilenameForScale(scale) { return scale === 'log' ? `${DAL_BASE}_log.png` : `${DAL_BASE}.png`; }
-function getStoredDalScale() { return localStorage.getItem(DAL_STORAGE_KEY) || 'linear'; }
-function setStoredDalScale(s) { localStorage.setItem(DAL_STORAGE_KEY, s); }
+function isDalFile(fname) {
+    return fname.startsWith(DAL_BASE);
+}
+function dalScaleFromFilename(fname) {
+    return /_log\.png$/.test(fname) ? 'log' : 'linear';
+}
+function dalFilenameForScale(scale) {
+    return scale === 'log' ? `${DAL_BASE}_log.png` : `${DAL_BASE}.png`;
+}
+function getStoredDalScale() {
+    return localStorage.getItem(DAL_STORAGE_KEY) || 'linear';
+}
+function setStoredDalScale(s) {
+    localStorage.setItem(DAL_STORAGE_KEY, s);
+}
 function setDalScale(scale) {
     const oldFilename = visibleImages[currentIndex].filename;
     if (!isDalFile(oldFilename)) return;
@@ -899,7 +1120,7 @@ function setDalScale(scale) {
     updateModalSafePadding();
 }
 function cycleDalScale(direction) {
-    const current = (scaleSelect?.value) || getStoredDalScale();
+    const current = scaleSelect?.value || getStoredDalScale();
     const idx = DAL_SCALES.indexOf(current);
     if (idx === -1) return;
     const delta = direction === 'up' ? -1 : 1;
@@ -913,11 +1134,22 @@ function cycleDalScale(direction) {
 /* ===========================
  * MODULE: Dominance (USD/BTC)
  * =========================== */
-function isDominanceFile(fname) { return fname.startsWith(DOM_BASE); }
-function domUnitFromFilename(fname) { return /_btc\.png$/.test(fname) ? 'btc' : 'usd'; }
-function domFilenameForUnit(u) { return u === 'btc' ? `${DOM_BASE}_btc.png` : `${DOM_BASE}.png`; }
-function getStoredDominanceUnit() { return getCookie(DOM_STORAGE_KEY) || localStorage.getItem(DOM_STORAGE_KEY) || 'usd'; }
-function setStoredDominanceUnit(u) { setCookie(DOM_STORAGE_KEY, u, 365); localStorage.setItem(DOM_STORAGE_KEY, u); }
+function isDominanceFile(fname) {
+    return fname.startsWith(DOM_BASE);
+}
+function domUnitFromFilename(fname) {
+    return /_btc\.png$/.test(fname) ? 'btc' : 'usd';
+}
+function domFilenameForUnit(u) {
+    return u === 'btc' ? `${DOM_BASE}_btc.png` : `${DOM_BASE}.png`;
+}
+function getStoredDominanceUnit() {
+    return getCookie(DOM_STORAGE_KEY) || localStorage.getItem(DOM_STORAGE_KEY) || 'usd';
+}
+function setStoredDominanceUnit(u) {
+    setCookie(DOM_STORAGE_KEY, u, 365);
+    localStorage.setItem(DOM_STORAGE_KEY, u);
+}
 function setDominanceUnit(unit) {
     const oldFilename = visibleImages[currentIndex].filename;
     if (!isDominanceFile(oldFilename)) return;
@@ -931,7 +1163,7 @@ function setDominanceUnit(unit) {
     updateModalSafePadding();
 }
 function cycleDominance(direction) {
-    const current = (dominanceSelect?.value) || getStoredDominanceUnit();
+    const current = dominanceSelect?.value || getStoredDominanceUnit();
     const idx = DOM_UNITS.indexOf(current);
     if (idx === -1) return;
     const delta = direction === 'up' ? -1 : 1;
@@ -945,13 +1177,19 @@ function cycleDominance(direction) {
 /* ===========================
  * MODULE: Price Of (price_of_*)
  * =========================== */
-function isPriceOfFile(fname) { return fname.startsWith(POF_BASE); }
+function isPriceOfFile(fname) {
+    return fname.startsWith(POF_BASE);
+}
 function pofSlugFromFilename(fname) {
     const m = fname.match(/^price_of_([a-z0-9_]+)\.png$/);
     return m ? m[1] : null;
 }
-function pofFilenameForSlug(slug) { return `${POF_BASE}${slug}.png`; }
-function slugToTitle(slug) { return slug.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
+function pofFilenameForSlug(slug) {
+    return `${POF_BASE}${slug}.png`;
+}
+function slugToTitle(slug) {
+    return slug.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
 function buildPriceOfOptionsFromList(list) {
     const bySlug = new Map();
     list.forEach(img => {
@@ -961,9 +1199,7 @@ function buildPriceOfOptionsFromList(list) {
         if (!bySlug.has(slug)) {
             bySlug.set(slug, {
                 slug,
-                label: slug === 'ca_min_wage'
-                    ? 'CA Min Wage'
-                    : slugToTitle(slug),
+                label: slug === 'ca_min_wage' ? 'CA Min Wage' : slugToTitle(slug),
                 filename: `price_of_${slug}.png`,
                 title: img.title,
                 description: img.description,
@@ -974,23 +1210,28 @@ function buildPriceOfOptionsFromList(list) {
         }
     });
     PRICE_OF_OPTIONS = Array.from(bySlug.values()).sort((a, b) => a.label.localeCompare(b.label));
-    PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => (acc[o.slug] = o, acc), {});
+    PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => ((acc[o.slug] = o), acc), {});
 }
 function populatePriceOfSelect() {
     if (!priceOfSelect) return;
     priceOfSelect.innerHTML = PRICE_OF_OPTIONS.map(o => `<option value="${o.slug}">${o.label}</option>`).join('');
 }
 function applyPostLinksFromMeta(meta) {
-    setModalLinks({ x: meta.latest_x || '', nostr: meta.latest_nostr || '', youtube: meta.latest_youtube || '' });
+    setModalLinks({x: meta.latest_x || '', nostr: meta.latest_nostr || '', youtube: meta.latest_youtube || ''});
 }
-function getStoredPofItem() { return getCookie(POF_STORAGE_KEY) || localStorage.getItem(POF_STORAGE_KEY) || 'ground_beef'; }
-function setStoredPofItem(slug) { setCookie(POF_STORAGE_KEY, slug, 365); localStorage.setItem(POF_STORAGE_KEY, slug); }
+function getStoredPofItem() {
+    return getCookie(POF_STORAGE_KEY) || localStorage.getItem(POF_STORAGE_KEY) || 'ground_beef';
+}
+function setStoredPofItem(slug) {
+    setCookie(POF_STORAGE_KEY, slug, 365);
+    localStorage.setItem(POF_STORAGE_KEY, slug);
+}
 function setPriceOfItem(slug) {
     const oldFilename = visibleImages[currentIndex].filename;
     if (!isPriceOfFile(oldFilename)) return;
     const newFilename = pofFilenameForSlug(slug);
     const fallbackTitle = `Price of ${slugToTitle(slug)}`;
-    const meta = PRICE_OF_META[slug] || { title: fallbackTitle, description: '' };
+    const meta = PRICE_OF_META[slug] || {title: fallbackTitle, description: ''};
     setStoredPofItem(slug);
     setModalImageAndCenter(newFilename, meta.title || fallbackTitle);
     replaceUrlForFilename(newFilename);
@@ -1044,11 +1285,23 @@ function cyclePriceOf(direction) {
 /* ===========================
  * MODULE: Coins (single card)
  * =========================== */
-function isCoinFile(fname) { return /^(.+)\.png$/.test(fname) && COIN_ORDER.some(slug => `${slug}.png` === fname); }
-function coinSlugFromFilename(fname) { const m = fname.match(/^([a-z0-9_]+)\.png$/i); return m ? m[1] : null; }
-function coinFilenameForSlug(slug) { return `${slug}.png`; }
-function getStoredCoinSlug() { return getCookie(COIN_STORAGE_KEY) || localStorage.getItem(COIN_STORAGE_KEY) || 'wholecoins'; }
-function setStoredCoinSlug(slug) { setCookie(COIN_STORAGE_KEY, slug, 365); localStorage.setItem(COIN_STORAGE_KEY, slug); }
+function isCoinFile(fname) {
+    return /^(.+)\.png$/.test(fname) && COIN_ORDER.some(slug => `${slug}.png` === fname);
+}
+function coinSlugFromFilename(fname) {
+    const m = fname.match(/^([a-z0-9_]+)\.png$/i);
+    return m ? m[1] : null;
+}
+function coinFilenameForSlug(slug) {
+    return `${slug}.png`;
+}
+function getStoredCoinSlug() {
+    return getCookie(COIN_STORAGE_KEY) || localStorage.getItem(COIN_STORAGE_KEY) || 'wholecoins';
+}
+function setStoredCoinSlug(slug) {
+    setCookie(COIN_STORAGE_KEY, slug, 365);
+    localStorage.setItem(COIN_STORAGE_KEY, slug);
+}
 function buildCoinOptionsFromList(list) {
     const bySlug = new Map();
     list.forEach(img => {
@@ -1056,7 +1309,8 @@ function buildCoinOptionsFromList(list) {
         if (!slug || !COIN_ORDER.includes(slug)) return;
         const label = (img.title || slug).replace(/\s*\(.*?\)\s*$/, '');
         bySlug.set(slug, {
-            slug, label,
+            slug,
+            label,
             filename: img.filename,
             title: img.title || label,
             description: img.description || '',
@@ -1066,7 +1320,7 @@ function buildCoinOptionsFromList(list) {
         });
     });
     COIN_OPTIONS = COIN_ORDER.filter(slug => bySlug.has(slug)).map(slug => bySlug.get(slug));
-    COIN_META = COIN_OPTIONS.reduce((acc, o) => (acc[o.slug] = o, acc), {});
+    COIN_META = COIN_OPTIONS.reduce((acc, o) => ((acc[o.slug] = o), acc), {});
 }
 function populateCoinSelect() {
     if (!coinSelect) return;
@@ -1081,7 +1335,7 @@ function setCoinType(slug) {
     setStoredCoinSlug(slug);
     setModalImageAndCenter(newFilename, meta?.title || image.title || slug);
     replaceUrlForFilename(newFilename);
-    setModalLinks({ x: meta?.latest_x || '', nostr: meta?.latest_nostr || '', youtube: meta?.latest_youtube || '' });
+    setModalLinks({x: meta?.latest_x || '', nostr: meta?.latest_nostr || '', youtube: meta?.latest_youtube || ''});
     Object.assign(visibleImages[currentIndex], {
         filename: newFilename,
         title: meta?.title || image.title,
@@ -1098,7 +1352,7 @@ function setCoinType(slug) {
     const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
     const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
     if (cardContainer) {
-        const tip = (meta?.description || meta?.title || slug);
+        const tip = meta?.description || meta?.title || slug;
         cardContainer.setAttribute('title', tip);
     }
     migrateFavoriteFilename(oldFilename, newFilename);
@@ -1121,7 +1375,9 @@ function cycleCoinType(direction) {
 /* ===========================
  * MODULE: Monthly/Yearly Returns (MYR)
  * =========================== */
-function isMyrFile(fname) { return fname.startsWith(MYR_BASE); }
+function isMyrFile(fname) {
+    return fname.startsWith(MYR_BASE);
+}
 function myrRangeFromFilename(fname) {
     if (fname === `${MYR_BASE}.png`) return MYR_DEFAULT_RANGE;
     const m = fname.match(/^monthly_yearly_returns_(\d{4})_(\d{4})\.png$/);
@@ -1171,7 +1427,7 @@ function getImageNameFromPath() {
     if (!path) return null;
     return path + '.png';
 }
-fetch("final_frames/image_list.json")
+fetch('final_frames/image_list.json')
     .then(res => res.json())
     .then(data => {
         imageList = data;
@@ -1185,20 +1441,24 @@ fetch("final_frames/image_list.json")
         const coinsAll = imageList.filter(img => coinSet.has(img.filename));
         const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
         const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
-        let insertIdx = firstCoinIdx !== -1
-            ? firstCoinIdx
-            : nonCoins.findIndex(img => img.filename.startsWith('bitcoin_dominance')) + 1;
+        let insertIdx = firstCoinIdx !== -1 ? firstCoinIdx : nonCoins.findIndex(img => img.filename.startsWith('bitcoin_dominance')) + 1;
         if (insertIdx < 0) insertIdx = nonCoins.length;
         const initialFilename = getImageNameFromPath();
         let urlPofSlug = null;
         let urlCoinSlug = null;
         if (initialFilename && initialFilename.startsWith(POF_BASE)) {
             const s = pofSlugFromFilename(initialFilename);
-            if (s && PRICE_OF_OPTIONS.some(o => o.slug === s)) { urlPofSlug = s; setStoredPofItem(s); }
+            if (s && PRICE_OF_OPTIONS.some(o => o.slug === s)) {
+                urlPofSlug = s;
+                setStoredPofItem(s);
+            }
         }
         if (initialFilename && coinSet.has(initialFilename)) {
             const s = coinSlugFromFilename(initialFilename);
-            if (s && COIN_ORDER.includes(s)) { urlCoinSlug = s; setStoredCoinSlug(s); }
+            if (s && COIN_ORDER.includes(s)) {
+                urlCoinSlug = s;
+                setStoredCoinSlug(s);
+            }
         }
         const storedCoinSlug = getStoredCoinSlug();
         const repCoinMeta = COIN_META[storedCoinSlug] || COIN_META['wholecoins'] || COIN_OPTIONS[0];
@@ -1252,7 +1512,10 @@ fetch("final_frames/image_list.json")
         let urlBvgYear = null;
         if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
             const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
-            if (m && isValidBvgYear(m[1])) { urlBvgYear = m[1]; setStoredBvgYear(urlBvgYear); }
+            if (m && isValidBvgYear(m[1])) {
+                urlBvgYear = m[1];
+                setStoredBvgYear(urlBvgYear);
+            }
         }
         let urlDalScale = null;
         if (initialFilename && initialFilename.startsWith(DAL_BASE)) {
@@ -1267,11 +1530,11 @@ fetch("final_frames/image_list.json")
             if (urlDomUnit) setStoredDominanceUnit(urlDomUnit);
         }
         const storedBvgYear = getStoredBvgYear();
-        imageList = imageList.map(img => (img.filename.startsWith(BVG_BASE) ? { ...img, filename: `${BVG_BASE}_${storedBvgYear}.png` } : img));
+        imageList = imageList.map(img => (img.filename.startsWith(BVG_BASE) ? {...img, filename: `${BVG_BASE}_${storedBvgYear}.png`} : img));
         const storedDalScale = getStoredDalScale();
-        imageList = imageList.map(img => (img.filename.startsWith(DAL_BASE) ? { ...img, filename: dalFilenameForScale(storedDalScale) } : img));
+        imageList = imageList.map(img => (img.filename.startsWith(DAL_BASE) ? {...img, filename: dalFilenameForScale(storedDalScale)} : img));
         const storedDomUnit = getStoredDominanceUnit();
-        imageList = imageList.map(img => (img.filename.startsWith(DOM_BASE) ? { ...img, filename: domFilenameForUnit(storedDomUnit) } : img));
+        imageList = imageList.map(img => (img.filename.startsWith(DOM_BASE) ? {...img, filename: domFilenameForUnit(storedDomUnit)} : img));
         visibleImages = [...imageList];
         filterImages();
         const savedLayout = localStorage.getItem('preferredLayout');
@@ -1298,14 +1561,17 @@ fetch("final_frames/image_list.json")
             } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
                 openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
             }
-            if (openIdx !== -1) { openModalByIndex(openIdx); opened = true; }
+            if (openIdx !== -1) {
+                openModalByIndex(openIdx);
+                opened = true;
+            }
             if (!opened) {
                 if (!openByFilenameAllowingNonFav(initialFilename)) history.replaceState(null, '', '/');
             }
         }
     })
     .catch(err => {
-        imageGrid.textContent = "Failed to load visualizations.";
+        imageGrid.textContent = 'Failed to load visualizations.';
         console.error(err);
     });
 
@@ -1315,8 +1581,12 @@ fetch("final_frames/image_list.json")
 const EXP_MIN = 1;
 const EXP_MAX = 6;
 const THUMB_PX = 16;
-function expToSecs(exp) { return Math.pow(2, exp); }
-function clampExp(val) { return Math.max(EXP_MIN, Math.min(EXP_MAX, Math.round(val))); }
+function expToSecs(exp) {
+    return Math.pow(2, exp);
+}
+function clampExp(val) {
+    return Math.max(EXP_MIN, Math.min(EXP_MAX, Math.round(val)));
+}
 function positionBubble(rangeEl, bubbleEl) {
     if (!rangeEl || !bubbleEl) return;
     const wrap = rangeEl.parentElement;
@@ -1357,14 +1627,13 @@ function initSlideDurationControl() {
 }
 function bindSliderEventGuards() {
     if (!slideRange) return;
-    const stop = (ev) => { ev.stopPropagation(); };
-    ['pointerdown', 'pointerup', 'pointercancel', 'mousedown', 'mouseup', 'click', 'touchstart', 'touchend']
-        .forEach(type => slideRange.addEventListener(type, stop, { passive: true }));
+    const stop = ev => {
+        ev.stopPropagation();
+    };
+    ['pointerdown', 'pointerup', 'pointercancel', 'mousedown', 'mouseup', 'click', 'touchstart', 'touchend'].forEach(type => slideRange.addEventListener(type, stop, {passive: true}));
     const wrap = slideRange.closest('.slideshow-row');
     if (wrap) {
-        ['click', 'pointerdown', 'pointerup', 'touchstart', 'touchend'].forEach(type =>
-            wrap.addEventListener(type, stop, { passive: true })
-        );
+        ['click', 'pointerdown', 'pointerup', 'touchstart', 'touchend'].forEach(type => wrap.addEventListener(type, stop, {passive: true}));
     }
 }
 window.addEventListener('load', () => {
@@ -1386,7 +1655,9 @@ function isSlideshowOpen() {
     return !!slideshowEl && !slideshowEl.classList.contains('hidden');
 }
 function focusSlideshowShell() {
-    try { slideshowEl?.focus(); } catch (_) { }
+    try {
+        slideshowEl?.focus();
+    } catch (_) {}
 }
 function getSlideDurationSecs() {
     if (!slideRange) return 4;
@@ -1400,7 +1671,9 @@ function _applySlide(idx) {
     const alt = item?.title || item?.description || 'Slideshow image';
     slideshowImg.classList.add('ss-img-hidden');
     const onLoad = () => {
-        requestAnimationFrame(() => { slideshowImg.classList.remove('ss-img-hidden'); });
+        requestAnimationFrame(() => {
+            slideshowImg.classList.remove('ss-img-hidden');
+        });
         slideshowImg.removeEventListener('load', onLoad);
     };
     slideshowImg.removeEventListener('load', onLoad);
@@ -1413,16 +1686,30 @@ function setSlideshowImage(idx, restartTimer = false) {
     if (restartTimer) restartSlideshowTimer();
     else if (slideshowPlaying) scheduleNextSlide();
 }
-function slideshowNext(restartTimer = true) { setSlideshowImage(slideshowIndex + 1, restartTimer); }
-function slideshowPrev(restartTimer = true) { setSlideshowImage(slideshowIndex - 1, restartTimer); }
-function clearSlideshowTimer() { if (slideshowTimer) { clearTimeout(slideshowTimer); slideshowTimer = null; } }
+function slideshowNext(restartTimer = true) {
+    setSlideshowImage(slideshowIndex + 1, restartTimer);
+}
+function slideshowPrev(restartTimer = true) {
+    setSlideshowImage(slideshowIndex - 1, restartTimer);
+}
+function clearSlideshowTimer() {
+    if (slideshowTimer) {
+        clearTimeout(slideshowTimer);
+        slideshowTimer = null;
+    }
+}
 function scheduleNextSlide() {
     clearSlideshowTimer();
     if (!slideshowPlaying) return;
     const delayMs = getSlideDurationSecs() * 1000;
-    slideshowTimer = setTimeout(() => { slideshowNext(false); }, delayMs);
+    slideshowTimer = setTimeout(() => {
+        slideshowNext(false);
+    }, delayMs);
 }
-function restartSlideshowTimer() { if (!slideshowPlaying) return; scheduleNextSlide(); }
+function restartSlideshowTimer() {
+    if (!slideshowPlaying) return;
+    scheduleNextSlide();
+}
 function updatePlayButton() {
     if (!ssPlayPauseBtn) return;
     if (slideshowPlaying) {
@@ -1450,14 +1737,17 @@ function pauseSlideshow() {
     slideshowUiTimer = null;
     showSlideshowUI(false);
 }
-function togglePlayPause() { if (slideshowPlaying) pauseSlideshow(); else playSlideshow(); }
+function togglePlayPause() {
+    if (slideshowPlaying) pauseSlideshow();
+    else playSlideshow();
+}
 async function enterFullscreen(el) {
     try {
         if (!document.fullscreenElement) {
             if (el?.requestFullscreen) await el.requestFullscreen();
             else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
         }
-    } catch (_) { }
+    } catch (_) {}
 }
 
 /* ===========================
@@ -1496,10 +1786,10 @@ function onSlideshowActivity() {
     showSlideshowUI(slideshowPlaying);
 }
 function bindSlideshowUiActivityListeners() {
-    slideshowEl?.addEventListener('pointermove', onSlideshowActivity, { passive: true });
-    slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, { passive: true });
-    slideshowEl?.addEventListener('wheel', onSlideshowActivity, { passive: true });
-    slideshowEl?.addEventListener('mousemove', onSlideshowActivity, { passive: true }); // legacy
+    slideshowEl?.addEventListener('pointermove', onSlideshowActivity, {passive: true});
+    slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, {passive: true});
+    slideshowEl?.addEventListener('wheel', onSlideshowActivity, {passive: true});
+    slideshowEl?.addEventListener('mousemove', onSlideshowActivity, {passive: true}); // legacy
 }
 function unbindSlideshowUiActivityListeners() {
     slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
@@ -1507,7 +1797,11 @@ function unbindSlideshowUiActivityListeners() {
     slideshowEl?.removeEventListener('wheel', onSlideshowActivity);
     slideshowEl?.removeEventListener('mousemove', onSlideshowActivity);
 }
-async function exitFullscreen() { try { if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen(); } catch (_) { } }
+async function exitFullscreen() {
+    try {
+        if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
+    } catch (_) {}
+}
 async function openSlideshow(startAt = 0, startPlaying = true) {
     if (!slideshowEl) return;
     if (!visibleImages || visibleImages.length === 0) return;
@@ -1557,17 +1851,28 @@ window.addEventListener('load', updateLayoutBasedOnWidth);
 window.addEventListener('orientationchange', updateModalSafePadding);
 window.addEventListener('resize', handleModalViewportChange);
 window.addEventListener('orientationchange', handleModalViewportChange);
-chkSearchTitles?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('title'); });
-chkSearchDescriptions?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('desc'); });
-modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-modal.addEventListener('touchstart', (e) => {
+chkSearchTitles?.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleSearchPref('title');
+});
+chkSearchDescriptions?.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleSearchPref('desc');
+});
+modal.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+});
+modal.addEventListener('touchstart', e => {
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
 });
-modal.addEventListener('touchend', (e) => {
+modal.addEventListener('touchend', e => {
     touchEndX = e.changedTouches[0].screenX;
     touchEndY = e.changedTouches[0].screenY;
-    if (!gestureConsumed) { handleSwipe(); handleVerticalSwipe(); }
+    if (!gestureConsumed) {
+        handleSwipe();
+        handleVerticalSwipe();
+    }
 });
 startSlideshowBtn?.addEventListener('click', () => {
     kebabMenu?.classList.add('hidden');
@@ -1575,12 +1880,33 @@ startSlideshowBtn?.addEventListener('click', () => {
     if (!visibleImages || !visibleImages.length) return;
     openSlideshow(0, true);
 });
-ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); closeSlideshow(); });
-ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowNext(true); });
-ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowPrev(true); });
-ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); closeSlideshow(); });
-ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowNext(true); });
-ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowPrev(true); });
+ssExitBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    closeSlideshow();
+});
+ssNextBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    slideshowNext(true);
+});
+ssPrevBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    slideshowPrev(true);
+});
+ssExitBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    showSlideshowUI(slideshowPlaying);
+    closeSlideshow();
+});
+ssNextBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    showSlideshowUI(slideshowPlaying);
+    slideshowNext(true);
+});
+ssPrevBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    showSlideshowUI(slideshowPlaying);
+    slideshowPrev(true);
+});
 function onPlayPauseActivate(e) {
     if (e.type === 'keydown' && !(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
     e.stopPropagation();
@@ -1609,20 +1935,28 @@ if (!ssPlayPauseBtn) {
     ssPlayPauseBtn.setAttribute('tabindex', '0');
     ssPlayPauseBtn.setAttribute('role', 'button');
 }
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', e => {
     if (!slideshowEl || slideshowEl.classList.contains('hidden')) return;
-    if (e.key === 'Escape') { e.preventDefault(); closeSlideshow(); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); slideshowNext(true); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); slideshowPrev(true); }
-    else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePlayPause(); }
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        closeSlideshow();
+    } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        slideshowNext(true);
+    } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        slideshowPrev(true);
+    } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        togglePlayPause();
+    }
 });
 function onFullscreenChangeAutoClose() {
     if (!document.fullscreenElement && isSlideshowOpen()) {
         closeSlideshow();
     }
 }
-['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange']
-    .forEach(evt => document.addEventListener(evt, onFullscreenChangeAutoClose));
+['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => document.addEventListener(evt, onFullscreenChangeAutoClose));
 slideRange?.addEventListener('change', () => restartSlideshowTimer());
 slideRange?.addEventListener('input', () => restartSlideshowTimer());
 
@@ -1649,7 +1983,7 @@ document.addEventListener('keydown', onOptionSStartSlideshow, true);
 /* ===========================
  * KEBAB MENU (⋯) EVENTS
  * =========================== */
-kebabBtn?.addEventListener('click', (e) => {
+kebabBtn?.addEventListener('click', e => {
     e.stopPropagation();
     const isOpen = !kebabMenu.classList.contains('hidden');
     kebabMenu.classList.toggle('hidden', isOpen);
@@ -1661,10 +1995,13 @@ kebabBtn?.addEventListener('click', (e) => {
         });
     }
 });
-kebabMenu?.addEventListener('click', (e) => {
+kebabMenu?.addEventListener('click', e => {
     const btn = e.target.closest('.menu-item');
     if (!btn) return;
-    if (btn.classList.contains('slideshow-row') || btn.closest('.slideshow-row')) { e.stopPropagation(); return; }
+    if (btn.classList.contains('slideshow-row') || btn.closest('.slideshow-row')) {
+        e.stopPropagation();
+        return;
+    }
     if (btn.classList.contains('menu-check')) {
         e.stopPropagation();
         if (btn.id === 'chkSearchTitles') toggleSearchPref('title');
@@ -1677,25 +2014,25 @@ kebabMenu?.addEventListener('click', (e) => {
     kebabMenu.classList.add('hidden');
     kebabBtn.setAttribute('aria-expanded', 'false');
 });
-document.addEventListener('click', (e) => {
+document.addEventListener('click', e => {
     if (!kebabMenu || kebabMenu.classList.contains('hidden')) return;
     if (e.target === kebabBtn || kebabBtn.contains(e.target)) return;
     if (kebabMenu.contains(e.target)) return;
     kebabMenu.classList.add('hidden');
     kebabBtn.setAttribute('aria-expanded', 'false');
 });
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && kebabMenu && !kebabMenu.classList.contains('hidden')) {
         kebabMenu.classList.add('hidden');
         kebabBtn.setAttribute('aria-expanded', 'false');
     }
 });
-yearSelect?.addEventListener('change', (e) => setBvgYear(e.target.value));
-scaleSelect?.addEventListener('change', (e) => setDalScale(e.target.value));
-dominanceSelect?.addEventListener('change', (e) => setDominanceUnit(e.target.value));
-priceOfSelect?.addEventListener('change', (e) => setPriceOfItem(e.target.value));
-coinSelect?.addEventListener('change', (e) => setCoinType(e.target.value));
-myrSelect?.addEventListener('change', (e) => setMyrRange(e.target.value));
+yearSelect?.addEventListener('change', e => setBvgYear(e.target.value));
+scaleSelect?.addEventListener('change', e => setDalScale(e.target.value));
+dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value));
+priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
+coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
+myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
@@ -1706,20 +2043,37 @@ function toggleFavoritesView() {
 /* ===========================
  * MODAL KEYBOARD SHORTCUTS
  * =========================== */
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', e => {
     if (modal.style.display === 'flex') {
         if (e.key === 'ArrowLeft') prevImage();
         else if (e.key === 'ArrowRight') nextImage();
-        else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); closeModal(); }
-        else if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
-        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        else if (e.key === ' ' || e.code === 'Space') {
+            e.preventDefault();
+            closeModal();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            closeModal();
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             const currentFile = visibleImages[currentIndex]?.filename || '';
-            if (isBvgFile(currentFile)) { e.preventDefault(); (e.key === 'ArrowUp') ? cycleBvgYear('up') : cycleBvgYear('down'); }
-            else if (isDalFile(currentFile)) { e.preventDefault(); (e.key === 'ArrowUp') ? cycleDalScale('up') : cycleDalScale('down'); }
-            else if (isDominanceFile(currentFile)) { e.preventDefault(); (e.key === 'ArrowUp') ? cycleDominance('up') : cycleDominance('down'); }
-            else if (isPriceOfFile(currentFile)) { e.preventDefault(); (e.key === 'ArrowUp') ? cyclePriceOf('up') : cyclePriceOf('down'); }
-            else if (isCoinFile(currentFile)) { e.preventDefault(); (e.key === 'ArrowUp') ? cycleCoinType('up') : cycleCoinType('down'); }
-            else if (isMyrFile(currentFile)) { e.preventDefault(); (e.key === 'ArrowUp') ? cycleMyrRange('up') : cycleMyrRange('down'); }
+            if (isBvgFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleBvgYear('up') : cycleBvgYear('down');
+            } else if (isDalFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleDalScale('up') : cycleDalScale('down');
+            } else if (isDominanceFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
+            } else if (isPriceOfFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cyclePriceOf('up') : cyclePriceOf('down');
+            } else if (isCoinFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleCoinType('up') : cycleCoinType('down');
+            } else if (isMyrFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleMyrRange('up') : cycleMyrRange('down');
+            }
         }
     }
 });
