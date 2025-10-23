@@ -804,11 +804,11 @@ body.slideshow-open.hide-cursor .slideshow * {
     -webkit-tap-highlight-color: transparent;
 }
 .modal-controls button:hover,
-.modal-controls button:focus,
+.modal-controls button:focus-visible,
 .modal-controls .close-btn:hover,
-.modal-controls .close-btn:focus,
+.modal-controls .close-btn:focus-visible,
 #modal-fav-btn:hover,
-#modal-fav-btn:focus {
+#modal-fav-btn:focus-visible {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--brand);
     color: var(--brand);
