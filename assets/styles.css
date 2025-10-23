@@ -719,7 +719,13 @@ body.slideshow-open.hide-cursor .slideshow * {
     display: block;
     transform-origin: 0 0;
 }
-
+#modal-img {
+    z-index: 1;
+}
+.modal-controls {
+    z-index: 2000;
+    pointer-events: auto;
+}
 #modal.zoomed #modal-img {
     cursor: grab;
 }
@@ -867,7 +873,14 @@ body.slideshow-open.hide-cursor .slideshow * {
         max-height: calc(88vh - var(--controls-offset, 1.5rem));
     }
 }
-
+#modal.zoomed {
+    --controls-offset: 0px;
+}
+#modal.zoomed .modal-controls {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
+    border-radius: 8px;
+    padding-right: 0.25rem;
+}
 @supports (padding: max(0px)) {
     @media (max-width: 900px) and (orientation: landscape) {
         .modal {

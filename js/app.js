@@ -61,6 +61,10 @@ let panStartY = 0;
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
 const DOUBLE_TAP_DELAY = 300;
+let lastTapX = 0;
+let lastTapY = 0;
+let singleTapMoved = false;
+const MAX_TAP_MOVE_PX = 12;
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -296,23 +300,6 @@ function zoomToPoint(targetScale, clientX, clientY) {
     setTimeout(() => { modalImg.style.transition = ''; }, 220);
 }
 
-let lastTapX = 0;
-let lastTapY = 0;
-let singleTapMoved = false;
-const MAX_TAP_MOVE_PX = 12;
-
-function zoomToPoint(scaleTarget, clientX, clientY) {
-    const { u, v, xRel, yRel } = screenPointToImageLocal(clientX, clientY);
-    currentScale = clamp(scaleTarget, MIN_SCALE, MAX_SCALE);
-    translateX = xRel - u * currentScale;
-    translateY = yRel - v * currentScale;
-    modal.classList.add('zoomed');
-    clampPanToBounds();
-    modalImg.style.transition = 'transform 0.2s ease-out';
-    applyTransform();
-    setTimeout(() => { modalImg.style.transition = ''; }, 220);
-}
-
 function handleDoubleTap(clientX, clientY) {
     gestureConsumed = true;
     if (currentScale <= 1.001) {
@@ -342,18 +329,16 @@ function handleModalViewportChange() {
 
 
 function clampPanToBounds() {
-    const vp = modal.getBoundingClientRect();
-    const offset = getControlsOffset();
-    const availH = Math.max(0, vp.height - offset);
-    const imgRect = modalImg.getBoundingClientRect();
-    const baseW = imgRect.width / currentScale;
-    const baseH = imgRect.height / currentScale;
+    const { baseW, baseH, vpW, availH, offset } = computeBaseSizeAtScale1();
     const scaledW = baseW * currentScale;
     const scaledH = baseH * currentScale;
-    const minTx = Math.min(0, vp.width - scaledW);
+    const minTx = Math.min(0, vpW - scaledW);
     const maxTx = 0;
-    if (scaledW <= vp.width) translateX = (vp.width - scaledW) / 2;
-    else translateX = Math.max(minTx, Math.min(translateX, maxTx));
+    if (scaledW <= vpW) {
+        translateX = (vpW - scaledW) / 2;
+    } else {
+        translateX = Math.max(minTx, Math.min(translateX, maxTx));
+    }
     const minTy = offset + Math.min(0, availH - scaledH);
     const maxTy = offset;
     if (scaledH <= availH) {
@@ -748,14 +733,18 @@ modalImg.addEventListener('touchend', (e) => {
         const now = Date.now();
         const t = e.changedTouches[0];
         const dt = now - lastTapTime;
-        const moved = singleTapMoved;
         const closeToLast =
-            Math.abs(t.clientX - lastTapX) < MAX_TAP_MOVE_PX &&
-            Math.abs(t.clientY - lastTapY) < MAX_TAP_MOVE_PX;
-        if (!moved && dt > 0 && dt <= DOUBLE_TAP_DELAY && closeToLast) {
-            handleDoubleTap(t.clientX, t.clientY);
-            lastTapTime = 0;
-            lastTapX = lastTapY = 0;
+            Math.abs(t.clientX - lastTapX) < 12 &&
+            Math.abs(t.clientY - lastTapY) < 12;
+        if (!singleTapMoved && dt > 0 && dt <= DOUBLE_TAP_DELAY && closeToLast) {
+            gestureConsumed = true;
+            modalImg.style.transition = '';
+            if (currentScale <= 1.001) {
+                zoomToPoint(3, t.clientX, t.clientY);
+            } else {
+                resetZoomAndCenterAnimated();
+            }
+            lastTapTime = 0; lastTapX = lastTapY = 0;
             return;
         }
         lastTapTime = now;
@@ -770,6 +759,37 @@ modalImg.addEventListener('touchend', (e) => {
         setTimeout(() => { gestureConsumed = false; }, 0);
     }
 });
+
+let lastDownTime = 0;
+let lastDownX = 0;
+let lastDownY = 0;
+
+modalImg.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    modalImg.style.transition = '';
+    const now = Date.now();
+    const x = e.clientX, y = e.clientY;
+    const dt = now - lastDownTime;
+    const closeToLast =
+        Math.abs(x - lastDownX) <= 12 &&
+        Math.abs(y - lastDownY) <= 12;
+    if (dt > 0 && dt <= DOUBLE_TAP_DELAY && closeToLast) {
+        e.preventDefault();
+        e.stopPropagation();
+        gestureConsumed = true;
+        if (currentScale <= 1.001) {
+            zoomToPoint(3, x, y);
+        } else {
+            resetZoomAndCenterAnimated();
+        }
+        lastDownTime = 0; lastDownX = 0; lastDownY = 0;
+        return;
+    }
+
+    lastDownTime = now;
+    lastDownX = x;
+    lastDownY = y;
+}, { passive: false });
 
 modalImg.addEventListener('touchcancel', () => {
     isPinching = false; isPanning = false; pinchFocus = null;
