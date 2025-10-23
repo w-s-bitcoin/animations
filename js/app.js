@@ -276,33 +276,71 @@ function centerImageAtScale1() {
     currentScale = 1;
     translateX = (vpW - baseW) / 2;
     // Center vertically within the area below the controls, not the whole viewport
-    translateY = offset + ( (vpH - offset) - baseH ) / 2;
+    translateY = offset + ((vpH - offset) - baseH) / 2;
     applyTransform();
 }
 
+// Recenter (or re-clamp) the modal image after viewport changes.
+// Waits a frame so CSS --controls-offset has settled.
+let modalViewportRAF = null;
+function handleModalViewportChange() {
+    if (modal.style.display !== 'flex') return; // only when modal is open
+
+    // Coexist with your existing updateModalSafePadding() listeners
+    updateModalSafePadding();
+
+    if (modalViewportRAF) cancelAnimationFrame(modalViewportRAF);
+    modalViewportRAF = requestAnimationFrame(() => {
+        // Give CSS vars one more frame to apply
+        requestAnimationFrame(() => {
+            // If not zoomed-in, fully recenter; otherwise just keep it within bounds
+            if (currentScale <= 1.001 && !isPinching && !isPanning && !modal.classList.contains('zoomed')) {
+                centerImageAtScale1();
+            } else {
+                clampPanToBounds();
+                applyTransform();
+            }
+            modalViewportRAF = null;
+        });
+    });
+}
+
+
 function clampPanToBounds() {
     const vp = modal.getBoundingClientRect();
+    const offset = getControlsOffset();        // ← reserve top band
+    const availH = Math.max(0, vp.height - offset);
+
     const imgRect = modalImg.getBoundingClientRect();
     const baseW = imgRect.width / currentScale;
     const baseH = imgRect.height / currentScale;
+
     const scaledW = baseW * currentScale;
     const scaledH = baseH * currentScale;
+
+    // Horizontal (unchanged)
     const minTx = Math.min(0, vp.width - scaledW);
     const maxTx = 0;
-    const minTy = Math.min(0, vp.height - scaledH);
-    const maxTy = 0;
     if (scaledW <= vp.width) translateX = (vp.width - scaledW) / 2;
     else translateX = Math.max(minTx, Math.min(translateX, maxTx));
-    if (scaledH <= vp.height) translateY = (vp.height - scaledH) / 2;
-    else translateY = Math.max(minTy, Math.min(translateY, maxTy));
+
+    // Vertical — clamp within [offset + (availH - scaledH), offset]
+    const minTy = offset + Math.min(0, availH - scaledH);
+    const maxTy = offset;
+    if (scaledH <= availH) {
+        translateY = offset + (availH - scaledH) / 2;
+    } else {
+        translateY = Math.max(minTy, Math.min(translateY, maxTy));
+    }
 }
+
 // How much vertical space (px) should be reserved for the modal controls?
 function getControlsOffset() {
-  // Only applies on small landscape (matches your CSS/media query)
-  const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
-  if (!isSmallLandscape) return 0;
-  const v = parseFloat(getComputedStyle(modal).getPropertyValue('--controls-offset')) || 0;
-  return Math.max(0, v);
+    // Only applies on small landscape (matches your CSS/media query)
+    const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
+    if (!isSmallLandscape) return 0;
+    const v = parseFloat(getComputedStyle(modal).getPropertyValue('--controls-offset')) || 0;
+    return Math.max(0, v);
 }
 
 /* ===========================
@@ -1365,22 +1403,22 @@ function updatePlayButton() {
     }
 }
 function playSlideshow() {
-  if (!slideshowEl || !visibleImages?.length) return;
-  slideshowPlaying = true;
-  updatePlayButton();
-  showSlideshowUI(true);        // ⬅️ show & arm timer (only while playing)
-  scheduleNextSlide();
+    if (!slideshowEl || !visibleImages?.length) return;
+    slideshowPlaying = true;
+    updatePlayButton();
+    showSlideshowUI(true);        // ⬅️ show & arm timer (only while playing)
+    scheduleNextSlide();
 }
 
 function pauseSlideshow() {
-  slideshowPlaying = false;
-  updatePlayButton();
-  clearSlideshowTimer();
+    slideshowPlaying = false;
+    updatePlayButton();
+    clearSlideshowTimer();
 
-  // Keep controls visible when paused and ensure no pending hide fires
-  clearTimeout(slideshowUiTimer);
-  slideshowUiTimer = null;
-  showSlideshowUI(false); // show UI and DO NOT arm idle timer
+    // Keep controls visible when paused and ensure no pending hide fires
+    clearTimeout(slideshowUiTimer);
+    slideshowUiTimer = null;
+    showSlideshowUI(false); // show UI and DO NOT arm idle timer
 }
 
 function togglePlayPause() { if (slideshowPlaying) pauseSlideshow(); else playSlideshow(); }
@@ -1401,59 +1439,59 @@ const UI_HIDE_DELAY_MS = 1500; // 1.5s
 let slideshowUiTimer = null;
 
 function showSlideshowUI(armTimer = true) {
-  if (!slideshowEl) return;
-  slideshowEl.classList.add('show-ui');
-  document.body.classList.remove('hide-cursor');
+    if (!slideshowEl) return;
+    slideshowEl.classList.add('show-ui');
+    document.body.classList.remove('hide-cursor');
 
-  // Only (re)arm the idle timer while playing
-  clearTimeout(slideshowUiTimer);
-  if (armTimer && slideshowPlaying) {
-    slideshowUiTimer = setTimeout(() => {
-      // Guard: if paused by the time this fires, do nothing
-      if (!slideshowPlaying) return;
-      hideSlideshowUI();
-    }, UI_HIDE_DELAY_MS);
-  } else {
-    slideshowUiTimer = null;
-  }
+    // Only (re)arm the idle timer while playing
+    clearTimeout(slideshowUiTimer);
+    if (armTimer && slideshowPlaying) {
+        slideshowUiTimer = setTimeout(() => {
+            // Guard: if paused by the time this fires, do nothing
+            if (!slideshowPlaying) return;
+            hideSlideshowUI();
+        }, UI_HIDE_DELAY_MS);
+    } else {
+        slideshowUiTimer = null;
+    }
 }
 
 function hideSlideshowUI() {
-  if (!slideshowEl) return;
-  // Don't hide while paused
-  if (!slideshowPlaying) return;
+    if (!slideshowEl) return;
+    // Don't hide while paused
+    if (!slideshowPlaying) return;
 
-  slideshowEl.classList.remove('show-ui');
-  if (document.body.classList.contains('slideshow-open')) {
-    document.body.classList.add('hide-cursor');
-  }
-  clearTimeout(slideshowUiTimer);
-  slideshowUiTimer = null;
+    slideshowEl.classList.remove('show-ui');
+    if (document.body.classList.contains('slideshow-open')) {
+        document.body.classList.add('hide-cursor');
+    }
+    clearTimeout(slideshowUiTimer);
+    slideshowUiTimer = null;
 }
 
 function resetSlideshowUiHideTimer() {
-  // Keep behavior consistent with showSlideshowUI
-  showSlideshowUI(true);
+    // Keep behavior consistent with showSlideshowUI
+    showSlideshowUI(true);
 }
 
 // Pointer/touch/wheel activity should reveal UI.
 // If paused, keep it visible with NO timer. If playing, re-arm timer.
 function onSlideshowActivity() {
-  showSlideshowUI(slideshowPlaying);
+    showSlideshowUI(slideshowPlaying);
 }
 
 function bindSlideshowUiActivityListeners() {
-  slideshowEl?.addEventListener('pointermove', onSlideshowActivity, { passive: true });
-  slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, { passive: true });
-  slideshowEl?.addEventListener('wheel', onSlideshowActivity, { passive: true });
-  slideshowEl?.addEventListener('mousemove', onSlideshowActivity, { passive: true }); // legacy
+    slideshowEl?.addEventListener('pointermove', onSlideshowActivity, { passive: true });
+    slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, { passive: true });
+    slideshowEl?.addEventListener('wheel', onSlideshowActivity, { passive: true });
+    slideshowEl?.addEventListener('mousemove', onSlideshowActivity, { passive: true }); // legacy
 }
 
 function unbindSlideshowUiActivityListeners() {
-  slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
-  slideshowEl?.removeEventListener('pointerdown', onSlideshowActivity);
-  slideshowEl?.removeEventListener('wheel', onSlideshowActivity);
-  slideshowEl?.removeEventListener('mousemove', onSlideshowActivity);
+    slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
+    slideshowEl?.removeEventListener('pointerdown', onSlideshowActivity);
+    slideshowEl?.removeEventListener('wheel', onSlideshowActivity);
+    slideshowEl?.removeEventListener('mousemove', onSlideshowActivity);
 }
 
 async function exitFullscreen() { try { if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen(); } catch (_) { } }
@@ -1519,6 +1557,8 @@ window.addEventListener('resize', updateLayoutBasedOnWidth);
 window.addEventListener('resize', updateModalSafePadding);
 window.addEventListener('load', updateLayoutBasedOnWidth);
 window.addEventListener('orientationchange', updateModalSafePadding);
+window.addEventListener('resize', handleModalViewportChange);
+window.addEventListener('orientationchange', handleModalViewportChange);
 
 chkSearchTitles?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('title'); });
 chkSearchDescriptions?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('desc'); });
@@ -1550,37 +1590,37 @@ ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshow
 ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowPrev(true); });
 // Robust Play/Pause button handler (click + keyboard)
 function onPlayPauseActivate(e) {
-  // Make button work with mouse AND keyboard (Enter/Space)
-  if (e.type === 'keydown' && !(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
+    // Make button work with mouse AND keyboard (Enter/Space)
+    if (e.type === 'keydown' && !(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
 
-  e.stopPropagation();
-  e.preventDefault();
+    e.stopPropagation();
+    e.preventDefault();
 
-  if (slideshowPlaying) {
-    pauseSlideshow();                 // sets slideshowPlaying=false and updates UI
-    showSlideshowUI(false);           // keep controls visible while paused (no idle timer)
-  } else {
-    playSlideshow();                  // sets slideshowPlaying=true and updates UI
-    showSlideshowUI(true);            // visible & arm idle timer
-  }
+    if (slideshowPlaying) {
+        pauseSlideshow();                 // sets slideshowPlaying=false and updates UI
+        showSlideshowUI(false);           // keep controls visible while paused (no idle timer)
+    } else {
+        playSlideshow();                  // sets slideshowPlaying=true and updates UI
+        showSlideshowUI(true);            // visible & arm idle timer
+    }
 }
 
 if (!ssPlayPauseBtn) {
-  console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
+    console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
 } else {
-  ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
-  ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
-  ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
-  ssPlayPauseBtn.setAttribute('role', 'button');
+    ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
+    ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
+    ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
+    ssPlayPauseBtn.setAttribute('role', 'button');
 }
 
 if (!ssPlayPauseBtn) {
-  console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
+    console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
 } else {
-  ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
-  ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
-  ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
-  ssPlayPauseBtn.setAttribute('role', 'button');
+    ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
+    ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
+    ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
+    ssPlayPauseBtn.setAttribute('role', 'button');
 }
 
 document.addEventListener('keydown', (e) => {
@@ -1605,32 +1645,32 @@ slideRange?.addEventListener('input', () => restartSlideshowTimer());
  * SITE-WIDE: Option(Alt)+S starts slideshow (robust for macOS 'ß')
  * =========================== */
 function onOptionSStartSlideshow(e) {
-  // Only Alt/Option held (no Ctrl/Cmd/Shift)
-  if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    // Only Alt/Option held (no Ctrl/Cmd/Shift)
+    if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
 
-  // Use physical key so macOS Option+S (ß) still matches
-  if (e.code !== 'KeyS') return;
+    // Use physical key so macOS Option+S (ß) still matches
+    if (e.code !== 'KeyS') return;
 
-  // Don't hijack when typing in a control
-  const a = document.activeElement;
-  if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.isContentEditable)) return;
+    // Don't hijack when typing in a control
+    const a = document.activeElement;
+    if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.isContentEditable)) return;
 
-  // If slideshow is already open, let its own keys handle things
-  const slideshowOpen = !!slideshowEl && !slideshowEl.classList.contains('hidden');
-  if (slideshowOpen) return;
+    // If slideshow is already open, let its own keys handle things
+    const slideshowOpen = !!slideshowEl && !slideshowEl.classList.contains('hidden');
+    if (slideshowOpen) return;
 
-  // Stop other listeners from interfering
-  e.preventDefault();
-  e.stopPropagation();
+    // Stop other listeners from interfering
+    e.preventDefault();
+    e.stopPropagation();
 
-  // Tidy UI & state
-  kebabMenu?.classList.add('hidden');
-  kebabBtn?.setAttribute('aria-expanded', 'false');
-  if (modal && modal.style.display === 'flex') closeModal();
+    // Tidy UI & state
+    kebabMenu?.classList.add('hidden');
+    kebabBtn?.setAttribute('aria-expanded', 'false');
+    if (modal && modal.style.display === 'flex') closeModal();
 
-  // Launch slideshow
-  if (startSlideshowBtn) startSlideshowBtn.click();
-  else if (typeof openSlideshow === 'function') openSlideshow(0, true);
+    // Launch slideshow
+    if (startSlideshowBtn) startSlideshowBtn.click();
+    else if (typeof openSlideshow === 'function') openSlideshow(0, true);
 }
 
 // Use capture phase so we see the event before other handlers consume it
