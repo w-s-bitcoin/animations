@@ -68,14 +68,19 @@ footer {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
+.controls-row .toggle-icon,
+.controls-row .search-btn,
+.controls-row #favoritesToggle {
+    transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
 .controls-row .toggle-icon:hover,
 .controls-row .toggle-icon:focus,
 .controls-row .search-btn:hover,
 .controls-row .search-btn:focus,
 .controls-row #favoritesToggle:hover,
 .controls-row #favoritesToggle:focus {
-    border-color: #fff;
-    color: #fff;
+    border-color: var(--brand);
+    color: var(--brand);
     background: transparent;
 }
 .controls-row .toggle-icon.active,
@@ -94,7 +99,7 @@ footer {
 .controls-row .toggle-icon:hover .icon-list div,
 .controls-row .toggle-icon:focus .icon-grid div,
 .controls-row .toggle-icon:focus .icon-list div {
-    background-color: #fff;
+    background-color: var(--brand);
 }
 .controls-row .toggle-icon.active .icon-grid div,
 .controls-row .toggle-icon.active .icon-list div {
@@ -193,7 +198,7 @@ footer {
 }
 .search-btn:not(.active):focus {
     border-color: var(--border);
-    color: #fff;
+    color: var(--brand);
     background: transparent;
 }
 .search-btn.active {
@@ -256,26 +261,31 @@ footer {
     box-shadow: none;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
-    transition: border-color 0.25s ease, color 0.25s ease;
+    transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 .kebab-btn:hover,
 .kebab-btn:focus,
 .kebab-btn:focus-visible {
-    border-color: #fff;
-    color: #fff;
+    border-color: var(--brand);
+    color: var(--brand);
     outline: none;
 }
 .kebab-btn[aria-expanded='true'] {
     border-color: var(--brand);
     color: var(--brand);
+    box-shadow: 0 0 8px var(--brand);
+    background-color: #333;
 }
 .kebab-btn[aria-expanded='true']:hover,
 .kebab-btn[aria-expanded='true']:focus,
 .kebab-btn[aria-expanded='true']:focus-visible {
     border-color: var(--brand);
     color: var(--brand);
+    box-shadow: 0 0 8px var(--brand);
+    background-color: #333;
     outline: none;
 }
+
 .kebab-menu {
     position: absolute;
     top: calc(100% + 0.5rem);
