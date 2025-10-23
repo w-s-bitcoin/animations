@@ -10,8 +10,6 @@
     --border: #333;
     --panel: #1a1a1a;
     --brand: #f7931a;
-
-    /* Slideshow vars */
     --ss-thumb: 16px;
     --ss-track: 4px;
     --ss-sidepad: calc(var(--ss-thumb) / 1.5);
@@ -816,11 +814,9 @@ body.slideshow-open.hide-cursor .slideshow * {
     border: 1px solid var(--border);
     color: #fff;
     font-size: 1.2rem;
-    /* smaller text/icon size */
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    /* rounded like slideshow but scaled down */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -833,7 +829,6 @@ body.slideshow-open.hide-cursor .slideshow * {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Hover/focus effects (same orange accent as slideshow) */
 .modal-controls button:hover,
 .modal-controls button:focus,
 .modal-controls .close-btn:hover,
@@ -846,19 +841,15 @@ body.slideshow-open.hide-cursor .slideshow * {
     outline: none;
 }
 
-/* Distinct look for the favorite (star) button when filled */
 #modal-fav-btn.filled {
     color: var(--brand);
 }
 
-/* Slightly larger close “X” button */
 .close-btn {
     font-size: 1.6rem;
 }
 
-/* Optional: if you’d like the modal buttons to appear a bit tighter on small screens */
 @media (max-width: 640px) {
-
     .modal-controls button,
     .modal-controls .close-btn,
     #modal-fav-btn {
@@ -872,7 +863,6 @@ body.slideshow-open.hide-cursor .slideshow * {
     .modal {
         padding-top: var(--controls-offset, 1.5rem);
     }
-
     .modal img {
         max-height: calc(88vh - var(--controls-offset, 1.5rem));
     }
@@ -886,7 +876,6 @@ body.slideshow-open.hide-cursor .slideshow * {
     }
 }
 
-/* Keep post links orange in all interactive states (unless .disabled) */
 .modal-controls .modal-link:not(.disabled),
 .modal-controls .modal-link:not(.disabled):link,
 .modal-controls .modal-link:not(.disabled):visited,
@@ -896,14 +885,12 @@ body.slideshow-open.hide-cursor .slideshow * {
     opacity: 1;
 }
 
-/* Be explicit for your IDs too (belt & suspenders) */
 #x-link:not(.disabled),
 #nostr-link:not(.disabled),
 #youtube-link:not(.disabled) {
     color: var(--brand) !important;
 }
 
-/* Ensure icons track the link color */
 .modal-controls .modal-link svg {
     fill: currentColor !important;
 }
@@ -1177,16 +1164,11 @@ body.slideshow-open {
     font-size: 1rem;
     color: #fff;
     background: rgba(0, 0, 0, 0.4);
-    /* match modal buttons */
     border: 1px solid var(--border);
-    /* match modal buttons */
     border-radius: 8px;
-    /* match modal buttons */
     height: 32px;
     line-height: 32px;
-    /* helps iOS align text vertically */
     padding: 0 1.6rem 0 0.5rem;
-    /* room for caret on the right */
     cursor: pointer;
     outline: none;
     -webkit-appearance: none;
@@ -1195,7 +1177,6 @@ body.slideshow-open {
     transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
-/* Orange accent on hover/focus (like buttons) */
 #year-select:hover,
 #year-select:focus,
 #scale-select:hover,
@@ -1213,7 +1194,6 @@ body.slideshow-open {
     color: var(--brand);
 }
 
-/* Caret color reacts to hover/focus on its select */
 .select-wrap:focus-within::after,
 .select-wrap:focus-within::before,
 .select-wrap:hover::after,

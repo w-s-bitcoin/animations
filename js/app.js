@@ -21,22 +21,16 @@ const ssNextBtn = document.getElementById('ssNextBtn');
 const slideRange = document.getElementById('slideDuration');
 const slideBubble = document.getElementById('slideDurationBubble');
 const SLIDE_EXP_KEY = 'slideshowExp';
-
 const yearControls = document.getElementById('year-controls');
 const yearSelect = document.getElementById('year-select');
-
 const scaleControls = document.getElementById('scale-controls');
 const scaleSelect = document.getElementById('scale-select');
-
 const dominanceControls = document.getElementById('dominance-controls');
 const dominanceSelect = document.getElementById('dominance-select');
-
 const priceOfControls = document.getElementById('priceof-controls');
 const priceOfSelect = document.getElementById('priceof-select');
-
 const coinControls = document.getElementById('coin-controls');
 const coinSelect = document.getElementById('coin-select');
-
 const myrControls = document.getElementById('myr-controls');
 const myrSelect = document.getElementById('myr-select');
 
@@ -47,14 +41,11 @@ let imageList = [];
 let visibleImages = [];
 let currentIndex = 0;
 let justUnstarredInModal = false;
-
 let userSelectedLayout = null;
 let showFavoritesOnly = localStorage.getItem('showFavoritesOnly') === 'true';
 let searchWasInitiallyClosed = true;
-
 let touchStartX = 0, touchEndX = 0;
 let touchStartY = 0, touchEndY = 0;
-
 let isPinching = false;
 let isPanning = false;
 let gestureConsumed = false;
@@ -63,15 +54,13 @@ let startScale = 1;
 let currentScale = 1;
 let pinchFocus = null;
 let lastTapTime = 0;
-const DOUBLE_TAP_DELAY = 300;
-
 let translateX = 0;
 let translateY = 0;
 let panStartX = 0;
 let panStartY = 0;
-
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
+const DOUBLE_TAP_DELAY = 300;
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -173,9 +162,13 @@ function getCookie(name) {
     return match ? decodeURIComponent(match.split('=')[1]) : null;
 }
 function replaceUrlForFilename(newFilename) {
+  const slug = newFilename.replace('.png', '');
+  if (location.hostname === 'localhost') {
+    location.hash = slug;
+  } else {
     const base = location.pathname.replace(/\/[^/]*$/, '');
-    const slug = newFilename.replace('.png', '');
     history.replaceState(null, '', `${base}/${slug}`);
+  }
 }
 function updateGridThumbAtCurrent(newFilename, newAlt) {
     const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
@@ -261,12 +254,12 @@ function screenPointToImageLocal(clientX, clientY) {
 }
 function computeBaseSizeAtScale1() {
     const vp = modal.getBoundingClientRect();
-    const offset = getControlsOffset();        // ← reserve top space for buttons
+    const offset = getControlsOffset();
     const nw = modalImg.naturalWidth || 1;
     const nh = modalImg.naturalHeight || 1;
     const maxW = vp.width * 0.95;
     const availH = Math.max(0, vp.height - offset);
-    const maxH = availH * 0.88;                // keep your 88% headroom, but within the available area
+    const maxH = availH * 0.88;
     const fit = Math.min(maxW / nw, maxH / nh, 1);
     return { baseW: nw * fit, baseH: nh * fit, vpW: vp.width, vpH: vp.height, offset, availH };
 }
@@ -275,25 +268,17 @@ function centerImageAtScale1() {
     const { baseW, baseH, vpW, vpH, offset } = computeBaseSizeAtScale1();
     currentScale = 1;
     translateX = (vpW - baseW) / 2;
-    // Center vertically within the area below the controls, not the whole viewport
     translateY = offset + ((vpH - offset) - baseH) / 2;
     applyTransform();
 }
 
-// Recenter (or re-clamp) the modal image after viewport changes.
-// Waits a frame so CSS --controls-offset has settled.
 let modalViewportRAF = null;
 function handleModalViewportChange() {
-    if (modal.style.display !== 'flex') return; // only when modal is open
-
-    // Coexist with your existing updateModalSafePadding() listeners
+    if (modal.style.display !== 'flex') return;
     updateModalSafePadding();
-
     if (modalViewportRAF) cancelAnimationFrame(modalViewportRAF);
     modalViewportRAF = requestAnimationFrame(() => {
-        // Give CSS vars one more frame to apply
         requestAnimationFrame(() => {
-            // If not zoomed-in, fully recenter; otherwise just keep it within bounds
             if (currentScale <= 1.001 && !isPinching && !isPanning && !modal.classList.contains('zoomed')) {
                 centerImageAtScale1();
             } else {
@@ -308,23 +293,17 @@ function handleModalViewportChange() {
 
 function clampPanToBounds() {
     const vp = modal.getBoundingClientRect();
-    const offset = getControlsOffset();        // ← reserve top band
+    const offset = getControlsOffset();
     const availH = Math.max(0, vp.height - offset);
-
     const imgRect = modalImg.getBoundingClientRect();
     const baseW = imgRect.width / currentScale;
     const baseH = imgRect.height / currentScale;
-
     const scaledW = baseW * currentScale;
     const scaledH = baseH * currentScale;
-
-    // Horizontal (unchanged)
     const minTx = Math.min(0, vp.width - scaledW);
     const maxTx = 0;
     if (scaledW <= vp.width) translateX = (vp.width - scaledW) / 2;
     else translateX = Math.max(minTx, Math.min(translateX, maxTx));
-
-    // Vertical — clamp within [offset + (availH - scaledH), offset]
     const minTy = offset + Math.min(0, availH - scaledH);
     const maxTy = offset;
     if (scaledH <= availH) {
@@ -334,9 +313,7 @@ function clampPanToBounds() {
     }
 }
 
-// How much vertical space (px) should be reserved for the modal controls?
 function getControlsOffset() {
-    // Only applies on small landscape (matches your CSS/media query)
     const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
     if (!isSmallLandscape) return 0;
     const v = parseFloat(getComputedStyle(modal).getPropertyValue('--controls-offset')) || 0;
@@ -500,21 +477,16 @@ function filterImages() {
     message.style.display = (showFavoritesOnly && visibleImages.length === 0) ? 'block' : 'none';
     visibleImages.forEach(({ filename, title, description }, index) => {
         const container = document.createElement('div');
-
         const titleElem = document.createElement('div');
         titleElem.className = 'chart-title';
         titleElem.textContent = title;
         titleElem.dataset.gridIndex = index;
-
         const chartContainer = document.createElement('div');
         chartContainer.className = 'chart-container';
-
         const chartWrapper = document.createElement('div');
         chartWrapper.className = 'chart-wrapper';
-
         const spinner = document.createElement('div');
         spinner.className = 'chart-loading';
-
         const img = document.createElement('img');
         img.className = 'grid-thumb';
         img.dataset.gridIndex = index;
@@ -524,7 +496,6 @@ function filterImages() {
         img.onerror = () => { spinner.remove(); img.style.opacity = 1; };
         img.onclick = () => openModalByIndex(index);
         img.src = `final_frames/${filename}`;
-
         const star = document.createElement('div');
         star.className = 'favorite-star';
         const favOn = isFavorite(filename);
@@ -533,17 +504,14 @@ function filterImages() {
         const favKeyForThisCard = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
         star.setAttribute('data-filename', favKeyForThisCard);
         star.onclick = (e) => { e.stopPropagation(); toggleFavorite(filename, star); };
-
         chartContainer.appendChild(star);
         chartWrapper.appendChild(spinner);
         chartWrapper.appendChild(img);
         chartContainer.appendChild(chartWrapper);
-
         const desc = document.createElement('div');
         desc.className = 'chart-description';
         desc.textContent = description;
         desc.dataset.gridIndex = index;
-
         chartContainer.appendChild(desc);
         container.appendChild(titleElem);
         container.appendChild(chartContainer);
@@ -671,7 +639,6 @@ function handleVerticalSwipe() {
     }
 }
 
-/* ===== Pinch & Pan on modal image ===== */
 modalImg.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
         isPinching = true; gestureConsumed = true;
@@ -1113,9 +1080,12 @@ function cycleMyrRange(direction) {
  * FETCH LIST / BUILD VIEW / DEEP LINKS
  * =========================== */
 function getImageNameFromPath() {
-    const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
-    if (!path) return null;
-    return path + '.png';
+  if (location.hash) {
+    return location.hash.replace(/^#/, '') + '.png';
+  }
+  const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+  if (!path) return null;
+  return path + '.png';
 }
 fetch("final_frames/image_list.json")
     .then(res => res.json())
@@ -1315,7 +1285,7 @@ function updateSlideDurationUI(fromUser = false) {
 function initSlideDurationControl() {
     if (!slideRange || !slideBubble) return;
     const saved = Number(localStorage.getItem(SLIDE_EXP_KEY));
-    const initial = Number.isFinite(saved) ? clampExp(saved) : 2; // Default exponent → 2^2 = 4 seconds
+    const initial = Number.isFinite(saved) ? clampExp(saved) : 2;
     slideRange.value = String(initial);
     requestAnimationFrame(() => updateSlideDurationUI(false));
     window.addEventListener('resize', () => positionBubble(slideRange, slideBubble));
@@ -1353,7 +1323,6 @@ function isSlideshowOpen() {
     return !!slideshowEl && !slideshowEl.classList.contains('hidden');
 }
 function focusSlideshowShell() {
-    // Ensure the first Esc keypress reaches us (even after entering fullscreen)
     try { slideshowEl?.focus(); } catch (_) { }
 }
 function getSlideDurationSecs() {
@@ -1408,7 +1377,7 @@ function playSlideshow() {
     if (!slideshowEl || !visibleImages?.length) return;
     slideshowPlaying = true;
     updatePlayButton();
-    showSlideshowUI(true);        // ⬅️ show & arm timer (only while playing)
+    showSlideshowUI(true);
     scheduleNextSlide();
 }
 
@@ -1416,11 +1385,9 @@ function pauseSlideshow() {
     slideshowPlaying = false;
     updatePlayButton();
     clearSlideshowTimer();
-
-    // Keep controls visible when paused and ensure no pending hide fires
     clearTimeout(slideshowUiTimer);
     slideshowUiTimer = null;
-    showSlideshowUI(false); // show UI and DO NOT arm idle timer
+    showSlideshowUI(false);
 }
 
 function togglePlayPause() { if (slideshowPlaying) pauseSlideshow(); else playSlideshow(); }
@@ -1437,19 +1404,16 @@ async function enterFullscreen(el) {
 /* ===========================
  * SLIDESHOW: auto-hide UI + cursor after inactivity (pause-aware)
  * =========================== */
-const UI_HIDE_DELAY_MS = 1500; // 1.5s
+const UI_HIDE_DELAY_MS = 1500;
 let slideshowUiTimer = null;
 
 function showSlideshowUI(armTimer = true) {
     if (!slideshowEl) return;
     slideshowEl.classList.add('show-ui');
     document.body.classList.remove('hide-cursor');
-
-    // Only (re)arm the idle timer while playing
     clearTimeout(slideshowUiTimer);
     if (armTimer && slideshowPlaying) {
         slideshowUiTimer = setTimeout(() => {
-            // Guard: if paused by the time this fires, do nothing
             if (!slideshowPlaying) return;
             hideSlideshowUI();
         }, UI_HIDE_DELAY_MS);
@@ -1460,9 +1424,7 @@ function showSlideshowUI(armTimer = true) {
 
 function hideSlideshowUI() {
     if (!slideshowEl) return;
-    // Don't hide while paused
     if (!slideshowPlaying) return;
-
     slideshowEl.classList.remove('show-ui');
     if (document.body.classList.contains('slideshow-open')) {
         document.body.classList.add('hide-cursor');
@@ -1472,12 +1434,9 @@ function hideSlideshowUI() {
 }
 
 function resetSlideshowUiHideTimer() {
-    // Keep behavior consistent with showSlideshowUI
     showSlideshowUI(true);
 }
 
-// Pointer/touch/wheel activity should reveal UI.
-// If paused, keep it visible with NO timer. If playing, re-arm timer.
 function onSlideshowActivity() {
     showSlideshowUI(slideshowPlaying);
 }
@@ -1501,21 +1460,13 @@ async function openSlideshow(startAt = 0, startPlaying = true) {
     if (!slideshowEl) return;
     if (!visibleImages || visibleImages.length === 0) return;
     if (modal && modal.style.display === 'flex') closeModal();
-
     slideshowEl.classList.remove('hidden');
     slideshowEl.classList.add('show-ui');
     slideshowEl.setAttribute('aria-hidden', 'false');
-
     document.body.style.overflow = 'hidden';
-    document.body.classList.add('slideshow-open');   // NEW: lock scroll via CSS
-
+    document.body.classList.add('slideshow-open');
     _applySlide(startAt);
-
-    // Try to enter fullscreen; some browsers will consume the first Esc to exit FS.
     await enterFullscreen(slideshowEl);
-
-    // NEW: focus the shell so Esc always reaches us next.
-    // Do it on the next frame to ensure the element is focusable/visible.
     requestAnimationFrame(focusSlideshowShell);
     bindSlideshowUiActivityListeners();
     if (startPlaying) {
@@ -1530,25 +1481,18 @@ async function openSlideshow(startAt = 0, startPlaying = true) {
 }
 async function closeSlideshow() {
     if (!slideshowEl) return;
-
-    // Stop timers/playback first
     pauseSlideshow();
     clearSlideshowTimer();
-    // Clean up auto-hide state
     unbindSlideshowUiActivityListeners();
     clearTimeout(slideshowUiTimer);
     slideshowUiTimer = null;
     document.body.classList.remove('hide-cursor');
-    // Ensure visible next time we open
     slideshowEl.classList.add('show-ui');
-    // Hide UI + restore page state
     slideshowEl.classList.add('hidden');
     slideshowEl.classList.remove('show-ui');
     slideshowEl.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     document.body.classList.remove('slideshow-open');
-
-    // Try to exit fullscreen if still in it (no-op if not)
     await exitFullscreen();
 }
 
@@ -1590,20 +1534,16 @@ ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowPrev
 ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); closeSlideshow(); });
 ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowNext(true); });
 ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); showSlideshowUI(slideshowPlaying); slideshowPrev(true); });
-// Robust Play/Pause button handler (click + keyboard)
 function onPlayPauseActivate(e) {
-    // Make button work with mouse AND keyboard (Enter/Space)
     if (e.type === 'keydown' && !(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
-
     e.stopPropagation();
     e.preventDefault();
-
     if (slideshowPlaying) {
-        pauseSlideshow();                 // sets slideshowPlaying=false and updates UI
-        showSlideshowUI(false);           // keep controls visible while paused (no idle timer)
+        pauseSlideshow();
+        showSlideshowUI(false);
     } else {
-        playSlideshow();                  // sets slideshowPlaying=true and updates UI
-        showSlideshowUI(true);            // visible & arm idle timer
+        playSlideshow();
+        showSlideshowUI(true);
     }
 }
 
@@ -1612,7 +1552,7 @@ if (!ssPlayPauseBtn) {
 } else {
     ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
     ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
-    ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
+    ssPlayPauseBtn.setAttribute('tabindex', '0');
     ssPlayPauseBtn.setAttribute('role', 'button');
 }
 
@@ -1621,7 +1561,7 @@ if (!ssPlayPauseBtn) {
 } else {
     ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
     ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
-    ssPlayPauseBtn.setAttribute('tabindex', '0'); // ensure focusable if not a <button>
+    ssPlayPauseBtn.setAttribute('tabindex', '0');
     ssPlayPauseBtn.setAttribute('role', 'button');
 }
 
@@ -1647,35 +1587,21 @@ slideRange?.addEventListener('input', () => restartSlideshowTimer());
  * SITE-WIDE: Option(Alt)+S starts slideshow (robust for macOS 'ß')
  * =========================== */
 function onOptionSStartSlideshow(e) {
-    // Only Alt/Option held (no Ctrl/Cmd/Shift)
     if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-
-    // Use physical key so macOS Option+S (ß) still matches
     if (e.code !== 'KeyS') return;
-
-    // Don't hijack when typing in a control
     const a = document.activeElement;
     if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.isContentEditable)) return;
-
-    // If slideshow is already open, let its own keys handle things
     const slideshowOpen = !!slideshowEl && !slideshowEl.classList.contains('hidden');
     if (slideshowOpen) return;
-
-    // Stop other listeners from interfering
     e.preventDefault();
     e.stopPropagation();
-
-    // Tidy UI & state
     kebabMenu?.classList.add('hidden');
     kebabBtn?.setAttribute('aria-expanded', 'false');
     if (modal && modal.style.display === 'flex') closeModal();
-
-    // Launch slideshow
     if (startSlideshowBtn) startSlideshowBtn.click();
     else if (typeof openSlideshow === 'function') openSlideshow(0, true);
 }
 
-// Use capture phase so we see the event before other handlers consume it
 document.addEventListener('keydown', onOptionSStartSlideshow, true);
 
 /* ===========================
