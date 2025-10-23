@@ -448,8 +448,8 @@ function updateLayoutBasedOnWidth() {
             searchBtn.classList.remove('active');
         }
         searchBtn.disabled = false;
-        if (userSelectedLayout === 'list') setLayout('list', false);
-        else setLayout('grid', false);
+        const preferred = userSelectedLayout || (imageGrid.classList.contains('list') ? 'list' : 'grid');
+        setLayout(preferred, false);
     }
 }
 function toggleSearch() {

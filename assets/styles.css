@@ -51,6 +51,55 @@ footer {
 /* ===========================
     TOP CONTROLS (layout/search/favorites)
     =========================== */
+.controls-row .toggle-icon,
+.controls-row .search-btn,
+.controls-row #favoritesToggle {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: #fff;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.controls-row .toggle-icon:hover,
+.controls-row .toggle-icon:focus,
+.controls-row .search-btn:hover,
+.controls-row .search-btn:focus,
+.controls-row #favoritesToggle:hover,
+.controls-row #favoritesToggle:focus {
+    border-color: #fff;
+    color: #fff;
+    background: transparent;
+}
+.controls-row .toggle-icon.active,
+.controls-row .search-btn.active,
+.controls-row #favoritesToggle.active {
+    border-color: var(--brand);
+    color: var(--brand);
+    background: transparent;
+}
+.controls-row .icon-grid div,
+.controls-row .icon-list div {
+    background-color: #fff;
+    transition: background-color 0.25s ease;
+}
+.controls-row .toggle-icon:hover .icon-grid div,
+.controls-row .toggle-icon:hover .icon-list div,
+.controls-row .toggle-icon:focus .icon-grid div,
+.controls-row .toggle-icon:focus .icon-list div {
+    background-color: #fff;
+}
+.controls-row .toggle-icon.active .icon-grid div,
+.controls-row .toggle-icon.active .icon-list div {
+    background-color: var(--brand);
+}
 .controls-row {
     display: flex;
     justify-content: center;
@@ -65,32 +114,20 @@ footer {
     justify-content: center;
 }
 .toggle-icon {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border);
-    color: #fff;
+    padding: 0.005rem 0.02rem;
+    border: 1px solid var(--brand);
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: var(--panel);
+    color: var(--brand);
     font-size: 1.2rem;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: inline-flex;
+    transition: box-shadow 0.2s, background-color 0.2s;
+    display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-.toggle-icon:hover,
-.toggle-icon:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--brand);
-    color: var(--brand);
-}
-
-.toggle-icon.active {
-    border-color: var(--brand);
-    color: var(--brand);
-    background: rgba(0, 0, 0, 0.4);
+    width: 30px;
+    height: 30px;
+    box-shadow: none;
 }
 .toggle-icon.active {
     box-shadow: 0 0 8px var(--brand);
@@ -140,30 +177,24 @@ footer {
     position: relative;
 }
 .search-btn {
-    width: 36px;
-    height: 36px;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border);
-    color: #fff;
+    width: 32px;
+    height: 32px;
+    padding: 0.005rem 0.02rem;
+    border: 1px solid var(--brand);
+    border-radius: 6px;
+    background-color: var(--panel);
+    color: var(--brand);
     font-size: 1.2rem;
-    border-radius: 8px;
-    display: inline-flex;
+    cursor: pointer;
+    box-shadow: none;
+    display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
 }
-.search-btn:hover,
-.search-btn:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--brand);
-    color: var(--brand);
-}
-.search-btn.active {
-    border-color: var(--brand);
-    color: var(--brand);
+.search-btn:not(.active):focus {
+    border-color: var(--border);
+    color: #fff;
+    background: transparent;
 }
 .search-btn.active {
     box-shadow: 0 0 8px var(--brand);
@@ -181,6 +212,18 @@ footer {
     font-family: monospace;
     font-size: 1rem;
     border-radius: 6px;
+}
+.search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+@supports selector(:focus-visible) {
+    .search-input:focus {
+        outline: none !important;
+    }
+    .search-input:focus-visible {
+        border-color: var(--brand);
+    }
 }
 .search-container.active .search-input {
     width: 200px;
@@ -589,31 +632,10 @@ body.slideshow-open.hide-cursor .slideshow * {
 .image-grid img,
 .favorite-star,
 #favoritesToggle {
-    font-size: 1.5rem;
-    line-height: 1;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border);
-    color: #fff;
-    border-radius: 8px;
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-#favoritesToggle:hover,
-#favoritesToggle:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--brand);
-    color: var(--brand);
-}
-#favoritesToggle.active {
-    border-color: var(--brand);
-    color: var(--brand);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 .image-grid img {
     -webkit-user-drag: auto;
