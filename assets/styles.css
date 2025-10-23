@@ -65,20 +65,32 @@ footer {
     justify-content: center;
 }
 .toggle-icon {
-    padding: 0.005rem 0.02rem;
-    border: 1px solid var(--brand);
-    cursor: pointer;
-    border-radius: 6px;
-    background-color: var(--panel);
-    color: var(--brand);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    color: #fff;
     font-size: 1.2rem;
-    transition: box-shadow 0.2s, background-color 0.2s;
-    display: flex;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
-    box-shadow: none;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.toggle-icon:hover,
+.toggle-icon:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+.toggle-icon.active {
+    border-color: var(--brand);
+    color: var(--brand);
+    background: rgba(0, 0, 0, 0.4);
 }
 .toggle-icon.active {
     box-shadow: 0 0 8px var(--brand);
@@ -128,19 +140,30 @@ footer {
     position: relative;
 }
 .search-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0.005rem 0.02rem;
-    border: 1px solid var(--brand);
-    border-radius: 6px;
-    background-color: var(--panel);
-    color: var(--brand);
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    color: #fff;
     font-size: 1.2rem;
-    cursor: pointer;
-    box-shadow: none;
-    display: flex;
+    border-radius: 8px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.search-btn:hover,
+.search-btn:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--brand);
+    color: var(--brand);
+}
+.search-btn.active {
+    border-color: var(--brand);
+    color: var(--brand);
 }
 .search-btn.active {
     box-shadow: 0 0 8px var(--brand);
@@ -566,10 +589,31 @@ body.slideshow-open.hide-cursor .slideshow * {
 .image-grid img,
 .favorite-star,
 #favoritesToggle {
+    font-size: 1.5rem;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    color: #fff;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+#favoritesToggle:hover,
+#favoritesToggle:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--brand);
+    color: var(--brand);
+}
+#favoritesToggle.active {
+    border-color: var(--brand);
+    color: var(--brand);
 }
 .image-grid img {
     -webkit-user-drag: auto;
