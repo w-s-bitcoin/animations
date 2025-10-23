@@ -345,7 +345,7 @@ footer {
 
 body.slideshow-open.hide-cursor .slideshow,
 body.slideshow-open.hide-cursor .slideshow * {
-  cursor: none !important;
+    cursor: none !important;
 }
 
 /* ===========================
@@ -731,7 +731,7 @@ body.slideshow-open.hide-cursor .slideshow * {
     top: 0.5rem;
     left: 1rem;
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     align-items: center;
     padding-bottom: 0.5rem;
     transition: transform 0.3s ease, opacity 0.3s ease;
@@ -812,23 +812,25 @@ body.slideshow-open.hide-cursor .slideshow * {
 .modal-controls button,
 .modal-controls .close-btn,
 #modal-fav-btn {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border);
-  color: #fff;
-  font-size: 1.2rem;          /* smaller text/icon size */
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;         /* rounded like slideshow but scaled down */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-tap-highlight-color: transparent;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    color: #fff;
+    font-size: 1.2rem;
+    /* smaller text/icon size */
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    /* rounded like slideshow but scaled down */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Hover/focus effects (same orange accent as slideshow) */
@@ -838,31 +840,32 @@ body.slideshow-open.hide-cursor .slideshow * {
 .modal-controls .close-btn:focus,
 #modal-fav-btn:hover,
 #modal-fav-btn:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--brand);
-  color: var(--brand);
-  outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--brand);
+    color: var(--brand);
+    outline: none;
 }
 
 /* Distinct look for the favorite (star) button when filled */
 #modal-fav-btn.filled {
-  color: var(--brand);
+    color: var(--brand);
 }
 
 /* Slightly larger close “X” button */
 .close-btn {
-  font-size: 1.6rem;
+    font-size: 1.6rem;
 }
 
 /* Optional: if you’d like the modal buttons to appear a bit tighter on small screens */
 @media (max-width: 640px) {
-  .modal-controls button,
-  .modal-controls .close-btn,
-  #modal-fav-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 1.1rem;
-  }
+
+    .modal-controls button,
+    .modal-controls .close-btn,
+    #modal-fav-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
@@ -889,20 +892,20 @@ body.slideshow-open.hide-cursor .slideshow * {
 .modal-controls .modal-link:not(.disabled):visited,
 .modal-controls .modal-link:not(.disabled):hover,
 .modal-controls .modal-link:not(.disabled):focus {
-  color: var(--brand) !important;
-  opacity: 1;
+    color: var(--brand) !important;
+    opacity: 1;
 }
 
 /* Be explicit for your IDs too (belt & suspenders) */
 #x-link:not(.disabled),
 #nostr-link:not(.disabled),
 #youtube-link:not(.disabled) {
-  color: var(--brand) !important;
+    color: var(--brand) !important;
 }
 
 /* Ensure icons track the link color */
 .modal-controls .modal-link svg {
-  fill: currentColor !important;
+    fill: currentColor !important;
 }
 
 /* ===========================
@@ -913,7 +916,7 @@ body.slideshow-open.hide-cursor .slideshow * {
 }
 
 body.slideshow-open {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .slideshow {
@@ -928,7 +931,7 @@ body.slideshow-open {
 }
 
 .slideshow:focus {
-  outline: none;
+    outline: none;
 }
 
 .slideshow-viewport {
@@ -955,7 +958,9 @@ body.slideshow-open {
 
 .slideshow-controls,
 .ss-edge,
-.slideshow-hint { z-index: 2; }
+.slideshow-hint {
+    z-index: 2;
+}
 
 .slideshow-controls {
     position: absolute;
@@ -983,23 +988,23 @@ body.slideshow-open {
 
 .ss-btn:focus-visible,
 .ss-edge:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
 }
 
 .ss-prev,
 .ss-next {
-  font-size: 1.4rem;
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border);
-  color: #fff;
-  cursor: pointer;
+    font-size: 1.4rem;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    color: #fff;
+    cursor: pointer;
 }
 
 .ss-exit {
@@ -1037,15 +1042,16 @@ body.slideshow-open {
 .ss-next {
     right: max(0.75rem, env(safe-area-inset-right));
 }
+
 .ss-btn,
 .ss-edge,
 .ss-prev,
 .ss-next {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .slideshow .slideshow-controls,
@@ -1062,8 +1068,13 @@ body.slideshow-open {
     pointer-events: auto;
 }
 
-.slideshow-controls { transition: opacity 0.25s ease, transform 0.25s ease; }
-.ss-edge { transition: opacity 0.25s ease, transform 0.25s ease; }
+.slideshow-controls {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.ss-edge {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
 
 .slideshow-hint {
     position: absolute;
@@ -1165,15 +1176,52 @@ body.slideshow-open {
     font-family: monospace;
     font-size: 1rem;
     color: #fff;
-    background: transparent;
-    border: none;
-    outline: none;
+    background: rgba(0, 0, 0, 0.4);
+    /* match modal buttons */
+    border: 1px solid var(--border);
+    /* match modal buttons */
+    border-radius: 8px;
+    /* match modal buttons */
+    height: 32px;
+    line-height: 32px;
+    /* helps iOS align text vertically */
+    padding: 0 1.6rem 0 0.5rem;
+    /* room for caret on the right */
     cursor: pointer;
-    padding-right: 1.6rem;
+    outline: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
+
+/* Orange accent on hover/focus (like buttons) */
+#year-select:hover,
+#year-select:focus,
+#scale-select:hover,
+#scale-select:focus,
+#dominance-select:hover,
+#dominance-select:focus,
+#priceof-select:hover,
+#priceof-select:focus,
+#coin-select:hover,
+#coin-select:focus,
+#myr-select:hover,
+#myr-select:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+/* Caret color reacts to hover/focus on its select */
+.select-wrap:focus-within::after,
+.select-wrap:focus-within::before,
+.select-wrap:hover::after,
+.select-wrap:hover::before {
+    border-top-color: var(--brand);
+    border-bottom-color: var(--brand);
+}
+
 
 .select-wrap::after {
     content: "";
