@@ -1464,7 +1464,6 @@ async function openSlideshow(startAt = 0, startPlaying = true) {
     // NEW: focus the shell so Esc always reaches us next.
     // Do it on the next frame to ensure the element is focusable/visible.
     requestAnimationFrame(focusSlideshowShell);
-    showSlideshowUI(slideshowPlaying);
     bindSlideshowUiActivityListeners();
     if (startPlaying) {
         slideshowPlaying = true;
@@ -1474,6 +1473,7 @@ async function openSlideshow(startAt = 0, startPlaying = true) {
         slideshowPlaying = false;
         updatePlayButton();
     }
+    showSlideshowUI(slideshowPlaying);
 }
 async function closeSlideshow() {
     if (!slideshowEl) return;
