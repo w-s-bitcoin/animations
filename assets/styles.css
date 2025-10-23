@@ -240,22 +240,41 @@ footer {
     z-index: 2000;
 }
 .kebab-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    line-height: 1;
-    border: 1px solid var(--brand);
-    border-radius: 6px;
-    background-color: var(--panel);
-    color: var(--brand);
-    font-size: 1.3rem;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: none;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  line-height: 1;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: border-color .25s ease, color .25s ease;
+}
+.kebab-btn:hover,
+.kebab-btn:focus,
+.kebab-btn:focus-visible {
+  border-color: #fff;
+  color: #fff;
+  outline: none;
+}
+.kebab-btn[aria-expanded="true"] {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+.kebab-btn[aria-expanded="true"]:hover,
+.kebab-btn[aria-expanded="true"]:focus,
+.kebab-btn[aria-expanded="true"]:focus-visible {
+  border-color: var(--brand);
+  color: var(--brand);
+  outline: none;
 }
 .kebab-menu {
     position: absolute;
