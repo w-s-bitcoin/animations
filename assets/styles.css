@@ -274,7 +274,7 @@ footer {
     border-color: var(--brand);
     color: var(--brand);
     box-shadow: 0 0 8px var(--brand);
-    background-color: #333;
+    background-color: transparent;
 }
 .kebab-btn[aria-expanded='true']:hover,
 .kebab-btn[aria-expanded='true']:focus,
@@ -282,7 +282,7 @@ footer {
     border-color: var(--brand);
     color: var(--brand);
     box-shadow: 0 0 8px var(--brand);
-    background-color: #333;
+    background-color: transparent;
     outline: none;
 }
 .kebab-menu {
