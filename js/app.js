@@ -272,6 +272,19 @@ function centerImageAtScale1() {
     applyTransform();
 }
 
+function resetZoomAndCenterAnimated() {
+  const { baseW, baseH, vpW, vpH, offset } = computeBaseSizeAtScale1();
+  currentScale = 1;
+  translateX = (vpW - baseW) / 2;
+  translateY = offset + ((vpH - offset) - baseH) / 2;
+  modalImg.style.transition = 'transform 0.25s ease-out';
+  applyTransform();
+  modal.classList.remove('zoomed');
+  pinchFocus = null;
+  setTimeout(() => { modalImg.style.transition = ''; }, 300);
+}
+
+
 let modalViewportRAF = null;
 function handleModalViewportChange() {
     if (modal.style.display !== 'flex') return;
@@ -691,25 +704,6 @@ modalImg.addEventListener('touchend', (e) => {
     }
 });
 
-modalImg.addEventListener('touchend', (e) => {
-    const now = Date.now();
-    if (e.touches.length === 0 && e.changedTouches.length === 1 && !isPinching && !isPanning) {
-        const delta = now - lastTapTime; lastTapTime = now;
-        if (delta < DOUBLE_TAP_DELAY) {
-            e.preventDefault();
-            const { baseW, baseH, vpW, vpH } = computeBaseSizeAtScale1();
-            currentScale = 1;
-            translateX = (vpW - baseW) / 2;
-            translateY = (vpH - baseH) / 2;
-            modalImg.style.transition = 'transform 0.25s ease-out';
-            applyTransform();
-            modal.classList.remove('zoomed');
-            pinchFocus = null;
-            setTimeout(() => { modalImg.style.transition = ''; }, 300);
-        }
-    }
-});
-
 modalImg.addEventListener('dblclick', (e) => {
     e.preventDefault();
     const { baseW, baseH, vpW, vpH } = computeBaseSizeAtScale1();
@@ -721,6 +715,11 @@ modalImg.addEventListener('dblclick', (e) => {
     modal.classList.remove('zoomed');
     pinchFocus = null;
     setTimeout(() => { modalImg.style.transition = ''; }, 300);
+});
+
+modalImg.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+    resetZoomAndCenterAnimated();
 });
 
 modalImg.addEventListener('touchcancel', () => {
