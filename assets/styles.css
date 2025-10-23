@@ -806,6 +806,65 @@ body.slideshow-open.hide-cursor .slideshow * {
     color: var(--brand);
 }
 
+/* ===========================
+   MODAL BUTTONS (match slideshow style, smaller)
+   =========================== */
+.modal-controls button,
+.modal-controls .close-btn,
+#modal-fav-btn {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border);
+  color: #fff;
+  font-size: 1.2rem;          /* smaller text/icon size */
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;         /* rounded like slideshow but scaled down */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover/focus effects (same orange accent as slideshow) */
+.modal-controls button:hover,
+.modal-controls button:focus,
+.modal-controls .close-btn:hover,
+.modal-controls .close-btn:focus,
+#modal-fav-btn:hover,
+#modal-fav-btn:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--brand);
+  color: var(--brand);
+  outline: none;
+}
+
+/* Distinct look for the favorite (star) button when filled */
+#modal-fav-btn.filled {
+  color: var(--brand);
+}
+
+/* Slightly larger close “X” button */
+.close-btn {
+  font-size: 1.6rem;
+}
+
+/* Optional: if you’d like the modal buttons to appear a bit tighter on small screens */
+@media (max-width: 640px) {
+  .modal-controls button,
+  .modal-controls .close-btn,
+  #modal-fav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+}
+
 @media (max-width: 900px) and (orientation: landscape) {
     .modal {
         padding-top: var(--controls-offset, 1.5rem);
@@ -822,6 +881,28 @@ body.slideshow-open.hide-cursor .slideshow * {
             padding-top: max(var(--controls-offset, 1.5rem), env(safe-area-inset-top));
         }
     }
+}
+
+/* Keep post links orange in all interactive states (unless .disabled) */
+.modal-controls .modal-link:not(.disabled),
+.modal-controls .modal-link:not(.disabled):link,
+.modal-controls .modal-link:not(.disabled):visited,
+.modal-controls .modal-link:not(.disabled):hover,
+.modal-controls .modal-link:not(.disabled):focus {
+  color: var(--brand) !important;
+  opacity: 1;
+}
+
+/* Be explicit for your IDs too (belt & suspenders) */
+#x-link:not(.disabled),
+#nostr-link:not(.disabled),
+#youtube-link:not(.disabled) {
+  color: var(--brand) !important;
+}
+
+/* Ensure icons track the link color */
+.modal-controls .modal-link svg {
+  fill: currentColor !important;
 }
 
 /* ===========================

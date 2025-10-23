@@ -261,20 +261,25 @@ function screenPointToImageLocal(clientX, clientY) {
 }
 function computeBaseSizeAtScale1() {
     const vp = modal.getBoundingClientRect();
+    const offset = getControlsOffset();        // ← reserve top space for buttons
     const nw = modalImg.naturalWidth || 1;
     const nh = modalImg.naturalHeight || 1;
     const maxW = vp.width * 0.95;
-    const maxH = vp.height * 0.88;
+    const availH = Math.max(0, vp.height - offset);
+    const maxH = availH * 0.88;                // keep your 88% headroom, but within the available area
     const fit = Math.min(maxW / nw, maxH / nh, 1);
-    return { baseW: nw * fit, baseH: nh * fit, vpW: vp.width, vpH: vp.height };
+    return { baseW: nw * fit, baseH: nh * fit, vpW: vp.width, vpH: vp.height, offset, availH };
 }
+
 function centerImageAtScale1() {
-    const { baseW, baseH, vpW, vpH } = computeBaseSizeAtScale1();
+    const { baseW, baseH, vpW, vpH, offset } = computeBaseSizeAtScale1();
     currentScale = 1;
     translateX = (vpW - baseW) / 2;
-    translateY = (vpH - baseH) / 2;
+    // Center vertically within the area below the controls, not the whole viewport
+    translateY = offset + ( (vpH - offset) - baseH ) / 2;
     applyTransform();
 }
+
 function clampPanToBounds() {
     const vp = modal.getBoundingClientRect();
     const imgRect = modalImg.getBoundingClientRect();
@@ -290,6 +295,14 @@ function clampPanToBounds() {
     else translateX = Math.max(minTx, Math.min(translateX, maxTx));
     if (scaledH <= vp.height) translateY = (vp.height - scaledH) / 2;
     else translateY = Math.max(minTy, Math.min(translateY, maxTy));
+}
+// How much vertical space (px) should be reserved for the modal controls?
+function getControlsOffset() {
+  // Only applies on small landscape (matches your CSS/media query)
+  const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
+  if (!isSmallLandscape) return 0;
+  const v = parseFloat(getComputedStyle(modal).getPropertyValue('--controls-offset')) || 0;
+  return Math.max(0, v);
 }
 
 /* ===========================
