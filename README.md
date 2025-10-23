@@ -1,9 +1,9 @@
 # 🍎 Wicked Smart Bitcoin
 
-**Live Site:** [https://wickedsmartbitcoin.com](https://wickedsmartbitcoin.com)  
-**Repository:** [https://github.com/w-s-bitcoin/animations](https://github.com/w-s-bitcoin/animations)
+**Live Site:** https://wickedsmartbitcoin.com  
+**Repository:** https://github.com/w-s-bitcoin/animations
 
-Bitcoin visualizations, updated daily from live blockchain and market data.  
+Bitcoin visualizations, updated hourly/daily from live blockchain and market data.  
 Each chart is generated automatically by a local cron job, committed to this GitHub repository, and hosted via GitHub Pages.
 
 ---
@@ -25,82 +25,90 @@ The site dynamically loads an `image_list.json` manifest containing metadata for
 - Supports **grid** and **list** layouts with a responsive design.
 
 ### ⭐ Favorites
-- Users can star images to mark favorites.
-- Favorites persist via `localStorage` and can be toggled in the header.
-- A **⋯ menu** in the top-right corner includes:
-  - **★ Star All** — adds every visualization to favorites  
-  - **☆ Unstar All** — removes all favorites  
+- Star images to mark favorites (persisted via `localStorage`).
+- Header star toggle for **Favorites-only** view.
+- ⋯ menu actions:
+  - **★ Star All** — add every visualization to favorites  
+  - **☆ Unstar All** — remove all favorites  
+- Special handling for the **Price Of** series: one favorite key represents the whole set, so favoriting “Price Of” applies across all “price_of_*” images.
 
 ### 🔍 Search & Filtering
 - Expandable search bar with smooth animation.
-- Filters images by title and description text in real time.
-- Favorites-only view can be toggled via the top star button.
+- Filters images by title and/or description (you can toggle which fields are searched from the ⋯ menu).
+- Works live as you type.
 
-### 🔢 Dropdown Controls
-Interactive dropdowns appear dynamically in the modal for special chart groups:
-- **Bitcoin vs Gold** → Choose starting year  
-- **Days at a Loss** → Linear / Log scale  
-- **Dominance** → USD / BTC units  
-- **Price Of** → Select items (e.g., beef, electricity, eggs, etc.)  
-- **Coins** → Select coin type (wholecoin, pi-coin, etc.)  
-- **Monthly / Yearly Returns** → Choose 5-year window  
+### 🔢 Contextual Dropdowns (in the modal)
+When a chart is opened, context-specific controls appear at the top of the modal:
+- **Bitcoin vs Gold** → Choose starting **year**  
+- **Days at a Loss** → **Linear / Log** scale  
+- **Dominance** → **USD / BTC** units  
+- **Price Of** → Select the item (e.g., beef, electricity, eggs, etc.)  
+- **Coins** → Choose coin type (wholecoin, π-coin, …)  
+- **Monthly / Yearly Returns** → Pick a 5-year range
 
-### 🖐️ Touch & Gesture Support
-- Swipe left/right to navigate between images.  
-- Swipe up/down to hide or show modal controls.  
-- Pinch to zoom and drag (pan) while zoomed in.  
-- Double-tap or double-click to reset and recenter the image.
+### 🖱️ Modal Viewer
+- Click a card to open a dedicated full-screen **modal** viewer.
+- **Pinch-to-zoom** and **drag/pan** while zoomed.
+- **Double-tap/double-click** to reset zoom and re-center.
+- **Swipe left/right** (touch) or use **← / →** keys to navigate.
+- **Swipe up/down** (touch) to hide/show the modal controls.
+- **Social links** (X / Nostr / YouTube) open latest posts.
 
-### 💾 Deep Linking
-- Each visualization is addressable by URL (e.g.  
-  `https://wickedsmartbitcoin.com/price_distribution`)  
-- When opened directly, the corresponding modal opens automatically.
+### 🎬 Slideshow (full-screen)
+- Starts at the current image set (**visible** images after filters/favorites).
+- **Play/Pause**: click the **▸ / ။** button or hit **Space**  
+- **Next/Prev**: click the edge buttons or press **→ / ←**.
+- **Exit**: click **×** or press **Esc**.
+- **Auto-hide UI & cursor** while **playing**: controls fade out after **1.5s** of no pointer activity and reappear on movement/tap. While **paused**, controls remain visible.
+- **Duration control** in ⋯ menu (2ˣ seconds, x=1..6) with a live bubble indicator.
+- **Global shortcut**: **Option (Alt) + S** starts the slideshow from anywhere (if it isn’t already open).
 
-### 🕒 Automation
-- A local cron job runs daily, regenerating updated PNG charts.  
-- The cron job commits new images to GitHub, triggering a GitHub Pages update.
+### 🔗 Deep Linking
+- Every visualization has a stable URL:
+  - On production (GitHub Pages / custom domain), URLs look like:  
+    `https://wickedsmartbitcoin.com/<slug>` (e.g., `/days_at_a_loss`)
+  - In local development, deep links use the **hash** form:  
+    `http://localhost:8080/#<slug>`  
+- Opening a deep link loads the gallery and automatically opens the matching image (or the appropriate “representative card” for dynamic series such as **Price Of** or **Coins**).
+
+### 🧠 Persistence
+- **Favorites**, **layout** (grid/list), search field preferences, and dropdown selections (e.g., BVG year, DAL scale, Dominance unit, Price Of item, Coin type) are saved to `localStorage` / cookies.
 
 ---
 
 ## 🧩 File Structure
 
 ```
-├── index.html              # Main webpage and layout
-├── assets/
-│   ├── favicon.png
-│   └── styles.css          # All styling and responsive rules
-├── js/
-│   └── app.js              # Core site logic (rendering, modals, gestures, storage)
+├── index.html
+├── styles.css
+├── app.js
 ├── final_frames/
-│   ├── image_list.json     # Metadata manifest of all PNGs
-│   ├── *.png               # Visualization images generated by cron job
-└── README.md               # This file
+│   ├── image_list.json
+│   └── *.png
+└── README.md
 ```
+
+> Note: The app expects `final_frames/image_list.json` and PNGs in `final_frames/`.
 
 ---
 
 ## 🧠 How It Works
 
-1. **Data Generation (Backend Automation)**
-   - Python scripts (outside this repo) generate Bitcoin visualizations daily.
-   - The images and an updated `image_list.json` are pushed to GitHub via a local cron job.
+1. **Data Generation (Offline / Cron)**
+   - External scripts generate daily PNGs and update `final_frames/image_list.json`.
+   - Those changes are pushed to GitHub.
 
-2. **Frontend Rendering (Static Site)**
+2. **Frontend Rendering (Static)**
    - On page load, `app.js` fetches `final_frames/image_list.json`.
-   - Images are rendered dynamically with interactive behavior.
-   - State (favorites, layout, filters, dropdowns) is managed using `localStorage` and cookies.
+   - The grid/list is composed dynamically, and the modal/slideshow features are wired up.
+   - UI state is kept in the browser (no server needed).
 
 3. **Hosting**
-   - The website is hosted via GitHub Pages at  
-     [`http://w-s-bitcoin.github.io/animations/`](http://w-s-bitcoin.github.io/animations/)  
-     and routed to the custom domain  
-     [`https://wickedsmartbitcoin.com`](https://wickedsmartbitcoin.com).
+   - Hosted via GitHub Pages and routed to `https://wickedsmartbitcoin.com`.
 
 ---
 
 ## ⚙️ Local Development
-
-To preview locally:
 
 ```bash
 # Clone the repository
@@ -112,15 +120,43 @@ python3 -m http.server 8080
 ```
 
 Then visit:  
-👉 [http://localhost:8080](http://localhost:8080)
+👉 http://localhost:8080
+
+**Deep linking locally:** use the hash form, e.g.  
+`http://localhost:8080/#days_at_a_loss` (not `/days_at_a_loss`).
+
+---
+
+## ⌨️ Keyboard & Touch Shortcuts
+
+**Gallery (modal closed)**
+- **Alt/Option + S** — start slideshow
+
+**Modal**
+- **← / →** — previous / next image  
+- **Space** — close modal  
+- **Esc** — close modal  
+- **Double-click** — reset zoom and re-center
+
+**Slideshow**
+- **Space** — play/pause  
+- **← / →** — previous / next  
+- **Esc** — exit
+
+**Touch**
+- **Swipe left/right** — previous/next (modal)  
+- **Swipe up/down** — hide/show modal controls  
+- **Pinch** — zoom; **drag** — pan while zoomed  
+- **Double-tap** — reset zoom and re-center
 
 ---
 
 ## 📱 Accessibility & Compatibility
 
 - Fully responsive (mobile, tablet, desktop)
-- Works offline once loaded (no server dependencies)
-- Compatible with modern browsers (Chrome, Safari, Firefox, Edge)
+- Focusable, keyboard-operable controls; button labels and ARIA states updated on play/pause
+- Works offline once loaded (static files)
+- Modern browsers (Chrome, Safari, Firefox, Edge)
 
 ---
 
@@ -148,10 +184,10 @@ Openly viewable for educational purposes; redistribution or reuse of images requ
 
 ## 🍎 Author
 
-**Wicked**  
+**Wicked**
 Bitcoin researcher & data analyst  
 🌐 [wickedsmartbitcoin.com](https://wickedsmartbitcoin.com)  
-🐦 [X @w_s_bitcoin](https://x.com/w_s_bitcoin)  
+𝕏 [@w_s_bitcoin](https://x.com/w_s_bitcoin)  
 📺 [YouTube @wickedsmartbitcoin](https://www.youtube.com/@wickedsmartbitcoin)  
 💜 [Nostr @wicked](https://primal.net/wicked)  
 💻 [GitHub @w-s-bitcoin](https://github.com/w-s-bitcoin)
