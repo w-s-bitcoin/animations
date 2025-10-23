@@ -48,6 +48,8 @@ let touchStartX = 0, touchEndX = 0;
 let touchStartY = 0, touchEndY = 0;
 let isPinching = false;
 let isPanning = false;
+let isMousePanning = false;
+let mouseHadMoved = false;
 let gestureConsumed = false;
 let startPinchDistance = 0;
 let startScale = 1;
@@ -124,26 +126,21 @@ const BVG_BASE = 'bitcoin_vs_gold';
 const BVG_STORAGE_KEY = 'bvgYear';
 const THIS_YEAR = new Date().getFullYear();
 const BVG_YEARS = Array.from({ length: THIS_YEAR - 2013 + 1 }, (_, i) => THIS_YEAR - i);
-
 const DAL_BASE = 'days_at_a_loss';
 const DAL_STORAGE_KEY = 'dalScale';
 const DAL_SCALES = ['linear', 'log'];
-
 const DOM_BASE = 'bitcoin_dominance';
 const DOM_STORAGE_KEY = 'dominanceUnit';
 const DOM_UNITS = ['usd', 'btc'];
-
 const POF_BASE = 'price_of_';
 const POF_STORAGE_KEY = 'pofItem';
 const POF_FAV_KEY = 'price_of_*';
 let PRICE_OF_OPTIONS = [];
 let PRICE_OF_META = {};
-
 const COIN_STORAGE_KEY = 'coinType';
 const COIN_ORDER = ['wholecoins', 'pi_coins', 'v_coins', 'x_coins', 'l_coins', 'c_coins', 'd_coins', 'm_coins'];
 let COIN_OPTIONS = [];
 let COIN_META = {};
-
 const MYR_BASE = 'monthly_yearly_returns';
 const MYR_START_YEAR = 2010;
 const MYR_DEFAULT_RANGE = `${THIS_YEAR - 4} - ${THIS_YEAR}`;
@@ -267,7 +264,6 @@ function computeBaseSizeAtScale1() {
     const fit = Math.min(maxW / nw, maxH / nh, 1);
     return { baseW: nw * fit, baseH: nh * fit, vpW: vp.width, vpH: vp.height, offset, availH };
 }
-
 function centerImageAtScale1() {
     const { baseW, baseH, vpW, vpH, offset } = computeBaseSizeAtScale1();
     currentScale = 1;
@@ -275,7 +271,6 @@ function centerImageAtScale1() {
     translateY = offset + ((vpH - offset) - baseH) / 2;
     applyTransform();
 }
-
 function resetZoomAndCenterAnimated() {
     const { baseW, baseH, vpW, vpH, offset } = computeBaseSizeAtScale1();
     currentScale = 1;
@@ -287,7 +282,6 @@ function resetZoomAndCenterAnimated() {
     pinchFocus = null;
     setTimeout(() => { modalImg.style.transition = ''; }, 300);
 }
-
 function zoomToPoint(targetScale, clientX, clientY) {
     const { u, v, xRel, yRel } = screenPointToImageLocal(clientX, clientY);
     currentScale = clamp(targetScale, MIN_SCALE, MAX_SCALE);
@@ -299,7 +293,6 @@ function zoomToPoint(targetScale, clientX, clientY) {
     applyTransform();
     setTimeout(() => { modalImg.style.transition = ''; }, 220);
 }
-
 function handleDoubleTap(clientX, clientY) {
     gestureConsumed = true;
     if (currentScale <= 1.001) {
@@ -308,7 +301,6 @@ function handleDoubleTap(clientX, clientY) {
         resetZoomAndCenterAnimated();
     }
 }
-
 let modalViewportRAF = null;
 function handleModalViewportChange() {
     if (modal.style.display !== 'flex') return;
@@ -326,8 +318,6 @@ function handleModalViewportChange() {
         });
     });
 }
-
-
 function clampPanToBounds() {
     const { baseW, baseH, vpW, availH, offset } = computeBaseSizeAtScale1();
     const scaledW = baseW * currentScale;
@@ -347,7 +337,6 @@ function clampPanToBounds() {
         translateY = Math.max(minTy, Math.min(translateY, maxTy));
     }
 }
-
 function getControlsOffset() {
     const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
     if (!isSmallLandscape) return 0;
@@ -583,10 +572,8 @@ function openModalByIndex(index) {
     setTimeout(updateModalSafePadding, 0);
     document.body.style.overflow = 'hidden';
     setModalLinks({ x: image.latest_x || '', nostr: image.latest_nostr || '', youtube: image.latest_youtube || '' });
-
     populateYearSelect();
     const fname = image.filename;
-
     if (isBvgFile(fname)) {
         showYearControls(true); showScaleControls(false); showPriceOfControls(false); showDominanceControls(false); showCoinControls(false); showMyrControls(false);
         const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
@@ -632,7 +619,6 @@ function openModalByIndex(index) {
         modalImg.alt = image.title;
         replaceUrlForFilename(fname);
     }
-
     const fav = isFavorite(visibleImages[currentIndex].filename);
     modalFavBtn.textContent = fav ? '★' : '☆';
     modalFavBtn.classList.toggle('filled', fav);
@@ -673,7 +659,6 @@ function handleVerticalSwipe() {
         else controls.classList.remove('hidden');
     }
 }
-
 modalImg.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
         isPinching = true; gestureConsumed = true;
@@ -693,8 +678,6 @@ modalImg.addEventListener('touchstart', (e) => {
         }
     }
 }, { passive: false });
-
-
 modalImg.addEventListener('touchmove', (e) => {
     if (isPinching && e.touches.length === 2) {
         e.preventDefault();
@@ -718,7 +701,6 @@ modalImg.addEventListener('touchmove', (e) => {
         if (dx > MAX_TAP_MOVE_PX || dy > MAX_TAP_MOVE_PX) singleTapMoved = true;
     }
 }, { passive: false });
-
 modalImg.addEventListener('touchend', (e) => {
     if (isPinching && e.touches.length === 1) {
         isPinching = false; pinchFocus = null; isPanning = currentScale > 1;
@@ -759,11 +741,9 @@ modalImg.addEventListener('touchend', (e) => {
         setTimeout(() => { gestureConsumed = false; }, 0);
     }
 });
-
 let lastDownTime = 0;
 let lastDownX = 0;
 let lastDownY = 0;
-
 modalImg.addEventListener('pointerdown', (e) => {
     if (e.pointerType !== 'mouse') return;
     modalImg.style.transition = '';
@@ -785,18 +765,54 @@ modalImg.addEventListener('pointerdown', (e) => {
         lastDownTime = 0; lastDownX = 0; lastDownY = 0;
         return;
     }
-
     lastDownTime = now;
     lastDownX = x;
     lastDownY = y;
 }, { passive: false });
-
+modalImg.addEventListener('mousedown', (e) => {
+    if (e.button !== 0 || currentScale <= 1.001) return;
+    e.preventDefault();
+    gestureConsumed = true;
+    isMousePanning = true;
+    mouseHadMoved = false;
+    panStartX = e.clientX - translateX;
+    panStartY = e.clientY - translateY;
+    modalImg.style.cursor = 'grabbing';
+    modal.classList.add('zoomed');
+});
+window.addEventListener('mousemove', (e) => {
+    if (!isMousePanning) return;
+    const nx = e.clientX - panStartX;
+    const ny = e.clientY - panStartY;
+    if (Math.abs(nx - translateX) > 0.5 || Math.abs(ny - translateY) > 0.5) {
+        mouseHadMoved = true;
+    }
+    translateX = nx;
+    translateY = ny;
+    clampPanToBounds();
+    applyTransform();
+});
+function endMousePan() {
+    if (!isMousePanning) return;
+    isMousePanning = false;
+    modalImg.style.cursor = '';
+    setTimeout(() => { gestureConsumed = false; }, 0);
+}
+window.addEventListener('mouseup', endMousePan);
+window.addEventListener('mouseleave', endMousePan);
+modalImg.addEventListener('click', (e) => {
+    if (mouseHadMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    mouseHadMoved = false;
+}, true);
 modalImg.addEventListener('touchcancel', () => {
     isPinching = false; isPanning = false; pinchFocus = null;
     if (currentScale <= 1.001) { currentScale = 1; modal.classList.remove('zoomed'); centerImageAtScale1(); }
     gestureConsumed = false;
 });
-
+modalImg.addEventListener('dragstart', (e) => e.preventDefault());
 function prevImage() {
     if (justUnstarredInModal) { justUnstarredInModal = false; filterImages(); }
     const prevIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
@@ -1159,30 +1175,23 @@ fetch("final_frames/image_list.json")
     .then(res => res.json())
     .then(data => {
         imageList = data;
-
         MYR_RANGES = buildMyrRanges(MYR_START_YEAR, THIS_YEAR);
         populateMyrSelect();
-
         buildPriceOfOptionsFromList(imageList);
         populatePriceOfSelect();
-
         buildCoinOptionsFromList(imageList);
         populateCoinSelect();
-
         const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
         const coinsAll = imageList.filter(img => coinSet.has(img.filename));
         const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
-
         const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
         let insertIdx = firstCoinIdx !== -1
             ? firstCoinIdx
             : nonCoins.findIndex(img => img.filename.startsWith('bitcoin_dominance')) + 1;
         if (insertIdx < 0) insertIdx = nonCoins.length;
-
         const initialFilename = getImageNameFromPath();
         let urlPofSlug = null;
         let urlCoinSlug = null;
-
         if (initialFilename && initialFilename.startsWith(POF_BASE)) {
             const s = pofSlugFromFilename(initialFilename);
             if (s && PRICE_OF_OPTIONS.some(o => o.slug === s)) { urlPofSlug = s; setStoredPofItem(s); }
@@ -1191,10 +1200,8 @@ fetch("final_frames/image_list.json")
             const s = coinSlugFromFilename(initialFilename);
             if (s && COIN_ORDER.includes(s)) { urlCoinSlug = s; setStoredCoinSlug(s); }
         }
-
         const storedCoinSlug = getStoredCoinSlug();
         const repCoinMeta = COIN_META[storedCoinSlug] || COIN_META['wholecoins'] || COIN_OPTIONS[0];
-
         let coinCard = null;
         if (repCoinMeta) {
             coinCard = {
@@ -1206,19 +1213,16 @@ fetch("final_frames/image_list.json")
                 latest_youtube: repCoinMeta.latest_youtube || ''
             };
         }
-
         if (coinCard) {
             imageList = [...nonCoins.slice(0, insertIdx), coinCard, ...nonCoins.slice(insertIdx)];
         } else {
             imageList = nonCoins;
         }
-
         const storedPofSlug = getStoredPofItem();
         const repFilename = pofFilenameForSlug(storedPofSlug);
         const repMeta = PRICE_OF_META[storedPofSlug];
         const nonPof = imageList.filter(img => !isPriceOfFile(img.filename));
         const pofAll = imageList.filter(img => isPriceOfFile(img.filename));
-
         let pofCard = null;
         if (pofAll.length) {
             const chosen = pofAll.find(img => img.filename === repFilename) || pofAll[0];
@@ -1232,7 +1236,6 @@ fetch("final_frames/image_list.json")
                 latest_youtube: repMeta?.latest_youtube || ''
             };
         }
-
         if (pofCard) {
             const gwIdx = nonPof.findIndex(img => img.filename.startsWith('global_wealth'));
             if (gwIdx !== -1) {
@@ -1243,45 +1246,37 @@ fetch("final_frames/image_list.json")
         } else {
             imageList = nonPof;
         }
-
         visibleImages = [...imageList];
         migratePriceOfFavorites();
         filterImages();
-
         let urlBvgYear = null;
         if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
             const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
             if (m && isValidBvgYear(m[1])) { urlBvgYear = m[1]; setStoredBvgYear(urlBvgYear); }
         }
-
         let urlDalScale = null;
         if (initialFilename && initialFilename.startsWith(DAL_BASE)) {
             if (initialFilename === `${DAL_BASE}_log.png`) urlDalScale = 'log';
             else if (initialFilename === `${DAL_BASE}.png`) urlDalScale = 'linear';
             if (urlDalScale) setStoredDalScale(urlDalScale);
         }
-
         let urlDomUnit = null;
         if (initialFilename && initialFilename.startsWith(DOM_BASE)) {
             if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = 'btc';
             else if (initialFilename === `${DOM_BASE}.png`) urlDomUnit = 'usd';
             if (urlDomUnit) setStoredDominanceUnit(urlDomUnit);
         }
-
         const storedBvgYear = getStoredBvgYear();
         imageList = imageList.map(img => (img.filename.startsWith(BVG_BASE) ? { ...img, filename: `${BVG_BASE}_${storedBvgYear}.png` } : img));
         const storedDalScale = getStoredDalScale();
         imageList = imageList.map(img => (img.filename.startsWith(DAL_BASE) ? { ...img, filename: dalFilenameForScale(storedDalScale) } : img));
         const storedDomUnit = getStoredDominanceUnit();
         imageList = imageList.map(img => (img.filename.startsWith(DOM_BASE) ? { ...img, filename: domFilenameForUnit(storedDomUnit) } : img));
-
         visibleImages = [...imageList];
         filterImages();
-
         const savedLayout = localStorage.getItem('preferredLayout');
         if (savedLayout === 'list' || savedLayout === 'grid') setLayout(savedLayout, false);
         if (showFavoritesOnly) document.getElementById('favoritesToggle').classList.add('active');
-
         if (initialFilename) {
             let opened = false;
             let openIdx = -1;
@@ -1413,7 +1408,6 @@ function _applySlide(idx) {
     slideshowImg.alt = alt;
     slideshowImg.src = `final_frames/${item.filename}`;
 }
-
 function setSlideshowImage(idx, restartTimer = false) {
     _applySlide(idx);
     if (restartTimer) restartSlideshowTimer();
@@ -1448,7 +1442,6 @@ function playSlideshow() {
     showSlideshowUI(true);
     scheduleNextSlide();
 }
-
 function pauseSlideshow() {
     slideshowPlaying = false;
     updatePlayButton();
@@ -1457,7 +1450,6 @@ function pauseSlideshow() {
     slideshowUiTimer = null;
     showSlideshowUI(false);
 }
-
 function togglePlayPause() { if (slideshowPlaying) pauseSlideshow(); else playSlideshow(); }
 async function enterFullscreen(el) {
     try {
@@ -1468,13 +1460,11 @@ async function enterFullscreen(el) {
     } catch (_) { }
 }
 
-
 /* ===========================
  * SLIDESHOW: auto-hide UI + cursor after inactivity (pause-aware)
  * =========================== */
 const UI_HIDE_DELAY_MS = 1500;
 let slideshowUiTimer = null;
-
 function showSlideshowUI(armTimer = true) {
     if (!slideshowEl) return;
     slideshowEl.classList.add('show-ui');
@@ -1489,7 +1479,6 @@ function showSlideshowUI(armTimer = true) {
         slideshowUiTimer = null;
     }
 }
-
 function hideSlideshowUI() {
     if (!slideshowEl) return;
     if (!slideshowPlaying) return;
@@ -1500,29 +1489,24 @@ function hideSlideshowUI() {
     clearTimeout(slideshowUiTimer);
     slideshowUiTimer = null;
 }
-
 function resetSlideshowUiHideTimer() {
     showSlideshowUI(true);
 }
-
 function onSlideshowActivity() {
     showSlideshowUI(slideshowPlaying);
 }
-
 function bindSlideshowUiActivityListeners() {
     slideshowEl?.addEventListener('pointermove', onSlideshowActivity, { passive: true });
     slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, { passive: true });
     slideshowEl?.addEventListener('wheel', onSlideshowActivity, { passive: true });
     slideshowEl?.addEventListener('mousemove', onSlideshowActivity, { passive: true }); // legacy
 }
-
 function unbindSlideshowUiActivityListeners() {
     slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
     slideshowEl?.removeEventListener('pointerdown', onSlideshowActivity);
     slideshowEl?.removeEventListener('wheel', onSlideshowActivity);
     slideshowEl?.removeEventListener('mousemove', onSlideshowActivity);
 }
-
 async function exitFullscreen() { try { if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen(); } catch (_) { } }
 async function openSlideshow(startAt = 0, startPlaying = true) {
     if (!slideshowEl) return;
@@ -1573,12 +1557,9 @@ window.addEventListener('load', updateLayoutBasedOnWidth);
 window.addEventListener('orientationchange', updateModalSafePadding);
 window.addEventListener('resize', handleModalViewportChange);
 window.addEventListener('orientationchange', handleModalViewportChange);
-
 chkSearchTitles?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('title'); });
 chkSearchDescriptions?.addEventListener('click', (e) => { e.stopPropagation(); toggleSearchPref('desc'); });
-
 modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
 modal.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
@@ -1588,14 +1569,12 @@ modal.addEventListener('touchend', (e) => {
     touchEndY = e.changedTouches[0].screenY;
     if (!gestureConsumed) { handleSwipe(); handleVerticalSwipe(); }
 });
-
 startSlideshowBtn?.addEventListener('click', () => {
     kebabMenu?.classList.add('hidden');
     kebabBtn?.setAttribute('aria-expanded', 'false');
     if (!visibleImages || !visibleImages.length) return;
     openSlideshow(0, true);
 });
-
 ssExitBtn?.addEventListener('click', (e) => { e.stopPropagation(); closeSlideshow(); });
 ssNextBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowNext(true); });
 ssPrevBtn?.addEventListener('click', (e) => { e.stopPropagation(); slideshowPrev(true); });
@@ -1614,7 +1593,6 @@ function onPlayPauseActivate(e) {
         showSlideshowUI(true);
     }
 }
-
 if (!ssPlayPauseBtn) {
     console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
 } else {
@@ -1623,7 +1601,6 @@ if (!ssPlayPauseBtn) {
     ssPlayPauseBtn.setAttribute('tabindex', '0');
     ssPlayPauseBtn.setAttribute('role', 'button');
 }
-
 if (!ssPlayPauseBtn) {
     console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
 } else {
@@ -1632,7 +1609,6 @@ if (!ssPlayPauseBtn) {
     ssPlayPauseBtn.setAttribute('tabindex', '0');
     ssPlayPauseBtn.setAttribute('role', 'button');
 }
-
 document.addEventListener('keydown', (e) => {
     if (!slideshowEl || slideshowEl.classList.contains('hidden')) return;
     if (e.key === 'Escape') { e.preventDefault(); closeSlideshow(); }
@@ -1647,7 +1623,6 @@ function onFullscreenChangeAutoClose() {
 }
 ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange']
     .forEach(evt => document.addEventListener(evt, onFullscreenChangeAutoClose));
-
 slideRange?.addEventListener('change', () => restartSlideshowTimer());
 slideRange?.addEventListener('input', () => restartSlideshowTimer());
 
@@ -1669,7 +1644,6 @@ function onOptionSStartSlideshow(e) {
     if (startSlideshowBtn) startSlideshowBtn.click();
     else if (typeof openSlideshow === 'function') openSlideshow(0, true);
 }
-
 document.addEventListener('keydown', onOptionSStartSlideshow, true);
 
 /* ===========================
@@ -1716,14 +1690,12 @@ document.addEventListener('keydown', (e) => {
         kebabBtn.setAttribute('aria-expanded', 'false');
     }
 });
-
 yearSelect?.addEventListener('change', (e) => setBvgYear(e.target.value));
 scaleSelect?.addEventListener('change', (e) => setDalScale(e.target.value));
 dominanceSelect?.addEventListener('change', (e) => setDominanceUnit(e.target.value));
 priceOfSelect?.addEventListener('change', (e) => setPriceOfItem(e.target.value));
 coinSelect?.addEventListener('change', (e) => setCoinType(e.target.value));
 myrSelect?.addEventListener('change', (e) => setMyrRange(e.target.value));
-
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
