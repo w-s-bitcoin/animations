@@ -406,7 +406,10 @@ function getControlsOffset() {
     const v = parseFloat(getComputedStyle(modal).getPropertyValue('--controls-offset')) || 0;
     return Math.max(0, v);
 }
-
+function getContainerOrigin() {
+    const r = modal.getBoundingClientRect();
+    return {ox: r.left, oy: r.top};
+}
 /* ===========================
  * LAYOUT / SEARCH
  * =========================== */
@@ -813,8 +816,10 @@ modalImg.addEventListener(
             startPinchDistance = distance(e.touches);
             startScale = currentScale;
             const {x, y} = midpoint(e.touches);
-            const {u, v, xRel, yRel} = screenPointToImageLocal(x, y);
-            pinchFocus = {u, v, xRel, yRel};
+            const {ox, oy} = getContainerOrigin();
+            const focusUx = (x - ox - translateX) / startScale;
+            const focusUy = (y - oy - translateY) / startScale;
+            pinchFocus = {focusUx, focusUy};
         } else if (e.touches.length === 1) {
             singleTapMoved = false;
             modalImg.style.transition = '';
@@ -833,16 +838,18 @@ modalImg.addEventListener(
     e => {
         if (isPinching && e.touches.length === 2) {
             e.preventDefault();
-            const rawScale = startScale * (distance(e.touches) / startPinchDistance);
-            currentScale = clamp(rawScale, MIN_SCALE, MAX_SCALE);
+            const s = startScale * (distance(e.touches) / startPinchDistance);
+            currentScale = clamp(s, MIN_SCALE, MAX_SCALE);
+            const {x, y} = midpoint(e.touches);
+            const {ox, oy} = getContainerOrigin();
             if (pinchFocus) {
-                translateX = pinchFocus.xRel - pinchFocus.u * currentScale;
-                translateY = pinchFocus.yRel - pinchFocus.v * currentScale;
-            }
-            if (currentScale <= 1.0001) {
-                currentScale = 1;
-                translateX = 0;
-                translateY = 0;
+                const {focusUx, focusUy} = pinchFocus;
+                translateX = x - ox - focusUx * currentScale;
+                translateY = y - oy - focusUy * currentScale;
+                if (currentScale === MIN_SCALE) {
+                    translateX = x - ox - focusUx * MIN_SCALE;
+                    translateY = y - oy - focusUy * MIN_SCALE;
+                }
             }
             clampPanToBounds();
             applyTransform();
@@ -866,11 +873,14 @@ modalImg.addEventListener('touchend', e => {
     if (isPinching && e.touches.length === 1) {
         isPinching = false;
         pinchFocus = null;
-        isPanning = currentScale > 1;
-        if (isPanning) {
+        if (currentScale > 1) {
             const t = e.touches[0];
             panStartX = t.clientX - translateX;
             panStartY = t.clientY - translateY;
+            isPanning = true;
+            gestureConsumed = true;
+        } else {
+            isPanning = false;
         }
         return;
     }
