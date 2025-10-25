@@ -727,8 +727,8 @@ body.slideshow-open.hide-cursor .slideshow * {
     -webkit-user-drag: none;
     display: block;
     transform-origin: 0 0;
-}
-#modal-img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimizeQuality;
     z-index: 1;
 }
 .modal-controls {
