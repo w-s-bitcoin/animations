@@ -11,9 +11,9 @@
         "filename": "price_distribution.png",
         "title": "Price Distribution",
         "description": "Shows the number of daily closes in between each price range",
-        "latest_x": "https://x.com/w_s_bitcoin/status/1931532722142368206",
-        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qy88wumn8ghj7mn0wvhxcmmv9uqzp8akh7gfkd2kf0f9xhkrtqslxp22deklqa60p52kxxv7j7ep2jnpx9c64z",
-        "latest_youtube": "https://youtu.be/WwpJY5rmP_A"
+        "latest_x": "https://x.com/w_s_bitcoin/status/1982255381326831856",
+        "latest_nostr": "https://primal.net/e/nevent1qqswsvqmz4xrgprv6jd45hays9gpyn0sr8tzejq28vsq3st7452qgpqxc4n74",
+        "latest_youtube": "https://youtu.be/K33t8HmWipQ"
     },
     {
         "filename": "mcap_distribution.png",
