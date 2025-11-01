@@ -208,6 +208,14 @@
         "latest_youtube": "https://youtu.be/ZMmq4zYUviY"
     },
     {
+        "filename": "hodl_waves_price.png",
+        "title": "HODL Waves with Price",
+        "description": "Shows UTXO age distribution over time to visualize HODLing behavior with the price overlayed",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "supply_distribution.png",
         "title": "Supply Distribution & Age By Realized Price",
         "description": "Shows the prices and ages of the circulating bitcoin supply",
