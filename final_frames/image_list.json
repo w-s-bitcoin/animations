@@ -120,6 +120,14 @@
         "latest_youtube": ""
     },
     {
+        "filename": "price_of_new_houses.png",
+        "title": "Price of New Houses",
+        "description": "Shows the price of average sales price for new houses in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "price_of_electricity.png",
         "title": "Price of Electricity",
         "description": "Shows the price of one kWh of electricity in terms of bitcoin and in terms of dollars",
