@@ -122,7 +122,7 @@
     {
         "filename": "price_of_new_houses.png",
         "title": "Price of New Houses",
-        "description": "Shows the price of average sales price for new houses in terms of bitcoin and in terms of dollars",
+        "description": "Shows the average sales price for new houses in terms of bitcoin and in terms of dollars",
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": ""
