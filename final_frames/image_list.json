@@ -56,6 +56,14 @@
         "latest_youtube": "https://youtu.be/ieiwq2m9aWg"
     },
     {
+        "filename": "halving_progress.png",
+        "title": "Halving Progress",
+        "description": "Shows the relative halving progress based on block height through each epoch",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1964505623548350655",
+        "latest_nostr": "https://primal.net/e/nevent1qqsdyrjzv79smqevlv7tp8nudnk5phg6yxf30uqua7cgsf8awp87dmc9xzfx7",
+        "latest_youtube": "https://youtu.be/lN0vjNEIRJA"
+    },
+    {
         "filename": "halving_cycles.png",
         "title": "Halving Cycles (Block-Height Aligned)",
         "description": "Compares all Bitcoin halving epochs by normalizing progress to block height and showing each epoch's performance multiple.",
