@@ -67,8 +67,8 @@
         "filename": "halving_cycles.png",
         "title": "Halving Cycles (Block-Height Aligned)",
         "description": "Compares all Bitcoin halving epochs by normalizing progress to block height and showing each epoch's performance multiple.",
-        "latest_x": "",
-        "latest_nostr": "",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1989442940436144252?s=20",
+        "latest_nostr": "https://primal.net/e/nevent1qqsxy9wkuzpdmfx86mu83hxhxun9fv8vm8kcrkfcpz44fnkdweghtrq20ulw8",
         "latest_youtube": ""
     },
     {
