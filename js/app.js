@@ -711,6 +711,7 @@ function openModalByIndex(index) {
         showCoinControls(false);
         showMyrControls(false);
         showAlignmentControls(true);
+        populateAlignmentSelect();
         const align = alignmentFromFilename(fname);
         if (alignmentSelect) alignmentSelect.value = align;
         setHalvingAlignment(align);
@@ -1213,6 +1214,8 @@ function cycleDominance(direction) {
  * (halving_cycles.png / halving_cycles_days.png)
  * =========================== */
 const HALVING_ALIGN_OPTIONS = ['block', 'days'];
+const HALVING_STORAGE_KEY = 'halvingAlignment';
+let HALVING_META = {};
 
 function isHalvingCyclesFile(fname) {
     return fname === 'halving_cycles.png' || fname === 'halving_cycles_days.png';
@@ -1224,13 +1227,43 @@ function halvingFilenameForAlignment(alignment) {
     return alignment === 'days' ? 'halving_cycles_days.png' : 'halving_cycles.png';
 }
 
-/**
- * Switch the halving cycles image between:
- *  - Block Height   → halving_cycles.png
- *  - Days from Halving → halving_cycles_days.png
- *
- * Also updates title/description/links from image_list.json if present.
- */
+// Build a metadata map from the raw JSON list
+function buildHalvingMetaFromList(list) {
+    HALVING_META = {};
+    list.forEach(img => {
+        if (isHalvingCyclesFile(img.filename)) {
+            HALVING_META[img.filename] = {
+                title: img.title || '',
+                description: img.description || '',
+                latest_x: img.latest_x || '',
+                latest_nostr: img.latest_nostr || '',
+                latest_youtube: img.latest_youtube || ''
+            };
+        }
+    });
+}
+
+function populateAlignmentSelect() {
+    if (!alignmentSelect) return;
+
+    alignmentSelect.innerHTML = HALVING_ALIGN_OPTIONS.map(opt => {
+        const label =
+            opt === 'block'
+                ? 'Block Height'
+                : 'Days After Halving';
+        return `<option value="${opt}">${label}</option>`;
+    }).join('');
+}
+
+function getStoredHalvingAlignment() {
+    const v = localStorage.getItem(HALVING_STORAGE_KEY);
+    return HALVING_ALIGN_OPTIONS.includes(v) ? v : 'block';
+}
+function setStoredHalvingAlignment(a) {
+    if (!HALVING_ALIGN_OPTIONS.includes(a)) a = 'block';
+    localStorage.setItem(HALVING_STORAGE_KEY, a);
+}
+
 function setHalvingAlignment(alignment) {
     if (!HALVING_ALIGN_OPTIONS.includes(alignment)) alignment = 'block';
 
@@ -1240,9 +1273,11 @@ function setHalvingAlignment(alignment) {
     const oldFilename = cur.filename;
     const newFilename = halvingFilenameForAlignment(alignment);
 
-    // Don't early-return if filenames match; we still need to ensure
-    // the modal image + metadata are set when entering this card.
-    const meta = imageList.find(img => img.filename === newFilename) || {};
+    // Remember user's last choice
+    setStoredHalvingAlignment(alignment);
+
+    // Pull metadata from the original JSON entries
+    const meta = HALVING_META[newFilename] || {};
 
     const fallbackTitle =
         meta.title ||
@@ -1256,10 +1291,12 @@ function setHalvingAlignment(alignment) {
     const latest_nostr = meta.latest_nostr || cur.latest_nostr || '';
     const latest_youtube = meta.latest_youtube || cur.latest_youtube || '';
 
+    // Update big modal image + URL + links
     setModalImageAndCenter(newFilename, newTitle);
     replaceUrlForFilename(newFilename);
-    setModalLinks({x: latest_x, nostr: latest_nostr, youtube: latest_youtube});
+    setModalLinks({ x: latest_x, nostr: latest_nostr, youtube: latest_youtube });
 
+    // Update the in-memory record
     Object.assign(visibleImages[currentIndex], {
         filename: newFilename,
         title: newTitle,
@@ -1269,12 +1306,14 @@ function setHalvingAlignment(alignment) {
         latest_youtube
     });
 
+    // Update the grid title/description UI for this card
     const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
     if (titleEl) titleEl.textContent = newTitle;
 
     const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
     if (descEl) descEl.textContent = newDescription;
 
+    // Update the thumbnail src + alt
     updateGridThumbAtCurrent(newFilename, newTitle);
 
     const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
@@ -1285,9 +1324,12 @@ function setHalvingAlignment(alignment) {
         if (gridImg) gridImg.alt = newTitle;
     }
 
+    // Keep favorites consistent when switching (no-op if same filename)
     migrateFavoriteFilename(oldFilename, newFilename);
+
     updateModalSafePadding();
 }
+
 
 /**
  * Arrow up/down cycling between "Block Height" and "Days from Halving"
@@ -1562,6 +1604,7 @@ fetch('final_frames/image_list.json')
     .then(res => res.json())
     .then(data => {
         imageList = data;
+        buildHalvingMetaFromList(imageList);
         MYR_RANGES = buildMyrRanges(MYR_START_YEAR, THIS_YEAR);
         populateMyrSelect();
         buildPriceOfOptionsFromList(imageList);
@@ -1637,9 +1680,47 @@ fetch('final_frames/image_list.json')
         } else {
             imageList = nonPof;
         }
+
+        // --- Collapse halving_cycles variants into a single card (but keep both in HALVING_META) ---
+        const halvingEntries = imageList.filter(img => isHalvingCyclesFile(img.filename));
+
+        if (halvingEntries.length) {
+            // See if URL explicitly requested a particular alignment
+            let urlHalvingAlignment = null;
+            if (initialFilename && isHalvingCyclesFile(initialFilename)) {
+                urlHalvingAlignment = alignmentFromFilename(initialFilename);
+                setStoredHalvingAlignment(urlHalvingAlignment);
+            }
+
+            const storedHalvingAlignment = getStoredHalvingAlignment();
+            const effectiveAlignment = urlHalvingAlignment || storedHalvingAlignment;
+
+            const desiredFilename = halvingFilenameForAlignment(effectiveAlignment);
+            const baseMeta = HALVING_META[desiredFilename] || halvingEntries[0];
+
+            const firstIdx = imageList.findIndex(img => isHalvingCyclesFile(img.filename));
+
+            // Remove all halving entries from the main list
+            imageList = imageList.filter(img => !isHalvingCyclesFile(img.filename));
+
+            // Insert a single representative halving card at the original first position
+            const halvingCard = {
+                filename: desiredFilename,
+                title: baseMeta.title || 'Halving Cycles',
+                description: baseMeta.description || '',
+                latest_x: baseMeta.latest_x || '',
+                latest_nostr: baseMeta.latest_nostr || '',
+                latest_youtube: baseMeta.latest_youtube || ''
+            };
+
+            const insertIndex = firstIdx === -1 ? imageList.length : firstIdx;
+            imageList.splice(insertIndex, 0, halvingCard);
+        }
+
         visibleImages = [...imageList];
         migratePriceOfFavorites();
         filterImages();
+
         let urlBvgYear = null;
         if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
             const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
