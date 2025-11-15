@@ -33,6 +33,8 @@ const coinControls = document.getElementById('coin-controls');
 const coinSelect = document.getElementById('coin-select');
 const myrControls = document.getElementById('myr-controls');
 const myrSelect = document.getElementById('myr-select');
+const alignmentControls = document.getElementById('alignment-controls');
+const alignmentSelect = document.getElementById('alignment-select');
 
 /* ===========================
  * GLOBAL STATE
@@ -220,6 +222,9 @@ function showCoinControls(show) {
 }
 function showMyrControls(show) {
     myrControls?.classList.toggle('show', !!show);
+}
+function showAlignmentControls(show) {
+    alignmentControls?.classList.toggle('show', !!show);
 }
 function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
     const xLink = document.getElementById('x-link');
@@ -672,6 +677,7 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(false);
+        showAlignmentControls(false)
         const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
         yearSelect.value = chosenYear;
         setBvgYear(chosenYear);
@@ -682,6 +688,7 @@ function openModalByIndex(index) {
         showDominanceControls(true);
         showCoinControls(false);
         showMyrControls(false);
+        showAlignmentControls(false)
         const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
         dominanceSelect.value = unit;
         setDominanceUnit(unit);
@@ -692,9 +699,21 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(false);
+        showAlignmentControls(false)
         const sc = dalScaleFromFilename(fname) || getStoredDalScale();
         scaleSelect.value = sc;
         setDalScale(sc);
+    } else if (isHalvingCyclesFile(fname)) {
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
+        showAlignmentControls(true);
+        const align = alignmentFromFilename(fname);
+        if (alignmentSelect) alignmentSelect.value = align;
+        setHalvingAlignment(align);
     } else if (isPriceOfFile(fname)) {
         showYearControls(false);
         showScaleControls(false);
@@ -702,6 +721,7 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(false);
+        showAlignmentControls(false)
         populatePriceOfSelect();
         let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
         if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
@@ -718,6 +738,7 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(true);
         showMyrControls(false);
+        showAlignmentControls(false)
         populateCoinSelect();
         let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
         if (!COIN_OPTIONS.some(o => o.slug === chosen)) chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
@@ -730,6 +751,7 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(true);
+        showAlignmentControls(false)
         populateMyrSelect();
         const chosenRange = myrRangeFromFilename(fname) || MYR_DEFAULT_RANGE;
         myrSelect.value = chosenRange;
@@ -741,6 +763,7 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(false);
+        showAlignmentControls(false);
         setModalImageAndCenter(fname, image.title);
         modalImg.alt = image.title;
         replaceUrlForFilename(fname);
@@ -763,6 +786,7 @@ function closeModal() {
     showMyrControls(false);
     showDominanceControls(false);
     showCoinControls(false);
+    showAlignmentControls(false)
     try {
         const cur = visibleImages[currentIndex];
         if (cur && isMyrFile(cur.filename) && cur.filename !== `${MYR_BASE}.png`) {
@@ -1182,6 +1206,103 @@ function cycleDominance(direction) {
     const next = DOM_UNITS[newIdx];
     if (dominanceSelect) dominanceSelect.value = next;
     setDominanceUnit(next);
+}
+
+/* ===========================
+ * MODULE: Halving Cycles Alignment
+ * (halving_cycles.png / halving_cycles_days.png)
+ * =========================== */
+const HALVING_ALIGN_OPTIONS = ['block', 'days'];
+
+function isHalvingCyclesFile(fname) {
+    return fname === 'halving_cycles.png' || fname === 'halving_cycles_days.png';
+}
+function alignmentFromFilename(fname) {
+    return fname === 'halving_cycles_days.png' ? 'days' : 'block';
+}
+function halvingFilenameForAlignment(alignment) {
+    return alignment === 'days' ? 'halving_cycles_days.png' : 'halving_cycles.png';
+}
+
+/**
+ * Switch the halving cycles image between:
+ *  - Block Height   → halving_cycles.png
+ *  - Days from Halving → halving_cycles_days.png
+ *
+ * Also updates title/description/links from image_list.json if present.
+ */
+function setHalvingAlignment(alignment) {
+    if (!HALVING_ALIGN_OPTIONS.includes(alignment)) alignment = 'block';
+
+    const cur = visibleImages[currentIndex];
+    if (!cur || !isHalvingCyclesFile(cur.filename)) return;
+
+    const oldFilename = cur.filename;
+    const newFilename = halvingFilenameForAlignment(alignment);
+
+    // Don't early-return if filenames match; we still need to ensure
+    // the modal image + metadata are set when entering this card.
+    const meta = imageList.find(img => img.filename === newFilename) || {};
+
+    const fallbackTitle =
+        meta.title ||
+        (alignment === 'days'
+            ? 'Halving Cycles (Days After Halving)'
+            : 'Halving Cycles (Block-Height Aligned)');
+
+    const newTitle = meta.title || cur.title || fallbackTitle;
+    const newDescription = meta.description || cur.description || '';
+    const latest_x = meta.latest_x || cur.latest_x || '';
+    const latest_nostr = meta.latest_nostr || cur.latest_nostr || '';
+    const latest_youtube = meta.latest_youtube || cur.latest_youtube || '';
+
+    setModalImageAndCenter(newFilename, newTitle);
+    replaceUrlForFilename(newFilename);
+    setModalLinks({x: latest_x, nostr: latest_nostr, youtube: latest_youtube});
+
+    Object.assign(visibleImages[currentIndex], {
+        filename: newFilename,
+        title: newTitle,
+        description: newDescription,
+        latest_x,
+        latest_nostr,
+        latest_youtube
+    });
+
+    const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
+    if (titleEl) titleEl.textContent = newTitle;
+
+    const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
+    if (descEl) descEl.textContent = newDescription;
+
+    updateGridThumbAtCurrent(newFilename, newTitle);
+
+    const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+    const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
+    if (cardContainer) {
+        const tip = newDescription || newTitle;
+        cardContainer.setAttribute('title', tip);
+        if (gridImg) gridImg.alt = newTitle;
+    }
+
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+}
+
+/**
+ * Arrow up/down cycling between "Block Height" and "Days from Halving"
+ */
+function cycleHalvingAlignment(direction) {
+    if (!alignmentSelect) return;
+    const current = alignmentSelect.value || alignmentFromFilename(visibleImages[currentIndex]?.filename || '');
+    const idx = HALVING_ALIGN_OPTIONS.indexOf(current);
+    if (idx === -1) return;
+    const delta = direction === 'up' ? -1 : 1;
+    const len = HALVING_ALIGN_OPTIONS.length;
+    const newIdx = (idx + delta + len) % len;
+    const next = HALVING_ALIGN_OPTIONS[newIdx];
+    alignmentSelect.value = next;
+    setHalvingAlignment(next);
 }
 
 /* ===========================
@@ -1892,18 +2013,6 @@ startSlideshowBtn?.addEventListener('click', () => {
 });
 ssExitBtn?.addEventListener('click', e => {
     e.stopPropagation();
-    closeSlideshow();
-});
-ssNextBtn?.addEventListener('click', e => {
-    e.stopPropagation();
-    slideshowNext(true);
-});
-ssPrevBtn?.addEventListener('click', e => {
-    e.stopPropagation();
-    slideshowPrev(true);
-});
-ssExitBtn?.addEventListener('click', e => {
-    e.stopPropagation();
     showSlideshowUI(slideshowPlaying);
     closeSlideshow();
 });
@@ -2043,6 +2152,7 @@ dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value
 priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
 coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
 myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
+alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
@@ -2074,6 +2184,9 @@ document.addEventListener('keydown', e => {
             } else if (isDominanceFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
+            } else if (isHalvingCyclesFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleHalvingAlignment('up') : cycleHalvingAlignment('down');
             } else if (isPriceOfFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cyclePriceOf('up') : cyclePriceOf('down');

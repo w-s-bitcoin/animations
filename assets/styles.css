@@ -1103,7 +1103,8 @@ body.slideshow-open {
 .dominance-controls,
 .priceof-controls,
 .coin-controls,
-.myr-controls {
+.myr-controls,
+.alignment-controls {
     display: none;
     align-items: center;
     gap: 0.4rem;
@@ -1114,7 +1115,8 @@ body.slideshow-open {
 .priceof-controls.show,
 .dominance-controls.show,
 .coin-controls.show,
-.myr-controls.show {
+.myr-controls.show,
+.alignment-controls.show {
     display: inline-flex;
 }
 .select-wrap {
@@ -1127,7 +1129,8 @@ body.slideshow-open {
 #dominance-select,
 #priceof-select,
 #coin-select,
-#myr-select {
+#myr-select,
+#alignment-select {
     font-family: monospace;
     font-size: 1rem;
     color: #fff;
@@ -1155,7 +1158,9 @@ body.slideshow-open {
 #coin-select:hover,
 #coin-select:focus,
 #myr-select:hover,
-#myr-select:focus {
+#myr-select:focus,
+#alignment-select:hover,
+#alignment-select:focus {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--brand);
     color: var(--brand);
@@ -1199,7 +1204,8 @@ body.slideshow-open {
     #dominance-controls,
     #priceof-controls,
     #coin-controls,
-    #myr-controls {
+    #myr-controls,
+    #alignment-controls {
         flex-basis: 100%;
         margin-left: 0;
     }

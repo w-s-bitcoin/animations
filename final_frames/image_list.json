@@ -72,6 +72,14 @@
         "latest_youtube": ""
     },
     {
+        "filename": "halving_cycles_days.png",
+        "title": "Halving Cycles (Days After Halving)",
+        "description": "Compares all Bitcoin halving epochs by normalizing progress to days after the halving and showing each epoch's performance multiple.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "target_and_block_hashes.png",
         "title": "Target & Block Hashes",
         "description": "Shows every block hash as an orange dot and the difficulty targets in white",
