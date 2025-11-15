@@ -67,7 +67,7 @@
         "filename": "halving_cycles.png",
         "title": "Halving Cycles (Block-Height Aligned)",
         "description": "Compares all Bitcoin halving epochs by normalizing progress to block height and showing each epoch's performance multiple.",
-        "latest_x": "https://x.com/w_s_bitcoin/status/1989442940436144252?s=20",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1989442940436144252",
         "latest_nostr": "https://primal.net/e/nevent1qqsxy9wkuzpdmfx86mu83hxhxun9fv8vm8kcrkfcpz44fnkdweghtrq20ulw8",
         "latest_youtube": ""
     },
@@ -203,9 +203,9 @@
         "filename": "block_size.png",
         "title": "Block Size",
         "description": "Shows each block size with smaller epoch windows on the side",
-        "latest_x": "https://x.com/w_s_bitcoin/status/1888583534903738596",
-        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyphh48hhwtsmekjymzux0hq4rqkhkru30mj6m5j0fy0mg5ldls92z9aak38",
-        "latest_youtube": "https://youtu.be/k7baducIk-Y"
+        "latest_x": "https://x.com/w_s_bitcoin/status/1988683623562883351",
+        "latest_nostr": "https://primal.net/e/nevent1qqsxdmjyz8r4g24z3guh26rzxh9k9zu6xyp9r9t7w6hnf556atc5qcqp63302",
+        "latest_youtube": "https://youtu.be/SV-HZftkKXM"
     },
     {
         "filename": "utxo_distributions.png",
