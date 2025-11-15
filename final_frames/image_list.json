@@ -80,20 +80,20 @@
         "latest_youtube": ""
     },
     {
+        "filename": "cycle_low_multiple.png",
+        "title": "Cycle Low Multiple (Days After Cycle Low)",
+        "description": "Compares Bitcoin market cycles by aligning each one from its cycle low and showing the performance multiple to its market high.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "target_and_block_hashes.png",
         "title": "Target & Block Hashes",
         "description": "Shows every block hash as an orange dot and the difficulty targets in white",
         "latest_x": "https://x.com/w_s_bitcoin/status/1925974203527762141",
         "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyp0djcnun2uumjq23dszhwp4yruw5yh8g9e87htgrsp2tsujmgy5s9mfjke",
         "latest_youtube": "https://youtu.be/HD6vcASMA8o"
-    },
-    {
-        "filename": "cycle_low_multiple.png",
-        "title": "Cycle Low Multiple (Days After Cycle Low)",
-        "description": "Shows each Bitcoin market cycle aligned by days after the cycle low, using price performance from market low to market high and displaying each cycle’s multiple relative to its starting price.",
-        "latest_x": "",
-        "latest_nostr": "",
-        "latest_youtube": ""
     },
     {
         "filename": "issuance_rate.png",
