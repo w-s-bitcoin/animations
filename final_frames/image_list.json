@@ -88,6 +88,14 @@
         "latest_youtube": "https://youtu.be/HD6vcASMA8o"
     },
     {
+        "filename": "cycle_low_multiple.png",
+        "title": "Cycle Low Multiple (Days After Cycle Low)",
+        "description": "Shows each Bitcoin market cycle aligned by days after the cycle low, using price performance from market low to market high and displaying each cycle’s multiple relative to its starting price.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "issuance_rate.png",
         "title": "Issuance Rate",
         "description": "Shows Bitcoin's annualized issuance rate",
