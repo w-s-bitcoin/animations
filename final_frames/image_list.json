@@ -88,6 +88,14 @@
         "latest_youtube": ""
     },
     {
+        "filename": "cycle_high_drawdown.png",
+        "title": "Cycle High Drawdown (Days After Cycle High)",
+        "description": "Compares Bitcoin market cycles by aligning each one from its cycle high and showing the percentage drawdown over time.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "target_and_block_hashes.png",
         "title": "Target & Block Hashes",
         "description": "Shows every block hash as an orange dot and the difficulty targets in white",
