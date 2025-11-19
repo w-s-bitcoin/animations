@@ -155,9 +155,9 @@
         "filename": "price_of_new_houses.png",
         "title": "Price of New Houses",
         "description": "Shows the average sales price for new houses in terms of bitcoin and in terms of dollars",
-        "latest_x": "",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_x": "https://x.com/w_s_bitcoin/status/1986444148384186857",
+        "latest_nostr": "https://primal.net/e/nevent1qqsfw63azu4e29t2zz4s4sc73hg7qvn7zwhae742gzcm5ra87ycp7eg4p9rcn",
+        "latest_youtube": "https://youtu.be/DgaAU2eZLCI"
     },
     {
         "filename": "price_of_electricity.png",
