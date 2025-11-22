@@ -24,6 +24,14 @@
         "latest_youtube": "https://youtu.be/wuGElsNvHZU"
     },
     {
+        "filename": "price_on_this_day.png",
+        "title": "Price On This Day",
+        "description": "Shows Bitcoin’s price on this calendar day across all years of BTCUSD exchange rate history.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "days_since_ath.png",
         "title": "Days Since All-Time High",
         "description": "Shows the number of days since Bitcoin's last all-time high",
