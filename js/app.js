@@ -703,6 +703,18 @@ function openModalByIndex(index) {
         const sc = dalScaleFromFilename(fname) || getStoredDalScale();
         scaleSelect.value = sc;
         setDalScale(sc);
+    } else if (isPotdFile(fname)) {
+        showYearControls(false);
+        showScaleControls(true);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
+        showAlignmentControls(false);
+
+        const sc = potdScaleFromFilename(fname) || getStoredPotdScale();
+        scaleSelect.value = sc;
+        setPotdScale(sc);
     } else if (isHalvingCyclesFile(fname)) {
         showYearControls(false);
         showScaleControls(false);
@@ -1164,6 +1176,56 @@ function cycleDalScale(direction) {
     const next = DAL_SCALES[newIdx];
     if (scaleSelect) scaleSelect.value = next;
     setDalScale(next);
+}
+
+/* ===========================
+ * MODULE: Price On This Day (POTD)
+ * price_on_this_day.png / price_on_this_day_log.png
+ * =========================== */
+const POTD_BASE = 'price_on_this_day';
+const POTD_STORAGE_KEY = 'potdScale';
+const POTD_SCALES = ['linear', 'log'];
+
+function isPotdFile(fname) {
+    return fname.startsWith(POTD_BASE);
+}
+function potdScaleFromFilename(fname) {
+    return /_log\.png$/.test(fname) ? 'log' : 'linear';
+}
+function potdFilenameForScale(scale) {
+    return scale === 'log'
+        ? `${POTD_BASE}_log.png`
+        : `${POTD_BASE}.png`;
+}
+function getStoredPotdScale() {
+    return localStorage.getItem(POTD_STORAGE_KEY) || 'linear';
+}
+function setStoredPotdScale(s) {
+    localStorage.setItem(POTD_STORAGE_KEY, s);
+}
+function setPotdScale(scale) {
+    const oldFilename = visibleImages[currentIndex].filename;
+    if (!isPotdFile(oldFilename)) return;
+    const newFilename = potdFilenameForScale(scale);
+    setStoredPotdScale(scale);
+    const newTitle = `Price On This Day (${scale})`;
+    setModalImageAndCenter(newFilename, newTitle);
+    replaceUrlForFilename(newFilename);
+    visibleImages[currentIndex].filename = newFilename;
+    updateGridThumbAtCurrent(newFilename);
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+}
+
+function cyclePotdScale(direction) {
+    const current = scaleSelect?.value || getStoredPotdScale();
+    const idx = POTD_SCALES.indexOf(current);
+    if (idx === -1) return;
+    const delta = direction === 'up' ? -1 : 1;
+    const newIdx = (idx + delta + POTD_SCALES.length) % POTD_SCALES.length;
+    const next = POTD_SCALES[newIdx];
+    if (scaleSelect) scaleSelect.value = next;
+    setPotdScale(next);
 }
 
 /* ===========================
@@ -1735,6 +1797,12 @@ fetch('final_frames/image_list.json')
             else if (initialFilename === `${DAL_BASE}.png`) urlDalScale = 'linear';
             if (urlDalScale) setStoredDalScale(urlDalScale);
         }
+        let urlPotdScale = null;
+        if (initialFilename && initialFilename.startsWith(POTD_BASE)) {
+            if (initialFilename === `${POTD_BASE}_log.png`) urlPotdScale = 'log';
+            else urlPotdScale = 'linear';
+            setStoredPotdScale(urlPotdScale);
+        }
         let urlDomUnit = null;
         if (initialFilename && initialFilename.startsWith(DOM_BASE)) {
             if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = 'btc';
@@ -1745,6 +1813,12 @@ fetch('final_frames/image_list.json')
         imageList = imageList.map(img => (img.filename.startsWith(BVG_BASE) ? {...img, filename: `${BVG_BASE}_${storedBvgYear}.png`} : img));
         const storedDalScale = getStoredDalScale();
         imageList = imageList.map(img => (img.filename.startsWith(DAL_BASE) ? {...img, filename: dalFilenameForScale(storedDalScale)} : img));
+        const storedPotdScale = getStoredPotdScale();
+        imageList = imageList.map(img =>
+            img.filename.startsWith(POTD_BASE)
+                ? { ...img, filename: potdFilenameForScale(storedPotdScale) }
+                : img
+        );
         const storedDomUnit = getStoredDominanceUnit();
         imageList = imageList.map(img => (img.filename.startsWith(DOM_BASE) ? {...img, filename: domFilenameForUnit(storedDomUnit)} : img));
         visibleImages = [...imageList];
@@ -1761,6 +1835,9 @@ fetch('final_frames/image_list.json')
             } else if (urlDalScale) {
                 openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
                 if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DAL_BASE));
+            } else if (urlPotdScale) {
+                openIdx = visibleImages.findIndex(img => img.filename.startsWith(POTD_BASE));
+                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POTD_BASE));
             } else if (urlPofSlug) {
                 openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
                 if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POF_BASE));
@@ -2228,7 +2305,11 @@ document.addEventListener('keydown', e => {
     }
 });
 yearSelect?.addEventListener('change', e => setBvgYear(e.target.value));
-scaleSelect?.addEventListener('change', e => setDalScale(e.target.value));
+scaleSelect?.addEventListener('change', e => {
+    const currentFile = visibleImages[currentIndex]?.filename || '';
+    if (isDalFile(currentFile)) setDalScale(e.target.value);
+    else if (isPotdFile(currentFile)) setPotdScale(e.target.value);
+});
 dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value));
 priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
 coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
@@ -2262,6 +2343,9 @@ document.addEventListener('keydown', e => {
             } else if (isDalFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cycleDalScale('up') : cycleDalScale('down');
+            } else if (isPotdFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cyclePotdScale('up') : cyclePotdScale('down');
             } else if (isDominanceFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
