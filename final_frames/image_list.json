@@ -107,9 +107,9 @@
         "filename": "mining_difficulty_target_hash.png",
         "title": "Mining Difficulty & Target Hash",
         "description": "A snapshot of Bitcoin’s mining difficulty, target hash, and related network stats at the latest block.",
-        "latest_x": "",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_x": "https://x.com/w_s_bitcoin/status/1992422416719679781?s=20",
+        "latest_nostr": "https://primal.net/e/nevent1qqsgnvqcsg8g7n5slkkgs30767q4flen7hy5raxetgnc840h4f9hcug697u8c",
+        "latest_youtube": "https://youtu.be/XTb2jYYYg8Y"
     },
     {
         "filename": "target_and_block_hashes.png",
