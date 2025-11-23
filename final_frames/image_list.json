@@ -104,6 +104,14 @@
         "latest_youtube": ""
     },
     {
+        "filename": "mining_difficulty_target_hash.png",
+        "title": "Mining Difficulty & Target Hash",
+        "description": "A snapshot of Bitcoin’s mining difficulty, target hash, and related network stats at the latest block.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "target_and_block_hashes.png",
         "title": "Target & Block Hashes",
         "description": "Shows every block hash as an orange dot and the difficulty targets in white",
