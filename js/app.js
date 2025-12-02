@@ -711,10 +711,20 @@ function openModalByIndex(index) {
         showCoinControls(false);
         showMyrControls(false);
         showAlignmentControls(false);
-
         const sc = potdScaleFromFilename(fname) || getStoredPotdScale();
         scaleSelect.value = sc;
         setPotdScale(sc);
+    } else if (isNlbpFile(fname)) {
+        showYearControls(false);
+        showScaleControls(true);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
+        showAlignmentControls(false);
+        const sc = nlbpScaleFromFilename(fname) || getStoredNlbpScale();
+        scaleSelect.value = sc;
+        setNlbpScale(sc);
     } else if (isHalvingCyclesFile(fname)) {
         showYearControls(false);
         showScaleControls(false);
@@ -1272,6 +1282,60 @@ function cycleDominance(direction) {
 }
 
 /* ===========================
+ * MODULE: Never Look Back Price (NLBP)
+ * never_look_back_price.png / never_look_back_price_log.png
+ * =========================== */
+const NLBP_BASE = 'never_look_back_price';
+const NLBP_STORAGE_KEY = 'nlbpScale';
+const NLBP_SCALES = ['linear', 'log'];
+
+function isNlbpFile(fname) {
+    return fname.startsWith(NLBP_BASE);
+}
+function nlbpScaleFromFilename(fname) {
+    return /_log\.png$/.test(fname) ? 'log' : 'linear';
+}
+function nlbpFilenameForScale(scale) {
+    return scale === 'log'
+        ? `${NLBP_BASE}_log.png`
+        : `${NLBP_BASE}.png`;
+}
+function getStoredNlbpScale() {
+    return localStorage.getItem(NLBP_STORAGE_KEY) || 'linear';
+}
+function setStoredNlbpScale(s) {
+    localStorage.setItem(NLBP_STORAGE_KEY, s);
+}
+function setNlbpScale(scale) {
+    const oldFilename = visibleImages[currentIndex].filename;
+    if (!isNlbpFile(oldFilename)) return;
+
+    const newFilename = nlbpFilenameForScale(scale);
+    setStoredNlbpScale(scale);
+
+    const newTitle = `Never Look Back Price (${scale})`;
+    setModalImageAndCenter(newFilename, newTitle);
+    replaceUrlForFilename(newFilename);
+
+    visibleImages[currentIndex].filename = newFilename;
+    updateGridThumbAtCurrent(newFilename);
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+}
+
+function cycleNlbpScale(direction) {
+    const current = scaleSelect?.value || getStoredNlbpScale();
+    const idx = NLBP_SCALES.indexOf(current);
+    if (idx === -1) return;
+    const delta = direction === 'up' ? -1 : 1;
+    const newIdx = (idx + delta + NLBP_SCALES.length) % NLBP_SCALES.length;
+    const next = NLBP_SCALES[newIdx];
+    if (scaleSelect) scaleSelect.value = next;
+    setNlbpScale(next);
+}
+
+
+/* ===========================
  * MODULE: Halving Cycles Alignment
  * (halving_cycles.png / halving_cycles_days.png)
  * =========================== */
@@ -1803,6 +1867,12 @@ fetch('final_frames/image_list.json')
             else urlPotdScale = 'linear';
             setStoredPotdScale(urlPotdScale);
         }
+        let urlNlbpScale = null;
+        if (initialFilename && initialFilename.startsWith(NLBP_BASE)) {
+            if (initialFilename === `${NLBP_BASE}_log.png`) urlNlbpScale = 'log';
+            else urlNlbpScale = 'linear';
+            setStoredNlbpScale(urlNlbpScale);
+        }
         let urlDomUnit = null;
         if (initialFilename && initialFilename.startsWith(DOM_BASE)) {
             if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = 'btc';
@@ -1810,13 +1880,27 @@ fetch('final_frames/image_list.json')
             if (urlDomUnit) setStoredDominanceUnit(urlDomUnit);
         }
         const storedBvgYear = getStoredBvgYear();
-        imageList = imageList.map(img => (img.filename.startsWith(BVG_BASE) ? {...img, filename: `${BVG_BASE}_${storedBvgYear}.png`} : img));
+        imageList = imageList.map(img =>
+            img.filename.startsWith(BVG_BASE)
+                ? { ...img, filename: `${BVG_BASE}_${storedBvgYear}.png` }
+                : img
+        );
         const storedDalScale = getStoredDalScale();
-        imageList = imageList.map(img => (img.filename.startsWith(DAL_BASE) ? {...img, filename: dalFilenameForScale(storedDalScale)} : img));
+        imageList = imageList.map(img =>
+            img.filename.startsWith(DAL_BASE)
+                ? { ...img, filename: dalFilenameForScale(storedDalScale) }
+                : img
+        );
         const storedPotdScale = getStoredPotdScale();
         imageList = imageList.map(img =>
             img.filename.startsWith(POTD_BASE)
                 ? { ...img, filename: potdFilenameForScale(storedPotdScale) }
+                : img
+        );
+        const storedNlbpScale = getStoredNlbpScale();
+        imageList = imageList.map(img =>
+            img.filename.startsWith(NLBP_BASE)
+                ? { ...img, filename: nlbpFilenameForScale(storedNlbpScale) }
                 : img
         );
         const storedDomUnit = getStoredDominanceUnit();
@@ -1837,7 +1921,10 @@ fetch('final_frames/image_list.json')
                 if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DAL_BASE));
             } else if (urlPotdScale) {
                 openIdx = visibleImages.findIndex(img => img.filename.startsWith(POTD_BASE));
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POTD_BASE));
+                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+            } else if (urlNlbpScale) {
+                openIdx = visibleImages.findIndex(img => img.filename.startsWith(NLBP_BASE));
+                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
             } else if (urlPofSlug) {
                 openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
                 if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POF_BASE));
@@ -2309,6 +2396,7 @@ scaleSelect?.addEventListener('change', e => {
     const currentFile = visibleImages[currentIndex]?.filename || '';
     if (isDalFile(currentFile)) setDalScale(e.target.value);
     else if (isPotdFile(currentFile)) setPotdScale(e.target.value);
+    else if (isNlbpFile(currentFile)) setNlbpScale(e.target.value);
 });
 dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value));
 priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
@@ -2346,6 +2434,9 @@ document.addEventListener('keydown', e => {
             } else if (isPotdFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cyclePotdScale('up') : cyclePotdScale('down');
+            } else if (isNlbpFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleNlbpScale('up') : cycleNlbpScale('down');
             } else if (isDominanceFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
