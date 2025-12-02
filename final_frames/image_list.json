@@ -408,6 +408,14 @@
         "latest_youtube": ""
     },
     {
+        "filename": "never_look_back_price.png",
+        "title": "Never Look Back Price",
+        "description": "Shows the running all-time-lows across Bitcoin’s full price history",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "monthly_candles.png",
         "title": "Monthly Candles",
         "description": "Shows the monthly candles chart",
