@@ -107,7 +107,7 @@
         "filename": "mining_difficulty_target_hash.png",
         "title": "Mining Difficulty & Target Hash",
         "description": "A snapshot of Bitcoin’s mining difficulty, target hash, and related network stats at the latest block.",
-        "latest_x": "https://x.com/w_s_bitcoin/status/1992422416719679781?s=20",
+        "latest_x": "https://x.com/w_s_bitcoin/status/1992422416719679781",
         "latest_nostr": "https://primal.net/e/nevent1qqsgnvqcsg8g7n5slkkgs30767q4flen7hy5raxetgnc840h4f9hcug697u8c",
         "latest_youtube": "https://youtu.be/XTb2jYYYg8Y"
     },
@@ -355,9 +355,9 @@
         "filename": "x_coins.png",
         "title": "X-coins (10 BTC)",
         "description": "Shows the history of X-coins (UTXOs worth exactly 10 BTC)",
-        "latest_x": "",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_x": "https://x.com/w_s_bitcoin/status/1995840297583214878",
+        "latest_nostr": "https://primal.net/e/nevent1qqswdulp9jzap4rdrgymfr4l6fh4c7yp7u8a8lwn50zmpghk77kfllsjypw5r",
+        "latest_youtube": "https://youtu.be/N4m86PL4qs8"
     },
     {
         "filename": "l_coins.png",
