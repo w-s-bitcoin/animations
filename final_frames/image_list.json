@@ -8,6 +8,14 @@
         "latest_youtube": "https://youtu.be/CZKA01K3vig"
     },
     {
+        "filename": "uoa_btc_xag.png",
+        "title": "Unit of Account (BTC/XAG)",
+        "description": "Shows the price of 1 oz of silver in terms of bitcoin and 1 BTC in terms of ounces of silver",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "uoa_btc_xau.png",
         "title": "Unit of Account (BTC/XAU)",
         "description": "Shows the price of 1 oz of gold in terms of bitcoin and 1 BTC in terms of ounces of gold",
