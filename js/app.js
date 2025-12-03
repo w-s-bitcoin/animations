@@ -35,6 +35,8 @@ const myrControls = document.getElementById('myr-controls');
 const myrSelect = document.getElementById('myr-select');
 const alignmentControls = document.getElementById('alignment-controls');
 const alignmentSelect = document.getElementById('alignment-select');
+const uoaControls = document.getElementById('uoa-controls');
+const uoaSelect = document.getElementById('uoa-select');
 
 /* ===========================
  * GLOBAL STATE
@@ -225,6 +227,9 @@ function showMyrControls(show) {
 }
 function showAlignmentControls(show) {
     alignmentControls?.classList.toggle('show', !!show);
+}
+function showUoaControls(show) {
+    uoaControls?.classList.toggle('show', !!show);
 }
 function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
     const xLink = document.getElementById('x-link');
@@ -677,7 +682,8 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(false);
-        showAlignmentControls(false)
+        showAlignmentControls(false);
+        showUoaControls(false);
         const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
         yearSelect.value = chosenYear;
         setBvgYear(chosenYear);
@@ -688,7 +694,8 @@ function openModalByIndex(index) {
         showDominanceControls(true);
         showCoinControls(false);
         showMyrControls(false);
-        showAlignmentControls(false)
+        showAlignmentControls(false);
+        showUoaControls(false);
         const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
         dominanceSelect.value = unit;
         setDominanceUnit(unit);
@@ -699,7 +706,8 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(false);
-        showAlignmentControls(false)
+        showAlignmentControls(false);
+        showUoaControls(false);
         const sc = dalScaleFromFilename(fname) || getStoredDalScale();
         scaleSelect.value = sc;
         setDalScale(sc);
@@ -711,6 +719,7 @@ function openModalByIndex(index) {
         showCoinControls(false);
         showMyrControls(false);
         showAlignmentControls(false);
+        showUoaControls(false);
         const sc = potdScaleFromFilename(fname) || getStoredPotdScale();
         scaleSelect.value = sc;
         setPotdScale(sc);
@@ -722,6 +731,7 @@ function openModalByIndex(index) {
         showCoinControls(false);
         showMyrControls(false);
         showAlignmentControls(false);
+        showUoaControls(false);
         const sc = nlbpScaleFromFilename(fname) || getStoredNlbpScale();
         scaleSelect.value = sc;
         setNlbpScale(sc);
@@ -734,6 +744,7 @@ function openModalByIndex(index) {
         showMyrControls(false);
         showAlignmentControls(true);
         populateAlignmentSelect();
+        showUoaControls(false);
         const align = alignmentFromFilename(fname);
         if (alignmentSelect) alignmentSelect.value = align;
         setHalvingAlignment(align);
@@ -744,7 +755,8 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(false);
-        showAlignmentControls(false)
+        showAlignmentControls(false);
+        showUoaControls(false);
         populatePriceOfSelect();
         let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
         if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
@@ -754,6 +766,24 @@ function openModalByIndex(index) {
         const meta = PRICE_OF_META[chosenSlug];
         if (meta) applyPostLinksFromMeta(meta);
         setPriceOfItem(chosenSlug);
+    } else if (isUoaFile(fname)) {
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
+        showAlignmentControls(false);
+        showUoaControls(true);
+
+        populateUoaSelect();
+        let chosenSlug = uoaSlugFromFilename(fname) || getStoredUoaItem();
+        if (!UOA_OPTIONS.some(o => o.slug === chosenSlug)) {
+            chosenSlug = UOA_OPTIONS[0]?.slug || chosenSlug;
+        }
+        if (uoaSelect) uoaSelect.value = chosenSlug;
+        setUoaItem(chosenSlug);
+
     } else if (isCoinFile(fname)) {
         showYearControls(false);
         showScaleControls(false);
@@ -761,7 +791,8 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(true);
         showMyrControls(false);
-        showAlignmentControls(false)
+        showAlignmentControls(false);
+        showUoaControls(false);
         populateCoinSelect();
         let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
         if (!COIN_OPTIONS.some(o => o.slug === chosen)) chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
@@ -774,7 +805,8 @@ function openModalByIndex(index) {
         showDominanceControls(false);
         showCoinControls(false);
         showMyrControls(true);
-        showAlignmentControls(false)
+        showAlignmentControls(false);
+        showUoaControls(false);
         populateMyrSelect();
         const chosenRange = myrRangeFromFilename(fname) || MYR_DEFAULT_RANGE;
         myrSelect.value = chosenRange;
@@ -787,6 +819,7 @@ function openModalByIndex(index) {
         showCoinControls(false);
         showMyrControls(false);
         showAlignmentControls(false);
+        showUoaControls(false);
         setModalImageAndCenter(fname, image.title);
         modalImg.alt = image.title;
         replaceUrlForFilename(fname);
@@ -809,7 +842,7 @@ function closeModal() {
     showMyrControls(false);
     showDominanceControls(false);
     showCoinControls(false);
-    showAlignmentControls(false)
+    showAlignmentControls(false);
     try {
         const cur = visibleImages[currentIndex];
         if (cur && isMyrFile(cur.filename) && cur.filename !== `${MYR_BASE}.png`) {
@@ -1582,6 +1615,159 @@ function cyclePriceOf(direction) {
 }
 
 /* ===========================
+ * MODULE: Unit of Account (UOA)
+ * uoa_<slug>.png  e.g. uoa_btc_usd.png
+ * =========================== */
+const UOA_BASE = 'uoa_';
+const UOA_STORAGE_KEY = 'uoaItem';
+let UOA_OPTIONS = [];
+let UOA_META = {};
+
+function isUoaFile(fname) {
+    return /^uoa_[a-z0-9_]+\.png$/i.test(fname);
+}
+
+function uoaSlugFromFilename(fname) {
+    const m = fname.match(/^uoa_([a-z0-9_]+)\.png$/i);
+    return m ? m[1] : null;
+}
+
+function uoaFilenameForSlug(slug) {
+    return `${UOA_BASE}${slug}.png`;
+}
+
+// btc_usd   -> BTC/USD
+// gold      -> GOLD
+// sp500     -> SP500
+// foo_bar_baz -> FOO BAR BAZ (fallback)
+function uoaLabelFromSlug(slug) {
+    const parts = slug.split('_');
+    if (parts.length === 2) {
+        return `${parts[0].toUpperCase()}/${parts[1].toUpperCase()}`;
+    }
+    if (parts.length === 1) {
+        return parts[0].toUpperCase();
+    }
+    return parts.map(p => p.toUpperCase()).join(' ');
+}
+
+function buildUoaOptionsFromList(list) {
+    const bySlug = new Map();
+    list.forEach(img => {
+        if (!isUoaFile(img.filename)) return;
+        const slug = uoaSlugFromFilename(img.filename);
+        if (!slug) return;
+
+        if (!bySlug.has(slug)) {
+            const label = uoaLabelFromSlug(slug);
+            bySlug.set(slug, {
+                slug,
+                label,
+                filename: uoaFilenameForSlug(slug),
+                title: img.title || `Unit of Account – ${label}`,
+                description: img.description || '',
+                latest_x: img.latest_x || '',
+                latest_nostr: img.latest_nostr || '',
+                latest_youtube: img.latest_youtube || ''
+            });
+        }
+    });
+
+    UOA_OPTIONS = Array.from(bySlug.values()).sort((a, b) => a.label.localeCompare(b.label));
+    UOA_META = UOA_OPTIONS.reduce((acc, o) => {
+        acc[o.slug] = o;
+        return acc;
+    }, {});
+}
+
+function populateUoaSelect() {
+    if (!uoaSelect) return;
+    uoaSelect.innerHTML = UOA_OPTIONS
+        .map(o => `<option value="${o.slug}">${o.label}</option>`)
+        .join('');
+}
+
+function getStoredUoaItem() {
+    return getCookie(UOA_STORAGE_KEY)
+        || localStorage.getItem(UOA_STORAGE_KEY)
+        || (UOA_OPTIONS[0]?.slug || '');
+}
+
+function setStoredUoaItem(slug) {
+    setCookie(UOA_STORAGE_KEY, slug, 365);
+    localStorage.setItem(UOA_STORAGE_KEY, slug);
+}
+
+function setUoaItem(slug) {
+    const image = visibleImages[currentIndex];
+    if (!image || !isUoaFile(image.filename)) return;
+
+    const meta = UOA_META[slug] || {};
+    const oldFilename = image.filename;
+    const newFilename = uoaFilenameForSlug(slug);
+
+    setStoredUoaItem(slug);
+
+    const label = uoaLabelFromSlug(slug);
+    const title = meta.title || image.title || `Unit of Account – ${label}`;
+    const description = meta.description || image.description || '';
+
+    // Update modal
+    setModalImageAndCenter(newFilename, title);
+    replaceUrlForFilename(newFilename);
+    setModalLinks({
+        x: meta.latest_x || '',
+        nostr: meta.latest_nostr || '',
+        youtube: meta.latest_youtube || ''
+    });
+
+    // Update in-memory record
+    Object.assign(visibleImages[currentIndex], {
+        filename: newFilename,
+        title,
+        description,
+        latest_x: meta.latest_x || '',
+        latest_nostr: meta.latest_nostr || '',
+        latest_youtube: meta.latest_youtube || ''
+    });
+
+    // Grid title/description
+    const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
+    if (titleEl) titleEl.textContent = title;
+
+    const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
+    if (descEl) descEl.textContent = description;
+
+    // Thumb + tooltip
+    updateGridThumbAtCurrent(newFilename, title);
+    const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+    const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
+    if (cardContainer) {
+        const tip = description || title;
+        cardContainer.setAttribute('title', tip);
+        if (gridImg) gridImg.alt = title;
+    }
+
+    // Keep favorites consistent
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+}
+
+function cycleUoaItem(direction) {
+    if (!uoaSelect || UOA_OPTIONS.length === 0) return;
+    const slugs = UOA_OPTIONS.map(o => o.slug);
+    const currentSlug = uoaSelect.value || getStoredUoaItem() || slugs[0];
+    const idx = slugs.indexOf(currentSlug);
+    if (idx === -1) return;
+    const delta = direction === 'up' ? -1 : 1;
+    const len = slugs.length;
+    const newIdx = (idx + delta + len) % len;
+    const nextSlug = slugs[newIdx];
+    uoaSelect.value = nextSlug;
+    setUoaItem(nextSlug);
+}
+
+/* ===========================
  * MODULE: Coins (single card)
  * =========================== */
 function isCoinFile(fname) {
@@ -1737,15 +1923,12 @@ fetch('final_frames/image_list.json')
         populatePriceOfSelect();
         buildCoinOptionsFromList(imageList);
         populateCoinSelect();
-        const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
-        const coinsAll = imageList.filter(img => coinSet.has(img.filename));
-        const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
-        const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
-        let insertIdx = firstCoinIdx !== -1 ? firstCoinIdx : nonCoins.findIndex(img => img.filename.startsWith('bitcoin_dominance')) + 1;
-        if (insertIdx < 0) insertIdx = nonCoins.length;
+        buildUoaOptionsFromList(imageList);
         const initialFilename = getImageNameFromPath();
+        const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
         let urlPofSlug = null;
         let urlCoinSlug = null;
+        let urlUoaSlug = null;
         if (initialFilename && initialFilename.startsWith(POF_BASE)) {
             const s = pofSlugFromFilename(initialFilename);
             if (s && PRICE_OF_OPTIONS.some(o => o.slug === s)) {
@@ -1760,95 +1943,145 @@ fetch('final_frames/image_list.json')
                 setStoredCoinSlug(s);
             }
         }
+        if (initialFilename && isUoaFile(initialFilename)) {
+            const s = uoaSlugFromFilename(initialFilename);
+            if (s && UOA_OPTIONS.some(o => o.slug === s)) {
+                urlUoaSlug = s;
+                setStoredUoaItem(s);
+            }
+        }
+        const uoaAll = imageList.filter(img => isUoaFile(img.filename));
+        if (uoaAll.length) {
+            const storedUoaSlug = getStoredUoaItem();
+            const effectiveSlug =
+                urlUoaSlug ||
+                storedUoaSlug ||
+                (UOA_OPTIONS[0]?.slug || null);
+            const repFilename = effectiveSlug
+                ? uoaFilenameForSlug(effectiveSlug)
+                : uoaAll[0].filename;
+            const repMeta = effectiveSlug ? UOA_META[effectiveSlug] : null;
+            const chosen = uoaAll.find(img => img.filename === repFilename) || uoaAll[0];
+            const uoaCard = {
+                ...chosen,
+                filename: repFilename,
+                title: repMeta?.title || chosen.title || "Unit of Account",
+                description: repMeta?.description || chosen.description || "",
+                latest_x: repMeta?.latest_x || chosen.latest_x || "",
+                latest_nostr: repMeta?.latest_nostr || chosen.latest_nostr || "",
+                latest_youtube: repMeta?.latest_youtube || chosen.latest_youtube || ""
+            };
+            const firstIdx = imageList.findIndex(img => isUoaFile(img.filename));
+            const nonUoa = imageList.filter(img => !isUoaFile(img.filename));
+            const insertIndex = firstIdx === -1 ? nonUoa.length : firstIdx;
+            imageList = [
+                ...nonUoa.slice(0, insertIndex),
+                uoaCard,
+                ...nonUoa.slice(insertIndex)
+            ];
+        }
+        const coinsAll = imageList.filter(img => coinSet.has(img.filename));
+        const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
+        const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
+        let insertIdx =
+            firstCoinIdx !== -1
+                ? firstCoinIdx
+                : nonCoins.findIndex(img => img.filename.startsWith("bitcoin_dominance")) + 1;
+        if (insertIdx < 0) insertIdx = nonCoins.length;
         const storedCoinSlug = getStoredCoinSlug();
-        const repCoinMeta = COIN_META[storedCoinSlug] || COIN_META['wholecoins'] || COIN_OPTIONS[0];
+        const repCoinMeta =
+            COIN_META[storedCoinSlug] ||
+            COIN_META["wholecoins"] ||
+            COIN_OPTIONS[0];
         let coinCard = null;
         if (repCoinMeta) {
             coinCard = {
                 filename: coinFilenameForSlug(repCoinMeta.slug),
                 title: repCoinMeta.title,
                 description: repCoinMeta.description,
-                latest_x: repCoinMeta.latest_x || '',
-                latest_nostr: repCoinMeta.latest_nostr || '',
-                latest_youtube: repCoinMeta.latest_youtube || ''
+                latest_x: repCoinMeta.latest_x || "",
+                latest_nostr: repCoinMeta.latest_nostr || "",
+                latest_youtube: repCoinMeta.latest_youtube || ""
             };
         }
         if (coinCard) {
-            imageList = [...nonCoins.slice(0, insertIdx), coinCard, ...nonCoins.slice(insertIdx)];
+            imageList = [
+                ...nonCoins.slice(0, insertIdx),
+                coinCard,
+                ...nonCoins.slice(insertIdx)
+            ];
         } else {
             imageList = nonCoins;
         }
         const storedPofSlug = getStoredPofItem();
-        const repFilename = pofFilenameForSlug(storedPofSlug);
-        const repMeta = PRICE_OF_META[storedPofSlug];
+        const repPofFilename = pofFilenameForSlug(storedPofSlug);
+        const repPofMeta = PRICE_OF_META[storedPofSlug];
         const nonPof = imageList.filter(img => !isPriceOfFile(img.filename));
         const pofAll = imageList.filter(img => isPriceOfFile(img.filename));
         let pofCard = null;
         if (pofAll.length) {
-            const chosen = pofAll.find(img => img.filename === repFilename) || pofAll[0];
+            const chosen =
+                pofAll.find(img => img.filename === repPofFilename) || pofAll[0];
             pofCard = {
                 ...chosen,
-                filename: repFilename,
-                title: repMeta?.title || chosen.title,
-                description: repMeta?.description || chosen.description,
-                latest_x: repMeta?.latest_x || '',
-                latest_nostr: repMeta?.latest_nostr || '',
-                latest_youtube: repMeta?.latest_youtube || ''
+                filename: repPofFilename,
+                title: repPofMeta?.title || chosen.title,
+                description: repPofMeta?.description || chosen.description,
+                latest_x: repPofMeta?.latest_x || "",
+                latest_nostr: repPofMeta?.latest_nostr || "",
+                latest_youtube: repPofMeta?.latest_youtube || ""
             };
         }
         if (pofCard) {
-            const gwIdx = nonPof.findIndex(img => img.filename.startsWith('global_wealth'));
+            const gwIdx = nonPof.findIndex(img =>
+                img.filename.startsWith("global_wealth")
+            );
             if (gwIdx !== -1) {
-                imageList = [...nonPof.slice(0, gwIdx + 1), pofCard, ...nonPof.slice(gwIdx + 1)];
+                imageList = [
+                    ...nonPof.slice(0, gwIdx + 1),
+                    pofCard,
+                    ...nonPof.slice(gwIdx + 1)
+                ];
             } else {
                 imageList = [...nonPof, pofCard];
             }
         } else {
             imageList = nonPof;
         }
-
-        // --- Collapse halving_cycles variants into a single card (but keep both in HALVING_META) ---
-        const halvingEntries = imageList.filter(img => isHalvingCyclesFile(img.filename));
-
+        const halvingEntries = imageList.filter(img =>
+            isHalvingCyclesFile(img.filename)
+        );
         if (halvingEntries.length) {
-            // See if URL explicitly requested a particular alignment
             let urlHalvingAlignment = null;
             if (initialFilename && isHalvingCyclesFile(initialFilename)) {
                 urlHalvingAlignment = alignmentFromFilename(initialFilename);
                 setStoredHalvingAlignment(urlHalvingAlignment);
             }
-
             const storedHalvingAlignment = getStoredHalvingAlignment();
             const effectiveAlignment = urlHalvingAlignment || storedHalvingAlignment;
-
-            const desiredFilename = halvingFilenameForAlignment(effectiveAlignment);
-            const baseMeta = HALVING_META[desiredFilename] || halvingEntries[0];
-
-            const firstIdx = imageList.findIndex(img => isHalvingCyclesFile(img.filename));
-
-            // Remove all halving entries from the main list
-            imageList = imageList.filter(img => !isHalvingCyclesFile(img.filename));
-
-            // Insert a single representative halving card at the original first position
+            const desiredFilename =
+                halvingFilenameForAlignment(effectiveAlignment);
+            const baseMeta =
+                HALVING_META[desiredFilename] || halvingEntries[0];
+            const firstIdx = imageList.findIndex(img =>
+                isHalvingCyclesFile(img.filename)
+            );
+            imageList = imageList.filter(
+                img => !isHalvingCyclesFile(img.filename)
+            );
             const halvingCard = {
                 filename: desiredFilename,
-                title: baseMeta.title || 'Halving Cycles',
-                description: baseMeta.description || '',
-                latest_x: baseMeta.latest_x || '',
-                latest_nostr: baseMeta.latest_nostr || '',
-                latest_youtube: baseMeta.latest_youtube || ''
+                title: baseMeta.title || "Halving Cycles",
+                description: baseMeta.description || "",
+                latest_x: baseMeta.latest_x || "",
+                latest_nostr: baseMeta.latest_nostr || "",
+                latest_youtube: baseMeta.latest_youtube || ""
             };
-
             const insertIndex = firstIdx === -1 ? imageList.length : firstIdx;
             imageList.splice(insertIndex, 0, halvingCard);
         }
-
-        visibleImages = [...imageList];
-        migratePriceOfFavorites();
-        filterImages();
-
         let urlBvgYear = null;
-        if (initialFilename && initialFilename.startsWith('bitcoin_vs_gold_')) {
+        if (initialFilename && initialFilename.startsWith("bitcoin_vs_gold_")) {
             const m = initialFilename.match(/bitcoin_vs_gold_(\d{4})\.png$/);
             if (m && isValidBvgYear(m[1])) {
                 urlBvgYear = m[1];
@@ -1857,97 +2090,146 @@ fetch('final_frames/image_list.json')
         }
         let urlDalScale = null;
         if (initialFilename && initialFilename.startsWith(DAL_BASE)) {
-            if (initialFilename === `${DAL_BASE}_log.png`) urlDalScale = 'log';
-            else if (initialFilename === `${DAL_BASE}.png`) urlDalScale = 'linear';
-            if (urlDalScale) setStoredDalScale(urlDalScale);
+            if (initialFilename === `${DAL_BASE}_log.png`) urlDalScale = "log";
+            else urlDalScale = "linear";
+            setStoredDalScale(urlDalScale);
         }
         let urlPotdScale = null;
         if (initialFilename && initialFilename.startsWith(POTD_BASE)) {
-            if (initialFilename === `${POTD_BASE}_log.png`) urlPotdScale = 'log';
-            else urlPotdScale = 'linear';
+            if (initialFilename === `${POTD_BASE}_log.png`) urlPotdScale = "log";
+            else urlPotdScale = "linear";
             setStoredPotdScale(urlPotdScale);
         }
         let urlNlbpScale = null;
         if (initialFilename && initialFilename.startsWith(NLBP_BASE)) {
-            if (initialFilename === `${NLBP_BASE}_log.png`) urlNlbpScale = 'log';
-            else urlNlbpScale = 'linear';
+            if (initialFilename === `${NLBP_BASE}_log.png`) urlNlbpScale = "log";
+            else urlNlbpScale = "linear";
             setStoredNlbpScale(urlNlbpScale);
         }
         let urlDomUnit = null;
         if (initialFilename && initialFilename.startsWith(DOM_BASE)) {
-            if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = 'btc';
-            else if (initialFilename === `${DOM_BASE}.png`) urlDomUnit = 'usd';
-            if (urlDomUnit) setStoredDominanceUnit(urlDomUnit);
+            if (initialFilename === `${DOM_BASE}_btc.png`) urlDomUnit = "btc";
+            else urlDomUnit = "usd";
+            setStoredDominanceUnit(urlDomUnit);
         }
-        const storedBvgYear = getStoredBvgYear();
         imageList = imageList.map(img =>
             img.filename.startsWith(BVG_BASE)
-                ? { ...img, filename: `${BVG_BASE}_${storedBvgYear}.png` }
+                ? { ...img, filename: `${BVG_BASE}_${getStoredBvgYear()}.png` }
                 : img
         );
-        const storedDalScale = getStoredDalScale();
         imageList = imageList.map(img =>
             img.filename.startsWith(DAL_BASE)
-                ? { ...img, filename: dalFilenameForScale(storedDalScale) }
+                ? { ...img, filename: dalFilenameForScale(getStoredDalScale()) }
                 : img
         );
-        const storedPotdScale = getStoredPotdScale();
         imageList = imageList.map(img =>
             img.filename.startsWith(POTD_BASE)
-                ? { ...img, filename: potdFilenameForScale(storedPotdScale) }
+                ? { ...img, filename: potdFilenameForScale(getStoredPotdScale()) }
                 : img
         );
-        const storedNlbpScale = getStoredNlbpScale();
         imageList = imageList.map(img =>
             img.filename.startsWith(NLBP_BASE)
-                ? { ...img, filename: nlbpFilenameForScale(storedNlbpScale) }
+                ? { ...img, filename: nlbpFilenameForScale(getStoredNlbpScale()) }
                 : img
         );
-        const storedDomUnit = getStoredDominanceUnit();
-        imageList = imageList.map(img => (img.filename.startsWith(DOM_BASE) ? {...img, filename: domFilenameForUnit(storedDomUnit)} : img));
+        imageList = imageList.map(img =>
+            img.filename.startsWith(DOM_BASE)
+                ? { ...img, filename: domFilenameForUnit(getStoredDominanceUnit()) }
+                : img
+        );
         visibleImages = [...imageList];
+        migratePriceOfFavorites();
         filterImages();
-        const savedLayout = localStorage.getItem('preferredLayout');
-        if (savedLayout === 'list' || savedLayout === 'grid') setLayout(savedLayout, false);
-        if (showFavoritesOnly) document.getElementById('favoritesToggle').classList.add('active');
+        const savedLayout = localStorage.getItem("preferredLayout");
+        if (savedLayout === "list" || savedLayout === "grid") {
+            setLayout(savedLayout, false);
+        }
+        if (showFavoritesOnly)
+            document.getElementById("favoritesToggle").classList.add("active");
         if (initialFilename) {
             let opened = false;
             let openIdx = -1;
             if (urlBvgYear) {
-                openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith('bitcoin_vs_gold_'));
+                openIdx = visibleImages.findIndex(
+                    img => img.filename === initialFilename
+                );
+                if (openIdx === -1)
+                    openIdx = visibleImages.findIndex(img =>
+                        img.filename.startsWith("bitcoin_vs_gold_")
+                    );
             } else if (urlDalScale) {
-                openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DAL_BASE));
+                openIdx = visibleImages.findIndex(
+                    img => img.filename === initialFilename
+                );
+                if (openIdx === -1)
+                    openIdx = visibleImages.findIndex(img =>
+                        img.filename.startsWith(DAL_BASE)
+                    );
             } else if (urlPotdScale) {
-                openIdx = visibleImages.findIndex(img => img.filename.startsWith(POTD_BASE));
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+                openIdx = visibleImages.findIndex(img =>
+                    img.filename.startsWith(POTD_BASE)
+                );
+                if (openIdx === -1)
+                    openIdx = visibleImages.findIndex(
+                        img => img.filename === initialFilename
+                    );
             } else if (urlNlbpScale) {
-                openIdx = visibleImages.findIndex(img => img.filename.startsWith(NLBP_BASE));
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+                openIdx = visibleImages.findIndex(img =>
+                    img.filename.startsWith(NLBP_BASE)
+                );
+                if (openIdx === -1)
+                    openIdx = visibleImages.findIndex(
+                        img => img.filename === initialFilename
+                    );
+            } else if (urlUoaSlug) {
+                openIdx = visibleImages.findIndex(img =>
+                    isUoaFile(img.filename)
+                );
             } else if (urlPofSlug) {
-                openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(POF_BASE));
+                openIdx = visibleImages.findIndex(
+                    img => img.filename === initialFilename
+                );
+                if (openIdx === -1)
+                    openIdx = visibleImages.findIndex(img =>
+                        img.filename.startsWith(POF_BASE)
+                    );
             } else if (urlDomUnit) {
-                openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => img.filename.startsWith(DOM_BASE));
+                openIdx = visibleImages.findIndex(
+                    img => img.filename === initialFilename
+                );
+                if (openIdx === -1)
+                    openIdx = visibleImages.findIndex(img =>
+                        img.filename.startsWith(DOM_BASE)
+                    );
             } else if (coinSet.has(initialFilename)) {
-                openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
-                if (openIdx === -1) openIdx = visibleImages.findIndex(img => isCoinFile(img.filename));
-            } else if (!initialFilename.startsWith('bitcoin_vs_gold_')) {
-                openIdx = visibleImages.findIndex(img => img.filename === initialFilename);
+                openIdx = visibleImages.findIndex(
+                    img => img.filename === initialFilename
+                );
+                if (openIdx === -1)
+                    openIdx = visibleImages.findIndex(img =>
+                        isCoinFile(img.filename)
+                    );
+            } else if (
+                !initialFilename.startsWith("bitcoin_vs_gold_")
+            ) {
+                openIdx = visibleImages.findIndex(
+                    img => img.filename === initialFilename
+                );
             }
             if (openIdx !== -1) {
                 openModalByIndex(openIdx);
                 opened = true;
             }
             if (!opened) {
-                if (!openByFilenameAllowingNonFav(initialFilename)) history.replaceState(null, '', '/');
+                if (
+                    !openByFilenameAllowingNonFav(initialFilename)
+                )
+                    history.replaceState(null, "", "/");
             }
         }
     })
     .catch(err => {
-        imageGrid.textContent = 'Failed to load visualizations.';
+        imageGrid.textContent = "Failed to load visualizations.";
         console.error(err);
     });
 
@@ -2403,6 +2685,7 @@ priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
 coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
 myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
 alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
+uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
@@ -2446,6 +2729,9 @@ document.addEventListener('keydown', e => {
             } else if (isPriceOfFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cyclePriceOf('up') : cyclePriceOf('down');
+            } else if (isUoaFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleUoaItem('up') : cycleUoaItem('down');
             } else if (isCoinFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cycleCoinType('up') : cycleCoinType('down');

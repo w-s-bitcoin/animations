@@ -1096,7 +1096,7 @@ body.slideshow-open {
 
 /* ===========================
     DROPDOWN CONTROLS IN MODAL
-    (BVG year / DAL scale / Dominance / Price Of / Coins)
+    (BVG year / DAL scale / Dominance / Price Of / Coins / UoA)
     =========================== */
 .year-controls,
 .scale-controls,
@@ -1104,7 +1104,8 @@ body.slideshow-open {
 .priceof-controls,
 .coin-controls,
 .myr-controls,
-.alignment-controls {
+.alignment-controls,
+.uoa-controls {
     display: none;
     align-items: center;
     gap: 0.4rem;
@@ -1116,7 +1117,8 @@ body.slideshow-open {
 .dominance-controls.show,
 .coin-controls.show,
 .myr-controls.show,
-.alignment-controls.show {
+.alignment-controls.show,
+.uoa-controls.show {
     display: inline-flex;
 }
 .select-wrap {
@@ -1130,7 +1132,8 @@ body.slideshow-open {
 #priceof-select,
 #coin-select,
 #myr-select,
-#alignment-select {
+#alignment-select,
+#uoa-select {
     font-family: monospace;
     font-size: 1rem;
     color: #fff;
@@ -1160,7 +1163,9 @@ body.slideshow-open {
 #myr-select:hover,
 #myr-select:focus,
 #alignment-select:hover,
-#alignment-select:focus {
+#alignment-select:focus,
+#uoa-select:hover,
+#uoa-select:focus {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--brand);
     color: var(--brand);
@@ -1205,7 +1210,8 @@ body.slideshow-open {
     #priceof-controls,
     #coin-controls,
     #myr-controls,
-    #alignment-controls {
+    #alignment-controls,
+    #uoa-controls {
         flex-basis: 100%;
         margin-left: 0;
     }
