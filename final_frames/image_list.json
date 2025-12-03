@@ -1,11 +1,19 @@
 [
     {
-        "filename": "uoa.png",
-        "title": "Unit of Account",
+        "filename": "uoa_btc_usd.png",
+        "title": "Unit of Account (BTC/USD)",
         "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of dollars",
         "latest_x": "https://x.com/w_s_bitcoin/status/1945906813968298283",
         "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqypvng2f8pa2laesr3vcdanfplczkljns7zxc4m8t9j7u0p8m8jjgwzncgnt",
         "latest_youtube": "https://youtu.be/CZKA01K3vig"
+    },
+    {
+        "filename": "uoa_btc_xau.png",
+        "title": "Unit of Account (BTC/XAU)",
+        "description": "Shows the price of 1 oz of gold in terms of bitcoin and 1 BTC in terms of ounces of gold",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
     },
     {
         "filename": "price_distribution.png",
