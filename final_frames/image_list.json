@@ -398,6 +398,292 @@
         "latest_youtube": ""
     },
     {
+        "filename": "uoa_btc_pen.png",
+        "title": "Unit of Account (BTC/PEN)",
+        "description": "Shows the price of S/. 1 Peruvian Sol in terms of bitcoin and 1 BTC in terms of S/.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_bob.png",
+        "title": "Unit of Account (BTC/BOB)",
+        "description": "Shows the price of Bs 1 Bolivian Boliviano in terms of bitcoin and 1 BTC in terms of Bs",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_pyg.png",
+        "title": "Unit of Account (BTC/PYG)",
+        "description": "Shows the price of ₲1 Paraguayan Guarani in terms of bitcoin and 1 BTC in terms of ₲",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_uyu.png",
+        "title": "Unit of Account (BTC/UYU)",
+        "description": "Shows the price of UYU 1 Uruguayan Peso in terms of bitcoin and 1 BTC in terms of UYU",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_dop.png",
+        "title": "Unit of Account (BTC/DOP)",
+        "description": "Shows the price of DOP 1 Dominican Peso in terms of bitcoin and 1 BTC in terms of DOP",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_htg.png",
+        "title": "Unit of Account (BTC/HTG)",
+        "description": "Shows the price of G 1 Haitian Gourde in terms of bitcoin and 1 BTC in terms of G",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_jmd.png",
+        "title": "Unit of Account (BTC/JMD)",
+        "description": "Shows the price of J$1 Jamaican Dollar in terms of bitcoin and 1 BTC in terms of J$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_ttd.png",
+        "title": "Unit of Account (BTC/TTD)",
+        "description": "Shows the price of TT$1 Trinidad & Tobago Dollar in terms of bitcoin and 1 BTC in terms of TT$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_bbd.png",
+        "title": "Unit of Account (BTC/BBD)",
+        "description": "Shows the price of BBD 1 Barbadian Dollar in terms of bitcoin and 1 BTC in terms of BBD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_bsd.png",
+        "title": "Unit of Account (BTC/BSD)",
+        "description": "Shows the price of BSD 1 Bahamian Dollar in terms of bitcoin and 1 BTC in terms of BSD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_bzd.png",
+        "title": "Unit of Account (BTC/BZD)",
+        "description": "Shows the price of BZD 1 Belize Dollar in terms of bitcoin and 1 BTC in terms of BZD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_xcd.png",
+        "title": "Unit of Account (BTC/XCD)",
+        "description": "Shows the price of EC$1 East Caribbean Dollar in terms of bitcoin and 1 BTC in terms of EC$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_mad.png",
+        "title": "Unit of Account (BTC/MAD)",
+        "description": "Shows the price of MAD 1 Moroccan Dirham in terms of bitcoin and 1 BTC in terms of MAD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_dzd.png",
+        "title": "Unit of Account (BTC/DZD)",
+        "description": "Shows the price of DZD 1 Algerian Dinar in terms of bitcoin and 1 BTC in terms of DZD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_tnd.png",
+        "title": "Unit of Account (BTC/TND)",
+        "description": "Shows the price of TND 1 Tunisian Dinar in terms of bitcoin and 1 BTC in terms of TND",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_ugx.png",
+        "title": "Unit of Account (BTC/UGX)",
+        "description": "Shows the price of UGX 1 Ugandan Shilling in terms of bitcoin and 1 BTC in terms of UGX",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_tzs.png",
+        "title": "Unit of Account (BTC/TZS)",
+        "description": "Shows the price of TZS 1 Tanzanian Shilling in terms of bitcoin and 1 BTC in terms of TZS",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_mzn.png",
+        "title": "Unit of Account (BTC/MZN)",
+        "description": "Shows the price of MZN 1 Mozambican Metical in terms of bitcoin and 1 BTC in terms of MZN",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_mur.png",
+        "title": "Unit of Account (BTC/MUR)",
+        "description": "Shows the price of Rs 1 Mauritian Rupee in terms of bitcoin and 1 BTC in terms of Rs",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_xof.png",
+        "title": "Unit of Account (BTC/XOF)",
+        "description": "Shows the price of 1 CFA West African CFA Franc in terms of bitcoin and 1 BTC in terms of CFA",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_xaf.png",
+        "title": "Unit of Account (BTC/XAF)",
+        "description": "Shows the price of 1 CFA Central African CFA Franc in terms of bitcoin and 1 BTC in terms of CFA",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_bgn.png",
+        "title": "Unit of Account (BTC/BGN)",
+        "description": "Shows the price of 1 лв Bulgarian Lev in terms of bitcoin and 1 BTC in terms of лв",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_hrk.png",
+        "title": "Unit of Account (BTC/HRK)",
+        "description": "Shows the price of 1 kn Croatian Kuna in terms of bitcoin and 1 BTC in terms of kn",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_rsd.png",
+        "title": "Unit of Account (BTC/RSD)",
+        "description": "Shows the price of RSD 1 Serbian Dinar in terms of bitcoin and 1 BTC in terms of RSD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_byn.png",
+        "title": "Unit of Account (BTC/BYN)",
+        "description": "Shows the price of Br 1 Belarusian Ruble in terms of bitcoin and 1 BTC in terms of Br",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_kwd.png",
+        "title": "Unit of Account (BTC/KWD)",
+        "description": "Shows the price of KD 1 Kuwaiti Dinar in terms of bitcoin and 1 BTC in terms of KD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_qar.png",
+        "title": "Unit of Account (BTC/QAR)",
+        "description": "Shows the price of QAR 1 Qatari Riyal in terms of bitcoin and 1 BTC in terms of QAR",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_omr.png",
+        "title": "Unit of Account (BTC/OMR)",
+        "description": "Shows the price of OMR 1 Omani Rial in terms of bitcoin and 1 BTC in terms of OMR",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_bhd.png",
+        "title": "Unit of Account (BTC/BHD)",
+        "description": "Shows the price of BD 1 Bahraini Dinar in terms of bitcoin and 1 BTC in terms of BD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_jod.png",
+        "title": "Unit of Account (BTC/JOD)",
+        "description": "Shows the price of JOD 1 Jordanian Dinar in terms of bitcoin and 1 BTC in terms of JOD",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_bdt.png",
+        "title": "Unit of Account (BTC/BDT)",
+        "description": "Shows the price of BDT 1 Bangladeshi Taka in terms of bitcoin and 1 BTC in terms of BDT",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_lkr.png",
+        "title": "Unit of Account (BTC/LKR)",
+        "description": "Shows the price of Rs 1 Sri Lankan Rupee in terms of bitcoin and 1 BTC in terms of Rs",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_npr.png",
+        "title": "Unit of Account (BTC/NPR)",
+        "description": "Shows the price of Rs 1 Nepalese Rupee in terms of bitcoin and 1 BTC in terms of Rs",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_kzt.png",
+        "title": "Unit of Account (BTC/KZT)",
+        "description": "Shows the price of 1 ₸ Kazakhstani Tenge in terms of bitcoin and 1 BTC in terms of ₸",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_uzs.png",
+        "title": "Unit of Account (BTC/UZS)",
+        "description": "Shows the price of UZS 1 Uzbekistani Som in terms of bitcoin and 1 BTC in terms of UZS",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "price_distribution.png",
         "title": "Price Distribution",
         "description": "Shows the number of daily closes in between each price range",
