@@ -2,10 +2,392 @@
     {
         "filename": "uoa_btc_usd.png",
         "title": "Unit of Account (BTC/USD)",
-        "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of dollars",
-        "latest_x": "https://x.com/w_s_bitcoin/status/1945906813968298283",
-        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqypvng2f8pa2laesr3vcdanfplczkljns7zxc4m8t9j7u0p8m8jjgwzncgnt",
-        "latest_youtube": "https://youtu.be/CZKA01K3vig"
+        "description": "Shows the price of $1 US Dollar in terms of bitcoin and 1 BTC in terms of $",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_eur.png",
+        "title": "Unit of Account (BTC/EUR)",
+        "description": "Shows the price of €1 Euro in terms of bitcoin and 1 BTC in terms of €",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_jpy.png",
+        "title": "Unit of Account (BTC/JPY)",
+        "description": "Shows the price of ¥1 Japanese Yen in terms of bitcoin and 1 BTC in terms of ¥",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_gbp.png",
+        "title": "Unit of Account (BTC/GBP)",
+        "description": "Shows the price of £1 British Pound in terms of bitcoin and 1 BTC in terms of £",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_aud.png",
+        "title": "Unit of Account (BTC/AUD)",
+        "description": "Shows the price of A$1 Australian Dollar in terms of bitcoin and 1 BTC in terms of A$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_cad.png",
+        "title": "Unit of Account (BTC/CAD)",
+        "description": "Shows the price of C$1 Canadian Dollar in terms of bitcoin and 1 BTC in terms of C$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_chf.png",
+        "title": "Unit of Account (BTC/CHF)",
+        "description": "Shows the price of 1 CHF Swiss Franc in terms of bitcoin and 1 BTC in terms of CHF",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_cny.png",
+        "title": "Unit of Account (BTC/CNY)",
+        "description": "Shows the price of ¥1 Chinese Yuan in terms of bitcoin and 1 BTC in terms of ¥",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_sek.png",
+        "title": "Unit of Account (BTC/SEK)",
+        "description": "Shows the price of 1 kr Swedish Krona in terms of bitcoin and 1 BTC in terms of kr",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_nzd.png",
+        "title": "Unit of Account (BTC/NZD)",
+        "description": "Shows the price of NZ$1 New Zealand Dollar in terms of bitcoin and 1 BTC in terms of NZ$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_krw.png",
+        "title": "Unit of Account (BTC/KRW)",
+        "description": "Shows the price of ₩1 South Korean Won in terms of bitcoin and 1 BTC in terms of ₩",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_sgd.png",
+        "title": "Unit of Account (BTC/SGD)",
+        "description": "Shows the price of S$1 Singapore Dollar in terms of bitcoin and 1 BTC in terms of S$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_nok.png",
+        "title": "Unit of Account (BTC/NOK)",
+        "description": "Shows the price of 1 kr Norwegian Krone in terms of bitcoin and 1 BTC in terms of kr",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_mxn.png",
+        "title": "Unit of Account (BTC/MXN)",
+        "description": "Shows the price of $1 Mexican Peso in terms of bitcoin and 1 BTC in terms of $",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_hkd.png",
+        "title": "Unit of Account (BTC/HKD)",
+        "description": "Shows the price of HK$1 Hong Kong Dollar in terms of bitcoin and 1 BTC in terms of HK$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_inr.png",
+        "title": "Unit of Account (BTC/INR)",
+        "description": "Shows the price of ₹1 Indian Rupee in terms of bitcoin and 1 BTC in terms of ₹",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_rub.png",
+        "title": "Unit of Account (BTC/RUB)",
+        "description": "Shows the price of ₽1 Russian Ruble in terms of bitcoin and 1 BTC in terms of ₽",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_zar.png",
+        "title": "Unit of Account (BTC/ZAR)",
+        "description": "Shows the price of R1 South African Rand in terms of bitcoin and 1 BTC in terms of R",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_try.png",
+        "title": "Unit of Account (BTC/TRY)",
+        "description": "Shows the price of ₺1 Turkish Lira in terms of bitcoin and 1 BTC in terms of ₺",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_brl.png",
+        "title": "Unit of Account (BTC/BRL)",
+        "description": "Shows the price of R$1 Brazilian Real in terms of bitcoin and 1 BTC in terms of R$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_pln.png",
+        "title": "Unit of Account (BTC/PLN)",
+        "description": "Shows the price of 1 zł Polish Zloty in terms of bitcoin and 1 BTC in terms of zł",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_twd.png",
+        "title": "Unit of Account (BTC/TWD)",
+        "description": "Shows the price of NT$1 Taiwan Dollar in terms of bitcoin and 1 BTC in terms of NT$",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_thb.png",
+        "title": "Unit of Account (BTC/THB)",
+        "description": "Shows the price of ฿1 Thai Baht in terms of bitcoin and 1 BTC in terms of ฿",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_idr.png",
+        "title": "Unit of Account (BTC/IDR)",
+        "description": "Shows the price of Rp1 Indonesian Rupiah in terms of bitcoin and 1 BTC in terms of Rp",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_czk.png",
+        "title": "Unit of Account (BTC/CZK)",
+        "description": "Shows the price of 1 Kč Czech Koruna in terms of bitcoin and 1 BTC in terms of Kč",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_huf.png",
+        "title": "Unit of Account (BTC/HUF)",
+        "description": "Shows the price of 1 Ft Hungarian Forint in terms of bitcoin and 1 BTC in terms of Ft",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_ils.png",
+        "title": "Unit of Account (BTC/ILS)",
+        "description": "Shows the price of ₪1 Israeli Shekel in terms of bitcoin and 1 BTC in terms of ₪",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_dkk.png",
+        "title": "Unit of Account (BTC/DKK)",
+        "description": "Shows the price of 1 kr Danish Krone in terms of bitcoin and 1 BTC in terms of kr",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_sar.png",
+        "title": "Unit of Account (BTC/SAR)",
+        "description": "Shows the price of SAR 1 Saudi Riyal in terms of bitcoin and 1 BTC in terms of SAR",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_aed.png",
+        "title": "Unit of Account (BTC/AED)",
+        "description": "Shows the price of Dhs 1 UAE Dirham in terms of bitcoin and 1 BTC in terms of Dhs",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_pkr.png",
+        "title": "Unit of Account (BTC/PKR)",
+        "description": "Shows the price of PKR 1 Pakistani Rupee in terms of bitcoin and 1 BTC in terms of PKR",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_ars.png",
+        "title": "Unit of Account (BTC/ARS)",
+        "description": "Shows the price of ARS 1 Argentine Peso in terms of bitcoin and 1 BTC in terms of ARS",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_ngn.png",
+        "title": "Unit of Account (BTC/NGN)",
+        "description": "Shows the price of NGN 1 Nigerian Naira in terms of bitcoin and 1 BTC in terms of NGN",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_egp.png",
+        "title": "Unit of Account (BTC/EGP)",
+        "description": "Shows the price of EGP 1 Egyptian Pound in terms of bitcoin and 1 BTC in terms of EGP",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_lbp.png",
+        "title": "Unit of Account (BTC/LBP)",
+        "description": "Shows the price of LBP 1 Lebanese Pound in terms of bitcoin and 1 BTC in terms of LBP",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_vnd.png",
+        "title": "Unit of Account (BTC/VND)",
+        "description": "Shows the price of VND 1 Vietnamese Dong in terms of bitcoin and 1 BTC in terms of VND",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_irr.png",
+        "title": "Unit of Account (BTC/IRR)",
+        "description": "Shows the price of IRR 1 Iranian Rial in terms of bitcoin and 1 BTC in terms of IRR",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_syp.png",
+        "title": "Unit of Account (BTC/SYP)",
+        "description": "Shows the price of SYP 1 Syrian Pound in terms of bitcoin and 1 BTC in terms of SYP",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_sdg.png",
+        "title": "Unit of Account (BTC/SDG)",
+        "description": "Shows the price of SDG 1 Sudanese Pound in terms of bitcoin and 1 BTC in terms of SDG",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+
+    {
+        "filename": "uoa_btc_ghs.png",
+        "title": "Unit of Account (BTC/GHS)",
+        "description": "Shows the price of GH₵ 1 Ghanaian Cedi in terms of bitcoin and 1 BTC in terms of GH₵",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_uah.png",
+        "title": "Unit of Account (BTC/UAH)",
+        "description": "Shows the price of ₴1 Ukrainian Hryvnia in terms of bitcoin and 1 BTC in terms of ₴",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_kes.png",
+        "title": "Unit of Account (BTC/KES)",
+        "description": "Shows the price of KES 1 Kenyan Shilling in terms of bitcoin and 1 BTC in terms of KES",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_gel.png",
+        "title": "Unit of Account (BTC/GEL)",
+        "description": "Shows the price of ₾1 Georgian Lari in terms of bitcoin and 1 BTC in terms of ₾",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_cop.png",
+        "title": "Unit of Account (BTC/COP)",
+        "description": "Shows the price of $1 Colombian Peso in terms of bitcoin and 1 BTC in terms of $",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_clp.png",
+        "title": "Unit of Account (BTC/CLP)",
+        "description": "Shows the price of $1 Chilean Peso in terms of bitcoin and 1 BTC in terms of $",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_php.png",
+        "title": "Unit of Account (BTC/PHP)",
+        "description": "Shows the price of ₱1 Philippine Peso in terms of bitcoin and 1 BTC in terms of ₱",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_myr.png",
+        "title": "Unit of Account (BTC/MYR)",
+        "description": "Shows the price of RM1 Malaysian Ringgit in terms of bitcoin and 1 BTC in terms of RM",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "uoa_btc_ron.png",
+        "title": "Unit of Account (BTC/RON)",
+        "description": "Shows the price of 1 lei Romanian Leu in terms of bitcoin and 1 BTC in terms of lei",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
     },
     {
         "filename": "uoa_btc_xag.png",
