@@ -4,80 +4,80 @@
         "title": "Unit of Account (BTC/USD)",
         "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqypvng2f8pa2laesr3vcdanfplczkljns7zxc4m8t9j7u0p8m8jjgwzncgnt",
-        "latest_youtube": "https://youtu.be/CZKA01K3vig"
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_eur.png",
         "title": "Unit of Account (BTC/EUR)",
         "description": "Shows the price of €1 Euro in terms of bitcoin and 1 BTC in terms of €",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_jpy.png",
         "title": "Unit of Account (BTC/JPY)",
         "description": "Shows the price of ¥1 Japanese Yen in terms of bitcoin and 1 BTC in terms of ¥",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_gbp.png",
         "title": "Unit of Account (BTC/GBP)",
         "description": "Shows the price of £1 British Pound in terms of bitcoin and 1 BTC in terms of £",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_aud.png",
         "title": "Unit of Account (BTC/AUD)",
         "description": "Shows the price of A$1 Australian Dollar in terms of bitcoin and 1 BTC in terms of A$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_cad.png",
         "title": "Unit of Account (BTC/CAD)",
         "description": "Shows the price of C$1 Canadian Dollar in terms of bitcoin and 1 BTC in terms of C$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_chf.png",
         "title": "Unit of Account (BTC/CHF)",
         "description": "Shows the price of 1 CHF Swiss Franc in terms of bitcoin and 1 BTC in terms of CHF",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_cny.png",
         "title": "Unit of Account (BTC/CNY)",
         "description": "Shows the price of ¥1 Chinese Yuan in terms of bitcoin and 1 BTC in terms of ¥",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_sek.png",
         "title": "Unit of Account (BTC/SEK)",
         "description": "Shows the price of 1 kr Swedish Krona in terms of bitcoin and 1 BTC in terms of kr",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_nzd.png",
         "title": "Unit of Account (BTC/NZD)",
         "description": "Shows the price of NZ$1 New Zealand Dollar in terms of bitcoin and 1 BTC in terms of NZ$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -85,80 +85,80 @@
         "title": "Unit of Account (BTC/KRW)",
         "description": "Shows the price of ₩1 South Korean Won in terms of bitcoin and 1 BTC in terms of ₩",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_sgd.png",
         "title": "Unit of Account (BTC/SGD)",
         "description": "Shows the price of S$1 Singapore Dollar in terms of bitcoin and 1 BTC in terms of S$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_nok.png",
         "title": "Unit of Account (BTC/NOK)",
         "description": "Shows the price of 1 kr Norwegian Krone in terms of bitcoin and 1 BTC in terms of kr",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_mxn.png",
         "title": "Unit of Account (BTC/MXN)",
         "description": "Shows the price of $1 Mexican Peso in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_hkd.png",
         "title": "Unit of Account (BTC/HKD)",
         "description": "Shows the price of HK$1 Hong Kong Dollar in terms of bitcoin and 1 BTC in terms of HK$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_inr.png",
         "title": "Unit of Account (BTC/INR)",
         "description": "Shows the price of ₹1 Indian Rupee in terms of bitcoin and 1 BTC in terms of ₹",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_rub.png",
         "title": "Unit of Account (BTC/RUB)",
         "description": "Shows the price of ₽1 Russian Ruble in terms of bitcoin and 1 BTC in terms of ₽",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_zar.png",
         "title": "Unit of Account (BTC/ZAR)",
         "description": "Shows the price of R1 South African Rand in terms of bitcoin and 1 BTC in terms of R",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_try.png",
         "title": "Unit of Account (BTC/TRY)",
         "description": "Shows the price of ₺1 Turkish Lira in terms of bitcoin and 1 BTC in terms of ₺",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_brl.png",
         "title": "Unit of Account (BTC/BRL)",
         "description": "Shows the price of R$1 Brazilian Real in terms of bitcoin and 1 BTC in terms of R$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -166,80 +166,80 @@
         "title": "Unit of Account (BTC/PLN)",
         "description": "Shows the price of 1 zł Polish Zloty in terms of bitcoin and 1 BTC in terms of zł",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_twd.png",
         "title": "Unit of Account (BTC/TWD)",
         "description": "Shows the price of NT$1 Taiwan Dollar in terms of bitcoin and 1 BTC in terms of NT$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_thb.png",
         "title": "Unit of Account (BTC/THB)",
         "description": "Shows the price of ฿1 Thai Baht in terms of bitcoin and 1 BTC in terms of ฿",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_idr.png",
         "title": "Unit of Account (BTC/IDR)",
         "description": "Shows the price of Rp1 Indonesian Rupiah in terms of bitcoin and 1 BTC in terms of Rp",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_czk.png",
         "title": "Unit of Account (BTC/CZK)",
         "description": "Shows the price of 1 Kč Czech Koruna in terms of bitcoin and 1 BTC in terms of Kč",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_huf.png",
         "title": "Unit of Account (BTC/HUF)",
         "description": "Shows the price of 1 Ft Hungarian Forint in terms of bitcoin and 1 BTC in terms of Ft",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_ils.png",
         "title": "Unit of Account (BTC/ILS)",
         "description": "Shows the price of ₪1 Israeli Shekel in terms of bitcoin and 1 BTC in terms of ₪",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_dkk.png",
         "title": "Unit of Account (BTC/DKK)",
         "description": "Shows the price of 1 kr Danish Krone in terms of bitcoin and 1 BTC in terms of kr",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_sar.png",
         "title": "Unit of Account (BTC/SAR)",
         "description": "Shows the price of SAR 1 Saudi Riyal in terms of bitcoin and 1 BTC in terms of SAR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_aed.png",
         "title": "Unit of Account (BTC/AED)",
         "description": "Shows the price of Dhs 1 UAE Dirham in terms of bitcoin and 1 BTC in terms of Dhs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -247,16 +247,16 @@
         "title": "Unit of Account (BTC/PKR)",
         "description": "Shows the price of PKR 1 Pakistani Rupee in terms of bitcoin and 1 BTC in terms of PKR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_ars.png",
         "title": "Unit of Account (BTC/ARS)",
         "description": "Shows the price of ARS 1 Argentine Peso in terms of bitcoin and 1 BTC in terms of ARS",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -264,40 +264,40 @@
         "title": "Unit of Account (BTC/NGN)",
         "description": "Shows the price of NGN 1 Nigerian Naira in terms of bitcoin and 1 BTC in terms of NGN",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_egp.png",
         "title": "Unit of Account (BTC/EGP)",
         "description": "Shows the price of EGP 1 Egyptian Pound in terms of bitcoin and 1 BTC in terms of EGP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_lbp.png",
         "title": "Unit of Account (BTC/LBP)",
         "description": "Shows the price of LBP 1 Lebanese Pound in terms of bitcoin and 1 BTC in terms of LBP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_vnd.png",
         "title": "Unit of Account (BTC/VND)",
         "description": "Shows the price of VND 1 Vietnamese Dong in terms of bitcoin and 1 BTC in terms of VND",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_irr.png",
         "title": "Unit of Account (BTC/IRR)",
         "description": "Shows the price of IRR 1 Iranian Rial in terms of bitcoin and 1 BTC in terms of IRR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -305,16 +305,16 @@
         "title": "Unit of Account (BTC/SYP)",
         "description": "Shows the price of SYP 1 Syrian Pound in terms of bitcoin and 1 BTC in terms of SYP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_sdg.png",
         "title": "Unit of Account (BTC/SDG)",
         "description": "Shows the price of SDG 1 Sudanese Pound in terms of bitcoin and 1 BTC in terms of SDG",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -322,176 +322,176 @@
         "title": "Unit of Account (BTC/GHS)",
         "description": "Shows the price of GH₵ 1 Ghanaian Cedi in terms of bitcoin and 1 BTC in terms of GH₵",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_uah.png",
         "title": "Unit of Account (BTC/UAH)",
         "description": "Shows the price of ₴1 Ukrainian Hryvnia in terms of bitcoin and 1 BTC in terms of ₴",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_kes.png",
         "title": "Unit of Account (BTC/KES)",
         "description": "Shows the price of KES 1 Kenyan Shilling in terms of bitcoin and 1 BTC in terms of KES",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_cop.png",
         "title": "Unit of Account (BTC/COP)",
         "description": "Shows the price of $1 Colombian Peso in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_clp.png",
         "title": "Unit of Account (BTC/CLP)",
         "description": "Shows the price of $1 Chilean Peso in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_php.png",
         "title": "Unit of Account (BTC/PHP)",
         "description": "Shows the price of ₱1 Philippine Peso in terms of bitcoin and 1 BTC in terms of ₱",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_myr.png",
         "title": "Unit of Account (BTC/MYR)",
         "description": "Shows the price of RM1 Malaysian Ringgit in terms of bitcoin and 1 BTC in terms of RM",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_ron.png",
         "title": "Unit of Account (BTC/RON)",
         "description": "Shows the price of 1 lei Romanian Leu in terms of bitcoin and 1 BTC in terms of lei",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_xag.png",
         "title": "Unit of Account (BTC/XAG)",
         "description": "Shows the price of 1 oz of silver in terms of bitcoin and 1 BTC in terms of ounces of silver",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_xau.png",
         "title": "Unit of Account (BTC/XAU)",
         "description": "Shows the price of 1 oz of gold in terms of bitcoin and 1 BTC in terms of ounces of gold",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_pen.png",
         "title": "Unit of Account (BTC/PEN)",
         "description": "Shows the price of S/. 1 Peruvian Sol in terms of bitcoin and 1 BTC in terms of S/.",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_bob.png",
         "title": "Unit of Account (BTC/BOB)",
         "description": "Shows the price of Bs 1 Bolivian Boliviano in terms of bitcoin and 1 BTC in terms of Bs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_pyg.png",
         "title": "Unit of Account (BTC/PYG)",
         "description": "Shows the price of ₲1 Paraguayan Guarani in terms of bitcoin and 1 BTC in terms of ₲",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_uyu.png",
         "title": "Unit of Account (BTC/UYU)",
         "description": "Shows the price of UYU 1 Uruguayan Peso in terms of bitcoin and 1 BTC in terms of UYU",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_dop.png",
         "title": "Unit of Account (BTC/DOP)",
         "description": "Shows the price of DOP 1 Dominican Peso in terms of bitcoin and 1 BTC in terms of DOP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_htg.png",
         "title": "Unit of Account (BTC/HTG)",
         "description": "Shows the price of G 1 Haitian Gourde in terms of bitcoin and 1 BTC in terms of G",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_jmd.png",
         "title": "Unit of Account (BTC/JMD)",
         "description": "Shows the price of J$1 Jamaican Dollar in terms of bitcoin and 1 BTC in terms of J$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_ttd.png",
         "title": "Unit of Account (BTC/TTD)",
         "description": "Shows the price of TT$1 Trinidad & Tobago Dollar in terms of bitcoin and 1 BTC in terms of TT$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_bbd.png",
         "title": "Unit of Account (BTC/BBD)",
         "description": "Shows the price of BBD 1 Barbadian Dollar in terms of bitcoin and 1 BTC in terms of BBD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_bsd.png",
         "title": "Unit of Account (BTC/BSD)",
         "description": "Shows the price of BSD 1 Bahamian Dollar in terms of bitcoin and 1 BTC in terms of BSD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_bzd.png",
         "title": "Unit of Account (BTC/BZD)",
         "description": "Shows the price of BZD 1 Belize Dollar in terms of bitcoin and 1 BTC in terms of BZD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_xcd.png",
         "title": "Unit of Account (BTC/XCD)",
         "description": "Shows the price of EC$1 East Caribbean Dollar in terms of bitcoin and 1 BTC in terms of EC$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -499,56 +499,56 @@
         "title": "Unit of Account (BTC/MAD)",
         "description": "Shows the price of MAD 1 Moroccan Dirham in terms of bitcoin and 1 BTC in terms of MAD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_dzd.png",
         "title": "Unit of Account (BTC/DZD)",
         "description": "Shows the price of DZD 1 Algerian Dinar in terms of bitcoin and 1 BTC in terms of DZD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_tnd.png",
         "title": "Unit of Account (BTC/TND)",
         "description": "Shows the price of TND 1 Tunisian Dinar in terms of bitcoin and 1 BTC in terms of TND",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_ugx.png",
         "title": "Unit of Account (BTC/UGX)",
         "description": "Shows the price of UGX 1 Ugandan Shilling in terms of bitcoin and 1 BTC in terms of UGX",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_tzs.png",
         "title": "Unit of Account (BTC/TZS)",
         "description": "Shows the price of TZS 1 Tanzanian Shilling in terms of bitcoin and 1 BTC in terms of TZS",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_mzn.png",
         "title": "Unit of Account (BTC/MZN)",
         "description": "Shows the price of MZN 1 Mozambican Metical in terms of bitcoin and 1 BTC in terms of MZN",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_mur.png",
         "title": "Unit of Account (BTC/MUR)",
         "description": "Shows the price of Rs 1 Mauritian Rupee in terms of bitcoin and 1 BTC in terms of Rs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -556,16 +556,16 @@
         "title": "Unit of Account (BTC/XOF)",
         "description": "Shows the price of 1 CFA West African CFA Franc in terms of bitcoin and 1 BTC in terms of CFA",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_xaf.png",
         "title": "Unit of Account (BTC/XAF)",
         "description": "Shows the price of 1 CFA Central African CFA Franc in terms of bitcoin and 1 BTC in terms of CFA",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -573,32 +573,32 @@
         "title": "Unit of Account (BTC/BGN)",
         "description": "Shows the price of 1 лв Bulgarian Lev in terms of bitcoin and 1 BTC in terms of лв",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_hrk.png",
         "title": "Unit of Account (BTC/HRK)",
         "description": "Shows the price of 1 kn Croatian Kuna in terms of bitcoin and 1 BTC in terms of kn",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_rsd.png",
         "title": "Unit of Account (BTC/RSD)",
         "description": "Shows the price of RSD 1 Serbian Dinar in terms of bitcoin and 1 BTC in terms of RSD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_byn.png",
         "title": "Unit of Account (BTC/BYN)",
         "description": "Shows the price of Br 1 Belarusian Ruble in terms of bitcoin and 1 BTC in terms of Br",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -606,40 +606,40 @@
         "title": "Unit of Account (BTC/KWD)",
         "description": "Shows the price of KD 1 Kuwaiti Dinar in terms of bitcoin and 1 BTC in terms of KD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_qar.png",
         "title": "Unit of Account (BTC/QAR)",
         "description": "Shows the price of QAR 1 Qatari Riyal in terms of bitcoin and 1 BTC in terms of QAR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_omr.png",
         "title": "Unit of Account (BTC/OMR)",
         "description": "Shows the price of OMR 1 Omani Rial in terms of bitcoin and 1 BTC in terms of OMR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_bhd.png",
         "title": "Unit of Account (BTC/BHD)",
         "description": "Shows the price of BD 1 Bahraini Dinar in terms of bitcoin and 1 BTC in terms of BD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_jod.png",
         "title": "Unit of Account (BTC/JOD)",
         "description": "Shows the price of JOD 1 Jordanian Dinar in terms of bitcoin and 1 BTC in terms of JOD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -647,24 +647,24 @@
         "title": "Unit of Account (BTC/BDT)",
         "description": "Shows the price of BDT 1 Bangladeshi Taka in terms of bitcoin and 1 BTC in terms of BDT",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_lkr.png",
         "title": "Unit of Account (BTC/LKR)",
         "description": "Shows the price of Rs 1 Sri Lankan Rupee in terms of bitcoin and 1 BTC in terms of Rs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_npr.png",
         "title": "Unit of Account (BTC/NPR)",
         "description": "Shows the price of Rs 1 Nepalese Rupee in terms of bitcoin and 1 BTC in terms of Rs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
 
     {
@@ -672,16 +672,16 @@
         "title": "Unit of Account (BTC/KZT)",
         "description": "Shows the price of 1 ₸ Kazakhstani Tenge in terms of bitcoin and 1 BTC in terms of ₸",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "uoa_btc_uzs.png",
         "title": "Unit of Account (BTC/UZS)",
         "description": "Shows the price of UZS 1 Uzbekistani Som in terms of bitcoin and 1 BTC in terms of UZS",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
-        "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
+        "latest_youtube": "https://youtu.be/rF4PfhMI084"
     },
     {
         "filename": "price_distribution.png",
