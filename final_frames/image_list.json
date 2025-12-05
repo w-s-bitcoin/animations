@@ -5,7 +5,8 @@
         "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1126183
     },
     {
         "filename": "uoa_btc_afn.png",
@@ -13,7 +14,89 @@
         "description": "Shows the price of 1 Afghan Afghani in terms of bitcoin and 1 BTC in terms of Afghan Afghani.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 17065
+    },
+    {
+        "filename": "uoa_btc_nio.png",
+        "title": "Unit of Account (BTC/NIO)",
+        "description": "Shows the price of 1 Nicaraguan Córdoba in terms of bitcoin and 1 BTC in terms of Nicaraguan Córdobas.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 30750
+    },
+    {
+        "filename": "uoa_btc_gnf.png",
+        "title": "Unit of Account (BTC/GNF)",
+        "description": "Shows the price of 1 Guinean Franc in terms of bitcoin and 1 BTC in terms of Guinean Francs.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 130
+    },
+    {
+        "filename": "uoa_btc_kmf.png",
+        "title": "Unit of Account (BTC/KMF)",
+        "description": "Shows the price of 1 Comorian Franc in terms of bitcoin and 1 BTC in terms of Comorian Francs.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 2668
+    },
+    {
+        "filename": "uoa_btc_hnl.png",
+        "title": "Unit of Account (BTC/HNL)",
+        "description": "Shows the price of 1 Honduran Lempira in terms of bitcoin and 1 BTC in terms of Honduran Lempiras.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 42823
+    },
+    {
+        "filename": "uoa_btc_iqd.png",
+        "title": "Unit of Account (BTC/IQD)",
+        "description": "Shows the price of 1 Iraqi Dinar in terms of bitcoin and 1 BTC in terms of Iraqi Dinars.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 860
+    },
+    {
+        "filename": "uoa_btc_pgk.png",
+        "title": "Unit of Account (BTC/PGK)",
+        "description": "Shows the price of 1 Papua New Guinean Kina in terms of bitcoin and 1 BTC in terms of Papua New Guinean Kina.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 266048
+    },
+    {
+        "filename": "uoa_btc_khr.png",
+        "title": "Unit of Account (BTC/KHR)",
+        "description": "Shows the price of 1 Cambodian Riel in terms of bitcoin and 1 BTC in terms of Cambodian Riels.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 282
+    },
+    {
+        "filename": "uoa_btc_sbd.png",
+        "title": "Unit of Account (BTC/SBD)",
+        "description": "Shows the price of 1 Solomon Islands Dollar in terms of bitcoin and 1 BTC in terms of Solomon Islands Dollars.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 13739
+    },
+    {
+        "filename": "uoa_btc_scr.png",
+        "title": "Unit of Account (BTC/SCR)",
+        "description": "Shows the price of 1 Seychellois Rupee in terms of bitcoin and 1 BTC in terms of Seychellois Rupees.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 77631
     },
     {
         "filename": "uoa_btc_all.png",
@@ -21,7 +104,35 @@
         "description": "Shows the price of 1 Albanian Lek in terms of bitcoin and 1 BTC in terms of Albanian Lek.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 13628
+    },
+    {
+        "filename": "uoa_btc_gmd.png",
+        "title": "Unit of Account (BTC/GMD)",
+        "description": "Shows the price of 1 Gambian Dalasi in terms of bitcoin and 1 BTC in terms of Gambian Dalasis.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 15453
+    },
+    {
+        "filename": "uoa_btc_gtq.png",
+        "title": "Unit of Account (BTC/GTQ)",
+        "description": "Shows the price of 1 Guatemalan Quetzal in terms of bitcoin and 1 BTC in terms of Guatemalan Quetzales.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 147117
+    },
+    {
+        "filename": "uoa_btc_fok.png",
+        "title": "Unit of Account (BTC/FOK)",
+        "description": "Shows the price of 1 Faroese Króna in terms of bitcoin and 1 BTC in terms of Faroese Krónur.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 175467
     },
     {
         "filename": "uoa_btc_amd.png",
@@ -29,7 +140,17 @@
         "description": "Shows the price of 1 Armenian Dram in terms of bitcoin and 1 BTC in terms of Armenian Dram.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 2956
+    },
+    {
+        "filename": "uoa_btc_ang.png",
+        "title": "Unit of Account (BTC/ANG)",
+        "description": "Shows the price of 1 Netherlands Antillean Guilder in terms of bitcoin and 1 BTC in terms of Netherlands Antillean Guilders.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": "",
+        "uoa_msat": 625032
     },
     {
         "filename": "uoa_btc_aoa.png",
@@ -37,7 +158,8 @@
         "description": "Shows the price of 1 Angolan Kwanza in terms of bitcoin and 1 BTC in terms of Angolan Kwanza.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1235
     },
     {
         "filename": "uoa_btc_awg.png",
@@ -45,7 +167,8 @@
         "description": "Shows the price of 1 Aruban Florin in terms of bitcoin and 1 BTC in terms of Aruban Florin.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 629153
     },
     {
         "filename": "uoa_btc_azn.png",
@@ -53,7 +176,8 @@
         "description": "Shows the price of 1 Azerbaijani Manat in terms of bitcoin and 1 BTC in terms of Azerbaijani Manat.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 662656
     },
     {
         "filename": "uoa_btc_bam.png",
@@ -61,7 +185,8 @@
         "description": "Shows the price of 1 Bosnia-Herzegovina Convertible Mark in terms of bitcoin and 1 BTC in terms of Bosnia-Herzegovina Convertible Mark.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 670706
     },
     {
         "filename": "uoa_btc_bif.png",
@@ -69,7 +194,8 @@
         "description": "Shows the price of 1 Burundian Franc in terms of bitcoin and 1 BTC in terms of Burundian Franc.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 383
     },
     {
         "filename": "uoa_btc_bnd.png",
@@ -77,7 +203,8 @@
         "description": "Shows the price of 1 Brunei Dollar in terms of bitcoin and 1 BTC in terms of Brunei Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 869237
     },
     {
         "filename": "uoa_btc_btn.png",
@@ -85,7 +212,8 @@
         "description": "Shows the price of 1 Bhutanese Ngultrum in terms of bitcoin and 1 BTC in terms of Bhutanese Ngultrum.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 12501
     },
     {
         "filename": "uoa_btc_bwp.png",
@@ -93,7 +221,8 @@
         "description": "Shows the price of 1 Botswanan Pula in terms of bitcoin and 1 BTC in terms of Botswanan Pula.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 85285
     },
     {
         "filename": "uoa_btc_cdf.png",
@@ -101,7 +230,8 @@
         "description": "Shows the price of 1 Congolese Franc in terms of bitcoin and 1 BTC in terms of Congolese Franc.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 507
     },
     {
         "filename": "uoa_btc_crc.png",
@@ -109,7 +239,8 @@
         "description": "Shows the price of 1 Costa Rican Colón in terms of bitcoin and 1 BTC in terms of Costa Rican Colón.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 2316
     },
     {
         "filename": "uoa_btc_cup.png",
@@ -117,7 +248,8 @@
         "description": "Shows the price of 1 Cuban Peso in terms of bitcoin and 1 BTC in terms of Cuban Peso.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 2531
     },
     {
         "filename": "uoa_btc_cve.png",
@@ -125,7 +257,8 @@
         "description": "Shows the price of 1 Cape Verdean Escudo in terms of bitcoin and 1 BTC in terms of Cape Verdean Escudo.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 11905
     },
     {
         "filename": "uoa_btc_djf.png",
@@ -133,7 +266,8 @@
         "description": "Shows the price of 1 Djiboutian Franc in terms of bitcoin and 1 BTC in terms of Djiboutian Franc.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 6331
     },
     {
         "filename": "uoa_btc_ern.png",
@@ -141,7 +275,8 @@
         "description": "Shows the price of 1 Eritrean Nakfa in terms of bitcoin and 1 BTC in terms of Eritrean Nakfa.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 74979
     },
     {
         "filename": "uoa_btc_etb.png",
@@ -149,7 +284,8 @@
         "description": "Shows the price of 1 Ethiopian Birr in terms of bitcoin and 1 BTC in terms of Ethiopian Birr.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 7254
     },
     {
         "filename": "uoa_btc_fjd.png",
@@ -157,7 +293,8 @@
         "description": "Shows the price of 1 Fijian Dollar in terms of bitcoin and 1 BTC in terms of Fijian Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 495636
     },
     {
         "filename": "uoa_btc_fkp.png",
@@ -165,7 +302,8 @@
         "description": "Shows the price of 1 Falkland Islands Pound in terms of bitcoin and 1 BTC in terms of Falkland Islands Pound.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1504587
     },
     {
         "filename": "uoa_btc_gel.png",
@@ -173,7 +311,8 @@
         "description": "Shows the price of 1 Georgian Lari in terms of bitcoin and 1 BTC in terms of Georgian Lari.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 418407
     },
     {
         "filename": "uoa_btc_gip.png",
@@ -181,7 +320,8 @@
         "description": "Shows the price of 1 Gibraltar Pound in terms of bitcoin and 1 BTC in terms of Gibraltar Pound.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1504185
     },
     {
         "filename": "uoa_btc_gyd.png",
@@ -189,7 +329,8 @@
         "description": "Shows the price of 1 Guyanaese Dollar in terms of bitcoin and 1 BTC in terms of Guyanaese Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 5415
     },
     {
         "filename": "uoa_btc_isk.png",
@@ -197,7 +338,8 @@
         "description": "Shows the price of 1 Icelandic Króna in terms of bitcoin and 1 BTC in terms of Icelandic Króna.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 8839
     },
     {
         "filename": "uoa_btc_kgs.png",
@@ -205,7 +347,8 @@
         "description": "Shows the price of 1 Kyrgystani Som in terms of bitcoin and 1 BTC in terms of Kyrgystani Som.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 12838
     },
     {
         "filename": "uoa_btc_kid.png",
@@ -213,7 +356,8 @@
         "description": "Shows the price of 1 Kiribati Dollar in terms of bitcoin and 1 BTC in terms of Kiribati Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 747649
     },
     {
         "filename": "uoa_btc_kpw.png",
@@ -221,7 +365,8 @@
         "description": "Shows the price of 1 North Korean Won in terms of bitcoin and 1 BTC in terms of North Korean Won.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1251
     },
     {
         "filename": "uoa_btc_kyd.png",
@@ -229,7 +374,8 @@
         "description": "Shows the price of 1 Cayman Islands Dollar in terms of bitcoin and 1 BTC in terms of Cayman Islands Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1373394
     },
     {
         "filename": "uoa_btc_lak.png",
@@ -237,7 +383,8 @@
         "description": "Shows the price of 1 Laotian Kip in terms of bitcoin and 1 BTC in terms of Laotian Kip.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 52
     },
     {
         "filename": "uoa_btc_lrd.png",
@@ -245,7 +392,8 @@
         "description": "Shows the price of 1 Liberian Dollar in terms of bitcoin and 1 BTC in terms of Liberian Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 6413
     },
     {
         "filename": "uoa_btc_lsl.png",
@@ -253,7 +401,8 @@
         "description": "Shows the price of 1 Lesotho Loti in terms of bitcoin and 1 BTC in terms of Lesotho Loti.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 66091
     },
     {
         "filename": "uoa_btc_lyd.png",
@@ -261,7 +410,8 @@
         "description": "Shows the price of 1 Libyan Dinar in terms of bitcoin and 1 BTC in terms of Libyan Dinar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 207691
     },
     {
         "filename": "uoa_btc_mdl.png",
@@ -269,7 +419,8 @@
         "description": "Shows the price of 1 Moldovan Leu in terms of bitcoin and 1 BTC in terms of Moldovan Leu.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 66757
     },
     {
         "filename": "uoa_btc_mga.png",
@@ -277,7 +428,8 @@
         "description": "Shows the price of 1 Malagasy Ariary in terms of bitcoin and 1 BTC in terms of Malagasy Ariary.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 252
     },
     {
         "filename": "uoa_btc_mkd.png",
@@ -285,15 +437,17 @@
         "description": "Shows the price of 1 Macedonian Denar in terms of bitcoin and 1 BTC in terms of Macedonian Denar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 21374
     },
     {
         "filename": "uoa_btc_mmk.png",
         "title": "Unit of Account (BTC/MMK)",
-        "description": "Shows the price of 1 Myanma Kyat in terms of bitcoin and 1 BTC in terms of Myanma Kyat.",
+        "description": "Shows the price of 1 Myanmar Kyat in terms of bitcoin and 1 BTC in terms of Myanmar Kyat.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 538
     },
     {
         "filename": "uoa_btc_mnt.png",
@@ -301,7 +455,8 @@
         "description": "Shows the price of 1 Mongolian Tugrik in terms of bitcoin and 1 BTC in terms of Mongolian Tugrik.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 318
     },
     {
         "filename": "uoa_btc_mop.png",
@@ -309,7 +464,8 @@
         "description": "Shows the price of 1 Macanese Pataca in terms of bitcoin and 1 BTC in terms of Macanese Pataca.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 140462
     },
     {
         "filename": "uoa_btc_mru.png",
@@ -317,7 +473,8 @@
         "description": "Shows the price of 1 Mauritanian Ouguiya in terms of bitcoin and 1 BTC in terms of Mauritanian Ouguiya.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 28360
     },
     {
         "filename": "uoa_btc_mvr.png",
@@ -325,7 +482,8 @@
         "description": "Shows the price of 1 Maldivian Rufiyaa in terms of bitcoin and 1 BTC in terms of Maldivian Rufiyaa.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 73034
     },
     {
         "filename": "uoa_btc_mwk.png",
@@ -333,7 +491,8 @@
         "description": "Shows the price of 1 Malawian Kwacha in terms of bitcoin and 1 BTC in terms of Malawian Kwacha.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 656
     },
     {
         "filename": "uoa_btc_nad.png",
@@ -341,7 +500,8 @@
         "description": "Shows the price of 1 Namibian Dollar in terms of bitcoin and 1 BTC in terms of Namibian Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 66427
     },
     {
         "filename": "uoa_btc_pab.png",
@@ -349,7 +509,8 @@
         "description": "Shows the price of 1 Panamanian Balboa in terms of bitcoin and 1 BTC in terms of Panamanian Balboa.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1126183
     },
     {
         "filename": "uoa_btc_rwf.png",
@@ -357,7 +518,8 @@
         "description": "Shows the price of 1 Rwandan Franc in terms of bitcoin and 1 BTC in terms of Rwandan Franc.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 778
     },
     {
         "filename": "uoa_btc_shp.png",
@@ -365,7 +527,8 @@
         "description": "Shows the price of 1 Saint Helena Pound in terms of bitcoin and 1 BTC in terms of Saint Helena Pound.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1504185
     },
     {
         "filename": "uoa_btc_sle.png",
@@ -373,7 +536,8 @@
         "description": "Shows the price of 1 Sierra Leonean Leone in terms of bitcoin and 1 BTC in terms of Sierra Leonean Leone.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 49481
     },
     {
         "filename": "uoa_btc_sos.png",
@@ -381,7 +545,8 @@
         "description": "Shows the price of 1 Somali Shilling in terms of bitcoin and 1 BTC in terms of Somali Shilling.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 1983
     },
     {
         "filename": "uoa_btc_srd.png",
@@ -389,7 +554,8 @@
         "description": "Shows the price of 1 Surinamese Dollar in terms of bitcoin and 1 BTC in terms of Surinamese Dollar.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 29366
     },
     {
         "filename": "uoa_btc_ssp.png",
@@ -397,7 +563,8 @@
         "description": "Shows the price of 1 South Sudanese Pound in terms of bitcoin and 1 BTC in terms of South Sudanese Pound.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 8646
     },
     {
         "filename": "uoa_btc_stn.png",
@@ -405,7 +572,8 @@
         "description": "Shows the price of 1 São Tomé and Príncipe Dobra in terms of bitcoin and 1 BTC in terms of São Tomé and Príncipe Dobra.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 53628
     },
     {
         "filename": "uoa_btc_szl.png",
@@ -413,7 +581,8 @@
         "description": "Shows the price of 1 Swazi Lilangeni in terms of bitcoin and 1 BTC in terms of Swazi Lilangeni.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 66419
     },
     {
         "filename": "uoa_btc_tjs.png",
@@ -421,7 +590,8 @@
         "description": "Shows the price of 1 Tajikistani Somoni in terms of bitcoin and 1 BTC in terms of Tajikistani Somoni.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 121750
     },
     {
         "filename": "uoa_btc_tmt.png",
@@ -429,7 +599,8 @@
         "description": "Shows the price of 1 Turkmenistani Manat in terms of bitcoin and 1 BTC in terms of Turkmenistani Manat.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 336174
     },
     {
         "filename": "uoa_btc_top.png",
@@ -437,7 +608,8 @@
         "description": "Shows the price of 1 Tongan Paʻanga in terms of bitcoin and 1 BTC in terms of Tongan Paʻanga.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 464808
     },
     {
         "filename": "uoa_btc_vuv.png",
@@ -445,7 +617,8 @@
         "description": "Shows the price of 1 Vanuatu Vatu in terms of bitcoin and 1 BTC in terms of Vanuatu Vatu.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 9458
     },
     {
         "filename": "uoa_btc_wst.png",
@@ -453,7 +626,8 @@
         "description": "Shows the price of 1 Samoan Tala in terms of bitcoin and 1 BTC in terms of Samoan Tala.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 404215
     },
     {
         "filename": "uoa_btc_xcg.png",
@@ -461,7 +635,8 @@
         "description": "Shows the price of 1 Congolese Government Currency (XCG) in terms of bitcoin and 1 BTC in terms of Congolese Government Currency (XCG).",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 631092
     },
     {
         "filename": "uoa_btc_xpf.png",
@@ -469,7 +644,8 @@
         "description": "Shows the price of 1 CFP Franc in terms of bitcoin and 1 BTC in terms of CFP Franc.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 11032
     },
     {
         "filename": "uoa_btc_yer.png",
@@ -477,7 +653,8 @@
         "description": "Shows the price of 1 Yemeni Rial in terms of bitcoin and 1 BTC in terms of Yemeni Rial.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 4730
     },
     {
         "filename": "uoa_btc_zmw.png",
@@ -485,7 +662,8 @@
         "description": "Shows the price of 1 Zambian Kwacha in terms of bitcoin and 1 BTC in terms of Zambian Kwacha.",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 48816
     },
     {
         "filename": "uoa_btc_zwg.png",
@@ -493,7 +671,8 @@
         "description": "Shows the price of 1 Zimbabwe Gold (ZWG) in terms of bitcoin and 1 BTC in terms of Zimbabwe Gold (ZWG).",
         "latest_x": "",
         "latest_nostr": "",
-        "latest_youtube": ""
+        "latest_youtube": "",
+        "uoa_msat": 42795
     },
     {
         "filename": "uoa_btc_eur.png",
@@ -501,7 +680,8 @@
         "description": "Shows the price of €1 Euro in terms of bitcoin and 1 BTC in terms of €",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1311040
     },
     {
         "filename": "uoa_btc_jpy.png",
@@ -509,7 +689,8 @@
         "description": "Shows the price of ¥1 Japanese Yen in terms of bitcoin and 1 BTC in terms of ¥",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 7253
     },
     {
         "filename": "uoa_btc_gbp.png",
@@ -517,7 +698,8 @@
         "description": "Shows the price of £1 British Pound in terms of bitcoin and 1 BTC in terms of £",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1501037
     },
     {
         "filename": "uoa_btc_aud.png",
@@ -525,7 +707,8 @@
         "description": "Shows the price of A$1 Australian Dollar in terms of bitcoin and 1 BTC in terms of A$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 747450
     },
     {
         "filename": "uoa_btc_cad.png",
@@ -533,7 +716,8 @@
         "description": "Shows the price of C$1 Canadian Dollar in terms of bitcoin and 1 BTC in terms of C$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 813246
     },
     {
         "filename": "uoa_btc_chf.png",
@@ -541,7 +725,8 @@
         "description": "Shows the price of 1 CHF Swiss Franc in terms of bitcoin and 1 BTC in terms of CHF",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1408151
     },
     {
         "filename": "uoa_btc_cny.png",
@@ -549,7 +734,8 @@
         "description": "Shows the price of ¥1 Chinese Yuan in terms of bitcoin and 1 BTC in terms of ¥",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 159311
     },
     {
         "filename": "uoa_btc_sek.png",
@@ -557,7 +743,8 @@
         "description": "Shows the price of 1 kr Swedish Krona in terms of bitcoin and 1 BTC in terms of kr",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 119647
     },
     {
         "filename": "uoa_btc_nzd.png",
@@ -565,16 +752,17 @@
         "description": "Shows the price of NZ$1 New Zealand Dollar in terms of bitcoin and 1 BTC in terms of NZ$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 650296
     },
-
     {
         "filename": "uoa_btc_krw.png",
         "title": "Unit of Account (BTC/KRW)",
         "description": "Shows the price of ₩1 South Korean Won in terms of bitcoin and 1 BTC in terms of ₩",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 765
     },
     {
         "filename": "uoa_btc_sgd.png",
@@ -582,7 +770,8 @@
         "description": "Shows the price of S$1 Singapore Dollar in terms of bitcoin and 1 BTC in terms of S$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 869076
     },
     {
         "filename": "uoa_btc_nok.png",
@@ -590,7 +779,8 @@
         "description": "Shows the price of 1 kr Norwegian Krone in terms of bitcoin and 1 BTC in terms of kr",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 111385
     },
     {
         "filename": "uoa_btc_mxn.png",
@@ -598,7 +788,8 @@
         "description": "Shows the price of $1 Mexican Peso in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 61950
     },
     {
         "filename": "uoa_btc_hkd.png",
@@ -606,7 +797,8 @@
         "description": "Shows the price of HK$1 Hong Kong Dollar in terms of bitcoin and 1 BTC in terms of HK$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 144670
     },
     {
         "filename": "uoa_btc_inr.png",
@@ -614,7 +806,8 @@
         "description": "Shows the price of ₹1 Indian Rupee in terms of bitcoin and 1 BTC in terms of ₹",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 12522
     },
     {
         "filename": "uoa_btc_rub.png",
@@ -622,7 +815,8 @@
         "description": "Shows the price of ₽1 Russian Ruble in terms of bitcoin and 1 BTC in terms of ₽",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 14691
     },
     {
         "filename": "uoa_btc_zar.png",
@@ -630,7 +824,8 @@
         "description": "Shows the price of R1 South African Rand in terms of bitcoin and 1 BTC in terms of R",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 66119
     },
     {
         "filename": "uoa_btc_try.png",
@@ -638,7 +833,8 @@
         "description": "Shows the price of ₺1 Turkish Lira in terms of bitcoin and 1 BTC in terms of ₺",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 26497
     },
     {
         "filename": "uoa_btc_brl.png",
@@ -646,16 +842,17 @@
         "description": "Shows the price of R$1 Brazilian Real in terms of bitcoin and 1 BTC in terms of R$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 209063
     },
-
     {
         "filename": "uoa_btc_pln.png",
         "title": "Unit of Account (BTC/PLN)",
         "description": "Shows the price of 1 zł Polish Zloty in terms of bitcoin and 1 BTC in terms of zł",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 309868
     },
     {
         "filename": "uoa_btc_twd.png",
@@ -663,7 +860,8 @@
         "description": "Shows the price of NT$1 Taiwan Dollar in terms of bitcoin and 1 BTC in terms of NT$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 35963
     },
     {
         "filename": "uoa_btc_thb.png",
@@ -671,7 +869,8 @@
         "description": "Shows the price of ฿1 Thai Baht in terms of bitcoin and 1 BTC in terms of ฿",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 35359
     },
     {
         "filename": "uoa_btc_idr.png",
@@ -679,7 +878,8 @@
         "description": "Shows the price of Rp1 Indonesian Rupiah in terms of bitcoin and 1 BTC in terms of Rp",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 68
     },
     {
         "filename": "uoa_btc_czk.png",
@@ -687,7 +887,8 @@
         "description": "Shows the price of 1 Kč Czech Koruna in terms of bitcoin and 1 BTC in terms of Kč",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 54178
     },
     {
         "filename": "uoa_btc_huf.png",
@@ -695,7 +896,8 @@
         "description": "Shows the price of 1 Ft Hungarian Forint in terms of bitcoin and 1 BTC in terms of Ft",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 3431
     },
     {
         "filename": "uoa_btc_ils.png",
@@ -703,7 +905,8 @@
         "description": "Shows the price of ₪1 Israeli Shekel in terms of bitcoin and 1 BTC in terms of ₪",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 348017
     },
     {
         "filename": "uoa_btc_dkk.png",
@@ -711,7 +914,8 @@
         "description": "Shows the price of 1 kr Danish Krone in terms of bitcoin and 1 BTC in terms of kr",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 175507
     },
     {
         "filename": "uoa_btc_sar.png",
@@ -719,7 +923,8 @@
         "description": "Shows the price of SAR 1 Saudi Riyal in terms of bitcoin and 1 BTC in terms of SAR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 300083
     },
     {
         "filename": "uoa_btc_aed.png",
@@ -727,16 +932,17 @@
         "description": "Shows the price of Dhs 1 UAE Dirham in terms of bitcoin and 1 BTC in terms of Dhs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 306636
     },
-
     {
         "filename": "uoa_btc_pkr.png",
         "title": "Unit of Account (BTC/PKR)",
         "description": "Shows the price of PKR 1 Pakistani Rupee in terms of bitcoin and 1 BTC in terms of PKR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 4020
     },
     {
         "filename": "uoa_btc_ars.png",
@@ -744,16 +950,17 @@
         "description": "Shows the price of ARS 1 Argentine Peso in terms of bitcoin and 1 BTC in terms of ARS",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 783
     },
-
     {
         "filename": "uoa_btc_ngn.png",
         "title": "Unit of Account (BTC/NGN)",
         "description": "Shows the price of NGN 1 Nigerian Naira in terms of bitcoin and 1 BTC in terms of NGN",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 778
     },
     {
         "filename": "uoa_btc_egp.png",
@@ -761,7 +968,8 @@
         "description": "Shows the price of EGP 1 Egyptian Pound in terms of bitcoin and 1 BTC in terms of EGP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 23699
     },
     {
         "filename": "uoa_btc_lbp.png",
@@ -769,7 +977,8 @@
         "description": "Shows the price of LBP 1 Lebanese Pound in terms of bitcoin and 1 BTC in terms of LBP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 13
     },
     {
         "filename": "uoa_btc_vnd.png",
@@ -777,7 +986,8 @@
         "description": "Shows the price of VND 1 Vietnamese Dong in terms of bitcoin and 1 BTC in terms of VND",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 43
     },
     {
         "filename": "uoa_btc_irr.png",
@@ -785,16 +995,17 @@
         "description": "Shows the price of IRR 1 Iranian Rial in terms of bitcoin and 1 BTC in terms of IRR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 27
     },
-
     {
         "filename": "uoa_btc_syp.png",
         "title": "Unit of Account (BTC/SYP)",
         "description": "Shows the price of SYP 1 Syrian Pound in terms of bitcoin and 1 BTC in terms of SYP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 102
     },
     {
         "filename": "uoa_btc_sdg.png",
@@ -802,16 +1013,17 @@
         "description": "Shows the price of SDG 1 Sudanese Pound in terms of bitcoin and 1 BTC in terms of SDG",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1882
     },
-
     {
         "filename": "uoa_btc_ghs.png",
         "title": "Unit of Account (BTC/GHS)",
         "description": "Shows the price of GH₵ 1 Ghanaian Cedi in terms of bitcoin and 1 BTC in terms of GH₵",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 99223
     },
     {
         "filename": "uoa_btc_uah.png",
@@ -819,7 +1031,8 @@
         "description": "Shows the price of ₴1 Ukrainian Hryvnia in terms of bitcoin and 1 BTC in terms of ₴",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 26697
     },
     {
         "filename": "uoa_btc_kes.png",
@@ -827,7 +1040,8 @@
         "description": "Shows the price of KES 1 Kenyan Shilling in terms of bitcoin and 1 BTC in terms of KES",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 8714
     },
     {
         "filename": "uoa_btc_cop.png",
@@ -835,7 +1049,8 @@
         "description": "Shows the price of $1 Colombian Peso in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 293
     },
     {
         "filename": "uoa_btc_clp.png",
@@ -843,7 +1058,8 @@
         "description": "Shows the price of $1 Chilean Peso in terms of bitcoin and 1 BTC in terms of $",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1222
     },
     {
         "filename": "uoa_btc_php.png",
@@ -851,7 +1067,8 @@
         "description": "Shows the price of ₱1 Philippine Peso in terms of bitcoin and 1 BTC in terms of ₱",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 19098
     },
     {
         "filename": "uoa_btc_myr.png",
@@ -859,7 +1076,8 @@
         "description": "Shows the price of RM1 Malaysian Ringgit in terms of bitcoin and 1 BTC in terms of RM",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 274211
     },
     {
         "filename": "uoa_btc_ron.png",
@@ -867,7 +1085,8 @@
         "description": "Shows the price of 1 lei Romanian Leu in terms of bitcoin and 1 BTC in terms of lei",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 257507
     },
     {
         "filename": "uoa_btc_xag.png",
@@ -891,7 +1110,8 @@
         "description": "Shows the price of S/. 1 Peruvian Sol in terms of bitcoin and 1 BTC in terms of S/.",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 334676
     },
     {
         "filename": "uoa_btc_bob.png",
@@ -899,7 +1119,8 @@
         "description": "Shows the price of Bs 1 Bolivian Boliviano in terms of bitcoin and 1 BTC in terms of Bs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 164167
     },
     {
         "filename": "uoa_btc_pyg.png",
@@ -907,7 +1128,8 @@
         "description": "Shows the price of ₲1 Paraguayan Guarani in terms of bitcoin and 1 BTC in terms of ₲",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 163
     },
     {
         "filename": "uoa_btc_uyu.png",
@@ -915,7 +1137,8 @@
         "description": "Shows the price of UYU 1 Uruguayan Peso in terms of bitcoin and 1 BTC in terms of UYU",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 28839
     },
     {
         "filename": "uoa_btc_dop.png",
@@ -923,7 +1146,8 @@
         "description": "Shows the price of DOP 1 Dominican Peso in terms of bitcoin and 1 BTC in terms of DOP",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 17580
     },
     {
         "filename": "uoa_btc_htg.png",
@@ -931,7 +1155,8 @@
         "description": "Shows the price of G 1 Haitian Gourde in terms of bitcoin and 1 BTC in terms of G",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 8638
     },
     {
         "filename": "uoa_btc_jmd.png",
@@ -939,7 +1164,8 @@
         "description": "Shows the price of J$1 Jamaican Dollar in terms of bitcoin and 1 BTC in terms of J$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 7066
     },
     {
         "filename": "uoa_btc_ttd.png",
@@ -947,7 +1173,8 @@
         "description": "Shows the price of TT$1 Trinidad & Tobago Dollar in terms of bitcoin and 1 BTC in terms of TT$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 168449
     },
     {
         "filename": "uoa_btc_bbd.png",
@@ -955,7 +1182,8 @@
         "description": "Shows the price of BBD 1 Barbadian Dollar in terms of bitcoin and 1 BTC in terms of BBD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 563092
     },
     {
         "filename": "uoa_btc_bsd.png",
@@ -963,7 +1191,8 @@
         "description": "Shows the price of BSD 1 Bahamian Dollar in terms of bitcoin and 1 BTC in terms of BSD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1126183
     },
     {
         "filename": "uoa_btc_bzd.png",
@@ -971,7 +1200,8 @@
         "description": "Shows the price of BZD 1 Belize Dollar in terms of bitcoin and 1 BTC in terms of BZD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 563007
     },
     {
         "filename": "uoa_btc_xcd.png",
@@ -979,16 +1209,17 @@
         "description": "Shows the price of EC$1 East Caribbean Dollar in terms of bitcoin and 1 BTC in terms of EC$",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 417105
     },
-
     {
         "filename": "uoa_btc_mad.png",
         "title": "Unit of Account (BTC/MAD)",
         "description": "Shows the price of MAD 1 Moroccan Dirham in terms of bitcoin and 1 BTC in terms of MAD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 121988
     },
     {
         "filename": "uoa_btc_dzd.png",
@@ -996,7 +1227,8 @@
         "description": "Shows the price of DZD 1 Algerian Dinar in terms of bitcoin and 1 BTC in terms of DZD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 8683
     },
     {
         "filename": "uoa_btc_tnd.png",
@@ -1004,7 +1236,8 @@
         "description": "Shows the price of TND 1 Tunisian Dinar in terms of bitcoin and 1 BTC in terms of TND",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 385152
     },
     {
         "filename": "uoa_btc_ugx.png",
@@ -1012,7 +1245,8 @@
         "description": "Shows the price of UGX 1 Ugandan Shilling in terms of bitcoin and 1 BTC in terms of UGX",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 319
     },
     {
         "filename": "uoa_btc_tzs.png",
@@ -1020,7 +1254,8 @@
         "description": "Shows the price of TZS 1 Tanzanian Shilling in terms of bitcoin and 1 BTC in terms of TZS",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 467
     },
     {
         "filename": "uoa_btc_mzn.png",
@@ -1028,7 +1263,8 @@
         "description": "Shows the price of MZN 1 Mozambican Metical in terms of bitcoin and 1 BTC in terms of MZN",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 17802
     },
     {
         "filename": "uoa_btc_mur.png",
@@ -1036,16 +1272,17 @@
         "description": "Shows the price of Rs 1 Mauritian Rupee in terms of bitcoin and 1 BTC in terms of Rs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 24530
     },
-
     {
         "filename": "uoa_btc_xof.png",
         "title": "Unit of Account (BTC/XOF)",
         "description": "Shows the price of 1 CFA West African CFA Franc in terms of bitcoin and 1 BTC in terms of CFA",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 2000
     },
     {
         "filename": "uoa_btc_xaf.png",
@@ -1053,16 +1290,17 @@
         "description": "Shows the price of 1 CFA Central African CFA Franc in terms of bitcoin and 1 BTC in terms of CFA",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 2000
     },
-
     {
         "filename": "uoa_btc_bgn.png",
         "title": "Unit of Account (BTC/BGN)",
         "description": "Shows the price of 1 лв Bulgarian Lev in terms of bitcoin and 1 BTC in terms of лв",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 670531
     },
     {
         "filename": "uoa_btc_hrk.png",
@@ -1070,7 +1308,8 @@
         "description": "Shows the price of 1 kn Croatian Kuna in terms of bitcoin and 1 BTC in terms of kn",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 174558
     },
     {
         "filename": "uoa_btc_rsd.png",
@@ -1078,7 +1317,8 @@
         "description": "Shows the price of RSD 1 Serbian Dinar in terms of bitcoin and 1 BTC in terms of RSD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 11219
     },
     {
         "filename": "uoa_btc_byn.png",
@@ -1086,16 +1326,17 @@
         "description": "Shows the price of Br 1 Belarusian Ruble in terms of bitcoin and 1 BTC in terms of Br",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 393770
     },
-
     {
         "filename": "uoa_btc_kwd.png",
         "title": "Unit of Account (BTC/KWD)",
         "description": "Shows the price of KD 1 Kuwaiti Dinar in terms of bitcoin and 1 BTC in terms of KD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 3668349
     },
     {
         "filename": "uoa_btc_qar.png",
@@ -1103,7 +1344,8 @@
         "description": "Shows the price of QAR 1 Qatari Riyal in terms of bitcoin and 1 BTC in terms of QAR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 309391
     },
     {
         "filename": "uoa_btc_omr.png",
@@ -1111,7 +1353,8 @@
         "description": "Shows the price of OMR 1 Omani Rial in terms of bitcoin and 1 BTC in terms of OMR",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 2925151
     },
     {
         "filename": "uoa_btc_bhd.png",
@@ -1119,7 +1362,8 @@
         "description": "Shows the price of BD 1 Bahraini Dinar in terms of bitcoin and 1 BTC in terms of BD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 2988016
     },
     {
         "filename": "uoa_btc_jod.png",
@@ -1127,16 +1371,17 @@
         "description": "Shows the price of JOD 1 Jordanian Dinar in terms of bitcoin and 1 BTC in terms of JOD",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 1590654
     },
-
     {
         "filename": "uoa_btc_bdt.png",
         "title": "Unit of Account (BTC/BDT)",
         "description": "Shows the price of BDT 1 Bangladeshi Taka in terms of bitcoin and 1 BTC in terms of BDT",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 9221
     },
     {
         "filename": "uoa_btc_lkr.png",
@@ -1144,7 +1389,8 @@
         "description": "Shows the price of Rs 1 Sri Lankan Rupee in terms of bitcoin and 1 BTC in terms of Rs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 3660
     },
     {
         "filename": "uoa_btc_npr.png",
@@ -1152,16 +1398,17 @@
         "description": "Shows the price of Rs 1 Nepalese Rupee in terms of bitcoin and 1 BTC in terms of Rs",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 7838
     },
-
     {
         "filename": "uoa_btc_kzt.png",
         "title": "Unit of Account (BTC/KZT)",
         "description": "Shows the price of 1 ₸ Kazakhstani Tenge in terms of bitcoin and 1 BTC in terms of ₸",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 2227
     },
     {
         "filename": "uoa_btc_uzs.png",
@@ -1169,7 +1416,8 @@
         "description": "Shows the price of UZS 1 Uzbekistani Som in terms of bitcoin and 1 BTC in terms of UZS",
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
-        "latest_youtube": "https://youtu.be/rF4PfhMI084"
+        "latest_youtube": "https://youtu.be/rF4PfhMI084",
+        "uoa_msat": 94
     },
     {
         "filename": "price_distribution.png",
