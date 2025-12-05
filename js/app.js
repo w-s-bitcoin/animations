@@ -37,6 +37,8 @@ const alignmentControls = document.getElementById('alignment-controls');
 const alignmentSelect = document.getElementById('alignment-select');
 const uoaControls = document.getElementById('uoa-controls');
 const uoaSelect = document.getElementById('uoa-select');
+const sortControls = document.getElementById('sort-controls');
+const uoaSortSelect = document.getElementById('sort-select');
 
 /* ===========================
  * GLOBAL STATE
@@ -216,6 +218,11 @@ function showScaleControls(show) {
 function showPriceOfControls(show) {
     priceOfControls?.classList.toggle('show', !!show);
 }
+function showUoaControls(show) {
+    const on = !!show;
+    if (uoaControls) uoaControls.classList.toggle('show', on);
+    if (sortControls) sortControls.classList.toggle('show', on);
+}
 function showDominanceControls(show) {
     dominanceControls?.classList.toggle('show', !!show);
 }
@@ -227,9 +234,6 @@ function showMyrControls(show) {
 }
 function showAlignmentControls(show) {
     alignmentControls?.classList.toggle('show', !!show);
-}
-function showUoaControls(show) {
-    uoaControls?.classList.toggle('show', !!show);
 }
 function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
     const xLink = document.getElementById('x-link');
@@ -775,15 +779,17 @@ function openModalByIndex(index) {
         showMyrControls(false);
         showAlignmentControls(false);
         showUoaControls(true);
-
+        sortUoaOptions(getStoredUoaSort());
         populateUoaSelect();
         let chosenSlug = uoaSlugFromFilename(fname) || getStoredUoaItem();
         if (!UOA_OPTIONS.some(o => o.slug === chosenSlug)) {
             chosenSlug = UOA_OPTIONS[0]?.slug || chosenSlug;
         }
         if (uoaSelect) uoaSelect.value = chosenSlug;
+        if (uoaSortSelect) {
+            uoaSortSelect.value = getStoredUoaSort();
+        }
         setUoaItem(chosenSlug);
-
     } else if (isCoinFile(fname)) {
         showYearControls(false);
         showScaleControls(false);
@@ -1620,6 +1626,7 @@ function cyclePriceOf(direction) {
  * =========================== */
 const UOA_BASE = 'uoa_';
 const UOA_STORAGE_KEY = 'uoaItem';
+const UOA_SORT_STORAGE_KEY = 'uoaSort';
 let UOA_OPTIONS = [];
 let UOA_META = {};
 
@@ -1636,10 +1643,6 @@ function uoaFilenameForSlug(slug) {
     return `${UOA_BASE}${slug}.png`;
 }
 
-// btc_usd   -> BTC/USD
-// gold      -> GOLD
-// sp500     -> SP500
-// foo_bar_baz -> FOO BAR BAZ (fallback)
 function uoaLabelFromSlug(slug) {
     const parts = slug.split('_');
     if (parts.length === 2) {
@@ -1657,7 +1660,6 @@ function buildUoaOptionsFromList(list) {
         if (!isUoaFile(img.filename)) return;
         const slug = uoaSlugFromFilename(img.filename);
         if (!slug) return;
-
         if (!bySlug.has(slug)) {
             const label = uoaLabelFromSlug(slug);
             bySlug.set(slug, {
@@ -1668,16 +1670,93 @@ function buildUoaOptionsFromList(list) {
                 description: img.description || '',
                 latest_x: img.latest_x || '',
                 latest_nostr: img.latest_nostr || '',
-                latest_youtube: img.latest_youtube || ''
+                latest_youtube: img.latest_youtube || '',
+                msat: typeof img.uoa_msat === 'number' ? img.uoa_msat : null
             });
         }
     });
-
-    UOA_OPTIONS = Array.from(bySlug.values()).sort((a, b) => a.label.localeCompare(b.label));
+    UOA_OPTIONS = Array.from(bySlug.values());
     UOA_META = UOA_OPTIONS.reduce((acc, o) => {
         acc[o.slug] = o;
         return acc;
     }, {});
+}
+
+function normalizeUoaSortMode(mode) {
+    if (!mode) return 'az';
+    const m = String(mode).toLowerCase();
+    if (m === 'a-z' || m === 'az') return 'az';
+    if (m === 'z-a' || m === 'za') return 'za';
+    if (m === 'highest' || m === 'highest price' || m === 'high') return 'high';
+    if (m === 'lowest' || m === 'lowest price' || m === 'low') return 'low';
+    return 'az';
+}
+
+
+function getStoredUoaSort() {
+    const raw = localStorage.getItem(UOA_SORT_STORAGE_KEY);
+    return normalizeUoaSortMode(raw || 'az');
+}
+
+function setStoredUoaSort(mode) {
+    const norm = normalizeUoaSortMode(mode);
+    localStorage.setItem(UOA_SORT_STORAGE_KEY, norm);
+}
+
+function sortUoaOptions(mode, preferredSlug) {
+    const norm = normalizeUoaSortMode(mode);
+    if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return;
+    const byLabel = (a, b) => a.label.localeCompare(b.label);
+    const byMsatAsc = (a, b) => {
+        const am = typeof a.msat === 'number' ? a.msat : Infinity;
+        const bm = typeof b.msat === 'number' ? b.msat : Infinity;
+        if (am === bm) return byLabel(a, b);
+        return am - bm;
+    };
+    const byMsatDesc = (a, b) => {
+        const am = typeof a.msat === 'number' ? a.msat : -Infinity;
+        const bm = typeof b.msat === 'number' ? b.msat : -Infinity;
+        if (am === bm) return byLabel(a, b);
+        return bm - am;
+    };
+    if (norm === 'az') {
+        UOA_OPTIONS.sort(byLabel);
+    } else if (norm === 'za') {
+        UOA_OPTIONS.sort((a, b) => byLabel(b, a));
+    } else if (norm === 'high') {
+        UOA_OPTIONS.sort(byMsatDesc);
+    } else if (norm === 'low') {
+        UOA_OPTIONS.sort(byMsatAsc);
+    }
+    UOA_META = UOA_OPTIONS.reduce((acc, o) => {
+        acc[o.slug] = o;
+        return acc;
+    }, {});
+    const currentSlug =
+        preferredSlug ||
+        (uoaSelect && uoaSelect.value) ||
+        getStoredUoaItem() ||
+        (UOA_OPTIONS[0] && UOA_OPTIONS[0].slug);
+    populateUoaSelect();
+    if (uoaSelect && currentSlug && UOA_OPTIONS.some(o => o.slug === currentSlug)) {
+        uoaSelect.value = currentSlug;
+    }
+}
+
+function setUoaSortMode(modeRaw) {
+    const norm = normalizeUoaSortMode(modeRaw);
+    setStoredUoaSort(norm);
+    let currentSlug = null;
+    const curImg = visibleImages[currentIndex];
+    if (curImg && isUoaFile(curImg.filename)) {
+        currentSlug = uoaSlugFromFilename(curImg.filename) || getStoredUoaItem();
+    } else {
+        currentSlug = getStoredUoaItem();
+    }
+    sortUoaOptions(norm, currentSlug);
+    if (uoaSortSelect) {
+        uoaSortSelect.value = norm;
+    }
 }
 
 function populateUoaSelect() {
@@ -1924,6 +2003,7 @@ fetch('final_frames/image_list.json')
         buildCoinOptionsFromList(imageList);
         populateCoinSelect();
         buildUoaOptionsFromList(imageList);
+        sortUoaOptions(getStoredUoaSort());
         const initialFilename = getImageNameFromPath();
         const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
         let urlPofSlug = null;
@@ -2686,6 +2766,8 @@ coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
 myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
 alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
 uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
+uoaSortSelect?.addEventListener('change', e => setUoaSortMode(e.target.value));
+
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);

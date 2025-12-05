@@ -1105,7 +1105,8 @@ body.slideshow-open {
 .coin-controls,
 .myr-controls,
 .alignment-controls,
-.uoa-controls {
+.uoa-controls,
+.sort-controls {
     display: none;
     align-items: center;
     gap: 0.4rem;
@@ -1118,7 +1119,8 @@ body.slideshow-open {
 .coin-controls.show,
 .myr-controls.show,
 .alignment-controls.show,
-.uoa-controls.show {
+.uoa-controls.show,
+.sort-controls.show {
     display: inline-flex;
 }
 .select-wrap {
@@ -1133,7 +1135,8 @@ body.slideshow-open {
 #coin-select,
 #myr-select,
 #alignment-select,
-#uoa-select {
+#uoa-select,
+#sort-select {
     font-family: monospace;
     font-size: 1rem;
     color: #fff;
@@ -1165,7 +1168,9 @@ body.slideshow-open {
 #alignment-select:hover,
 #alignment-select:focus,
 #uoa-select:hover,
-#uoa-select:focus {
+#uoa-select:focus,
+#sort-select:hover,
+#sort-select:focus {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--brand);
     color: var(--brand);
@@ -1211,7 +1216,8 @@ body.slideshow-open {
     #coin-controls,
     #myr-controls,
     #alignment-controls,
-    #uoa-controls {
+    #uoa-controls,
+    #sort-controls {
         flex-basis: 100%;
         margin-left: 0;
     }
