@@ -2894,22 +2894,14 @@ document.addEventListener('keydown', e => {
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         const currentFile = visibleImages[currentIndex]?.filename || '';
         if (!currentFile) return;
-
         const isUp = (e.key === 'ArrowUp');
         const active = document.activeElement;
-
         swallow();
-
         let dropdownToFocus = null;
-
-        // 1) FOCUS-DRIVEN ROUTING: if a specific dropdown has focus, operate on that one.
         if (active === yearSelect) {
-            // Bitcoin vs Gold year
             isUp ? cycleBvgYear('up') : cycleBvgYear('down');
             dropdownToFocus = yearSelect;
-
         } else if (active === scaleSelect) {
-            // Shared scale dropdown for DAL / POTD / NLBP
             if (isDalFile(currentFile)) {
                 isUp ? cycleDalScale('up') : cycleDalScale('down');
             } else if (isPotdFile(currentFile)) {
@@ -2918,104 +2910,77 @@ document.addEventListener('keydown', e => {
                 isUp ? cycleNlbpScale('up') : cycleNlbpScale('down');
             }
             dropdownToFocus = scaleSelect;
-
         } else if (active === dominanceSelect) {
             isUp ? cycleDominance('up') : cycleDominance('down');
             dropdownToFocus = dominanceSelect;
-
         } else if (active === alignmentSelect) {
             isUp ? cycleHalvingAlignment('up') : cycleHalvingAlignment('down');
             dropdownToFocus = alignmentSelect;
-
         } else if (active === priceOfSelect) {
             isUp ? cyclePriceOf('up') : cyclePriceOf('down');
             dropdownToFocus = priceOfSelect;
-
         } else if (active === uoaSelect) {
-            // First UoA dropdown: item selection
             isUp ? cycleUoaItem('up') : cycleUoaItem('down');
             dropdownToFocus = uoaSelect;
-
         } else if (active === uoaSortSelect) {
-            // SECOND UoA DROPDOWN: sort mode gets its own up/down behavior
             const order = ['az', 'za', 'high', 'low'];
             const currentSort = getStoredUoaSort();
             const idx = order.indexOf(currentSort);
             const delta = isUp ? -1 : 1;
             const next = order[( (idx === -1 ? 0 : idx) + delta + order.length ) % order.length];
-
-            setUoaSortMode(next);        // updates storage + options
+            setUoaSortMode(next);
             if (uoaSortSelect) uoaSortSelect.value = next;
-
             dropdownToFocus = uoaSortSelect;
-
         } else if (active === hashSelect) {
             isUp ? cycleHashLength('up') : cycleHashLength('down');
             dropdownToFocus = hashSelect;
-
         } else if (active === coinSelect) {
             isUp ? cycleCoinType('up') : cycleCoinType('down');
             dropdownToFocus = coinSelect;
-
         } else if (active === myrSelect) {
             isUp ? cycleMyrRange('up') : cycleMyrRange('down');
             dropdownToFocus = myrSelect;
         }
-
-        // 2) If nothing relevant is focused, fall back to file-type-based behavior.
         if (!dropdownToFocus) {
             if (isBvgFile(currentFile)) {
                 isUp ? cycleBvgYear('up') : cycleBvgYear('down');
                 dropdownToFocus = yearSelect;
-
             } else if (isDalFile(currentFile)) {
                 isUp ? cycleDalScale('up') : cycleDalScale('down');
                 dropdownToFocus = scaleSelect;
-
             } else if (isPotdFile(currentFile)) {
                 isUp ? cyclePotdScale('up') : cyclePotdScale('down');
                 dropdownToFocus = scaleSelect;
-
             } else if (isNlbpFile(currentFile)) {
                 isUp ? cycleNlbpScale('up') : cycleNlbpScale('down');
                 dropdownToFocus = scaleSelect;
-
             } else if (isDominanceFile(currentFile)) {
                 isUp ? cycleDominance('up') : cycleDominance('down');
                 dropdownToFocus = dominanceSelect;
-
             } else if (isHalvingCyclesFile(currentFile)) {
                 isUp ? cycleHalvingAlignment('up') : cycleHalvingAlignment('down');
                 dropdownToFocus = alignmentSelect;
-
             } else if (isPriceOfFile(currentFile)) {
                 isUp ? cyclePriceOf('up') : cyclePriceOf('down');
                 dropdownToFocus = priceOfSelect;
-
             } else if (isUoaFile(currentFile)) {
                 isUp ? cycleUoaItem('up') : cycleUoaItem('down');
                 dropdownToFocus = uoaSelect;
-
             } else if (isTargetHashFile(currentFile)) {
                 isUp ? cycleHashLength('up') : cycleHashLength('down');
                 dropdownToFocus = hashSelect;
-
             } else if (isCoinFile(currentFile)) {
                 isUp ? cycleCoinType('up') : cycleCoinType('down');
                 dropdownToFocus = coinSelect;
-
             } else if (isMyrFile(currentFile)) {
                 isUp ? cycleMyrRange('up') : cycleMyrRange('down');
                 dropdownToFocus = myrSelect;
             }
         }
-
-        // 3) Keep focus on whichever dropdown we just affected
         if (dropdownToFocus && typeof dropdownToFocus.focus === 'function') {
             requestAnimationFrame(() => dropdownToFocus.focus());
         }
     }
-
 }, true);
 
 /* ===========================
