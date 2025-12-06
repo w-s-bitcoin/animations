@@ -51,6 +51,7 @@ const uoaIndexTotal = document.getElementById('uoa-index-total');
 let imageList = [];
 let visibleImages = [];
 let currentIndex = 0;
+let lastOpenedFilename = null;
 let justUnstarredInModal = false;
 let userSelectedLayout = null;
 let showFavoritesOnly = localStorage.getItem('showFavoritesOnly') === 'true';
@@ -670,6 +671,7 @@ function openModalByIndex(index) {
     const image = visibleImages[index];
     if (!image) return;
     currentIndex = index;
+    lastOpenedFilename = image.filename || null;
     modal.style.display = 'flex';
     isPinching = false;
     isPanning = false;
@@ -2838,7 +2840,6 @@ uoaIndexInput?.addEventListener('blur', () => {
     }
 });
 
-
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
@@ -2850,53 +2851,85 @@ function toggleFavoritesView() {
  * MODAL KEYBOARD SHORTCUTS
  * =========================== */
 document.addEventListener('keydown', e => {
-    if (modal.style.display === 'flex') {
-        if (e.key === 'ArrowLeft') prevImage();
-        else if (e.key === 'ArrowRight') nextImage();
-        else if (e.key === ' ' || e.code === 'Space') {
-            e.preventDefault();
-            closeModal();
-        } else if (e.key === 'Escape') {
-            e.preventDefault();
-            closeModal();
-        } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            const currentFile = visibleImages[currentIndex]?.filename || '';
-            if (isBvgFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleBvgYear('up') : cycleBvgYear('down');
-            } else if (isDalFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleDalScale('up') : cycleDalScale('down');
-            } else if (isPotdFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cyclePotdScale('up') : cyclePotdScale('down');
-            } else if (isNlbpFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleNlbpScale('up') : cycleNlbpScale('down');
-            } else if (isDominanceFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
-            } else if (isHalvingCyclesFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleHalvingAlignment('up') : cycleHalvingAlignment('down');
-            } else if (isPriceOfFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cyclePriceOf('up') : cyclePriceOf('down');
-            } else if (isUoaFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleUoaItem('up') : cycleUoaItem('down');
-            } else if (isTargetHashFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleHashLength('up') : cycleHashLength('down');
-            } else if (isCoinFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleCoinType('up') : cycleCoinType('down');
-            } else if (isMyrFile(currentFile)) {
-                e.preventDefault();
-                e.key === 'ArrowUp' ? cycleMyrRange('up') : cycleMyrRange('down');
-            }
+    if (modal.style.display !== 'flex') return;
+    const swallow = () => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') {
+            e.stopImmediatePropagation();
+        }
+    };
+    if (e.key === 'ArrowLeft') {
+        swallow();
+        prevImage();
+    } else if (e.key === 'ArrowRight') {
+        swallow();
+        nextImage();
+    } else if (e.key === ' ' || e.code === 'Space') {
+        swallow();
+        closeModal();
+    } else if (e.key === 'Escape') {
+        swallow();
+        closeModal();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const currentFile = visibleImages[currentIndex]?.filename || '';
+        if (!currentFile) return;
+        swallow();
+        if (isBvgFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleBvgYear('up') : cycleBvgYear('down');
+        } else if (isDalFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleDalScale('up') : cycleDalScale('down');
+        } else if (isPotdFile(currentFile)) {
+            e.key === 'ArrowUp' ? cyclePotdScale('up') : cyclePotdScale('down');
+        } else if (isNlbpFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleNlbpScale('up') : cycleNlbpScale('down');
+        } else if (isDominanceFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleDominance('up') : cycleDominance('down');
+        } else if (isHalvingCyclesFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleHalvingAlignment('up') : cycleHalvingAlignment('down');
+        } else if (isPriceOfFile(currentFile)) {
+            e.key === 'ArrowUp' ? cyclePriceOf('up') : cyclePriceOf('down');
+        } else if (isUoaFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleUoaItem('up') : cycleUoaItem('down');
+        } else if (isTargetHashFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleHashLength('up') : cycleHashLength('down');
+        } else if (isCoinFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleCoinType('up') : cycleCoinType('down');
+        } else if (isMyrFile(currentFile)) {
+            e.key === 'ArrowUp' ? cycleMyrRange('up') : cycleMyrRange('down');
         }
     }
+}, true);
+
+/* ===========================
+ * SITE-WIDE SPACEBAR: reopen last modal image on main page
+ * =========================== */
+document.addEventListener('keydown', e => {
+    if (!(e.key === ' ' || e.code === 'Space')) return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const active = document.activeElement;
+    if (
+        active &&
+        (active.tagName === 'INPUT' ||
+         active.tagName === 'TEXTAREA' ||
+         active.tagName === 'SELECT' ||
+         active.isContentEditable)
+    ) {
+        return;
+    }
+    if (modal.style.display === 'flex') return;
+    if (typeof isSlideshowOpen === 'function' && isSlideshowOpen()) return;
+    if (!visibleImages || !visibleImages.length) return;
+    e.preventDefault();
+    e.stopPropagation();
+    let indexToOpen = 0;
+    if (lastOpenedFilename) {
+        const idx = visibleImages.findIndex(img => img.filename === lastOpenedFilename);
+        if (idx !== -1) {
+            indexToOpen = idx;
+        }
+    }
+    openModalByIndex(indexToOpen);
 });
 
 /* ===========================
