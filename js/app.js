@@ -39,6 +39,9 @@ const uoaControls = document.getElementById('uoa-controls');
 const uoaSelect = document.getElementById('uoa-select');
 const sortControls = document.getElementById('sort-controls');
 const uoaSortSelect = document.getElementById('sort-select');
+const uoaIndexWrap = document.getElementById('uoa-index');
+const uoaIndexInput = document.getElementById('uoa-index-input');
+const uoaIndexTotal = document.getElementById('uoa-index-total');
 
 /* ===========================
  * GLOBAL STATE
@@ -1682,6 +1685,22 @@ function buildUoaOptionsFromList(list) {
     }, {});
 }
 
+function updateUoaIndexUiBySlug(slug) {
+    if (!uoaIndexInput || !uoaIndexTotal || !Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) {
+        return;
+    }
+    const total = UOA_OPTIONS.length;
+    uoaIndexTotal.textContent = String(total);
+    uoaIndexInput.min = '1';
+    uoaIndexInput.max = String(total);
+    const idx = UOA_OPTIONS.findIndex(o => o.slug === slug);
+    if (idx === -1) {
+        uoaIndexInput.value = '';
+        return;
+    }
+    uoaIndexInput.value = String(idx + 1);
+}
+
 function normalizeUoaSortMode(mode) {
     if (!mode) return 'az';
     const m = String(mode).toLowerCase();
@@ -1740,6 +1759,9 @@ function sortUoaOptions(mode, preferredSlug) {
     populateUoaSelect();
     if (uoaSelect && currentSlug && UOA_OPTIONS.some(o => o.slug === currentSlug)) {
         uoaSelect.value = currentSlug;
+    }
+    if (currentSlug) {
+        updateUoaIndexUiBySlug(currentSlug);
     }
 }
 
@@ -1830,6 +1852,7 @@ function setUoaItem(slug) {
     // Keep favorites consistent
     migrateFavoriteFilename(oldFilename, newFilename);
     updateModalSafePadding();
+    updateUoaIndexUiBySlug(slug);
 }
 
 function cycleUoaItem(direction) {
@@ -2767,6 +2790,49 @@ myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
 alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
 uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
 uoaSortSelect?.addEventListener('change', e => setUoaSortMode(e.target.value));
+uoaIndexInput?.addEventListener('input', e => {
+    if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return;
+    let raw = e.target.value || '';
+    raw = raw.replace(/\D+/g, '');
+    if (raw === '') {
+        e.target.value = '';
+        return;
+    }
+    let n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) {
+        e.target.value = '';
+        return;
+    }
+    const total = UOA_OPTIONS.length;
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    if (String(n) !== raw) {
+        e.target.value = String(n);
+    }
+    const target = UOA_OPTIONS[n - 1];
+    if (!target) return;
+    if (uoaSelect) {
+        uoaSelect.value = target.slug;
+    }
+    setUoaItem(target.slug);
+});
+uoaIndexInput?.addEventListener('blur', () => {
+    const raw = (uoaIndexInput.value || '').trim();
+    if (raw !== '') return;
+    let currentSlug = null;
+    if (uoaSelect && uoaSelect.value) {
+        currentSlug = uoaSelect.value;
+    } else {
+        const image = visibleImages?.[currentIndex];
+        if (image && isUoaFile(image.filename)) {
+            currentSlug = uoaSlugFromFilename(image.filename);
+        }
+    }
+    if (currentSlug) {
+        updateUoaIndexUiBySlug(currentSlug);
+    }
+});
+
 
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
