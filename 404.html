@@ -165,10 +165,20 @@
                         <select id="sort-select" aria-label="Choose sort order">
                             <option value="az">A-Z</option>
                             <option value="za">Z-A</option>
-                            <option value="highest">Highest Price</option>
-                            <option value="lowest">Lowest Price</option>
+                            <option value="high">Highest Price</option>
+                            <option value="low">Lowest Price</option>
                         </select>
                     </span>
+                    <div class="uoa-index" id="uoa-index">
+                    <input
+                        id="uoa-index-input"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        autocomplete="off"
+                    />
+                    <span class="uoa-index-total">/ <span id="uoa-index-total">156</span></span>
+                    </div>
                 </span>
                 <span class="dominance-controls" id="dominance-controls">
                     <span style="color: white; font-size: 1rem">Unit of Account:</span>
