@@ -684,108 +684,67 @@ function openModalByIndex(index) {
     updateModalSafePadding();
     setTimeout(updateModalSafePadding, 0);
     document.body.style.overflow = 'hidden';
-    setModalLinks({x: image.latest_x || '', nostr: image.latest_nostr || '', youtube: image.latest_youtube || ''});
+    setModalLinks({
+        x: image.latest_x || '',
+        nostr: image.latest_nostr || '',
+        youtube: image.latest_youtube || ''
+    });
     populateYearSelect();
     const fname = image.filename;
+    showYearControls(false);
+    showScaleControls(false);
+    showHashControls(false);
+    showPriceOfControls(false);
+    showDominanceControls(false);
+    showCoinControls(false);
+    showMyrControls(false);
+    showAlignmentControls(false);
+    showUoaControls(false);
     if (isBvgFile(fname)) {
         showYearControls(true);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         const chosenYear = extractBvgYear(fname) || getStoredBvgYear();
         yearSelect.value = chosenYear;
         setBvgYear(chosenYear);
     } else if (isDominanceFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
         showDominanceControls(true);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         const unit = domUnitFromFilename(fname) || getStoredDominanceUnit();
         dominanceSelect.value = unit;
         setDominanceUnit(unit);
     } else if (isDalFile(fname)) {
-        showYearControls(false);
         showScaleControls(true);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         const sc = dalScaleFromFilename(fname) || getStoredDalScale();
         scaleSelect.value = sc;
         setDalScale(sc);
     } else if (isPotdFile(fname)) {
-        showYearControls(false);
         showScaleControls(true);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         const sc = potdScaleFromFilename(fname) || getStoredPotdScale();
         scaleSelect.value = sc;
         setPotdScale(sc);
     } else if (isNlbpFile(fname)) {
-        showYearControls(false);
         showScaleControls(true);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         const sc = nlbpScaleFromFilename(fname) || getStoredNlbpScale();
         scaleSelect.value = sc;
         setNlbpScale(sc);
     } else if (isHalvingCyclesFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
         showAlignmentControls(true);
         populateAlignmentSelect();
-        showUoaControls(false);
         const align = alignmentFromFilename(fname);
         if (alignmentSelect) alignmentSelect.value = align;
         setHalvingAlignment(align);
     } else if (isPriceOfFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
         showPriceOfControls(true);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         populatePriceOfSelect();
         let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
         if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
-            chosenSlug = PRICE_OF_OPTIONS.find(o => o.slug === 'ground_beef')?.slug || PRICE_OF_OPTIONS[0]?.slug;
+            chosenSlug =
+                PRICE_OF_OPTIONS.find(o => o.slug === 'ground_beef')?.slug ||
+                PRICE_OF_OPTIONS[0]?.slug;
         }
         priceOfSelect.value = chosenSlug;
         const meta = PRICE_OF_META[chosenSlug];
         if (meta) applyPostLinksFromMeta(meta);
         setPriceOfItem(chosenSlug);
     } else if (isUoaFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
         showUoaControls(true);
         sortUoaOptions(getStoredUoaSort());
         populateUoaSelect();
@@ -799,55 +758,27 @@ function openModalByIndex(index) {
         }
         setUoaItem(chosenSlug);
     } else if (isTargetHashFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         showHashControls(true);
-
-        const len = hashLengthFromFilename(fname); // '32' or '64'
+        const len = hashLengthFromFilename(fname);
         if (hashSelect) hashSelect.value = len;
         setHashLength(len);
     } else if (isCoinFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
         showCoinControls(true);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         populateCoinSelect();
         let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
-        if (!COIN_OPTIONS.some(o => o.slug === chosen)) chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
+        if (!COIN_OPTIONS.some(o => o.slug === chosen)) {
+            chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
+        }
         coinSelect.value = chosen;
         setCoinType(chosen);
     } else if (isMyrFile(fname)) {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
         showMyrControls(true);
-        showAlignmentControls(false);
-        showUoaControls(false);
         populateMyrSelect();
         const chosenRange = myrRangeFromFilename(fname) || MYR_DEFAULT_RANGE;
         myrSelect.value = chosenRange;
         setMyrRange(chosenRange);
+
     } else {
-        showYearControls(false);
-        showScaleControls(false);
-        showPriceOfControls(false);
-        showDominanceControls(false);
-        showCoinControls(false);
-        showMyrControls(false);
-        showAlignmentControls(false);
-        showUoaControls(false);
         setModalImageAndCenter(fname, image.title);
         modalImg.alt = image.title;
         replaceUrlForFilename(fname);
