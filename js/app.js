@@ -25,6 +25,8 @@ const yearControls = document.getElementById('year-controls');
 const yearSelect = document.getElementById('year-select');
 const scaleControls = document.getElementById('scale-controls');
 const scaleSelect = document.getElementById('scale-select');
+const hashControls = document.getElementById('hashlen-controls');
+const hashSelect = document.getElementById('hashlen-select');
 const dominanceControls = document.getElementById('dominance-controls');
 const dominanceSelect = document.getElementById('dominance-select');
 const priceOfControls = document.getElementById('priceof-controls');
@@ -217,6 +219,9 @@ function showYearControls(show) {
 }
 function showScaleControls(show) {
     scaleControls?.classList.toggle('show', !!show);
+}
+function showHashControls(show) {
+    hashControls?.classList.toggle('show', !!show);
 }
 function showPriceOfControls(show) {
     priceOfControls?.classList.toggle('show', !!show);
@@ -793,6 +798,20 @@ function openModalByIndex(index) {
             uoaSortSelect.value = getStoredUoaSort();
         }
         setUoaItem(chosenSlug);
+    } else if (isTargetHashFile(fname)) {
+        showYearControls(false);
+        showScaleControls(false);
+        showPriceOfControls(false);
+        showDominanceControls(false);
+        showCoinControls(false);
+        showMyrControls(false);
+        showAlignmentControls(false);
+        showUoaControls(false);
+        showHashControls(true);
+
+        const len = hashLengthFromFilename(fname); // '32' or '64'
+        if (hashSelect) hashSelect.value = len;
+        setHashLength(len);
     } else if (isCoinFile(fname)) {
         showYearControls(false);
         showScaleControls(false);
@@ -847,6 +866,7 @@ function closeModal() {
     }
     showYearControls(false);
     showScaleControls(false);
+    showHashControls(false);
     showPriceOfControls(false);
     showMyrControls(false);
     showDominanceControls(false);
@@ -1376,6 +1396,64 @@ function cycleNlbpScale(direction) {
     setNlbpScale(next);
 }
 
+/* ===========================
+ * MODULE: Target & Block Hashes length (32 / 64)
+ * target_and_block_hashes.png / target_and_block_hashes_64.png
+ * =========================== */
+const TARGET_HASH_BASE = 'target_and_block_hashes';
+const TARGET_HASH_32 = 'target_and_block_hashes.png';
+const TARGET_HASH_64 = 'target_and_block_hashes_64.png';
+const TARGET_HASH_LENGTHS = ['32', '64'];
+function isTargetHashFile(fname) {
+    return fname === TARGET_HASH_32 || fname === TARGET_HASH_64;
+}
+function hashLengthFromFilename(fname) {
+    return fname === TARGET_HASH_64 ? '64' : '32';
+}
+function targetHashFilenameForLength(len) {
+    return String(len) === '64' ? TARGET_HASH_64 : TARGET_HASH_32;
+}
+function setHashLength(len) {
+    const image = visibleImages[currentIndex];
+    if (!image || !isTargetHashFile(image.filename)) return;
+    const oldFilename = image.filename;
+    const newFilename = targetHashFilenameForLength(len);
+    const title = image.title || 'Target & Block Hashes';
+    const description = image.description || '';
+    setModalImageAndCenter(newFilename, title);
+    replaceUrlForFilename(newFilename);
+    Object.assign(visibleImages[currentIndex], {
+        filename: newFilename,
+        title,
+        description,
+        latest_x: image.latest_x || '',
+        latest_nostr: image.latest_nostr || '',
+        latest_youtube: image.latest_youtube || ''
+    });
+    updateGridThumbAtCurrent(newFilename, title);
+    const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
+    const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
+    if (cardContainer) {
+        const tip = description || title;
+        cardContainer.setAttribute('title', tip);
+        if (gridImg) gridImg.alt = title;
+    }
+    migrateFavoriteFilename(oldFilename, newFilename);
+    updateModalSafePadding();
+    if (hashSelect) hashSelect.value = String(len);
+}
+function cycleHashLength(direction) {
+    if (!hashSelect) return;
+    const current = hashSelect.value || hashLengthFromFilename(visibleImages[currentIndex]?.filename || TARGET_HASH_32);
+    const idx = TARGET_HASH_LENGTHS.indexOf(current);
+    if (idx === -1) return;
+    const delta = direction === 'up' ? -1 : 1;
+    const len = TARGET_HASH_LENGTHS.length;
+    const newIdx = (idx + delta + len) % len;
+    const next = TARGET_HASH_LENGTHS[newIdx];
+    hashSelect.value = next;
+    setHashLength(next);
+}
 
 /* ===========================
  * MODULE: Halving Cycles Alignment
@@ -1384,7 +1462,6 @@ function cycleNlbpScale(direction) {
 const HALVING_ALIGN_OPTIONS = ['block', 'days'];
 const HALVING_STORAGE_KEY = 'halvingAlignment';
 let HALVING_META = {};
-
 function isHalvingCyclesFile(fname) {
     return fname === 'halving_cycles.png' || fname === 'halving_cycles_days.png';
 }
@@ -1394,8 +1471,6 @@ function alignmentFromFilename(fname) {
 function halvingFilenameForAlignment(alignment) {
     return alignment === 'days' ? 'halving_cycles_days.png' : 'halving_cycles.png';
 }
-
-// Build a metadata map from the raw JSON list
 function buildHalvingMetaFromList(list) {
     HALVING_META = {};
     list.forEach(img => {
@@ -1410,7 +1485,6 @@ function buildHalvingMetaFromList(list) {
         }
     });
 }
-
 function populateAlignmentSelect() {
     if (!alignmentSelect) return;
 
@@ -1422,7 +1496,6 @@ function populateAlignmentSelect() {
         return `<option value="${opt}">${label}</option>`;
     }).join('');
 }
-
 function getStoredHalvingAlignment() {
     const v = localStorage.getItem(HALVING_STORAGE_KEY);
     return HALVING_ALIGN_OPTIONS.includes(v) ? v : 'block';
@@ -2790,6 +2863,7 @@ myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
 alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
 uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
 uoaSortSelect?.addEventListener('change', e => setUoaSortMode(e.target.value));
+hashSelect?.addEventListener('change', e => setHashLength(e.target.value));
 uoaIndexInput?.addEventListener('input', e => {
     if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return;
     let raw = e.target.value || '';
@@ -2880,6 +2954,9 @@ document.addEventListener('keydown', e => {
             } else if (isUoaFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cycleUoaItem('up') : cycleUoaItem('down');
+            } else if (isTargetHashFile(currentFile)) {
+                e.preventDefault();
+                e.key === 'ArrowUp' ? cycleHashLength('up') : cycleHashLength('down');
             } else if (isCoinFile(currentFile)) {
                 e.preventDefault();
                 e.key === 'ArrowUp' ? cycleCoinType('up') : cycleCoinType('down');
