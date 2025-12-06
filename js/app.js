@@ -81,6 +81,7 @@ let lastTapX = 0;
 let lastTapY = 0;
 let singleTapMoved = false;
 const MAX_TAP_MOVE_PX = 12;
+let nonModalFocusable = [];
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -672,6 +673,17 @@ function openModalByIndex(index) {
     if (!image) return;
     currentIndex = index;
     lastOpenedFilename = image.filename || null;
+    const focusable = document.querySelectorAll(
+        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    nonModalFocusable = [];
+    focusable.forEach(el => {
+        if (!modal.contains(el)) {
+            const prev = el.getAttribute('tabindex');
+            nonModalFocusable.push({ el, prev });
+            el.setAttribute('tabindex', '-1');
+        }
+    });
     modal.style.display = 'flex';
     isPinching = false;
     isPanning = false;
@@ -799,11 +811,9 @@ function openModalByIndex(index) {
             modal.querySelector('.modal-close') ||
             modal.querySelector('button[aria-label="Close"]') ||
             modal.querySelector('button[aria-label="Close modal"]');
-
         if (closeBtn && typeof closeBtn.focus === 'function') {
             closeBtn.focus();
         } else if (modalFavBtn && typeof modalFavBtn.focus === 'function') {
-            // Fallback: keep focus inside the modal on the favorite button
             modalFavBtn.focus();
         }
     });
@@ -813,6 +823,11 @@ function closeModal() {
     modal.style.display = 'none';
     history.replaceState(null, '', '/');
     document.body.style.overflow = '';
+    nonModalFocusable.forEach(({ el, prev }) => {
+        if (prev === null) el.removeAttribute('tabindex');
+        else el.setAttribute('tabindex', prev);
+    });
+    nonModalFocusable = [];
     if (justUnstarredInModal) {
         justUnstarredInModal = false;
         filterImages();
@@ -1460,37 +1475,25 @@ function setStoredHalvingAlignment(a) {
 
 function setHalvingAlignment(alignment) {
     if (!HALVING_ALIGN_OPTIONS.includes(alignment)) alignment = 'block';
-
     const cur = visibleImages[currentIndex];
     if (!cur || !isHalvingCyclesFile(cur.filename)) return;
-
     const oldFilename = cur.filename;
     const newFilename = halvingFilenameForAlignment(alignment);
-
-    // Remember user's last choice
     setStoredHalvingAlignment(alignment);
-
-    // Pull metadata from the original JSON entries
     const meta = HALVING_META[newFilename] || {};
-
     const fallbackTitle =
         meta.title ||
         (alignment === 'days'
             ? 'Halving Cycles (Days After Halving)'
             : 'Halving Cycles (Block-Height Aligned)');
-
     const newTitle = meta.title || cur.title || fallbackTitle;
     const newDescription = meta.description || cur.description || '';
     const latest_x = meta.latest_x || cur.latest_x || '';
     const latest_nostr = meta.latest_nostr || cur.latest_nostr || '';
     const latest_youtube = meta.latest_youtube || cur.latest_youtube || '';
-
-    // Update big modal image + URL + links
     setModalImageAndCenter(newFilename, newTitle);
     replaceUrlForFilename(newFilename);
     setModalLinks({ x: latest_x, nostr: latest_nostr, youtube: latest_youtube });
-
-    // Update the in-memory record
     Object.assign(visibleImages[currentIndex], {
         filename: newFilename,
         title: newTitle,
@@ -1499,17 +1502,11 @@ function setHalvingAlignment(alignment) {
         latest_nostr,
         latest_youtube
     });
-
-    // Update the grid title/description UI for this card
     const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
     if (titleEl) titleEl.textContent = newTitle;
-
     const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
     if (descEl) descEl.textContent = newDescription;
-
-    // Update the thumbnail src + alt
     updateGridThumbAtCurrent(newFilename, newTitle);
-
     const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
     const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
     if (cardContainer) {
@@ -1517,17 +1514,9 @@ function setHalvingAlignment(alignment) {
         cardContainer.setAttribute('title', tip);
         if (gridImg) gridImg.alt = newTitle;
     }
-
-    // Keep favorites consistent when switching (no-op if same filename)
     migrateFavoriteFilename(oldFilename, newFilename);
-
     updateModalSafePadding();
 }
-
-
-/**
- * Arrow up/down cycling between "Block Height" and "Days from Halving"
- */
 function cycleHalvingAlignment(direction) {
     if (!alignmentSelect) return;
     const current = alignmentSelect.value || alignmentFromFilename(visibleImages[currentIndex]?.filename || '');
@@ -1828,18 +1817,13 @@ function setStoredUoaItem(slug) {
 function setUoaItem(slug) {
     const image = visibleImages[currentIndex];
     if (!image || !isUoaFile(image.filename)) return;
-
     const meta = UOA_META[slug] || {};
     const oldFilename = image.filename;
     const newFilename = uoaFilenameForSlug(slug);
-
     setStoredUoaItem(slug);
-
     const label = uoaLabelFromSlug(slug);
     const title = meta.title || image.title || `Unit of Account – ${label}`;
     const description = meta.description || image.description || '';
-
-    // Update modal
     setModalImageAndCenter(newFilename, title);
     replaceUrlForFilename(newFilename);
     setModalLinks({
@@ -1847,8 +1831,6 @@ function setUoaItem(slug) {
         nostr: meta.latest_nostr || '',
         youtube: meta.latest_youtube || ''
     });
-
-    // Update in-memory record
     Object.assign(visibleImages[currentIndex], {
         filename: newFilename,
         title,
@@ -1857,15 +1839,10 @@ function setUoaItem(slug) {
         latest_nostr: meta.latest_nostr || '',
         latest_youtube: meta.latest_youtube || ''
     });
-
-    // Grid title/description
     const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
     if (titleEl) titleEl.textContent = title;
-
     const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
     if (descEl) descEl.textContent = description;
-
-    // Thumb + tooltip
     updateGridThumbAtCurrent(newFilename, title);
     const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
     const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
@@ -1874,8 +1851,6 @@ function setUoaItem(slug) {
         cardContainer.setAttribute('title', tip);
         if (gridImg) gridImg.alt = title;
     }
-
-    // Keep favorites consistent
     migrateFavoriteFilename(oldFilename, newFilename);
     updateModalSafePadding();
     updateUoaIndexUiBySlug(slug);
