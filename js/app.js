@@ -802,15 +802,21 @@ function openModalByIndex(index) {
     modalFavBtn.textContent = fav ? '★' : '☆';
     modalFavBtn.classList.toggle('filled', fav);
 
-    // NEW: move keyboard focus into the modal, preferably to the close ("X") button
     requestAnimationFrame(() => {
-        // Try to find a close button inside the modal using common selectors
-        const closeBtn =
-            modal.querySelector('[data-modal-close]') ||
-            modal.querySelector('.modal-close-btn') ||
-            modal.querySelector('.modal-close') ||
-            modal.querySelector('button[aria-label="Close"]') ||
-            modal.querySelector('button[aria-label="Close modal"]');
+        const focusableButtons = Array.from(
+            modal.querySelectorAll('button, [role="button"], [data-modal-close]')
+        );
+        let closeBtn = focusableButtons.find(btn => {
+            if (!modal.contains(btn)) return false;
+            const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+            const text = (btn.textContent || '').toLowerCase().trim();
+            return (
+                ariaLabel.includes('close') ||
+                text === '×' ||
+                text === 'x' ||
+                text.includes('close')
+            );
+        });
         if (closeBtn && typeof closeBtn.focus === 'function') {
             closeBtn.focus();
         } else if (modalFavBtn && typeof modalFavBtn.focus === 'function') {
