@@ -1564,6 +1564,8 @@ function buildPriceOfOptionsFromList(list) {
                 label:
                 slug === 'ca_min_wage' ? 'CA Min Wage' :
                 slug === 'wti_crude' ? 'WTI Crude' :
+                slug === 'natural_gas_us' ? 'Natural Gas US' :
+                slug === 'natural_gas_eu' ? 'Natural Gas EU' :
                 slugToTitle(slug),
                 filename: `price_of_${slug}.png`,
                 title: img.title,
