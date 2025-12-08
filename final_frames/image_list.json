@@ -1674,6 +1674,22 @@
         "latest_youtube": ""
     },
     {
+        "filename": "price_of_soybeans.png",
+        "title": "Price of Soybeans",
+        "description": "Shows the price of one metric ton of soybeans in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_olive_oil.png",
+        "title": "Price of Olive Oil",
+        "description": "Shows the price of one metric ton of olive oil in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "price_of_coffee.png",
         "title": "Price of Cocao",
         "description": "Shows the price of one pound of coffee in terms of bitcoin and in terms of dollars",
