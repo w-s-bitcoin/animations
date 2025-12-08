@@ -1658,6 +1658,30 @@
         "latest_youtube": ""
     },
     {
+        "filename": "price_of_natural_gas_us.png",
+        "title": "Price of Natural Gas (US)",
+        "description": "Shows the price of one MMBtu of natural gas in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_natural_gas_eu.png",
+        "title": "Price of Natural Gas (EU)",
+        "description": "Shows the price of one MMBtu of natural gas in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
+        "filename": "price_of_natural_gas_asia.png",
+        "title": "Price of Natural Gas (Asia)",
+        "description": "Shows the price of one MMBtu of natural gas in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "price_of_corn.png",
         "title": "Price of Corn",
         "description": "Shows the price of one metric ton of corn in terms of bitcoin and in terms of dollars",

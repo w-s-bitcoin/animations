@@ -1561,7 +1561,10 @@ function buildPriceOfOptionsFromList(list) {
         if (!bySlug.has(slug)) {
             bySlug.set(slug, {
                 slug,
-                label: slug === 'ca_min_wage' ? 'CA Min Wage' : slugToTitle(slug),
+                label:
+                slug === 'ca_min_wage' ? 'CA Min Wage' :
+                slug === 'wti_crude' ? 'WTI Crude' :
+                slugToTitle(slug),
                 filename: `price_of_${slug}.png`,
                 title: img.title,
                 description: img.description,
