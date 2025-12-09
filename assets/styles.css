@@ -238,6 +238,38 @@ footer {
 /* ===========================
     SITE MENU (top-right kebab)
     =========================== */
+.buy-coffee {
+    position: fixed;
+    top: max(0.75rem, env(safe-area-inset-top));
+    left: max(0.75rem, env(safe-area-inset-left));
+    z-index: 1500;
+}
+.buy-coffee-btn {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background-color: var(--panel);
+    color: var(--brand);
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.buy-coffee-btn:hover,
+.buy-coffee-btn:focus-visible {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--brand);
+    color: var(--brand);
+    outline: none;
+}
 .site-kebab {
     position: absolute;
     top: max(0.75rem, env(safe-area-inset-top));
@@ -519,6 +551,14 @@ body.slideshow-open.hide-cursor .slideshow * {
 @media (max-width: 640px) {
     .kebab-menu .menu-item.menu-check {
         min-height: 44px;
+    }
+}
+@media (max-width: 480px) {
+    .buy-coffee-btn {
+        padding: 0.25rem 0.5rem;
+    }
+    #buyCoffeeText {
+        display: none;
     }
 }
 

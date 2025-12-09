@@ -49,6 +49,26 @@ const uoaIndexInput = document.getElementById('uoa-index-input');
 const uoaIndexTotal = document.getElementById('uoa-index-total');
 
 /* ===========================
+ * BUY ME BUTTON (Beer/Coffee)
+ * =========================== */
+function updateBuyMeButton() {
+    const icon = document.getElementById("buyCoffeeIcon");
+    const text = document.getElementById("buyCoffeeText");
+    if (!icon || !text) return;
+    const hour = new Date().getHours();
+    const isBeerTime = (hour >= 17 || hour < 3);
+    if (isBeerTime) {
+        icon.textContent = "🍺";
+        text.textContent = "Buy me a beer";
+    } else {
+        icon.textContent = "☕";
+        text.textContent = "Buy me a coffee";
+    }
+}
+document.addEventListener("DOMContentLoaded", updateBuyMeButton);
+setInterval(updateBuyMeButton, 5 * 60 * 1000);
+
+/* ===========================
  * GLOBAL STATE
  * =========================== */
 let imageList = [];
