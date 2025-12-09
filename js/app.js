@@ -33,6 +33,8 @@ const priceOfControls = document.getElementById('priceof-controls');
 const priceOfSelect = document.getElementById('priceof-select');
 const pofSortControls = document.getElementById('pof-sort-controls');
 const pofSortSelect = document.getElementById('pof-sort-select');
+const pofIndexInput = document.getElementById('pof-index-input');
+const pofIndexTotal = document.getElementById('pof-index-total');
 const coinControls = document.getElementById('coin-controls');
 const coinSelect = document.getElementById('coin-select');
 const myrControls = document.getElementById('myr-controls');
@@ -43,7 +45,6 @@ const uoaControls = document.getElementById('uoa-controls');
 const uoaSelect = document.getElementById('uoa-select');
 const sortControls = document.getElementById('sort-controls');
 const uoaSortSelect = document.getElementById('sort-select');
-const uoaIndexWrap = document.getElementById('uoa-index');
 const uoaIndexInput = document.getElementById('uoa-index-input');
 const uoaIndexTotal = document.getElementById('uoa-index-total');
 
@@ -766,7 +767,10 @@ function openModalByIndex(index) {
         const meta = PRICE_OF_META[chosenSlug];
         if (meta) applyPostLinksFromMeta(meta);
         setPriceOfItem(chosenSlug);
+        // keep index [n / N] aligned to the opened item
+        updatePofIndexUiBySlug(chosenSlug);
     } else if (isUoaFile(fname)) {
+
         showUoaControls(true);
         sortUoaOptions(getStoredUoaSort());
         populateUoaSelect();
@@ -1566,31 +1570,74 @@ function buildPriceOfOptionsFromList(list) {
         const m = img.filename.match(/^price_of_([a-z0-9_]+)\.png$/);
         if (!m) return;
         const slug = m[1];
+        const rawMsat = img.pof_msat ?? img.uoa_msat ?? img.msat;
+        const msatNum = Number(rawMsat);
+        const msat = Number.isFinite(msatNum) ? msatNum : null;
+
+        // Debug: warn if we don't have a usable msat for this slug.
+        if (rawMsat === undefined || rawMsat === null || !Number.isFinite(msatNum)) {
+            console.warn(
+                '[POF] Missing or non-numeric msat for slug:',
+                slug,
+                { pof_msat: img.pof_msat, uoa_msat: img.uoa_msat, msat: img.msat }
+            );
+        }
+
         if (!bySlug.has(slug)) {
             bySlug.set(slug, {
                 slug,
                 label:
-                slug === 'ca_min_wage' ? 'CA Min Wage' :
-                slug === 'wti_crude' ? 'WTI Crude' :
-                slug === 'natural_gas_us' ? 'Natural Gas US' :
-                slug === 'natural_gas_eu' ? 'Natural Gas EU' :
-                slugToTitle(slug),
+                    slug === 'ca_min_wage' ? 'CA Min Wage' :
+                    slug === 'wti_crude' ? 'WTI Crude' :
+                    slug === 'natural_gas_us' ? 'Natural Gas US' :
+                    slug === 'natural_gas_eu' ? 'Natural Gas EU' :
+                    slugToTitle(slug),
                 filename: `price_of_${slug}.png`,
                 title: img.title,
                 description: img.description,
                 latest_x: img.latest_x || '',
                 latest_nostr: img.latest_nostr || '',
                 latest_youtube: img.latest_youtube || '',
-                msat: typeof img.pof_msat === 'number' ? img.pof_msat : null
+                msat
             });
         }
     });
+
     PRICE_OF_OPTIONS = Array.from(bySlug.values());
-    PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => ((acc[o.slug] = o), acc), {});
+    PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => {
+        acc[o.slug] = o;
+        return acc;
+    }, {});
 }
+
 function populatePriceOfSelect() {
     if (!priceOfSelect) return;
     priceOfSelect.innerHTML = PRICE_OF_OPTIONS.map(o => `<option value="${o.slug}">${o.label}</option>`).join('');
+}
+
+/**
+ * Update the Price-Of index UI (input + total) based on a given slug.
+ */
+function updatePofIndexUiBySlug(slug) {
+    if (
+        !pofIndexInput ||
+        !pofIndexTotal ||
+        !Array.isArray(PRICE_OF_OPTIONS) ||
+        PRICE_OF_OPTIONS.length === 0
+    ) {
+        return;
+    }
+    const total = PRICE_OF_OPTIONS.length;
+    pofIndexTotal.textContent = String(total);
+    pofIndexInput.min = '1';
+    pofIndexInput.max = String(total);
+
+    const idx = PRICE_OF_OPTIONS.findIndex(o => o.slug === slug);
+    if (idx === -1) {
+        pofIndexInput.value = '';
+        return;
+    }
+    pofIndexInput.value = String(idx + 1);
 }
 function applyPostLinksFromMeta(meta) {
     setModalLinks({x: meta.latest_x || '', nostr: meta.latest_nostr || '', youtube: meta.latest_youtube || ''});
@@ -1622,6 +1669,7 @@ function setStoredPofSort(mode) {
 function sortPriceOfOptions(mode, preferredSlug) {
     const norm = normalizePofSortMode(mode);
     if (!Array.isArray(PRICE_OF_OPTIONS) || PRICE_OF_OPTIONS.length === 0) return;
+
     const byLabel = (a, b) => a.label.localeCompare(b.label);
     const byMsatAsc = (a, b) => {
         const am = typeof a.msat === 'number' ? a.msat : Infinity;
@@ -1635,7 +1683,20 @@ function sortPriceOfOptions(mode, preferredSlug) {
         if (am === bm) return byLabel(a, b);
         return bm - am;
     };
-    if (norm === 'az') {
+
+    // Do we have at least one numeric msat?
+    const hasAnyNumericMsat = PRICE_OF_OPTIONS.some(
+        o => typeof o.msat === 'number' && Number.isFinite(o.msat)
+    );
+
+    if ((norm === 'high' || norm === 'low') && !hasAnyNumericMsat) {
+        console.warn(
+            '[POF] sort mode',
+            norm,
+            'requested but no numeric pof_msat values were found; falling back to A–Z.'
+        );
+        PRICE_OF_OPTIONS.sort(byLabel);
+    } else if (norm === 'az') {
         PRICE_OF_OPTIONS.sort(byLabel);
     } else if (norm === 'za') {
         PRICE_OF_OPTIONS.sort((a, b) => byLabel(b, a));
@@ -1644,20 +1705,30 @@ function sortPriceOfOptions(mode, preferredSlug) {
     } else if (norm === 'low') {
         PRICE_OF_OPTIONS.sort(byMsatAsc);
     }
+
     PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => {
         acc[o.slug] = o;
         return acc;
     }, {});
+
     const currentSlug =
         preferredSlug ||
         (priceOfSelect && priceOfSelect.value) ||
         getStoredPofItem() ||
         (PRICE_OF_OPTIONS[0] && PRICE_OF_OPTIONS[0].slug);
+
     populatePriceOfSelect();
+
     if (priceOfSelect && currentSlug && PRICE_OF_OPTIONS.some(o => o.slug === currentSlug)) {
         priceOfSelect.value = currentSlug;
     }
+
+    // keep the index UI in sync with the currently selected slug
+    if (currentSlug) {
+        updatePofIndexUiBySlug(currentSlug);
+    }
 }
+
 function setPofSortMode(modeRaw) {
     const norm = normalizePofSortMode(modeRaw);
     setStoredPofSort(norm);
@@ -1682,6 +1753,22 @@ function setPriceOfItem(slug) {
     const newFilename = pofFilenameForSlug(slug);
     const fallbackTitle = `Price of ${slugToTitle(slug)}`;
     const meta = PRICE_OF_META[slug] || {title: fallbackTitle, description: ''};
+
+    // --- LOG msats for this price_of item when opened/changed in the modal ---
+    const msat = typeof meta.msat === 'number' ? meta.msat : null;
+    if (msat !== null && Number.isFinite(msat)) {
+        const sats = msat / 1000;
+        console.log(
+            `[POF] Opened "${slug}" → ${msat} msats (${sats} sats)`
+        );
+    } else {
+        console.log(
+            `[POF] Opened "${slug}" → no valid msats value found`,
+            { pof_msat: meta.msat }
+        );
+    }
+    // -------------------------------------------------------------------------
+
     setStoredPofItem(slug);
     setModalImageAndCenter(newFilename, meta.title || fallbackTitle);
     replaceUrlForFilename(newFilename);
@@ -1703,7 +1790,7 @@ function setPriceOfItem(slug) {
     if (cardContainer) {
         const tip = meta.description || meta.title || fallbackTitle;
         cardContainer.setAttribute('title', tip);
-        gridImg.alt = meta.title || fallbackTitle;
+        gridImg.alt = title;
     }
     updateGridThumbAtCurrent(newFilename);
     const favOn = isFavorite(newFilename);
@@ -1715,7 +1802,10 @@ function setPriceOfItem(slug) {
         gridStar.classList.toggle('filled', favOn);
     }
     updateModalSafePadding();
+    // update the [n / N] index whenever the Price-Of item changes
+    updatePofIndexUiBySlug(slug);
 }
+
 function cyclePriceOf(direction) {
     if (!priceOfSelect) return;
     const opts = Array.from(priceOfSelect.options);
@@ -1772,6 +1862,12 @@ function buildUoaOptionsFromList(list) {
         if (!isUoaFile(img.filename)) return;
         const slug = uoaSlugFromFilename(img.filename);
         if (!slug) return;
+
+        // Coerce to number in case JSON stored it as a string.
+        const uoaMsatRaw = img.uoa_msat;
+        const uoaMsatNum = Number(uoaMsatRaw);
+        const msat = Number.isFinite(uoaMsatNum) ? uoaMsatNum : null;
+
         if (!bySlug.has(slug)) {
             const label = uoaLabelFromSlug(slug);
             bySlug.set(slug, {
@@ -1783,7 +1879,7 @@ function buildUoaOptionsFromList(list) {
                 latest_x: img.latest_x || '',
                 latest_nostr: img.latest_nostr || '',
                 latest_youtube: img.latest_youtube || '',
-                msat: typeof img.uoa_msat === 'number' ? img.uoa_msat : null
+                msat
             });
         }
     });
@@ -1793,6 +1889,7 @@ function buildUoaOptionsFromList(list) {
         return acc;
     }, {});
 }
+
 
 function updateUoaIndexUiBySlug(slug) {
     if (!uoaIndexInput || !uoaIndexTotal || !Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) {
@@ -2927,6 +3024,52 @@ uoaIndexInput?.addEventListener('blur', () => {
     }
     if (currentSlug) {
         updateUoaIndexUiBySlug(currentSlug);
+    }
+});
+
+/* --- Price Of index field events --- */
+pofIndexInput?.addEventListener('input', e => {
+    if (!Array.isArray(PRICE_OF_OPTIONS) || PRICE_OF_OPTIONS.length === 0) return;
+    let raw = e.target.value || '';
+    raw = raw.replace(/\D+/g, '');
+    if (raw === '') {
+        e.target.value = '';
+        return;
+    }
+    let n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) {
+        e.target.value = '';
+        return;
+    }
+    const total = PRICE_OF_OPTIONS.length;
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    if (String(n) !== raw) {
+        e.target.value = String(n);
+    }
+    const target = PRICE_OF_OPTIONS[n - 1];
+    if (!target) return;
+    if (priceOfSelect) {
+        priceOfSelect.value = target.slug;
+    }
+    setPriceOfItem(target.slug);
+});
+
+pofIndexInput?.addEventListener('blur', () => {
+    const raw = (pofIndexInput.value || '').trim();
+    if (raw !== '') return;
+
+    let currentSlug = null;
+    if (priceOfSelect && priceOfSelect.value) {
+        currentSlug = priceOfSelect.value;
+    } else {
+        const image = visibleImages?.[currentIndex];
+        if (image && isPriceOfFile(image.filename)) {
+            currentSlug = pofSlugFromFilename(image.filename);
+        }
+    }
+    if (currentSlug) {
+        updatePofIndexUiBySlug(currentSlug);
     }
 });
 
