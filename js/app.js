@@ -440,6 +440,7 @@ function getContainerOrigin() {
     const r = modal.getBoundingClientRect();
     return {ox: r.left, oy: r.top};
 }
+
 /* ===========================
  * LAYOUT / SEARCH
  * =========================== */
@@ -767,10 +768,8 @@ function openModalByIndex(index) {
         const meta = PRICE_OF_META[chosenSlug];
         if (meta) applyPostLinksFromMeta(meta);
         setPriceOfItem(chosenSlug);
-        // keep index [n / N] aligned to the opened item
         updatePofIndexUiBySlug(chosenSlug);
     } else if (isUoaFile(fname)) {
-
         showUoaControls(true);
         sortUoaOptions(getStoredUoaSort());
         populateUoaSelect();
@@ -809,11 +808,9 @@ function openModalByIndex(index) {
         modalImg.alt = image.title;
         replaceUrlForFilename(fname);
     }
-
     const fav = isFavorite(visibleImages[currentIndex].filename);
     modalFavBtn.textContent = fav ? '★' : '☆';
     modalFavBtn.classList.toggle('filled', fav);
-
     requestAnimationFrame(() => {
         const focusableButtons = Array.from(
             modal.querySelectorAll('button, [role="button"], [data-modal-close]')
@@ -836,7 +833,6 @@ function openModalByIndex(index) {
         }
     });
 }
-
 function closeModal() {
     modal.style.display = 'none';
     history.replaceState(null, '', '/');
@@ -1274,7 +1270,6 @@ function setPotdScale(scale) {
     migrateFavoriteFilename(oldFilename, newFilename);
     updateModalSafePadding();
 }
-
 function cyclePotdScale(direction) {
     const current = scaleSelect?.value || getStoredPotdScale();
     const idx = POTD_SCALES.indexOf(current);
@@ -1336,7 +1331,6 @@ function cycleDominance(direction) {
 const NLBP_BASE = 'never_look_back_price';
 const NLBP_STORAGE_KEY = 'nlbpScale';
 const NLBP_SCALES = ['linear', 'log'];
-
 function isNlbpFile(fname) {
     return fname.startsWith(NLBP_BASE);
 }
@@ -1357,20 +1351,16 @@ function setStoredNlbpScale(s) {
 function setNlbpScale(scale) {
     const oldFilename = visibleImages[currentIndex].filename;
     if (!isNlbpFile(oldFilename)) return;
-
     const newFilename = nlbpFilenameForScale(scale);
     setStoredNlbpScale(scale);
-
     const newTitle = `Never Look Back Price (${scale})`;
     setModalImageAndCenter(newFilename, newTitle);
     replaceUrlForFilename(newFilename);
-
     visibleImages[currentIndex].filename = newFilename;
     updateGridThumbAtCurrent(newFilename);
     migrateFavoriteFilename(oldFilename, newFilename);
     updateModalSafePadding();
 }
-
 function cycleNlbpScale(direction) {
     const current = scaleSelect?.value || getStoredNlbpScale();
     const idx = NLBP_SCALES.indexOf(current);
@@ -1490,7 +1480,6 @@ function setStoredHalvingAlignment(a) {
     if (!HALVING_ALIGN_OPTIONS.includes(a)) a = 'block';
     localStorage.setItem(HALVING_STORAGE_KEY, a);
 }
-
 function setHalvingAlignment(alignment) {
     if (!HALVING_ALIGN_OPTIONS.includes(alignment)) alignment = 'block';
     const cur = visibleImages[currentIndex];
@@ -1573,16 +1562,6 @@ function buildPriceOfOptionsFromList(list) {
         const rawMsat = img.pof_msat ?? img.uoa_msat ?? img.msat;
         const msatNum = Number(rawMsat);
         const msat = Number.isFinite(msatNum) ? msatNum : null;
-
-        // Debug: warn if we don't have a usable msat for this slug.
-        if (rawMsat === undefined || rawMsat === null || !Number.isFinite(msatNum)) {
-            console.warn(
-                '[POF] Missing or non-numeric msat for slug:',
-                slug,
-                { pof_msat: img.pof_msat, uoa_msat: img.uoa_msat, msat: img.msat }
-            );
-        }
-
         if (!bySlug.has(slug)) {
             bySlug.set(slug, {
                 slug,
@@ -1602,22 +1581,16 @@ function buildPriceOfOptionsFromList(list) {
             });
         }
     });
-
     PRICE_OF_OPTIONS = Array.from(bySlug.values());
     PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => {
         acc[o.slug] = o;
         return acc;
     }, {});
 }
-
 function populatePriceOfSelect() {
     if (!priceOfSelect) return;
     priceOfSelect.innerHTML = PRICE_OF_OPTIONS.map(o => `<option value="${o.slug}">${o.label}</option>`).join('');
 }
-
-/**
- * Update the Price-Of index UI (input + total) based on a given slug.
- */
 function updatePofIndexUiBySlug(slug) {
     if (
         !pofIndexInput ||
@@ -1683,18 +1656,10 @@ function sortPriceOfOptions(mode, preferredSlug) {
         if (am === bm) return byLabel(a, b);
         return bm - am;
     };
-
-    // Do we have at least one numeric msat?
     const hasAnyNumericMsat = PRICE_OF_OPTIONS.some(
         o => typeof o.msat === 'number' && Number.isFinite(o.msat)
     );
-
     if ((norm === 'high' || norm === 'low') && !hasAnyNumericMsat) {
-        console.warn(
-            '[POF] sort mode',
-            norm,
-            'requested but no numeric pof_msat values were found; falling back to A–Z.'
-        );
         PRICE_OF_OPTIONS.sort(byLabel);
     } else if (norm === 'az') {
         PRICE_OF_OPTIONS.sort(byLabel);
@@ -1705,34 +1670,26 @@ function sortPriceOfOptions(mode, preferredSlug) {
     } else if (norm === 'low') {
         PRICE_OF_OPTIONS.sort(byMsatAsc);
     }
-
     PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => {
         acc[o.slug] = o;
         return acc;
     }, {});
-
     const currentSlug =
         preferredSlug ||
         (priceOfSelect && priceOfSelect.value) ||
         getStoredPofItem() ||
         (PRICE_OF_OPTIONS[0] && PRICE_OF_OPTIONS[0].slug);
-
     populatePriceOfSelect();
-
     if (priceOfSelect && currentSlug && PRICE_OF_OPTIONS.some(o => o.slug === currentSlug)) {
         priceOfSelect.value = currentSlug;
     }
-
-    // keep the index UI in sync with the currently selected slug
     if (currentSlug) {
         updatePofIndexUiBySlug(currentSlug);
     }
 }
-
 function setPofSortMode(modeRaw) {
     const norm = normalizePofSortMode(modeRaw);
     setStoredPofSort(norm);
-
     let currentSlug = null;
     const curImg = visibleImages[currentIndex];
     if (curImg && isPriceOfFile(curImg.filename)) {
@@ -1740,59 +1697,44 @@ function setPofSortMode(modeRaw) {
     } else {
         currentSlug = getStoredPofItem();
     }
-
     sortPriceOfOptions(norm, currentSlug);
-
     if (pofSortSelect) {
         pofSortSelect.value = norm;
     }
 }
 function setPriceOfItem(slug) {
-    const oldFilename = visibleImages[currentIndex].filename;
-    if (!isPriceOfFile(oldFilename)) return;
-    const newFilename = pofFilenameForSlug(slug);
+    const image = visibleImages[currentIndex];
+    if (!image || !isPriceOfFile(image.filename)) return;
+    const oldFilename   = image.filename;
+    const newFilename   = pofFilenameForSlug(slug);
     const fallbackTitle = `Price of ${slugToTitle(slug)}`;
-    const meta = PRICE_OF_META[slug] || {title: fallbackTitle, description: ''};
-
-    // --- LOG msats for this price_of item when opened/changed in the modal ---
-    const msat = typeof meta.msat === 'number' ? meta.msat : null;
-    if (msat !== null && Number.isFinite(msat)) {
-        const sats = msat / 1000;
-        console.log(
-            `[POF] Opened "${slug}" → ${msat} msats (${sats} sats)`
-        );
-    } else {
-        console.log(
-            `[POF] Opened "${slug}" → no valid msats value found`,
-            { pof_msat: meta.msat }
-        );
-    }
-    // -------------------------------------------------------------------------
-
+    const meta          = PRICE_OF_META[slug] || { title: fallbackTitle, description: '' };
+    const title       = meta.title       || image.title       || fallbackTitle;
+    const description = meta.description || image.description || '';
     setStoredPofItem(slug);
-    setModalImageAndCenter(newFilename, meta.title || fallbackTitle);
+    setModalImageAndCenter(newFilename, title);
     replaceUrlForFilename(newFilename);
     applyPostLinksFromMeta(meta);
-    Object.assign(visibleImages[currentIndex], {
-        filename: newFilename,
-        title: meta.title || visibleImages[currentIndex].title || fallbackTitle,
-        description: meta.description || visibleImages[currentIndex].description || '',
-        latest_x: meta.latest_x || '',
-        latest_nostr: meta.latest_nostr || '',
-        latest_youtube: meta.latest_youtube || ''
+    Object.assign(image, {
+        filename:      newFilename,
+        title,
+        description,
+        latest_x:      meta.latest_x      || image.latest_x      || '',
+        latest_nostr:  meta.latest_nostr  || image.latest_nostr  || '',
+        latest_youtube: meta.latest_youtube || image.latest_youtube || ''
     });
     const titleEl = document.querySelector(`.chart-title[data-grid-index="${currentIndex}"]`);
-    if (titleEl) titleEl.textContent = meta.title || fallbackTitle;
+    if (titleEl) titleEl.textContent = title;
     const descEl = document.querySelector(`.chart-description[data-grid-index="${currentIndex}"]`);
-    if (descEl) descEl.textContent = meta.description || '';
+    if (descEl) descEl.textContent = description;
+    updateGridThumbAtCurrent(newFilename, title);
     const gridImg = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
     const cardContainer = gridImg ? gridImg.closest('.chart-container') : null;
-    if (cardContainer) {
-        const tip = meta.description || meta.title || fallbackTitle;
+    if (cardContainer && gridImg) {
+        const tip = description || title;
         cardContainer.setAttribute('title', tip);
         gridImg.alt = title;
     }
-    updateGridThumbAtCurrent(newFilename);
     const favOn = isFavorite(newFilename);
     modalFavBtn.textContent = favOn ? '★' : '☆';
     modalFavBtn.classList.toggle('filled', favOn);
@@ -1802,10 +1744,8 @@ function setPriceOfItem(slug) {
         gridStar.classList.toggle('filled', favOn);
     }
     updateModalSafePadding();
-    // update the [n / N] index whenever the Price-Of item changes
     updatePofIndexUiBySlug(slug);
 }
-
 function cyclePriceOf(direction) {
     if (!priceOfSelect) return;
     const opts = Array.from(priceOfSelect.options);
@@ -1831,20 +1771,16 @@ const UOA_STORAGE_KEY = 'uoaItem';
 const UOA_SORT_STORAGE_KEY = 'uoaSort';
 let UOA_OPTIONS = [];
 let UOA_META = {};
-
 function isUoaFile(fname) {
     return /^uoa_[a-z0-9_]+\.png$/i.test(fname);
 }
-
 function uoaSlugFromFilename(fname) {
     const m = fname.match(/^uoa_([a-z0-9_]+)\.png$/i);
     return m ? m[1] : null;
 }
-
 function uoaFilenameForSlug(slug) {
     return `${UOA_BASE}${slug}.png`;
 }
-
 function uoaLabelFromSlug(slug) {
     const parts = slug.split('_');
     if (parts.length === 2) {
@@ -1855,19 +1791,15 @@ function uoaLabelFromSlug(slug) {
     }
     return parts.map(p => p.toUpperCase()).join(' ');
 }
-
 function buildUoaOptionsFromList(list) {
     const bySlug = new Map();
     list.forEach(img => {
         if (!isUoaFile(img.filename)) return;
         const slug = uoaSlugFromFilename(img.filename);
         if (!slug) return;
-
-        // Coerce to number in case JSON stored it as a string.
         const uoaMsatRaw = img.uoa_msat;
         const uoaMsatNum = Number(uoaMsatRaw);
         const msat = Number.isFinite(uoaMsatNum) ? uoaMsatNum : null;
-
         if (!bySlug.has(slug)) {
             const label = uoaLabelFromSlug(slug);
             bySlug.set(slug, {
@@ -1889,8 +1821,6 @@ function buildUoaOptionsFromList(list) {
         return acc;
     }, {});
 }
-
-
 function updateUoaIndexUiBySlug(slug) {
     if (!uoaIndexInput || !uoaIndexTotal || !Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) {
         return;
@@ -1906,7 +1836,6 @@ function updateUoaIndexUiBySlug(slug) {
     }
     uoaIndexInput.value = String(idx + 1);
 }
-
 function normalizeUoaSortMode(mode) {
     if (!mode) return 'az';
     const m = String(mode).toLowerCase();
@@ -1916,18 +1845,14 @@ function normalizeUoaSortMode(mode) {
     if (m === 'lowest' || m === 'lowest price' || m === 'low') return 'low';
     return 'az';
 }
-
-
 function getStoredUoaSort() {
     const raw = localStorage.getItem(UOA_SORT_STORAGE_KEY);
     return normalizeUoaSortMode(raw || 'az');
 }
-
 function setStoredUoaSort(mode) {
     const norm = normalizeUoaSortMode(mode);
     localStorage.setItem(UOA_SORT_STORAGE_KEY, norm);
 }
-
 function sortUoaOptions(mode, preferredSlug) {
     const norm = normalizeUoaSortMode(mode);
     if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return;
@@ -1970,7 +1895,6 @@ function sortUoaOptions(mode, preferredSlug) {
         updateUoaIndexUiBySlug(currentSlug);
     }
 }
-
 function setUoaSortMode(modeRaw) {
     const norm = normalizeUoaSortMode(modeRaw);
     setStoredUoaSort(norm);
@@ -1986,25 +1910,21 @@ function setUoaSortMode(modeRaw) {
         uoaSortSelect.value = norm;
     }
 }
-
 function populateUoaSelect() {
     if (!uoaSelect) return;
     uoaSelect.innerHTML = UOA_OPTIONS
         .map(o => `<option value="${o.slug}">${o.label}</option>`)
         .join('');
 }
-
 function getStoredUoaItem() {
     return getCookie(UOA_STORAGE_KEY)
         || localStorage.getItem(UOA_STORAGE_KEY)
         || (UOA_OPTIONS[0]?.slug || '');
 }
-
 function setStoredUoaItem(slug) {
     setCookie(UOA_STORAGE_KEY, slug, 365);
     localStorage.setItem(UOA_STORAGE_KEY, slug);
 }
-
 function setUoaItem(slug) {
     const image = visibleImages[currentIndex];
     if (!image || !isUoaFile(image.filename)) return;
@@ -2046,7 +1966,6 @@ function setUoaItem(slug) {
     updateModalSafePadding();
     updateUoaIndexUiBySlug(slug);
 }
-
 function cycleUoaItem(direction) {
     if (!uoaSelect || UOA_OPTIONS.length === 0) return;
     const slugs = UOA_OPTIONS.map(o => o.slug);
@@ -2860,22 +2779,10 @@ function onPlayPauseActivate(e) {
         showSlideshowUI(true);
     }
 }
-if (!ssPlayPauseBtn) {
-    console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
-} else {
-    ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
-    ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
-    ssPlayPauseBtn.setAttribute('tabindex', '0');
-    ssPlayPauseBtn.setAttribute('role', 'button');
-}
-if (!ssPlayPauseBtn) {
-    console.warn('ssPlayPauseBtn not found. Check the button id in your HTML.');
-} else {
-    ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
-    ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
-    ssPlayPauseBtn.setAttribute('tabindex', '0');
-    ssPlayPauseBtn.setAttribute('role', 'button');
-}
+ssPlayPauseBtn.addEventListener('click', onPlayPauseActivate);
+ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
+ssPlayPauseBtn.setAttribute('tabindex', '0');
+ssPlayPauseBtn.setAttribute('role', 'button');
 document.addEventListener('keydown', e => {
     if (!slideshowEl || slideshowEl.classList.contains('hidden')) return;
     if (e.key === 'Escape') {
@@ -3026,8 +2933,6 @@ uoaIndexInput?.addEventListener('blur', () => {
         updateUoaIndexUiBySlug(currentSlug);
     }
 });
-
-/* --- Price Of index field events --- */
 pofIndexInput?.addEventListener('input', e => {
     if (!Array.isArray(PRICE_OF_OPTIONS) || PRICE_OF_OPTIONS.length === 0) return;
     let raw = e.target.value || '';
@@ -3054,11 +2959,9 @@ pofIndexInput?.addEventListener('input', e => {
     }
     setPriceOfItem(target.slug);
 });
-
 pofIndexInput?.addEventListener('blur', () => {
     const raw = (pofIndexInput.value || '').trim();
     if (raw !== '') return;
-
     let currentSlug = null;
     if (priceOfSelect && priceOfSelect.value) {
         currentSlug = priceOfSelect.value;
@@ -3072,7 +2975,6 @@ pofIndexInput?.addEventListener('blur', () => {
         updatePofIndexUiBySlug(currentSlug);
     }
 });
-
 function toggleFavoritesView() {
     showFavoritesOnly = !showFavoritesOnly;
     localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
