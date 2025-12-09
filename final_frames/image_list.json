@@ -1856,8 +1856,8 @@
         "uoa_msat": 40437163
     },
     {
-        "filename": "price_of_ca_min_wage.png",
-        "title": "Price of CA Min Wage",
+        "filename": "price_of_min_wage_ca.png",
+        "title": "Price of Minimum Wage (CA)",
         "description": "Shows the price of one hour of California minimum wage in terms of bitcoin and in terms of dollars",
         "latest_x": "",
         "latest_nostr": "",

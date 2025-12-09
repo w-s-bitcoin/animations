@@ -1566,7 +1566,7 @@ function buildPriceOfOptionsFromList(list) {
             bySlug.set(slug, {
                 slug,
                 label:
-                    slug === 'ca_min_wage' ? 'CA Min Wage' :
+                    slug === 'min_wage_ca' ? 'Min Wage CA' :
                     slug === 'wti_crude' ? 'WTI Crude' :
                     slug === 'natural_gas_us' ? 'Natural Gas US' :
                     slug === 'natural_gas_eu' ? 'Natural Gas EU' :
