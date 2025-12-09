@@ -239,7 +239,7 @@ footer {
     SITE MENU (top-right kebab)
     =========================== */
 .buy-coffee {
-    position: fixed;
+    position: absolute;
     top: max(0.75rem, env(safe-area-inset-top));
     left: max(0.75rem, env(safe-area-inset-left));
     z-index: 1500;
