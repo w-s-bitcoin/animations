@@ -1107,7 +1107,8 @@ body.slideshow-open {
 .alignment-controls,
 .uoa-controls,
 .hashlen-controls,
-.sort-controls {
+.sort-controls,
+.imgsort-controls {
     display: none;
     align-items: center;
     gap: 0.4rem;
@@ -1122,7 +1123,8 @@ body.slideshow-open {
 .alignment-controls.show,
 .uoa-controls.show,
 .hashlen-controls.show,
-.sort-controls.show {
+.sort-controls.show,
+.imgsort-controls.show {
     display: inline-flex;
 }
 .select-wrap {
@@ -1144,7 +1146,8 @@ body.slideshow-open {
 #alignment-select,
 #uoa-select,
 #hashlen-select,
-#sort-select {
+#sort-select,
+#imgsort-select {
     font-family: monospace;
     font-size: 1rem;
     color: #fff;
@@ -1180,7 +1183,9 @@ body.slideshow-open {
 #hashlen-select:hover,
 #hashlen-select:focus,
 #sort-select:hover,
-#sort-select:focus {
+#sort-select:focus,
+#imgsort-select:hover,
+#imgsort-select:focus {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--brand);
     color: var(--brand);
@@ -1262,7 +1267,8 @@ body.slideshow-open {
     #alignment-controls,
     #uoa-controls,
     #hashlen-controls,
-    #sort-controls {
+    #sort-controls,
+    #imgsort-controls {
         flex-basis: 100%;
         margin-left: 0;
     }

@@ -31,6 +31,8 @@ const dominanceControls = document.getElementById('dominance-controls');
 const dominanceSelect = document.getElementById('dominance-select');
 const priceOfControls = document.getElementById('priceof-controls');
 const priceOfSelect = document.getElementById('priceof-select');
+const pofSortControls = document.getElementById('pof-sort-controls');
+const pofSortSelect = document.getElementById('pof-sort-select');
 const coinControls = document.getElementById('coin-controls');
 const coinSelect = document.getElementById('coin-select');
 const myrControls = document.getElementById('myr-controls');
@@ -160,6 +162,7 @@ const DOM_UNITS = ['usd', 'btc'];
 const POF_BASE = 'price_of_';
 const POF_STORAGE_KEY = 'pofItem';
 const POF_FAV_KEY = 'price_of_*';
+const POF_SORT_STORAGE_KEY = 'pofSort';
 let PRICE_OF_OPTIONS = [];
 let PRICE_OF_META = {};
 const COIN_STORAGE_KEY = 'coinType';
@@ -226,7 +229,9 @@ function showHashControls(show) {
     hashControls?.classList.toggle('show', !!show);
 }
 function showPriceOfControls(show) {
-    priceOfControls?.classList.toggle('show', !!show);
+    const on = !!show;
+    priceOfControls?.classList.toggle('show', on);
+    pofSortControls?.classList.toggle('show', on);
 }
 function showUoaControls(show) {
     const on = !!show;
@@ -747,7 +752,10 @@ function openModalByIndex(index) {
         setHalvingAlignment(align);
     } else if (isPriceOfFile(fname)) {
         showPriceOfControls(true);
-        populatePriceOfSelect();
+        sortPriceOfOptions(getStoredPofSort());
+        if (pofSortSelect) {
+            pofSortSelect.value = getStoredPofSort();
+        }
         let chosenSlug = pofSlugFromFilename(fname) || getStoredPofItem();
         if (!PRICE_OF_OPTIONS.some(o => o.slug === chosenSlug)) {
             chosenSlug =
@@ -1572,11 +1580,12 @@ function buildPriceOfOptionsFromList(list) {
                 description: img.description,
                 latest_x: img.latest_x || '',
                 latest_nostr: img.latest_nostr || '',
-                latest_youtube: img.latest_youtube || ''
+                latest_youtube: img.latest_youtube || '',
+                msat: typeof img.pof_msat === 'number' ? img.pof_msat : null
             });
         }
     });
-    PRICE_OF_OPTIONS = Array.from(bySlug.values()).sort((a, b) => a.label.localeCompare(b.label));
+    PRICE_OF_OPTIONS = Array.from(bySlug.values());
     PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => ((acc[o.slug] = o), acc), {});
 }
 function populatePriceOfSelect() {
@@ -1592,6 +1601,80 @@ function getStoredPofItem() {
 function setStoredPofItem(slug) {
     setCookie(POF_STORAGE_KEY, slug, 365);
     localStorage.setItem(POF_STORAGE_KEY, slug);
+}
+function normalizePofSortMode(mode) {
+    if (!mode) return 'az';
+    const m = String(mode).toLowerCase();
+    if (m === 'a-z' || m === 'az') return 'az';
+    if (m === 'z-a' || m === 'za') return 'za';
+    if (m === 'highest' || m === 'highest price' || m === 'high') return 'high';
+    if (m === 'lowest' || m === 'lowest price' || m === 'low') return 'low';
+    return 'az';
+}
+function getStoredPofSort() {
+    const raw = localStorage.getItem(POF_SORT_STORAGE_KEY);
+    return normalizePofSortMode(raw || 'az');
+}
+function setStoredPofSort(mode) {
+    const norm = normalizePofSortMode(mode);
+    localStorage.setItem(POF_SORT_STORAGE_KEY, norm);
+}
+function sortPriceOfOptions(mode, preferredSlug) {
+    const norm = normalizePofSortMode(mode);
+    if (!Array.isArray(PRICE_OF_OPTIONS) || PRICE_OF_OPTIONS.length === 0) return;
+    const byLabel = (a, b) => a.label.localeCompare(b.label);
+    const byMsatAsc = (a, b) => {
+        const am = typeof a.msat === 'number' ? a.msat : Infinity;
+        const bm = typeof b.msat === 'number' ? b.msat : Infinity;
+        if (am === bm) return byLabel(a, b);
+        return am - bm;
+    };
+    const byMsatDesc = (a, b) => {
+        const am = typeof a.msat === 'number' ? a.msat : -Infinity;
+        const bm = typeof b.msat === 'number' ? b.msat : -Infinity;
+        if (am === bm) return byLabel(a, b);
+        return bm - am;
+    };
+    if (norm === 'az') {
+        PRICE_OF_OPTIONS.sort(byLabel);
+    } else if (norm === 'za') {
+        PRICE_OF_OPTIONS.sort((a, b) => byLabel(b, a));
+    } else if (norm === 'high') {
+        PRICE_OF_OPTIONS.sort(byMsatDesc);
+    } else if (norm === 'low') {
+        PRICE_OF_OPTIONS.sort(byMsatAsc);
+    }
+    PRICE_OF_META = PRICE_OF_OPTIONS.reduce((acc, o) => {
+        acc[o.slug] = o;
+        return acc;
+    }, {});
+    const currentSlug =
+        preferredSlug ||
+        (priceOfSelect && priceOfSelect.value) ||
+        getStoredPofItem() ||
+        (PRICE_OF_OPTIONS[0] && PRICE_OF_OPTIONS[0].slug);
+    populatePriceOfSelect();
+    if (priceOfSelect && currentSlug && PRICE_OF_OPTIONS.some(o => o.slug === currentSlug)) {
+        priceOfSelect.value = currentSlug;
+    }
+}
+function setPofSortMode(modeRaw) {
+    const norm = normalizePofSortMode(modeRaw);
+    setStoredPofSort(norm);
+
+    let currentSlug = null;
+    const curImg = visibleImages[currentIndex];
+    if (curImg && isPriceOfFile(curImg.filename)) {
+        currentSlug = pofSlugFromFilename(curImg.filename) || getStoredPofItem();
+    } else {
+        currentSlug = getStoredPofItem();
+    }
+
+    sortPriceOfOptions(norm, currentSlug);
+
+    if (pofSortSelect) {
+        pofSortSelect.value = norm;
+    }
 }
 function setPriceOfItem(slug) {
     const oldFilename = visibleImages[currentIndex].filename;
@@ -2034,7 +2117,7 @@ fetch('final_frames/image_list.json')
         MYR_RANGES = buildMyrRanges(MYR_START_YEAR, THIS_YEAR);
         populateMyrSelect();
         buildPriceOfOptionsFromList(imageList);
-        populatePriceOfSelect();
+        sortPriceOfOptions(getStoredPofSort());
         buildCoinOptionsFromList(imageList);
         populateCoinSelect();
         buildUoaOptionsFromList(imageList);
@@ -2797,6 +2880,7 @@ scaleSelect?.addEventListener('change', e => {
 });
 dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value));
 priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
+pofSortSelect?.addEventListener('change', e => setPofSortMode(e.target.value));
 coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
 myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
 alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
@@ -2917,6 +3001,15 @@ document.addEventListener('keydown', e => {
             setUoaSortMode(next);
             if (uoaSortSelect) uoaSortSelect.value = next;
             dropdownToFocus = uoaSortSelect;
+        } else if (active === pofSortSelect) {
+            const order = ['az', 'za', 'high', 'low'];
+            const currentSort = getStoredPofSort();
+            const idx = order.indexOf(currentSort);
+            const delta = isUp ? -1 : 1;
+            const next = order[((idx === -1 ? 0 : idx) + delta + order.length) % order.length];
+            setPofSortMode(next);
+            if (pofSortSelect) pofSortSelect.value = next;
+            dropdownToFocus = pofSortSelect;
         } else if (active === hashSelect) {
             isUp ? cycleHashLength('up') : cycleHashLength('down');
             dropdownToFocus = hashSelect;
