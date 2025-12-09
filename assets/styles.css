@@ -548,6 +548,9 @@ body.slideshow-open.hide-cursor .slideshow * {
 .slideshow-ticks span:nth-child(6) {
     transform: translateX(6px);
 }
+.buy-coffee-hide-text #buyCoffeeText {
+    display: none;
+}
 @media (max-width: 640px) {
     .kebab-menu .menu-item.menu-check {
         min-height: 44px;

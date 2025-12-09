@@ -47,6 +47,7 @@ const sortControls = document.getElementById('sort-controls');
 const uoaSortSelect = document.getElementById('sort-select');
 const uoaIndexInput = document.getElementById('uoa-index-input');
 const uoaIndexTotal = document.getElementById('uoa-index-total');
+const buyMeBtn = document.getElementById('buyCoffeeBtn');
 
 /* ===========================
  * BUY ME BUTTON (Beer/Coffee)
@@ -67,6 +68,14 @@ function updateBuyMeButton() {
 }
 document.addEventListener("DOMContentLoaded", updateBuyMeButton);
 setInterval(updateBuyMeButton, 5 * 60 * 1000);
+function updateBuyMeButtonLayout() {
+    const btn = document.getElementById("buyCoffeeBtn");
+    if (!btn) return;
+    const narrow = window.innerWidth <= 750;
+    btn.classList.toggle("buy-coffee-hide-text", narrow);
+}
+document.addEventListener("DOMContentLoaded", updateBuyMeButtonLayout);
+window.addEventListener("resize", updateBuyMeButtonLayout);
 
 /* ===========================
  * GLOBAL STATE
@@ -105,6 +114,7 @@ let lastTapY = 0;
 let singleTapMoved = false;
 const MAX_TAP_MOVE_PX = 12;
 let nonModalFocusable = [];
+let thanksOverlay = null;
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -460,6 +470,69 @@ function getContainerOrigin() {
     const r = modal.getBoundingClientRect();
     return {ox: r.left, oy: r.top};
 }
+function isBeerTime() {
+    const now = new Date();
+    const hour = now.getHours();
+    return hour >= 17 || hour < 3;
+}
+function onThanksKeydown(e) {
+    if (e.key === 'Escape') {
+        hideThanksPopup();
+    }
+}
+function hideThanksPopup() {
+    if (!thanksOverlay) return;
+    thanksOverlay.style.display = 'none';
+    if (thanksOverlay.parentNode) {
+        thanksOverlay.parentNode.removeChild(thanksOverlay);
+    }
+    document.removeEventListener('keydown', onThanksKeydown);
+}
+function showThanksPopup() {
+    const beerMode = isBeerTime();
+    const isPortrait = window.innerHeight >= window.innerWidth;
+    let imgSrc;
+    if (beerMode) {
+        imgSrc = isPortrait
+            ? 'assets/thanks_for_the_beer_portrait.png'
+            : 'assets/thanks_for_the_beer_landscape.png';
+    } else {
+        imgSrc = isPortrait
+            ? 'assets/thanks_for_the_coffee_portrait.png'
+            : 'assets/thanks_for_the_coffee_landscape.png';
+    }
+    if (!thanksOverlay) {
+        thanksOverlay = document.createElement('div');
+        thanksOverlay.id = 'thanks-overlay';
+        Object.assign(thanksOverlay.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0',
+            background: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: '9999',
+            cursor: 'pointer'
+        });
+        const img = document.createElement('img');
+        img.id = 'thanks-overlay-img';
+        img.alt = 'Thanks!';
+        img.style.maxWidth = '90%';
+        img.style.maxHeight = '90%';
+        img.style.boxShadow = '0 0 20px rgba(0,0,0,0.8)';
+        img.style.borderRadius = '8px';
+        thanksOverlay.appendChild(img);
+        thanksOverlay.addEventListener('click', hideThanksPopup);
+    }
+    const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
+    imgEl.src = imgSrc;
+    document.body.appendChild(thanksOverlay);
+    thanksOverlay.style.display = 'flex';
+    document.addEventListener('keydown', onThanksKeydown);
+}
 
 /* ===========================
  * LAYOUT / SEARCH
@@ -502,7 +575,11 @@ function updateLayoutBasedOnWidth() {
             searchBtn.classList.remove('active');
         }
         searchBtn.disabled = false;
-        const preferred = userSelectedLayout || (imageGrid.classList.contains('list') ? 'list' : 'grid');
+        const storedLayout = localStorage.getItem('preferredLayout');
+        const preferred =
+            userSelectedLayout ||
+            (storedLayout === 'grid' || storedLayout === 'list' ? storedLayout : null) ||
+            (imageGrid.classList.contains('list') ? 'list' : 'grid');
         setLayout(preferred, false);
     }
 }
@@ -2827,6 +2904,10 @@ function onFullscreenChangeAutoClose() {
 ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => document.addEventListener(evt, onFullscreenChangeAutoClose));
 slideRange?.addEventListener('change', () => restartSlideshowTimer());
 slideRange?.addEventListener('input', () => restartSlideshowTimer());
+buyMeBtn?.addEventListener('click', e => {
+    e.preventDefault();
+    showThanksPopup();
+});
 
 /* ===========================
  * SITE-WIDE: Option(Alt)+S starts slideshow (robust for macOS 'ß')
