@@ -50,6 +50,7 @@ const uoaIndexTotal = document.getElementById('uoa-index-total');
 const uoaShowControls = document.getElementById('uoa-show-controls');
 const uoaShowSelect = document.getElementById('uoa-show-select');
 const buyMeBtn = document.getElementById('buyCoffeeBtn');
+const favoritesToggleBtn = document.getElementById('favoritesToggle');
 
 /* ===========================
  * BUY ME BUTTON (Beer/Coffee)
@@ -85,6 +86,7 @@ window.addEventListener("resize", updateBuyMeButtonLayout);
 let imageList = [];
 let visibleImages = [];
 let currentIndex = 0;
+let lastOpenedImageIndex = null;
 let lastOpenedFilename = null;
 let justUnstarredInModal = false;
 let userSelectedLayout = null;
@@ -578,7 +580,6 @@ function showThanksPopup() {
             zIndex: '9999',
             cursor: 'default'
         });
-
         const container = document.createElement('div');
         Object.assign(container.style, {
             position: 'relative',
@@ -586,8 +587,6 @@ function showThanksPopup() {
             cursor: 'pointer',
             maxWidth: '90vw',
         });
-
-        // Focusable image
         const img = document.createElement('img');
         img.id = 'thanks-overlay-img';
         img.alt = 'Thanks!';
@@ -597,8 +596,6 @@ function showThanksPopup() {
         img.style.borderRadius = '8px';
         img.style.display = 'block';
         img.tabIndex = 0;
-
-        // Close button (already focusable)
         const closeBtn = document.createElement('button');
         closeBtn.id = 'thanks-overlay-close';
         closeBtn.type = 'button';
@@ -610,22 +607,17 @@ function showThanksPopup() {
             top: '8px',
             left: '8px'
         });
-
         closeBtn.addEventListener('click', e => {
             e.stopPropagation();
             e.preventDefault();
             hideThanksPopup();
         });
-
-        // Click on image copies email
         img.addEventListener('click', async e => {
             e.stopPropagation();
             e.preventDefault();
             await copyToClipboard('wicked@getalby.com');
             showThanksToast('wicked@getalby.com<br>copied to clipboard');
         });
-
-        // ENTER on image copies email (keyboard)
         img.addEventListener('keydown', async e => {
             if (e.key !== 'Enter') return;
             e.preventDefault();
@@ -633,34 +625,26 @@ function showThanksPopup() {
             await copyToClipboard('wicked@getalby.com');
             showThanksToast('wicked@getalby.com<br>copied to clipboard');
         });
-
         container.appendChild(img);
         container.appendChild(closeBtn);
         thanksOverlay.appendChild(container);
-
         thanksOverlay.addEventListener('click', e => {
             if (e.target === thanksOverlay) {
                 hideThanksPopup();
             }
         });
-
-        // Focus trap: Tab only cycles close ↔ image
         thanksOverlay.addEventListener('keydown', e => {
             if (!isBuyMeVisible) return;
             if (e.key !== 'Tab') return;
-
             const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
             const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
             const focusables = [closeEl, imgEl].filter(Boolean);
             if (!focusables.length) return;
-
             e.preventDefault();
             e.stopPropagation();
-
             const current = document.activeElement;
             let idx = focusables.indexOf(current);
             if (idx === -1) idx = 0;
-
             const delta = e.shiftKey ? -1 : 1;
             const nextIdx = (idx + delta + focusables.length) % focusables.length;
             const nextEl = focusables[nextIdx];
@@ -669,25 +653,43 @@ function showThanksPopup() {
             }
         });
     }
-
     const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
     imgEl.src = imgSrc;
-
+    const toast = thanksOverlay.querySelector('.thanks-toast');
+    if (toast) {
+        toast.style.opacity = '0';
+    }
     document.body.appendChild(thanksOverlay);
     thanksOverlay.style.display = 'flex';
-
-    // Mark overlay visible so other keyboard shortcuts are blocked
     isBuyMeVisible = true;
-
     document.addEventListener('keydown', onThanksKeydown);
-
-    // Initial focus on close button (then Tab → image → back)
     const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
     if (closeEl && typeof closeEl.focus === 'function') {
         requestAnimationFrame(() => closeEl.focus());
     }
 }
+function setSearchInputFocusability(active) {
+    const input = document.getElementById('search-input');
+    if (!input) return;
 
+    if (active) {
+        const orig = input.getAttribute('data-original-tabindex');
+        if (orig !== null) {
+            if (orig === '') input.removeAttribute('tabindex');
+            else input.setAttribute('tabindex', orig);
+        } else {
+            input.removeAttribute('tabindex');
+        }
+        input.removeAttribute('aria-hidden');
+    } else {
+        if (!input.hasAttribute('data-original-tabindex')) {
+            const existing = input.getAttribute('tabindex');
+            input.setAttribute('data-original-tabindex', existing === null ? '' : existing);
+        }
+        input.setAttribute('tabindex', '-1');
+        input.setAttribute('aria-hidden', 'true');
+    }
+}
 
 /* ===========================
  * LAYOUT / SEARCH
@@ -722,6 +724,7 @@ function updateLayoutBasedOnWidth() {
             searchBtn.classList.add('active');
         }
         searchBtn.disabled = true;
+        setSearchInputFocusability(true);
         if (userSelectedLayout !== 'list') setLayout('list', false);
     } else {
         toggleIconsEl.style.display = 'inline-flex';
@@ -730,6 +733,7 @@ function updateLayoutBasedOnWidth() {
             searchBtn.classList.remove('active');
         }
         searchBtn.disabled = false;
+        setSearchInputFocusability(searchContainer.classList.contains('active'));
         const storedLayout = localStorage.getItem('preferredLayout');
         const preferred =
             userSelectedLayout ||
@@ -745,6 +749,7 @@ function toggleSearch() {
     const nowActive = !container.classList.contains('active');
     container.classList.toggle('active');
     button.classList.toggle('active', nowActive);
+    setSearchInputFocusability(nowActive);
     if (nowActive) {
         searchWasInitiallyClosed = false;
         input.focus();
@@ -876,6 +881,15 @@ function filterImages() {
         img.dataset.gridIndex = index;
         img.alt = title;
         img.style.opacity = 0;
+        img.tabIndex = 0;
+        img.setAttribute('role', 'button');
+        img.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                openModalByIndex(index);
+            }
+        });
         img.onload = () => {
             spinner.remove();
             img.style.opacity = 1;
@@ -1132,6 +1146,14 @@ function closeModal() {
     modalImg.style.transformOrigin = '';
     modal.classList.remove('zoomed');
     modal.style.removeProperty('--controls-offset');
+    if (typeof currentIndex === 'number' && currentIndex >= 0) {
+        const thumb = document.querySelector(
+            `img.grid-thumb[data-grid-index="${currentIndex}"]`
+        );
+        if (thumb && typeof thumb.focus === 'function') {
+            requestAnimationFrame(() => thumb.focus());
+        }
+    }
 }
 function handleSwipe() {
     if (isPinching || currentScale > 1.001 || modal.classList.contains('zoomed')) return;
@@ -2949,7 +2971,13 @@ window.addEventListener('load', () => {
     initSearchPrefsAndUI();
     initSlideDurationControl();
     bindSliderEventGuards();
+    [gridIcon, listIcon, favoritesToggleBtn].forEach(el => {
+        if (!el) return;
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'button');
+    });
 });
+
 
 /* ===========================
  * SLIDESHOW: core (autoplay + fade)
@@ -3243,6 +3271,15 @@ buyMeBtn?.addEventListener('click', e => {
     e.preventDefault();
     showThanksPopup();
 });
+function onToolbarButtonKeydown(e) {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.click();
+}
+gridIcon?.addEventListener('keydown', onToolbarButtonKeydown);
+listIcon?.addEventListener('keydown', onToolbarButtonKeydown);
+favoritesToggleBtn?.addEventListener('keydown', onToolbarButtonKeydown);
 
 /* ===========================
  * SITE-WIDE: Option(Alt)+S starts slideshow (robust for macOS 'ß')
@@ -3608,6 +3645,33 @@ document.addEventListener('keydown', e => {
     }
     openModalByIndex(indexToOpen);
 });
+
+/* ===========================
+ * GRID TAB NAVIGATION: keep Tab within visible images
+ * =========================== */
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (isBuyMeVisible) return;
+    if (modal.style.display === 'flex') return;
+    if (typeof isSlideshowOpen === 'function' && isSlideshowOpen()) return;
+    const active = document.activeElement;
+    if (!active || !active.classList.contains('grid-thumb')) return;
+    const thumbs = Array.from(document.querySelectorAll('img.grid-thumb'));
+    if (!thumbs.length) return;
+    const currentIdx = thumbs.indexOf(active);
+    if (currentIdx === -1) return;
+    const delta = e.shiftKey ? -1 : 1;
+    const nextIdx = currentIdx + delta;
+    if (nextIdx < 0 || nextIdx >= thumbs.length) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const nextThumb = thumbs[nextIdx];
+    if (nextThumb && typeof nextThumb.focus === 'function') {
+        nextThumb.focus();
+    }
+});
+
 
 
 /* ===========================
