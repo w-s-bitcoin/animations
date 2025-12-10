@@ -944,19 +944,22 @@ function updateModalSafePadding() {
 function openModalByIndex(index) {
     const image = visibleImages[index];
     if (!image) return;
+    const firstOpen = modal.style.display !== 'flex';
     currentIndex = index;
     lastOpenedFilename = image.filename || null;
-    const focusable = document.querySelectorAll(
-        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    nonModalFocusable = [];
-    focusable.forEach(el => {
-        if (!modal.contains(el)) {
-            const prev = el.getAttribute('tabindex');
-            nonModalFocusable.push({ el, prev });
-            el.setAttribute('tabindex', '-1');
-        }
-    });
+    if (firstOpen) {
+        const focusable = document.querySelectorAll(
+            'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        nonModalFocusable = [];
+        focusable.forEach(el => {
+            if (!modal.contains(el)) {
+                const prev = el.getAttribute('tabindex');
+                nonModalFocusable.push({ el, prev });
+                el.setAttribute('tabindex', '-1');
+            }
+        });
+    }
     modal.style.display = 'flex';
     isPinching = false;
     isPanning = false;
