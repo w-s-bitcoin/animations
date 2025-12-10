@@ -19,6 +19,25 @@
                 <span id="buyCoffeeText">Buy me a coffee</span>
             </button>
         </div>
+        <div class="buy-coffee-overlay" id="buyCoffeeOverlay" aria-hidden="true" role="dialog" aria-modal="true">
+            <div class="buy-coffee-modal">
+                <button
+                    type="button"
+                    class="buy-coffee-close"
+                    id="buyCoffeeCloseBtn"
+                    aria-label="Close buy me a coffee panel"
+                >
+                    ×
+                </button>
+                <img
+                    src="assets/buymeacoffee.png"
+                    alt="Buy me a coffee"
+                    class="buy-coffee-img"
+                    id="buyCoffeeImg"
+                    draggable="false"
+                />
+            </div>
+        </div>
         <div class="site-kebab">
             <button id="kebabBtn" class="kebab-btn" aria-haspopup="menu" aria-expanded="false" aria-label="More options">⋯</button>
             <div id="kebabMenu" class="kebab-menu hidden" role="menu" aria-labelledby="kebabBtn">
@@ -296,7 +315,10 @@
                 © 2025 Wicked Smart Bitcoin
                 <span id="version-info">(v0.1.7)</span>
             </p>
-            <p id="last-updated" style="font-size: 0.75rem; color: #666">Last updated on December 10, 2025 at 01:29 UTC</p>
+            <p id="last-updated" style="font-size: 0.75rem; color: #666">Last updated on December 10, 2025 at 02:32 UTC</p>
+        <div class="buy-coffee-toast" id="buyCoffeeToast">
+            copied wicked@getalby.com to clipboard
+        </div>
         </footer>
         <script src="js/app.js" defer></script>
     </body>

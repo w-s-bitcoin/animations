@@ -270,6 +270,77 @@ footer {
     color: var(--brand);
     outline: none;
 }
+.buy-coffee-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9500;
+    padding: max(1rem, env(safe-area-inset-top))
+             max(1rem, env(safe-area-inset-right))
+             max(1rem, env(safe-area-inset-bottom))
+             max(1rem, env(safe-area-inset-left));
+}
+.buy-coffee-modal {
+    position: relative;
+    max-width: min(90vw, 420px);
+    width: 100%;
+}
+.buy-coffee-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    background-color: #000;
+}
+.buy-coffee-close {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.buy-coffee-close:hover,
+.buy-coffee-close:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--brand);
+    color: var(--brand);
+    outline: none;
+}
+.buy-coffee-toast {
+    position: fixed;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.35rem 0.75rem;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    font-size: 0.85rem;
+    font-family: monospace;
+    z-index: 9600;
+    display: none;
+}
 .site-kebab {
     position: absolute;
     top: max(0.75rem, env(safe-area-inset-top));

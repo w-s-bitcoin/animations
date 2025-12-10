@@ -115,6 +115,7 @@ let singleTapMoved = false;
 const MAX_TAP_MOVE_PX = 12;
 let nonModalFocusable = [];
 let thanksOverlay = null;
+let thanksToastTimeout = null;
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -487,7 +488,67 @@ function hideThanksPopup() {
         thanksOverlay.parentNode.removeChild(thanksOverlay);
     }
     document.removeEventListener('keydown', onThanksKeydown);
+    if (thanksToastTimeout) {
+        clearTimeout(thanksToastTimeout);
+        thanksToastTimeout = null;
+    }
 }
+
+// Generic clipboard helper
+async function copyToClipboard(text) {
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        console.log('Copied to clipboard:', text);
+    } catch (err) {
+        console.error('Failed to copy to clipboard', err);
+    }
+}
+
+function showThanksToast(message) {
+    if (!thanksOverlay) return;
+
+    let toast = thanksOverlay.querySelector('.thanks-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'thanks-toast';
+        Object.assign(toast.style, {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            padding: '0.5rem 1rem',
+            fontSize: '0.9rem',
+            borderRadius: '999px',
+            background: 'rgba(0, 0, 0, 0.85)',
+            color: '#fff',
+            pointerEvents: 'none',
+            opacity: '0',
+            transition: 'opacity 0.2s ease-out',
+            zIndex: '20'
+        });
+        thanksOverlay.appendChild(toast);
+    }
+
+    toast.textContent = message;
+    toast.style.opacity = '1';
+
+    if (thanksToastTimeout) clearTimeout(thanksToastTimeout);
+    thanksToastTimeout = setTimeout(() => {
+        toast.style.opacity = '0';
+    }, 1000);
+}
+
 function showThanksPopup() {
     const beerMode = isBeerTime();
     const isPortrait = window.innerHeight >= window.innerWidth;
@@ -501,34 +562,92 @@ function showThanksPopup() {
             ? 'assets/thanks_for_the_coffee_portrait.png'
             : 'assets/thanks_for_the_coffee_landscape.png';
     }
+
     if (!thanksOverlay) {
         thanksOverlay = document.createElement('div');
         thanksOverlay.id = 'thanks-overlay';
         Object.assign(thanksOverlay.style, {
             position: 'fixed',
-            top: '0',
-            left: '0',
-            right: '0',
-            bottom: '0',
-            background: 'rgba(0, 0, 0, 0.7)',
+            top: '0', left: '0', right: '0', bottom: '0',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: '9999',
-            cursor: 'pointer'
+            cursor: 'default'
         });
+
+        // Container to position X over the image
+        const container = document.createElement('div');
+        Object.assign(container.style, {
+            position: 'relative',
+            display: 'inline-block',
+            cursor: 'pointer',
+            maxWidth: '90vw',
+        });
+
         const img = document.createElement('img');
         img.id = 'thanks-overlay-img';
         img.alt = 'Thanks!';
-        img.style.maxWidth = '90%';
-        img.style.maxHeight = '90%';
+        img.style.maxWidth = '90vw';
+        img.style.maxHeight = '90vh';
         img.style.boxShadow = '0 0 20px rgba(0,0,0,0.8)';
         img.style.borderRadius = '8px';
-        thanksOverlay.appendChild(img);
-        thanksOverlay.addEventListener('click', hideThanksPopup);
+        img.style.display = 'block';
+
+
+        // Close button overlaid on top of the image
+        const closeBtn = document.createElement('button');
+        closeBtn.id = 'thanks-overlay-close';
+        closeBtn.type = 'button';
+        closeBtn.textContent = '×';
+        closeBtn.classList.add('close-btn');
+        closeBtn.setAttribute('aria-label', 'Close');
+        Object.assign(closeBtn.style, {
+            position: 'absolute',
+            top: '8px',
+            left: '8px',
+            padding: '0.1rem 0.5rem',
+            fontSize: '1.5rem',
+            lineHeight: '1',
+            background: 'rgba(0, 0, 0, 0.4)',
+            width: '36px',
+            height: '36px',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            color: '#fff',
+            cursor: 'pointer',
+        });
+
+        closeBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            hideThanksPopup();
+        });
+
+        // Clicking the image copies the email (and does NOT close)
+        img.addEventListener('click', async e => {
+            e.stopPropagation();
+            e.preventDefault();
+            await copyToClipboard('wicked@getalby.com');
+            showThanksToast('Copied wicked@getalby.com to clipboard');
+        });
+
+
+        container.appendChild(img);
+        container.appendChild(closeBtn);
+        thanksOverlay.appendChild(container);
+
+        // Click on the dark background closes, but not on image or X
+        thanksOverlay.addEventListener('click', e => {
+            if (e.target === thanksOverlay) {
+                hideThanksPopup();
+            }
+        });
     }
+
     const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
     imgEl.src = imgSrc;
+
     document.body.appendChild(thanksOverlay);
     thanksOverlay.style.display = 'flex';
     document.addEventListener('keydown', onThanksKeydown);
