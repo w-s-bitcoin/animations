@@ -303,28 +303,6 @@ footer {
     position: absolute;
     top: 8px;
     left: 8px;
-    width: 32px;
-    height: 32px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    font-size: 1.3rem;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-}
-.buy-coffee-close:hover,
-.buy-coffee-close:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--brand);
-    color: var(--brand);
-    outline: none;
 }
 .site-kebab {
     position: absolute;
@@ -911,7 +889,8 @@ body.slideshow-open.hide-cursor .slideshow * {
    =========================== */
 .modal-controls button,
 .modal-controls .close-btn,
-#modal-fav-btn {
+#modal-fav-btn,
+.buy-coffee-close {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border);
     color: #fff;
@@ -935,7 +914,9 @@ body.slideshow-open.hide-cursor .slideshow * {
 .modal-controls .close-btn:hover,
 .modal-controls .close-btn:focus-visible,
 #modal-fav-btn:hover,
-#modal-fav-btn:focus-visible {
+#modal-fav-btn:focus-visible,
+.buy-coffee-close:hover,
+.buy-coffee-close:focus-visible {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--brand);
     color: var(--brand);

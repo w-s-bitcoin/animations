@@ -586,22 +586,12 @@ function showThanksPopup() {
         closeBtn.id = 'thanks-overlay-close';
         closeBtn.type = 'button';
         closeBtn.textContent = '×';
-        closeBtn.classList.add('close-btn');
+        closeBtn.classList.add('buy-coffee-close');
         closeBtn.setAttribute('aria-label', 'Close');
         Object.assign(closeBtn.style, {
             position: 'absolute',
             top: '8px',
-            left: '8px',
-            padding: '0.1rem 0.5rem',
-            fontSize: '1.5rem',
-            lineHeight: '1',
-            background: 'rgba(0, 0, 0, 0.4)',
-            width: '36px',
-            height: '36px',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            color: '#fff',
-            cursor: 'pointer',
+            left: '8px'
         });
         closeBtn.addEventListener('click', e => {
             e.stopPropagation();
