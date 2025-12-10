@@ -326,21 +326,6 @@ footer {
     color: var(--brand);
     outline: none;
 }
-.buy-coffee-toast {
-    position: fixed;
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0.35rem 0.75rem;
-    background: rgba(0, 0, 0, 0.85);
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    color: var(--fg);
-    font-size: 0.85rem;
-    font-family: monospace;
-    z-index: 9600;
-    display: none;
-}
 .site-kebab {
     position: absolute;
     top: max(0.75rem, env(safe-area-inset-top));
