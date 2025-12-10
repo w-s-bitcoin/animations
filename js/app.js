@@ -118,6 +118,7 @@ const MAX_TAP_MOVE_PX = 12;
 let nonModalFocusable = [];
 let thanksOverlay = null;
 let thanksToastTimeout = null;
+let isBuyMeVisible = false;
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -495,6 +496,7 @@ function hideThanksPopup() {
         clearTimeout(thanksToastTimeout);
         thanksToastTimeout = null;
     }
+    isBuyMeVisible = false;
 }
 async function copyToClipboard(text) {
     try {
@@ -620,8 +622,10 @@ function showThanksPopup() {
     imgEl.src = imgSrc;
     document.body.appendChild(thanksOverlay);
     thanksOverlay.style.display = 'flex';
+    isBuyMeVisible = true;
     document.addEventListener('keydown', onThanksKeydown);
 }
+
 
 /* ===========================
  * LAYOUT / SEARCH
@@ -3152,6 +3156,7 @@ ssPlayPauseBtn.addEventListener('keydown', onPlayPauseActivate);
 ssPlayPauseBtn.setAttribute('tabindex', '0');
 ssPlayPauseBtn.setAttribute('role', 'button');
 document.addEventListener('keydown', e => {
+    if (isBuyMeVisible) return;
     if (!slideshowEl || slideshowEl.classList.contains('hidden')) return;
     if (e.key === 'Escape') {
         e.preventDefault();
@@ -3167,6 +3172,7 @@ document.addEventListener('keydown', e => {
         togglePlayPause();
     }
 });
+
 function onFullscreenChangeAutoClose() {
     if (!document.fullscreenElement && isSlideshowOpen()) {
         closeSlideshow();
@@ -3184,6 +3190,7 @@ buyMeBtn?.addEventListener('click', e => {
  * SITE-WIDE: Option(Alt)+S starts slideshow (robust for macOS 'ß')
  * =========================== */
 function onOptionSStartSlideshow(e) {
+    if (isBuyMeVisible) return;
     if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
     if (e.code !== 'KeyS') return;
     const a = document.activeElement;
@@ -3360,6 +3367,7 @@ function toggleFavoritesView() {
  * MODAL KEYBOARD SHORTCUTS
  * =========================== */
 document.addEventListener('keydown', e => {
+    if (isBuyMeVisible) return;
     if (modal.style.display !== 'flex') return;
     const swallow = () => {
         e.preventDefault();
@@ -3494,6 +3502,7 @@ document.addEventListener('keydown', e => {
  * SITE-WIDE SPACEBAR: reopen last modal image on main page
  * =========================== */
 document.addEventListener('keydown', e => {
+    if (isBuyMeVisible) return;
     if (!(e.key === ' ' || e.code === 'Space')) return;
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     const active = document.activeElement;
@@ -3520,6 +3529,7 @@ document.addEventListener('keydown', e => {
     }
     openModalByIndex(indexToOpen);
 });
+
 
 /* ===========================
  * BRIDGE FOR INLINE HTML HANDLERS
