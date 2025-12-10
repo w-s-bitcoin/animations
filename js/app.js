@@ -3416,10 +3416,19 @@ document.addEventListener('keydown', e => {
             const currentSort = getStoredUoaSort();
             const idx = order.indexOf(currentSort);
             const delta = isUp ? -1 : 1;
-            const next = order[( (idx === -1 ? 0 : idx) + delta + order.length ) % order.length];
+            const next = order[((idx === -1 ? 0 : idx) + delta + order.length) % order.length];
             setUoaSortMode(next);
             if (uoaSortSelect) uoaSortSelect.value = next;
             dropdownToFocus = uoaSortSelect;
+        } else if (active === uoaShowSelect) {
+            const order = UOA_SHOW_MODES;
+            const currentMode = getStoredUoaShowMode();
+            const idx = order.indexOf(currentMode);
+            const delta = isUp ? -1 : 1;
+            const next = order[((idx === -1 ? 0 : idx) + delta + order.length) % order.length];
+            setUoaShowMode(next);
+            if (uoaShowSelect) uoaShowSelect.value = next;
+            dropdownToFocus = uoaShowSelect;
         } else if (active === pofSortSelect) {
             const order = ['az', 'za', 'high', 'low'];
             const currentSort = getStoredPofSort();
