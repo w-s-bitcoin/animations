@@ -909,6 +909,12 @@ body.slideshow-open.hide-cursor .slideshow * {
     -ms-user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
+.uoa-filter-btn {
+    width: auto;
+    min-width: 48px;
+    padding: 0 0.6rem;
+    font-size: 0.95rem;
+}
 .modal-controls button:hover,
 .modal-controls button:focus-visible,
 .modal-controls .close-btn:hover,
@@ -1364,4 +1370,54 @@ body.slideshow-open {
     .pof-index {
         margin-left: 0;
     }
+}
+
+/* ===========================
+   UOA FILTER PANEL (in modal)
+   =========================== */
+.uoa-filter-panel {
+    position: absolute;
+    top: calc(0.5rem + 44px); /* just below modal controls row */
+    left: 1rem;
+    background-color: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    min-width: 260px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+    z-index: 2100;
+    display: none;
+}
+
+.uoa-filter-panel.open {
+    display: block;
+}
+
+.uoa-filter-header {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+}
+
+.uoa-filter-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    font-size: 0.9rem;
+    color: var(--fg);
+    margin: 0.25rem 0;
+    cursor: pointer;
+}
+
+.uoa-filter-option input[type='checkbox'] {
+    margin-top: 0.1rem;
+    accent-color: var(--brand);
+}
+
+.uoa-filter-description {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.1rem;
 }

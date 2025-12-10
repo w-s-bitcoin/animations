@@ -199,12 +199,45 @@
                         <span class="uoa-index-total">/ <span id="pof-index-total">39</span></span>
                     </div>
                 </span>
+                <button
+                    id="uoa-filter-btn"
+                    class="close-btn uoa-filter-btn"
+                    type="button"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-label="Filter units of account"
+                >
+                    Filter
+                </button>
                 <span class="uoa-controls" id="uoa-controls">
                     <span style="color: white; font-size: 1rem">Unit of Account:</span>
                     <span class="select-wrap">
                         <select id="uoa-select" aria-label="Choose unit of account"></select>
                     </span>
                 </span>
+                <div
+                    id="uoa-filter-panel"
+                    class="uoa-filter-panel"
+                    role="menu"
+                    aria-label="Unit of account filters"
+                >
+                    <div class="uoa-filter-header">Filters</div>
+                    <label class="uoa-filter-option" for="uoa-filter-g10">
+                        <input
+                            type="checkbox"
+                            id="uoa-filter-g10"
+                            value="g10"
+                            aria-label="Filter to G10 currencies"
+                        />
+                        <div>
+                            <div>G10</div>
+                            <div class="uoa-filter-description">
+                                USD, EUR, JPY, GBP, CHF, CAD, AUD, NZD, NOK, SEK
+                            </div>
+                        </div>
+                    </label>
+                    <!-- more filters can be added here later -->
+                </div>
                 <span class="sort-controls" id="sort-controls">
                     <span style="color: white; font-size: 1rem">Sort:</span>
                     <span class="select-wrap">
@@ -315,7 +348,7 @@
                 © 2025 Wicked Smart Bitcoin
                 <span id="version-info">(v0.1.7)</span>
             </p>
-            <p id="last-updated" style="font-size: 0.75rem; color: #666">Last updated on December 10, 2025 at 09:31 UTC</p>
+            <p id="last-updated" style="font-size: 0.75rem; color: #666">Last updated on December 10, 2025 at 10:30 UTC</p>
         </footer>
         <script src="js/app.js" defer></script>
     </body>
