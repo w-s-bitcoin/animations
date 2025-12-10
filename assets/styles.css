@@ -920,12 +920,6 @@ body.slideshow-open.hide-cursor .slideshow * {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--brand);
     color: var(--brand);
-    outline: none;  
-}
-.buy-coffee-close.focus-ring {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--brand);
-    color: var(--brand);
     outline: none;
 }
 #modal-fav-btn.filled {
