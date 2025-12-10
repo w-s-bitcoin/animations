@@ -1186,6 +1186,7 @@ body.slideshow-open {
 .myr-controls,
 .alignment-controls,
 .uoa-controls,
+.uoa-show-controls,
 .hashlen-controls,
 .sort-controls,
 .imgsort-controls {
@@ -1202,6 +1203,7 @@ body.slideshow-open {
 .myr-controls.show,
 .alignment-controls.show,
 .uoa-controls.show,
+.uoa-show-controls.show,
 .hashlen-controls.show,
 .sort-controls.show,
 .imgsort-controls.show {
@@ -1225,6 +1227,7 @@ body.slideshow-open {
 #myr-select,
 #alignment-select,
 #uoa-select,
+#uoa-show-select,
 #hashlen-select,
 #sort-select,
 #pof-sort-select,
@@ -1261,6 +1264,8 @@ body.slideshow-open {
 #alignment-select:focus,
 #uoa-select:hover,
 #uoa-select:focus,
+#uoa-show-select:hover,
+#uoa-show-select:focus,
 #hashlen-select:hover,
 #hashlen-select:focus,
 #sort-select:hover,
@@ -1354,6 +1359,7 @@ body.slideshow-open {
     #myr-controls,
     #alignment-controls,
     #uoa-controls,
+    #uoa-show-controls,
     #hashlen-controls,
     #sort-controls,
     #imgsort-controls {

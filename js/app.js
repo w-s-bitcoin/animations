@@ -47,6 +47,8 @@ const sortControls = document.getElementById('sort-controls');
 const uoaSortSelect = document.getElementById('sort-select');
 const uoaIndexInput = document.getElementById('uoa-index-input');
 const uoaIndexTotal = document.getElementById('uoa-index-total');
+const uoaShowControls = document.getElementById('uoa-show-controls');
+const uoaShowSelect = document.getElementById('uoa-show-select');
 const buyMeBtn = document.getElementById('buyCoffeeBtn');
 
 /* ===========================
@@ -269,6 +271,7 @@ function showUoaControls(show) {
     const on = !!show;
     if (uoaControls) uoaControls.classList.toggle('show', on);
     if (sortControls) sortControls.classList.toggle('show', on);
+    if (uoaShowControls) uoaShowControls.classList.toggle('show', on);
 }
 function showDominanceControls(show) {
     dominanceControls?.classList.toggle('show', !!show);
@@ -963,6 +966,9 @@ function openModalByIndex(index) {
         if (uoaSelect) uoaSelect.value = chosenSlug;
         if (uoaSortSelect) {
             uoaSortSelect.value = getStoredUoaSort();
+        }
+        if (uoaShowSelect) {
+            uoaShowSelect.value = getStoredUoaShowMode();
         }
         setUoaItem(chosenSlug);
     } else if (isTargetHashFile(fname)) {
@@ -1952,8 +1958,124 @@ function cyclePriceOf(direction) {
 const UOA_BASE = 'uoa_';
 const UOA_STORAGE_KEY = 'uoaItem';
 const UOA_SORT_STORAGE_KEY = 'uoaSort';
+const UOA_SHOW_STORAGE_KEY = 'uoaShowMode';
+const UOA_SHOW_MODES = [
+    'all',
+    'g7',
+    'g20',
+    'europe',
+    'asia',
+    'africa',
+    'latam',
+    'mena',
+    'oceania'
+];
+const G7_FIAT_CODES = new Set(['usd', 'eur', 'jpy', 'gbp', 'cad']);
+const G20_FIAT_CODES = new Set([
+    'usd', 'eur', 'jpy', 'gbp', 'cad',
+    'cny', 'aud', 'brl', 'inr', 'mxn',
+    'rub', 'zar', 'krw', 'try', 'sar', 'idr', 'ars'
+]);
+const EUROPE_FIAT_CODES = new Set([
+    'eur', 'gbp', 'chf', 'sek', 'nok', 'dkk',
+    'pln', 'czk', 'huf', 'ron', 'bgn', 'hrk',
+    'isk'
+]);
+const ASIA_FIAT_CODES = new Set([
+    'cny', 'jpy', 'krw', 'inr', 'idr', 'thb',
+    'hkd', 'twd', 'sgd', 'php', 'myr', 'vnd',
+    'bdt', 'lkr', 'mmk', 'kzt'
+]);
+const AFRICA_FIAT_CODES = new Set([
+    'zar', 'ngn', 'egp', 'kes', 'ghs', 'mad',
+    'tnd', 'dzd', 'etb', 'ugx', 'tzs', 'xof',
+    'xaf', 'aoa', 'zmw', 'mzn', 'bwp'
+]);
+const LATAM_FIAT_CODES = new Set([
+    'brl', 'mxn', 'ars', 'clp', 'cop', 'pen',
+    'uyu', 'dop', 'gtq', 'crc', 'hnl', 'nio',
+    'bob', 'pyg', 'ves'
+]);
+const MENA_FIAT_CODES = new Set([
+    'aed', 'sar', 'qar', 'kwd', 'omr', 'bhd',
+    'egp', 'mad', 'tnd', 'dzd', 'ils', 'try'
+]);
+const OCEANIA_FIAT_CODES = new Set([
+    'aud', 'nzd', 'pgk', 'fjf', 'wst', 'top',
+    'sbd', 'vuv'
+]);
 let UOA_OPTIONS = [];
 let UOA_META = {};
+function normalizeUoaShowMode(mode) {
+    const m = String(mode || '').toLowerCase();
+    if (m === 'g7') return 'g7';
+    if (m === 'g20') return 'g20';
+    if (m === 'europe' || m === 'eu') return 'europe';
+    if (m === 'asia' || m === 'apac') return 'asia';
+    if (m === 'africa') return 'africa';
+    if (m === 'latam' || m === 'latin' || m === 'latin_america') return 'latam';
+    if (m === 'mena' || m === 'middle_east' || m === 'middle-east') return 'mena';
+    if (m === 'oceania' || m === 'pacific') return 'oceania';
+    return 'all';
+}
+function getStoredUoaShowMode() {
+    const raw = localStorage.getItem(UOA_SHOW_STORAGE_KEY);
+    return normalizeUoaShowMode(raw || 'all');
+}
+function setStoredUoaShowMode(mode) {
+    const norm = normalizeUoaShowMode(mode);
+    localStorage.setItem(UOA_SHOW_STORAGE_KEY, norm);
+}
+function slugHasCode(slug, codeSet) {
+    const parts = String(slug || '').toLowerCase().split('_');
+    return parts.some(p => codeSet.has(p));
+}
+function slugIsG7(slug) {
+    return slugHasCode(slug, G7_FIAT_CODES);
+}
+function slugIsG20(slug) {
+    return slugHasCode(slug, G20_FIAT_CODES);
+}
+function slugIsEurope(slug) {
+    return slugHasCode(slug, EUROPE_FIAT_CODES);
+}
+function slugIsAsia(slug) {
+    return slugHasCode(slug, ASIA_FIAT_CODES);
+}
+function slugIsAfrica(slug) {
+    return slugHasCode(slug, AFRICA_FIAT_CODES);
+}
+function slugIsLatam(slug) {
+    return slugHasCode(slug, LATAM_FIAT_CODES);
+}
+function slugIsMena(slug) {
+    return slugHasCode(slug, MENA_FIAT_CODES);
+}
+function slugIsOceania(slug) {
+    return slugHasCode(slug, OCEANIA_FIAT_CODES);
+}
+let uoaShowMode = getStoredUoaShowMode();
+function getFilteredUoaOptions() {
+    if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return [];
+    if (uoaShowMode === 'g7') {
+        return UOA_OPTIONS.filter(o => slugIsG7(o.slug));
+    } else if (uoaShowMode === 'g20') {
+        return UOA_OPTIONS.filter(o => slugIsG20(o.slug));
+    } else if (uoaShowMode === 'europe') {
+        return UOA_OPTIONS.filter(o => slugIsEurope(o.slug));
+    } else if (uoaShowMode === 'asia') {
+        return UOA_OPTIONS.filter(o => slugIsAsia(o.slug));
+    } else if (uoaShowMode === 'africa') {
+        return UOA_OPTIONS.filter(o => slugIsAfrica(o.slug));
+    } else if (uoaShowMode === 'latam') {
+        return UOA_OPTIONS.filter(o => slugIsLatam(o.slug));
+    } else if (uoaShowMode === 'mena') {
+        return UOA_OPTIONS.filter(o => slugIsMena(o.slug));
+    } else if (uoaShowMode === 'oceania') {
+        return UOA_OPTIONS.filter(o => slugIsOceania(o.slug));
+    }
+    return [...UOA_OPTIONS];
+}
 function isUoaFile(fname) {
     return /^uoa_[a-z0-9_]+\.png$/i.test(fname);
 }
@@ -2005,14 +2127,20 @@ function buildUoaOptionsFromList(list) {
     }, {});
 }
 function updateUoaIndexUiBySlug(slug) {
-    if (!uoaIndexInput || !uoaIndexTotal || !Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) {
+    if (!uoaIndexInput || !uoaIndexTotal) return;
+    const opts = getFilteredUoaOptions();
+    if (!Array.isArray(opts) || opts.length === 0) {
+        uoaIndexTotal.textContent = '0';
+        uoaIndexInput.min = '0';
+        uoaIndexInput.max = '0';
+        uoaIndexInput.value = '';
         return;
     }
-    const total = UOA_OPTIONS.length;
+    const total = opts.length;
     uoaIndexTotal.textContent = String(total);
     uoaIndexInput.min = '1';
     uoaIndexInput.max = String(total);
-    const idx = UOA_OPTIONS.findIndex(o => o.slug === slug);
+    const idx = opts.findIndex(o => o.slug === slug);
     if (idx === -1) {
         uoaIndexInput.value = '';
         return;
@@ -2039,6 +2167,7 @@ function setStoredUoaSort(mode) {
 function sortUoaOptions(mode, preferredSlug) {
     const norm = normalizeUoaSortMode(mode);
     if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return;
+
     const byLabel = (a, b) => a.label.localeCompare(b.label);
     const byMsatAsc = (a, b) => {
         const am = typeof a.msat === 'number' ? a.msat : Infinity;
@@ -2065,13 +2194,18 @@ function sortUoaOptions(mode, preferredSlug) {
         acc[o.slug] = o;
         return acc;
     }, {});
-    const currentSlug =
+    const allCurrentSlug =
         preferredSlug ||
         (uoaSelect && uoaSelect.value) ||
         getStoredUoaItem() ||
         (UOA_OPTIONS[0] && UOA_OPTIONS[0].slug);
     populateUoaSelect();
-    if (uoaSelect && currentSlug && UOA_OPTIONS.some(o => o.slug === currentSlug)) {
+    const filtered = getFilteredUoaOptions();
+    let currentSlug = allCurrentSlug;
+    if (!filtered.some(o => o.slug === currentSlug)) {
+        currentSlug = filtered[0]?.slug || '';
+    }
+    if (uoaSelect && currentSlug && filtered.some(o => o.slug === currentSlug)) {
         uoaSelect.value = currentSlug;
     }
     if (currentSlug) {
@@ -2093,9 +2227,57 @@ function setUoaSortMode(modeRaw) {
         uoaSortSelect.value = norm;
     }
 }
+function setUoaShowMode(modeRaw) {
+    const mode = normalizeUoaShowMode(modeRaw);
+    uoaShowMode = mode;
+    setStoredUoaShowMode(mode);
+    if (uoaShowSelect && uoaShowSelect.value !== mode) {
+        uoaShowSelect.value = mode;
+    }
+    const filtered = getFilteredUoaOptions();
+    let keepSlug = null;
+    if (uoaSelect && uoaSelect.value) {
+        keepSlug = uoaSelect.value;
+    } else {
+        const img = visibleImages[currentIndex];
+        if (img && isUoaFile(img.filename)) {
+            keepSlug = uoaSlugFromFilename(img.filename);
+        } else {
+            keepSlug = getStoredUoaItem();
+        }
+    }
+    populateUoaSelect();
+    let newSlug = null;
+    if (keepSlug && filtered.some(o => o.slug === keepSlug)) {
+        newSlug = keepSlug;
+    } else if (filtered.length) {
+        newSlug = filtered[0].slug;
+    }
+    if (uoaSelect && newSlug) {
+        uoaSelect.value = newSlug;
+    }
+    if (newSlug) {
+        const img = visibleImages[currentIndex];
+        if (modal.style.display === 'flex' && img && isUoaFile(img.filename)) {
+            const curSlug = uoaSlugFromFilename(img.filename);
+            if (curSlug !== newSlug) {
+                setUoaItem(newSlug);
+            } else {
+                updateUoaIndexUiBySlug(newSlug);
+            }
+        } else {
+            updateUoaIndexUiBySlug(newSlug);
+        }
+        setStoredUoaItem(newSlug);
+    } else {
+        if (uoaIndexInput) uoaIndexInput.value = '';
+        if (uoaIndexTotal) uoaIndexTotal.textContent = '0';
+    }
+}
 function populateUoaSelect() {
     if (!uoaSelect) return;
-    uoaSelect.innerHTML = UOA_OPTIONS
+    const opts = getFilteredUoaOptions();
+    uoaSelect.innerHTML = opts
         .map(o => `<option value="${o.slug}">${o.label}</option>`)
         .join('');
 }
@@ -2150,8 +2332,10 @@ function setUoaItem(slug) {
     updateUoaIndexUiBySlug(slug);
 }
 function cycleUoaItem(direction) {
-    if (!uoaSelect || UOA_OPTIONS.length === 0) return;
-    const slugs = UOA_OPTIONS.map(o => o.slug);
+    if (!uoaSelect) return;
+    const opts = getFilteredUoaOptions();
+    if (!opts.length) return;
+    const slugs = opts.map(o => o.slug);
     const currentSlug = uoaSelect.value || getStoredUoaItem() || slugs[0];
     const idx = slugs.indexOf(currentSlug);
     if (idx === -1) return;
@@ -2321,6 +2505,7 @@ fetch('final_frames/image_list.json')
         populateCoinSelect();
         buildUoaOptionsFromList(imageList);
         sortUoaOptions(getStoredUoaSort());
+        setUoaShowMode(getStoredUoaShowMode());
         const initialFilename = getImageNameFromPath();
         const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
         let urlPofSlug = null;
@@ -3078,8 +3263,10 @@ alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.va
 uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
 uoaSortSelect?.addEventListener('change', e => setUoaSortMode(e.target.value));
 hashSelect?.addEventListener('change', e => setHashLength(e.target.value));
+uoaShowSelect?.addEventListener('change', e => setUoaShowMode(e.target.value));
 uoaIndexInput?.addEventListener('input', e => {
-    if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return;
+    const opts = getFilteredUoaOptions();
+    if (!Array.isArray(opts) || opts.length === 0) return;
     let raw = e.target.value || '';
     raw = raw.replace(/\D+/g, '');
     if (raw === '') {
@@ -3091,13 +3278,13 @@ uoaIndexInput?.addEventListener('input', e => {
         e.target.value = '';
         return;
     }
-    const total = UOA_OPTIONS.length;
+    const total = opts.length;
     if (n < 1) n = 1;
     if (n > total) n = total;
     if (String(n) !== raw) {
         e.target.value = String(n);
     }
-    const target = UOA_OPTIONS[n - 1];
+    const target = opts[n - 1];
     if (!target) return;
     if (uoaSelect) {
         uoaSelect.value = target.slug;
