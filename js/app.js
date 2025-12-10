@@ -121,6 +121,7 @@ let nonModalFocusable = [];
 let thanksOverlay = null;
 let thanksToastTimeout = null;
 let isBuyMeVisible = false;
+let buyCoffeeCloseBtn = null;
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -607,11 +608,12 @@ function showThanksPopup() {
             top: '8px',
             left: '8px'
         });
+        buyCoffeeCloseBtn = closeBtn;
         closeBtn.addEventListener('click', e => {
             e.stopPropagation();
             e.preventDefault();
             hideThanksPopup();
-        });
+});
         img.addEventListener('click', async e => {
             e.stopPropagation();
             e.preventDefault();
@@ -640,16 +642,23 @@ function showThanksPopup() {
             const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
             const focusables = [closeEl, imgEl].filter(Boolean);
             if (!focusables.length) return;
+            const current = document.activeElement;
+            const isFirst = current === closeEl;
+            const isLast = current === imgEl;
+            if (e.shiftKey && isFirst) {
+                isBuyMeVisible = false;
+                return;
+            }
             e.preventDefault();
             e.stopPropagation();
-            const current = document.activeElement;
-            let idx = focusables.indexOf(current);
-            if (idx === -1) idx = 0;
-            const delta = e.shiftKey ? -1 : 1;
-            const nextIdx = (idx + delta + focusables.length) % focusables.length;
-            const nextEl = focusables[nextIdx];
-            if (nextEl && typeof nextEl.focus === 'function') {
-                nextEl.focus();
+            if (!e.shiftKey && isLast) {
+                closeEl.focus();
+                return;
+            }
+            if (!e.shiftKey) {
+                imgEl.focus();
+            } else {
+                closeEl.focus();
             }
         });
     }
@@ -663,9 +672,9 @@ function showThanksPopup() {
     thanksOverlay.style.display = 'flex';
     isBuyMeVisible = true;
     document.addEventListener('keydown', onThanksKeydown);
-    const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
-    if (closeEl && typeof closeEl.focus === 'function') {
-        requestAnimationFrame(() => closeEl.focus());
+    buyCoffeeCloseBtn = thanksOverlay.querySelector('#thanks-overlay-close');
+    if (buyCoffeeCloseBtn && typeof buyCoffeeCloseBtn.focus === 'function') {
+        requestAnimationFrame(() => buyCoffeeCloseBtn.focus());
     }
 }
 function setSearchInputFocusability(active) {
@@ -3508,10 +3517,8 @@ function toggleFavoritesView() {
 /* ===========================
  * MODAL KEYBOARD SHORTCUTS
  * =========================== */
-// Block arrow/space keys from reaching background UI while Buy Me overlay is visible
 document.addEventListener('keydown', e => {
     if (!isBuyMeVisible) return;
-
     const k = e.key;
     if (
         k === 'ArrowLeft' ||
@@ -3526,9 +3533,11 @@ document.addEventListener('keydown', e => {
         if (typeof e.stopImmediatePropagation === 'function') {
             e.stopImmediatePropagation();
         }
+        if (k === ' ' || k === 'Spacebar') {
+            hideThanksPopup();
+        }
     }
 }, true);
-
 document.addEventListener('keydown', e => {
     if (isBuyMeVisible) return;
     if (modal.style.display !== 'flex') return;
