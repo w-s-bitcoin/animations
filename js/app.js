@@ -2054,12 +2054,13 @@ const UOA_SHOW_MODES = [
     'all',
     'g7',
     'g20',
-    'europe',
-    'asia',
     'africa',
+    'asia',
+    'europe',
     'latam',
     'mena',
-    'oceania'
+    'oceania',
+    'metals'
 ];
 const G7_FIAT_CODES = new Set(['usd', 'eur', 'jpy', 'gbp', 'cad']);
 const G20_FIAT_CODES = new Set([
@@ -2067,33 +2068,70 @@ const G20_FIAT_CODES = new Set([
     'cny', 'aud', 'brl', 'inr', 'mxn',
     'rub', 'zar', 'krw', 'try', 'sar', 'idr', 'ars'
 ]);
-const EUROPE_FIAT_CODES = new Set([
-    'eur', 'gbp', 'chf', 'sek', 'nok', 'dkk',
-    'pln', 'czk', 'huf', 'ron', 'bgn', 'hrk',
-    'isk'
+const AFRICA_FIAT_CODES = new Set([
+    // Southern Africa
+    'zar', 'bwp', 'nad', 'lsl', 'szl', 'zwg', 'mwk', 'mzn', 'zmw',
+    // East Africa
+    'kes', 'ugx', 'tzs', 'rwf', 'sos', 'djf', 'bif', 'kpmf', 'ssp', 'mga', 'ern',
+    // Central Africa
+    'cdf', 'xaf',
+    // West Africa
+    'ngn', 'ghs', 'gmd', 'gnf', 'sle', 'lrd', 'cve', 'xof',
+    // North Africa (overlaps with MENA)
+    'egp', 'mad', 'tnd', 'dzd', 'sdg', 'mru', 'lyd'
 ]);
 const ASIA_FIAT_CODES = new Set([
-    'cny', 'jpy', 'krw', 'inr', 'idr', 'thb',
-    'hkd', 'twd', 'sgd', 'php', 'myr', 'vnd',
-    'bdt', 'lkr', 'mmk', 'kzt'
+    // East Asia
+    'cny', 'jpy', 'krw', 'twd', 'hkd', 'kpw', 'mnt',
+    // South Asia
+    'inr', 'bdt', 'lkr', 'npr', 'btn', 'mvr', 'pkr', 'afn',
+    // Southeast Asia
+    'idr', 'thb', 'php', 'myr', 'vnd', 'mmk', 'khr', 'lak', 'mop',
+    // Central Asia
+    'kzt', 'kgs', 'tjs', 'uzs', 'tmt',
+    // Caucasus (Asia, not MENA)
+    'azn', 'amd', 'gel',
+    // Russia
+    'rub'
 ]);
-const AFRICA_FIAT_CODES = new Set([
-    'zar', 'ngn', 'egp', 'kes', 'ghs', 'mad',
-    'tnd', 'dzd', 'etb', 'ugx', 'tzs', 'xof',
-    'xaf', 'aoa', 'zmw', 'mzn', 'bwp'
+const EUROPE_FIAT_CODES = new Set([
+    // Core Western & Northern Europe
+    'eur', 'gbp', 'chf', 'sek', 'nok', 'dkk', 'isk',
+    // Central & Eastern Europe
+    'pln', 'czk', 'huf', 'ron', 'bgn', 'hrk',
+    // Balkans & Southeastern Europe
+    'rsd', 'mkd', 'bam', 'all', 'mdl',
+    // Eastern Europe
+    'byn', 'uah', 'rub',
+    // Caucasus (allowed overlap with Asia)
+    'gel', 'amd', 'azn',
+    // European territories & dependencies
+    'gip', 'fkp', 'shp', 'fok'
 ]);
 const LATAM_FIAT_CODES = new Set([
-    'brl', 'mxn', 'ars', 'clp', 'cop', 'pen',
-    'uyu', 'dop', 'gtq', 'crc', 'hnl', 'nio',
-    'bob', 'pyg', 'ves'
+    // South America
+    'brl', 'ars', 'clp', 'cop', 'pen', 'uyu', 'pyg', 'bob', 'ves',
+    // Central America + Mexico
+    'mxn', 'crc', 'hnl', 'gtq', 'nio', 'bzd',
+    // Caribbean
+    'dop', 'htg', 'jmd', 'ttd', 'bbd', 'bsd', 'xcd',
+    // Optional: sovereign but tightly pegged or special cases
+    'pab', 'cup'
 ]);
 const MENA_FIAT_CODES = new Set([
+    // Gulf Cooperation Council (GCC)
     'aed', 'sar', 'qar', 'kwd', 'omr', 'bhd',
-    'egp', 'mad', 'tnd', 'dzd', 'ils', 'try'
+    // Middle East (non-GCC)
+    'ils', 'try', 'iqd', 'irr', 'syp', 'yer', 'lbp', 'jod',
+    // North Africa
+    'egp', 'mad', 'tnd', 'dzd'
 ]);
 const OCEANIA_FIAT_CODES = new Set([
-    'aud', 'nzd', 'pgk', 'fjf', 'wst', 'top',
-    'sbd', 'vuv'
+    'aud', 'nzd', 'pgk', 'fjd', 'wst', 'top',
+    'sbd', 'vuv', 'kid'
+]);
+const METALS_FIAT_CODES = new Set([
+    'xau', 'xag'
 ]);
 let UOA_OPTIONS = [];
 let UOA_META = {};
@@ -2107,6 +2145,7 @@ function normalizeUoaShowMode(mode) {
     if (m === 'latam' || m === 'latin' || m === 'latin_america') return 'latam';
     if (m === 'mena' || m === 'middle_east' || m === 'middle-east') return 'mena';
     if (m === 'oceania' || m === 'pacific') return 'oceania';
+    if (m === 'metals' || m === 'metal') return 'metals';
     return 'all';
 }
 function getStoredUoaShowMode() {
@@ -2145,6 +2184,9 @@ function slugIsMena(slug) {
 function slugIsOceania(slug) {
     return slugHasCode(slug, OCEANIA_FIAT_CODES);
 }
+function slugIsMetals(slug) {
+    return slugHasCode(slug, METALS_FIAT_CODES);
+}
 let uoaShowMode = getStoredUoaShowMode();
 function getFilteredUoaOptions() {
     if (!Array.isArray(UOA_OPTIONS) || UOA_OPTIONS.length === 0) return [];
@@ -2164,6 +2206,8 @@ function getFilteredUoaOptions() {
         return UOA_OPTIONS.filter(o => slugIsMena(o.slug));
     } else if (uoaShowMode === 'oceania') {
         return UOA_OPTIONS.filter(o => slugIsOceania(o.slug));
+    } else if (uoaShowMode === 'metals') {
+        return UOA_OPTIONS.filter(o => slugIsMetals(o.slug));
     }
     return [...UOA_OPTIONS];
 }
