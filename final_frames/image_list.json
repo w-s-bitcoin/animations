@@ -123,7 +123,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 141276
+        "uoa_msat": 141117
     },
     {
         "filename": "uoa_btc_fok.png",
@@ -132,7 +132,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 168369
+        "uoa_msat": 168285
     },
     {
         "filename": "uoa_btc_amd.png",
@@ -141,7 +141,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 2836
+        "uoa_msat": 2833
     },
     {
         "filename": "uoa_btc_ang.png",
@@ -150,7 +150,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 599903
+        "uoa_msat": 599224
     },
     {
         "filename": "uoa_btc_aoa.png",
@@ -177,7 +177,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 636014
+        "uoa_msat": 635294
     },
     {
         "filename": "uoa_btc_bam.png",
@@ -249,7 +249,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 2429
+        "uoa_msat": 2426
     },
     {
         "filename": "uoa_btc_cve.png",
@@ -267,7 +267,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 6065
+        "uoa_msat": 6058
     },
     {
         "filename": "uoa_btc_ern.png",
@@ -285,7 +285,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 6974
+        "uoa_msat": 6966
     },
     {
         "filename": "uoa_btc_fjd.png",
@@ -294,7 +294,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 479933
+        "uoa_msat": 479390
     },
     {
         "filename": "uoa_btc_fkp.png",
@@ -330,7 +330,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 5197
+        "uoa_msat": 5191
     },
     {
         "filename": "uoa_btc_isk.png",
@@ -357,7 +357,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 718640
+        "uoa_msat": 718208
     },
     {
         "filename": "uoa_btc_kpw.png",
@@ -366,7 +366,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 1201
+        "uoa_msat": 1200
     },
     {
         "filename": "uoa_btc_kyd.png",
@@ -402,7 +402,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 63396
+        "uoa_msat": 63325
     },
     {
         "filename": "uoa_btc_lyd.png",
@@ -465,7 +465,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 134862
+        "uoa_msat": 134716
     },
     {
         "filename": "uoa_btc_mru.png",
@@ -483,7 +483,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 70098
+        "uoa_msat": 70018
     },
     {
         "filename": "uoa_btc_mwk.png",
@@ -528,7 +528,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 1439097
+        "uoa_msat": 1437469
     },
     {
         "filename": "uoa_btc_sle.png",
@@ -573,7 +573,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 51472
+        "uoa_msat": 51413
     },
     {
         "filename": "uoa_btc_szl.png",
@@ -672,7 +672,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 41074
+        "uoa_msat": 41028
     },
     {
         "filename": "uoa_btc_eur.png",
@@ -1095,7 +1095,7 @@
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
         "latest_youtube": "https://youtu.be/rF4PfhMI084",
-        "uoa_msat": 65037020
+        "uoa_msat": 64963430
     },
     {
         "filename": "uoa_btc_xau.png",
@@ -1104,7 +1104,7 @@
         "latest_x": "https://x.com/w_s_bitcoin/status/1996592550044442683",
         "latest_nostr": "https://primal.net/e/nevent1qqstrjt9dk6gryl0hk7ck3pw8e4yn8tsgj6a8p62ryuhk0p4ugm2k6qfz56yd",
         "latest_youtube": "https://youtu.be/rF4PfhMI084",
-        "uoa_msat": 4547046636
+        "uoa_msat": 4541901619
     },
     {
         "filename": "uoa_btc_pen.png",
@@ -1556,7 +1556,7 @@
         "latest_x": "https://x.com/w_s_bitcoin/status/1951799963996045422",
         "latest_nostr": "https://primal.net/e/nevent1qvzqqqqqqypzpte0dqh4z2yes5kxv48lqed2gpdyr5279vwtdjghxy3kq46y7phxqythwumn8ghj7cnfw33k76twv4ezuum0vd5kzmp0qyt8wumn8ghj7etyv4hzumn0wd68ytnvv9hxgtcqyzc67s5rfwhtm80wx9q4sm53f5f2wfxmycmqmd2sg3pce5ctz4s9wuctswy",
         "latest_youtube": "https://youtu.be/LpccPgtC56g",
-        "uoa_msat": 6834567
+        "uoa_msat": 6826834
     },
     {
         "filename": "price_of_eggs.png",
@@ -1565,7 +1565,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 3770199
+        "uoa_msat": 3765933
     },
     {
         "filename": "price_of_steak.png",
@@ -1574,7 +1574,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 15278603
+        "uoa_msat": 15261316
     },
     {
         "filename": "price_of_chicken.png",
@@ -1583,7 +1583,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 2227747
+        "uoa_msat": 2225226
     },
     {
         "filename": "price_of_aluminum.png",
@@ -1592,7 +1592,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 2730323783
+        "uoa_msat": 2727234401
     },
     {
         "filename": "price_of_copper.png",
@@ -1601,7 +1601,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 10630782138
+        "uoa_msat": 10618753328
     },
     {
         "filename": "price_of_iron_ore.png",
@@ -1610,7 +1610,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 103947108
+        "uoa_msat": 103829491
     },
     {
         "filename": "price_of_nickel.png",
@@ -1619,7 +1619,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 16216946029
+        "uoa_msat": 16198596433
     },
     {
         "filename": "price_of_lead.png",
@@ -1628,7 +1628,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 2133552603
+        "uoa_msat": 2131138472
     },
     {
         "filename": "price_of_tin.png",
@@ -1637,7 +1637,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 35177030237
+        "uoa_msat": 35137227163
     },
     {
         "filename": "price_of_zinc.png",
@@ -1646,7 +1646,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 2869426579
+        "uoa_msat": 2866179802
     },
     {
         "filename": "price_of_cocoa.png",
@@ -1655,7 +1655,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 9081719431
+        "uoa_msat": 9071443397
     },
     {
         "filename": "price_of_coal.png",
@@ -1664,7 +1664,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 113542119
+        "uoa_msat": 113413645
     },
     {
         "filename": "price_of_natural_gas_us.png",
@@ -1673,7 +1673,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 3974645
+        "uoa_msat": 3970148
     },
     {
         "filename": "price_of_natural_gas_eu.png",
@@ -1682,7 +1682,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 13295776
+        "uoa_msat": 13280732
     },
     {
         "filename": "price_of_natural_gas_asia.png",
@@ -1691,7 +1691,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 14011782
+        "uoa_msat": 13995927
     },
     {
         "filename": "price_of_corn.png",
@@ -1700,7 +1700,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 211553886
+        "uoa_msat": 211314511
     },
     {
         "filename": "price_of_rubber.png",
@@ -1709,7 +1709,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 1081162
+        "uoa_msat": 1079939
     },
     {
         "filename": "price_of_swine.png",
@@ -1718,7 +1718,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 1086910
+        "uoa_msat": 1085680
     },
     {
         "filename": "price_of_beef.png",
@@ -1727,7 +1727,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 3223930
+        "uoa_msat": 3220282
     },
     {
         "filename": "price_of_poultry.png",
@@ -1736,7 +1736,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 1923380
+        "uoa_msat": 1921203
     },
     {
         "filename": "price_of_brent_crude.png",
@@ -1745,7 +1745,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 75497667
+        "uoa_msat": 75412241
     },
     {
         "filename": "price_of_wti_crude.png",
@@ -1754,7 +1754,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 74081680
+        "uoa_msat": 73997856
     },
     {
         "filename": "price_of_cotton.png",
@@ -1763,7 +1763,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 845165
+        "uoa_msat": 844209
     },
     {
         "filename": "price_of_barley.png",
@@ -1772,7 +1772,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 127362612
+        "uoa_msat": 127218500
     },
     {
         "filename": "price_of_wheat.png",
@@ -1781,7 +1781,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 187207224
+        "uoa_msat": 186995398
     },
     {
         "filename": "price_of_soybeans.png",
@@ -1790,7 +1790,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 414549735
+        "uoa_msat": 414080668
     },
     {
         "filename": "price_of_olive_oil.png",
@@ -1799,7 +1799,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 5486039565
+        "uoa_msat": 5479832070
     },
     {
         "filename": "price_of_coffee.png",
@@ -1808,7 +1808,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 3925443
+        "uoa_msat": 3921002
     },
     {
         "filename": "price_of_tea.png",
@@ -1817,7 +1817,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 3307148
+        "uoa_msat": 3303406
     },
     {
         "filename": "price_of_uranium.png",
@@ -1826,7 +1826,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 64396615
+        "uoa_msat": 64323750
     },
     {
         "filename": "price_of_new_houses.png",
@@ -1835,7 +1835,7 @@
         "latest_x": "https://x.com/w_s_bitcoin/status/1986444148384186857",
         "latest_nostr": "https://primal.net/e/nevent1qqsfw63azu4e29t2zz4s4sc73hg7qvn7zwhae742gzcm5ra87ycp7eg4p9rcn",
         "latest_youtube": "https://youtu.be/DgaAU2eZLCI",
-        "uoa_msat": 577311787278
+        "uoa_msat": 576658554650
     },
     {
         "filename": "price_of_electricity.png",
@@ -1844,7 +1844,7 @@
         "latest_x": "https://x.com/w_s_bitcoin/status/1965530824578838723",
         "latest_nostr": "https://primal.net/e/nevent1qqsf8d4tl39jetxjfyv6tfzesjzzv8sak7hxsjkmsdhfp3hgmz6cg5sd5wwx8",
         "latest_youtube": "https://youtu.be/77GH63y-UnY",
-        "uoa_msat": 203210
+        "uoa_msat": 202980
     },
     {
         "filename": "price_of_hourly_earnings.png",
@@ -1853,7 +1853,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 39561152
+        "uoa_msat": 39516389
     },
     {
         "filename": "price_of_min_wage_ca.png",
@@ -1862,7 +1862,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 17834946
+        "uoa_msat": 17814765
     },
     {
         "filename": "price_of_milk.png",
@@ -1871,7 +1871,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 4463060
+        "uoa_msat": 4458010
     },
     {
         "filename": "price_of_rice.png",
@@ -1880,7 +1880,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 1145760
+        "uoa_msat": 1144464
     },
     {
         "filename": "price_of_sugar.png",
@@ -1889,7 +1889,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 1126304
+        "uoa_msat": 1125029
     },
     {
         "filename": "price_of_unleaded_gasoline.png",
@@ -1898,7 +1898,7 @@
         "latest_x": "",
         "latest_nostr": "",
         "latest_youtube": "",
-        "uoa_msat": 3609144
+        "uoa_msat": 3605061
     },
     {
         "filename": "node_count.png",
