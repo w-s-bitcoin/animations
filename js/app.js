@@ -205,6 +205,7 @@ const COIN_ORDER = ['wholecoins', 'pi_coins', 'v_coins', 'x_coins', 'l_coins', '
 let COIN_OPTIONS = [];
 let COIN_META = {};
 const MYR_BASE = 'monthly_yearly_returns';
+let MYR_RANGES = [];
 const MYR_START_YEAR = 2010;
 const MYR_DEFAULT_RANGE = `${THIS_YEAR - 4} - ${THIS_YEAR}`;
 function buildMyrRanges(startYear, endYear) {
@@ -487,6 +488,10 @@ function onThanksKeydown(e) {
 }
 function hideThanksPopup() {
     if (!thanksOverlay) return;
+    const toast = thanksOverlay.querySelector('.thanks-toast');
+    if (toast) {
+        toast.style.opacity = '0';
+    }
     thanksOverlay.style.display = 'none';
     if (thanksOverlay.parentNode) {
         thanksOverlay.parentNode.removeChild(thanksOverlay);
@@ -560,6 +565,7 @@ function showThanksPopup() {
             ? 'assets/thanks_for_the_coffee_portrait.png'
             : 'assets/thanks_for_the_coffee_landscape.png';
     }
+
     if (!thanksOverlay) {
         thanksOverlay = document.createElement('div');
         thanksOverlay.id = 'thanks-overlay';
@@ -572,6 +578,7 @@ function showThanksPopup() {
             zIndex: '9999',
             cursor: 'default'
         });
+
         const container = document.createElement('div');
         Object.assign(container.style, {
             position: 'relative',
@@ -579,6 +586,8 @@ function showThanksPopup() {
             cursor: 'pointer',
             maxWidth: '90vw',
         });
+
+        // Focusable image
         const img = document.createElement('img');
         img.id = 'thanks-overlay-img';
         img.alt = 'Thanks!';
@@ -587,6 +596,9 @@ function showThanksPopup() {
         img.style.boxShadow = '0 0 20px rgba(0,0,0,0.8)';
         img.style.borderRadius = '8px';
         img.style.display = 'block';
+        img.tabIndex = 0;
+
+        // Close button (already focusable)
         const closeBtn = document.createElement('button');
         closeBtn.id = 'thanks-overlay-close';
         closeBtn.type = 'button';
@@ -598,32 +610,82 @@ function showThanksPopup() {
             top: '8px',
             left: '8px'
         });
+
         closeBtn.addEventListener('click', e => {
             e.stopPropagation();
             e.preventDefault();
             hideThanksPopup();
         });
+
+        // Click on image copies email
         img.addEventListener('click', async e => {
             e.stopPropagation();
             e.preventDefault();
             await copyToClipboard('wicked@getalby.com');
             showThanksToast('wicked@getalby.com<br>copied to clipboard');
         });
+
+        // ENTER on image copies email (keyboard)
+        img.addEventListener('keydown', async e => {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            e.stopPropagation();
+            await copyToClipboard('wicked@getalby.com');
+            showThanksToast('wicked@getalby.com<br>copied to clipboard');
+        });
+
         container.appendChild(img);
         container.appendChild(closeBtn);
         thanksOverlay.appendChild(container);
+
         thanksOverlay.addEventListener('click', e => {
             if (e.target === thanksOverlay) {
                 hideThanksPopup();
             }
         });
+
+        // Focus trap: Tab only cycles close ↔ image
+        thanksOverlay.addEventListener('keydown', e => {
+            if (!isBuyMeVisible) return;
+            if (e.key !== 'Tab') return;
+
+            const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
+            const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
+            const focusables = [closeEl, imgEl].filter(Boolean);
+            if (!focusables.length) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const current = document.activeElement;
+            let idx = focusables.indexOf(current);
+            if (idx === -1) idx = 0;
+
+            const delta = e.shiftKey ? -1 : 1;
+            const nextIdx = (idx + delta + focusables.length) % focusables.length;
+            const nextEl = focusables[nextIdx];
+            if (nextEl && typeof nextEl.focus === 'function') {
+                nextEl.focus();
+            }
+        });
     }
+
     const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
     imgEl.src = imgSrc;
+
     document.body.appendChild(thanksOverlay);
     thanksOverlay.style.display = 'flex';
+
+    // Mark overlay visible so other keyboard shortcuts are blocked
     isBuyMeVisible = true;
+
     document.addEventListener('keydown', onThanksKeydown);
+
+    // Initial focus on close button (then Tab → image → back)
+    const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
+    if (closeEl && typeof closeEl.focus === 'function') {
+        requestAnimationFrame(() => closeEl.focus());
+    }
 }
 
 
@@ -3023,9 +3085,6 @@ function hideSlideshowUI() {
     clearTimeout(slideshowUiTimer);
     slideshowUiTimer = null;
 }
-function resetSlideshowUiHideTimer() {
-    showSlideshowUI(true);
-}
 function onSlideshowActivity() {
     showSlideshowUI(slideshowPlaying);
 }
@@ -3091,7 +3150,6 @@ async function closeSlideshow() {
  * =========================== */
 window.addEventListener('resize', updateLayoutBasedOnWidth);
 window.addEventListener('resize', updateModalSafePadding);
-window.addEventListener('load', updateLayoutBasedOnWidth);
 window.addEventListener('orientationchange', updateModalSafePadding);
 window.addEventListener('resize', handleModalViewportChange);
 window.addEventListener('orientationchange', handleModalViewportChange);
@@ -3366,6 +3424,27 @@ function toggleFavoritesView() {
 /* ===========================
  * MODAL KEYBOARD SHORTCUTS
  * =========================== */
+// Block arrow/space keys from reaching background UI while Buy Me overlay is visible
+document.addEventListener('keydown', e => {
+    if (!isBuyMeVisible) return;
+
+    const k = e.key;
+    if (
+        k === 'ArrowLeft' ||
+        k === 'ArrowRight' ||
+        k === 'ArrowUp' ||
+        k === 'ArrowDown' ||
+        k === ' ' ||
+        k === 'Spacebar'
+    ) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') {
+            e.stopImmediatePropagation();
+        }
+    }
+}, true);
+
 document.addEventListener('keydown', e => {
     if (isBuyMeVisible) return;
     if (modal.style.display !== 'flex') return;
