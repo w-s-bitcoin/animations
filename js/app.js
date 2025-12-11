@@ -3035,7 +3035,7 @@ window.addEventListener('load', () => {
 });
 
 /* ===========================
- * AUTO-REFRESH EVERY 15 MINUTES
+ * AUTO-REFRESH EVERY 15 MINUTES (HARD REFRESH)
  * =========================== */
 (function setupQuarterHourReload() {
     let lastReloadStamp = null;
@@ -3048,7 +3048,8 @@ window.addEventListener('load', () => {
             const stamp = `${h}:${m}`;
             if (stamp !== lastReloadStamp) {
                 lastReloadStamp = stamp;
-                location.reload();
+                const cacheBuster = `?v=${Date.now()}`;
+                location.href = location.pathname + cacheBuster;
             }
         }
     }
