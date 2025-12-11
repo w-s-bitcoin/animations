@@ -1871,6 +1871,10 @@ function buildPriceOfOptionsFromList(list) {
                 slug,
                 label:
                     slug === 'min_wage_ca' ? 'Min Wage CA' :
+                    slug === 'min_wage_fl' ? 'Min Wage FL' :
+                    slug === 'min_wage_ma' ? 'Min Wage MA' :
+                    slug === 'min_wage_tx' ? 'Min Wage TX' :
+                    slug === 'min_wage_wa' ? 'Min Wage WA' :
                     slug === 'wti_crude' ? 'WTI Crude' :
                     slug === 'natural_gas_us' ? 'Natural Gas US' :
                     slug === 'natural_gas_eu' ? 'Natural Gas EU' :
