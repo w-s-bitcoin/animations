@@ -3034,6 +3034,22 @@ window.addEventListener('load', () => {
     });
 });
 
+/* ===========================
+ * HOURLY AUTO-REFRESH @ HH:30
+ * =========================== */
+(function setupHourlyReload() {
+    let lastReloadHour = null;
+    function checkForReload() {
+        const now = new Date();
+        const minutes = now.getMinutes();
+        const hour = now.getHours();
+        if (minutes === 30 && hour !== lastReloadHour) {
+            lastReloadHour = hour;
+            location.reload();
+        }
+    }
+    setInterval(checkForReload, 60 * 1000);
+})();
 
 /* ===========================
  * SLIDESHOW: core (autoplay + fade)
