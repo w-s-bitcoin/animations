@@ -3035,17 +3035,21 @@ window.addEventListener('load', () => {
 });
 
 /* ===========================
- * HOURLY AUTO-REFRESH @ HH:30
+ * AUTO-REFRESH EVERY 15 MINUTES
  * =========================== */
-(function setupHourlyReload() {
-    let lastReloadHour = null;
+(function setupQuarterHourReload() {
+    let lastReloadStamp = null;
     function checkForReload() {
         const now = new Date();
-        const minutes = now.getMinutes();
-        const hour = now.getHours();
-        if (minutes === 30 && hour !== lastReloadHour) {
-            lastReloadHour = hour;
-            location.reload();
+        const m = now.getMinutes();
+        const h = now.getHours();
+        const quarterMarks = [0, 15, 30, 45];
+        if (quarterMarks.includes(m)) {
+            const stamp = `${h}:${m}`;
+            if (stamp !== lastReloadStamp) {
+                lastReloadStamp = stamp;
+                location.reload();
+            }
         }
     }
     setInterval(checkForReload, 60 * 1000);
