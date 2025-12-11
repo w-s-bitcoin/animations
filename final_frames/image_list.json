@@ -1865,6 +1865,14 @@
         "uoa_msat": 18190277
     },
     {
+        "filename": "price_of_min_wage_wa.png",
+        "title": "Price of Minimum Wage (WA)",
+        "description": "Shows the price of one hour of Washington minimum wage in terms of bitcoin and in terms of dollars",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "price_of_milk.png",
         "title": "Price of Milk",
         "description": "Shows the price of milk in terms of bitcoin and in terms of dollars",
