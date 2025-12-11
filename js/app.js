@@ -53,6 +53,18 @@ const buyMeBtn = document.getElementById('buyCoffeeBtn');
 const favoritesToggleBtn = document.getElementById('favoritesToggle');
 
 /* ===========================
+ * GLOBAL IMAGE VERSION (cache-buster)
+ * =========================== */
+// Version changes every 15 minutes
+function getImgVersion() {
+    const BUCKET_MS = 15 * 60 * 1000;
+    return Math.floor(Date.now() / BUCKET_MS);
+}
+function imgSrc(filename) {
+    return `final_frames/${filename}?v=${getImgVersion()}`;
+}
+
+/* ===========================
  * BUY ME BUTTON (Beer/Coffee)
  * =========================== */
 function updateBuyMeButton() {
@@ -241,7 +253,8 @@ function replaceUrlForFilename(newFilename) {
 function updateGridThumbAtCurrent(newFilename, newAlt) {
     const thumb = document.querySelector(`img.grid-thumb[data-grid-index="${currentIndex}"]`);
     if (thumb) {
-        thumb.src = `final_frames/${newFilename}`;
+        thumb.dataset.filename = newFilename;
+        thumb.src = imgSrc(newFilename);
         if (newAlt) thumb.alt = newAlt;
     }
 }
@@ -345,8 +358,9 @@ function openByFilenameAllowingNonFav(filename) {
     return false;
 }
 function setModalImageAndCenter(filename, altText = '') {
+    modalImg.dataset.filename = filename;
     modalImg.alt = altText || '';
-    modalImg.src = `final_frames/${filename}`;
+    modalImg.src = imgSrc(filename);
     if (modalImg.complete && modalImg.naturalWidth) {
         if (currentScale <= 1.001) centerImageAtScale1();
         return;
@@ -888,6 +902,7 @@ function filterImages() {
         const img = document.createElement('img');
         img.className = 'grid-thumb';
         img.dataset.gridIndex = index;
+        img.dataset.filename = filename;
         img.alt = title;
         img.style.opacity = 0;
         img.tabIndex = 0;
@@ -908,7 +923,7 @@ function filterImages() {
             img.style.opacity = 1;
         };
         img.onclick = () => openModalByIndex(index);
-        img.src = `final_frames/${filename}`;
+        img.src = imgSrc(filename);
         const star = document.createElement('div');
         star.className = 'favorite-star';
         const favOn = isFavorite(filename);
@@ -3035,25 +3050,33 @@ window.addEventListener('load', () => {
 });
 
 /* ===========================
- * AUTO-REFRESH EVERY 15 MINUTES (HARD REFRESH)
+ * AUTO-REFRESH EVERY 15 MINUTES (IMAGES ONLY)
  * =========================== */
-(function setupQuarterHourReload() {
-    let lastReloadStamp = null;
-    function checkForReload() {
-        const now = new Date();
-        const m = now.getMinutes();
-        const h = now.getHours();
-        const quarterMarks = [0, 15, 30, 45];
-        if (quarterMarks.includes(m)) {
-            const stamp = `${h}:${m}`;
-            if (stamp !== lastReloadStamp) {
-                lastReloadStamp = stamp;
-                const cacheBuster = `?v=${Date.now()}`;
-                location.href = location.pathname + cacheBuster;
-            }
+let lastImgVersion = getImgVersion();
+function refreshVisibleImagesForNewVersion() {
+    document.querySelectorAll('img.grid-thumb').forEach(img => {
+        const filename = img.dataset.filename;
+        if (!filename) return;
+        img.src = imgSrc(filename);
+    });
+    if (modal && modal.style.display === 'flex' && modalImg && modalImg.dataset.filename) {
+        const fname = modalImg.dataset.filename;
+        modalImg.src = imgSrc(fname);
+    }
+    if (typeof isSlideshowOpen === 'function' && isSlideshowOpen() && slideshowImg && slideshowImg.dataset.filename) {
+        const fname = slideshowImg.dataset.filename;
+        slideshowImg.src = imgSrc(fname);
+    }
+}
+(function setupImageVersionRefresh() {
+    function checkForNewVersion() {
+        const v = getImgVersion();
+        if (v !== lastImgVersion) {
+            lastImgVersion = v;
+            refreshVisibleImagesForNewVersion();
         }
     }
-    setInterval(checkForReload, 60 * 1000);
+    setInterval(checkForNewVersion, 60 * 1000);
 })();
 
 /* ===========================
@@ -3089,8 +3112,9 @@ function _applySlide(idx) {
     };
     slideshowImg.removeEventListener('load', onLoad);
     slideshowImg.addEventListener('load', onLoad);
+    slideshowImg.dataset.filename = item.filename;
     slideshowImg.alt = alt;
-    slideshowImg.src = `final_frames/${item.filename}`;
+    slideshowImg.src = imgSrc(item.filename);
 }
 function setSlideshowImage(idx, restartTimer = false) {
     _applySlide(idx);
@@ -3197,7 +3221,7 @@ function bindSlideshowUiActivityListeners() {
     slideshowEl?.addEventListener('pointermove', onSlideshowActivity, {passive: true});
     slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, {passive: true});
     slideshowEl?.addEventListener('wheel', onSlideshowActivity, {passive: true});
-    slideshowEl?.addEventListener('mousemove', onSlideshowActivity, {passive: true}); // legacy
+    slideshowEl?.addEventListener('mousemove', onSlideshowActivity, {passive: true});
 }
 function unbindSlideshowUiActivityListeners() {
     slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
