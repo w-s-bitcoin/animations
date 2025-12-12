@@ -1,4 +1,37 @@
 /* ===========================
+ * CONSTANTS
+ * =========================== */
+const BVG_BASE = 'bitcoin_vs_gold';
+const BVG_STORAGE_KEY = 'bvgYear';
+const THIS_YEAR = new Date().getFullYear();
+const BVG_YEARS = Array.from({length: THIS_YEAR - 2013 + 1}, (_, i) => THIS_YEAR - i);
+const DAL_BASE = 'days_at_a_loss';
+const DAL_STORAGE_KEY = 'dalScale';
+const DAL_SCALES = ['linear', 'log'];
+const DOM_BASE = 'bitcoin_dominance';
+const DOM_STORAGE_KEY = 'dominanceUnit';
+const DOM_UNITS = ['usd', 'btc'];
+const POF_BASE = 'price_of_';
+const POF_STORAGE_KEY = 'pofItem';
+const POF_FAV_KEY = 'price_of_*';
+const POF_SORT_STORAGE_KEY = 'pofSort';
+let PRICE_OF_OPTIONS = [];
+let PRICE_OF_META = {};
+const COIN_STORAGE_KEY = 'coinType';
+const COIN_ORDER = ['wholecoins', 'pi_coins', 'v_coins', 'x_coins', 'l_coins', 'c_coins', 'd_coins', 'm_coins'];
+let COIN_OPTIONS = [];
+let COIN_META = {};
+const MYR_BASE = 'monthly_yearly_returns';
+let MYR_RANGES = [];
+const MYR_START_YEAR = 2010;
+const MYR_DEFAULT_RANGE = `${THIS_YEAR - 4} - ${THIS_YEAR}`;
+function buildMyrRanges(startYear, endYear) {
+    const ranges = [];
+    for (let s = startYear; s <= endYear - 4; s++) ranges.push(`${s} - ${s + 4}`);
+    return ranges;
+}
+
+/* ===========================
  * DOM ELEMENTS
  * =========================== */
 const imageGrid = document.getElementById('image-grid');
@@ -51,48 +84,8 @@ const uoaShowControls = document.getElementById('uoa-show-controls');
 const uoaShowSelect = document.getElementById('uoa-show-select');
 const buyMeBtn = document.getElementById('buyCoffeeBtn');
 const favoritesToggleBtn = document.getElementById('favoritesToggle');
-const buyCoffeeMethods = document.querySelector('.buy-coffee-methods');
 const buyCoffeeMethodBtns = Array.from(document.querySelectorAll('.buy-coffee-method-btn'));
 const BUY_COFFEE_METHOD_KEY = 'buyCoffeeMethod';
-
-/* ===========================
- * GLOBAL IMAGE VERSION (cache-buster)
- * =========================== */
-function getImgVersion() {
-    const BUCKET_MS = 15 * 60 * 1000;
-    return Math.floor(Date.now() / BUCKET_MS);
-}
-function imgSrc(filename) {
-    return `final_frames/${filename}?v=${getImgVersion()}`;
-}
-
-/* ===========================
- * BUY ME BUTTON (Beer/Coffee)
- * =========================== */
-function updateBuyMeButton() {
-    const icon = document.getElementById("buyCoffeeIcon");
-    const text = document.getElementById("buyCoffeeText");
-    if (!icon || !text) return;
-    const hour = new Date().getHours();
-    const isBeerTime = (hour >= 17 || hour < 3);
-    if (isBeerTime) {
-        icon.textContent = "🍺";
-        text.textContent = "Buy me a beer";
-    } else {
-        icon.textContent = "☕";
-        text.textContent = "Buy me a coffee";
-    }
-}
-document.addEventListener("DOMContentLoaded", updateBuyMeButton);
-setInterval(updateBuyMeButton, 5 * 60 * 1000);
-function updateBuyMeButtonLayout() {
-    const btn = document.getElementById("buyCoffeeBtn");
-    if (!btn) return;
-    const narrow = window.innerWidth <= 750;
-    btn.classList.toggle("buy-coffee-hide-text", narrow);
-}
-document.addEventListener("DOMContentLoaded", updateBuyMeButtonLayout);
-window.addEventListener("resize", updateBuyMeButtonLayout);
 
 /* ===========================
  * GLOBAL STATE
@@ -100,16 +93,13 @@ window.addEventListener("resize", updateBuyMeButtonLayout);
 let imageList = [];
 let visibleImages = [];
 let currentIndex = 0;
-let lastOpenedImageIndex = null;
 let lastOpenedFilename = null;
 let justUnstarredInModal = false;
 let userSelectedLayout = null;
 let showFavoritesOnly = localStorage.getItem('showFavoritesOnly') === 'true';
 let searchWasInitiallyClosed = true;
-let touchStartX = 0,
-    touchEndX = 0;
-let touchStartY = 0,
-    touchEndY = 0;
+let touchStartX = 0, touchEndX = 0;
+let touchStartY = 0, touchEndY = 0;
 let isPinching = false;
 let isPanning = false;
 let isMousePanning = false;
@@ -137,144 +127,8 @@ let thanksToastTimeout = null;
 let isBuyMeVisible = false;
 let buyCoffeeCloseBtn = null;
 
-function normalizeBuyCoffeeMethod(m) {
-    const v = String(m || '').toLowerCase().trim();
-    if (v === 'on-chain') return 'onchain';
-    if (v === 'lightning' || v === 'liquid' || v === 'onchain') return v;
-    return 'lightning';
-}
-function getStoredBuyCoffeeMethod() {
-    return normalizeBuyCoffeeMethod(localStorage.getItem(BUY_COFFEE_METHOD_KEY) || 'lightning');
-}
-function setStoredBuyCoffeeMethod(m) {
-    const norm = normalizeBuyCoffeeMethod(m);
-    localStorage.setItem(BUY_COFFEE_METHOD_KEY, norm);
-    return norm;
-}
-function setActiveBuyCoffeeMethod(method) {
-    const norm = setStoredBuyCoffeeMethod(method);
-    if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return norm;
-    buyCoffeeMethodBtns.forEach(btn => {
-        const isOn = btn.dataset.method === norm;
-        btn.classList.toggle('active', isOn);
-        btn.setAttribute('aria-pressed', String(isOn));
-    });
-    return norm;
-}
-function initBuyCoffeeMethodsUI() {
-    if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return;
-    buyCoffeeMethodBtns.forEach(btn => {
-        btn.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            const m = btn.dataset.method;
-            setActiveBuyCoffeeMethod(m);
-        });
-        btn.addEventListener('keydown', e => {
-            if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
-            e.preventDefault();
-            e.stopPropagation();
-            btn.click();
-        });
-    });
-}
-
 /* ===========================
- * SEARCH PREFS (Title / Description)
- * =========================== */
-function readSearchPrefs() {
-    const t = localStorage.getItem('searchTitles');
-    const d = localStorage.getItem('searchDescriptions');
-    let inTitle = t === null ? true : t === 'true';
-    let inDesc = d === null ? true : d === 'true';
-    if (!inTitle && !inDesc) {
-        inTitle = true;
-        inDesc = false;
-    }
-    return {inTitle, inDesc};
-}
-function writeSearchPrefs(inTitle, inDesc) {
-    localStorage.setItem('searchTitles', String(inTitle));
-    localStorage.setItem('searchDescriptions', String(inDesc));
-}
-function applySearchPrefsToUI(inTitle, inDesc) {
-    if (chkSearchTitles) {
-        chkSearchTitles.classList.toggle('checked', inTitle);
-        chkSearchTitles.setAttribute('aria-checked', String(inTitle));
-    }
-    if (chkSearchDescriptions) {
-        chkSearchDescriptions.classList.toggle('checked', inDesc);
-        chkSearchDescriptions.setAttribute('aria-checked', String(inDesc));
-    }
-}
-function initSearchPrefsAndUI() {
-    const {inTitle, inDesc} = readSearchPrefs();
-    writeSearchPrefs(inTitle, inDesc);
-    applySearchPrefsToUI(inTitle, inDesc);
-}
-function isSearchHappening() {
-    const container = document.querySelector('.search-container');
-    const input = document.getElementById('search-input');
-    if (!container || !input) return false;
-    return container.classList.contains('active') && input.value.trim().length > 0;
-}
-function toggleSearchPref(which) {
-    let {inTitle, inDesc} = readSearchPrefs();
-    if (which === 'title') {
-        if (inTitle && !inDesc) {
-            inTitle = false;
-            inDesc = true;
-        } else inTitle = !inTitle;
-    } else {
-        if (inDesc && !inTitle) {
-            inDesc = false;
-            inTitle = true;
-        } else inDesc = !inDesc;
-    }
-    if (!inTitle && !inDesc) {
-        if (which === 'title') inTitle = true;
-        else inDesc = true;
-    }
-    writeSearchPrefs(inTitle, inDesc);
-    applySearchPrefsToUI(inTitle, inDesc);
-    if (isSearchHappening()) filterImages();
-}
-
-/* ===========================
- * CONSTANTS
- * =========================== */
-const BVG_BASE = 'bitcoin_vs_gold';
-const BVG_STORAGE_KEY = 'bvgYear';
-const THIS_YEAR = new Date().getFullYear();
-const BVG_YEARS = Array.from({length: THIS_YEAR - 2013 + 1}, (_, i) => THIS_YEAR - i);
-const DAL_BASE = 'days_at_a_loss';
-const DAL_STORAGE_KEY = 'dalScale';
-const DAL_SCALES = ['linear', 'log'];
-const DOM_BASE = 'bitcoin_dominance';
-const DOM_STORAGE_KEY = 'dominanceUnit';
-const DOM_UNITS = ['usd', 'btc'];
-const POF_BASE = 'price_of_';
-const POF_STORAGE_KEY = 'pofItem';
-const POF_FAV_KEY = 'price_of_*';
-const POF_SORT_STORAGE_KEY = 'pofSort';
-let PRICE_OF_OPTIONS = [];
-let PRICE_OF_META = {};
-const COIN_STORAGE_KEY = 'coinType';
-const COIN_ORDER = ['wholecoins', 'pi_coins', 'v_coins', 'x_coins', 'l_coins', 'c_coins', 'd_coins', 'm_coins'];
-let COIN_OPTIONS = [];
-let COIN_META = {};
-const MYR_BASE = 'monthly_yearly_returns';
-let MYR_RANGES = [];
-const MYR_START_YEAR = 2010;
-const MYR_DEFAULT_RANGE = `${THIS_YEAR - 4} - ${THIS_YEAR}`;
-function buildMyrRanges(startYear, endYear) {
-    const ranges = [];
-    for (let s = startYear; s <= endYear - 4; s++) ranges.push(`${s} - ${s + 4}`);
-    return ranges;
-}
-
-/* ===========================
- * GENERIC HELPERS
+ * STORAGE + COOKIES (generic)
  * =========================== */
 function setCookie(name, value, days = 365) {
     const d = new Date();
@@ -285,6 +139,10 @@ function getCookie(name) {
     const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
     return match ? decodeURIComponent(match.split('=')[1]) : null;
 }
+
+/* ===========================
+ * GENERIC HELPERS
+ * =========================== */
 function replaceUrlForFilename(newFilename) {
     const slug = newFilename.replace('.png', '');
     if (location.hostname === 'localhost') {
@@ -482,14 +340,6 @@ function zoomToPoint(targetScale, clientX, clientY) {
     setTimeout(() => {
         modalImg.style.transition = '';
     }, 220);
-}
-function handleDoubleTap(clientX, clientY) {
-    gestureConsumed = true;
-    if (currentScale <= 1.001) {
-        zoomToPoint(2, clientX, clientY);
-    } else {
-        resetZoomAndCenterAnimated();
-    }
 }
 let modalViewportRAF = null;
 function handleModalViewportChange() {
@@ -874,72 +724,64 @@ function setSearchInputFocusability(active) {
 }
 
 /* ===========================
- * LAYOUT / SEARCH
+ * SEARCH PREFS (Title / Description)
  * =========================== */
-function setLayout(type, manual = true) {
-    imageGrid.classList.remove('grid', 'list');
-    imageGrid.classList.add(type);
-    if (type === 'grid') {
-        gridIcon.classList.add('active');
-        listIcon.classList.remove('active');
-    } else {
-        listIcon.classList.add('active');
-        gridIcon.classList.remove('active');
+function readSearchPrefs() {
+    const t = localStorage.getItem('searchTitles');
+    const d = localStorage.getItem('searchDescriptions');
+    let inTitle = t === null ? true : t === 'true';
+    let inDesc = d === null ? true : d === 'true';
+    if (!inTitle && !inDesc) {
+        inTitle = true;
+        inDesc = false;
     }
-    if (manual) {
-        userSelectedLayout = type;
-        localStorage.setItem('preferredLayout', type);
+    return {inTitle, inDesc};
+}
+function writeSearchPrefs(inTitle, inDesc) {
+    localStorage.setItem('searchTitles', String(inTitle));
+    localStorage.setItem('searchDescriptions', String(inDesc));
+}
+function applySearchPrefsToUI(inTitle, inDesc) {
+    if (chkSearchTitles) {
+        chkSearchTitles.classList.toggle('checked', inTitle);
+        chkSearchTitles.setAttribute('aria-checked', String(inTitle));
+    }
+    if (chkSearchDescriptions) {
+        chkSearchDescriptions.classList.toggle('checked', inDesc);
+        chkSearchDescriptions.setAttribute('aria-checked', String(inDesc));
     }
 }
-function updateLayoutBasedOnWidth() {
-    const containerWidth = imageGrid.offsetWidth;
-    const columnWidth = 280 + 32;
-    const columns = Math.floor(containerWidth / columnWidth);
-    const toggleIconsEl = document.getElementById('toggleIcons');
-    const searchContainer = document.querySelector('.search-container');
-    const searchInput = document.getElementById('search-input');
-    const searchBtn = document.getElementById('search-btn');
-    if (columns < 2) {
-        toggleIconsEl.style.display = 'none';
-        if (!searchContainer.classList.contains('active')) {
-            searchContainer.classList.add('active');
-            searchBtn.classList.add('active');
-        }
-        searchBtn.disabled = true;
-        setSearchInputFocusability(true);
-        if (userSelectedLayout !== 'list') setLayout('list', false);
-    } else {
-        toggleIconsEl.style.display = 'inline-flex';
-        if (searchWasInitiallyClosed && searchInput.value.trim() === '') {
-            searchContainer.classList.remove('active');
-            searchBtn.classList.remove('active');
-        }
-        searchBtn.disabled = false;
-        setSearchInputFocusability(searchContainer.classList.contains('active'));
-        const storedLayout = localStorage.getItem('preferredLayout');
-        const preferred =
-            userSelectedLayout ||
-            (storedLayout === 'grid' || storedLayout === 'list' ? storedLayout : null) ||
-            (imageGrid.classList.contains('list') ? 'list' : 'grid');
-        setLayout(preferred, false);
-    }
+function initSearchPrefsAndUI() {
+    const {inTitle, inDesc} = readSearchPrefs();
+    writeSearchPrefs(inTitle, inDesc);
+    applySearchPrefsToUI(inTitle, inDesc);
 }
-function toggleSearch() {
+function isSearchHappening() {
     const container = document.querySelector('.search-container');
     const input = document.getElementById('search-input');
-    const button = document.getElementById('search-btn');
-    const nowActive = !container.classList.contains('active');
-    container.classList.toggle('active');
-    button.classList.toggle('active', nowActive);
-    setSearchInputFocusability(nowActive);
-    if (nowActive) {
-        searchWasInitiallyClosed = false;
-        input.focus();
+    if (!container || !input) return false;
+    return container.classList.contains('active') && input.value.trim().length > 0;
+}
+function toggleSearchPref(which) {
+    let {inTitle, inDesc} = readSearchPrefs();
+    if (which === 'title') {
+        if (inTitle && !inDesc) {
+            inTitle = false;
+            inDesc = true;
+        } else inTitle = !inTitle;
     } else {
-        input.value = '';
-        searchWasInitiallyClosed = true;
-        filterImages();
+        if (inDesc && !inTitle) {
+            inDesc = false;
+            inTitle = true;
+        } else inDesc = !inDesc;
     }
+    if (!inTitle && !inDesc) {
+        if (which === 'title') inTitle = true;
+        else inDesc = true;
+    }
+    writeSearchPrefs(inTitle, inDesc);
+    applySearchPrefsToUI(inTitle, inDesc);
+    if (isSearchHappening()) filterImages();
 }
 
 /* ===========================
@@ -1027,7 +869,7 @@ function migratePriceOfFavorites() {
 }
 
 /* ===========================
- * GRID RENDERING & FILTERING
+ * GRID: LAYOUT + FILTER/RENDER
  * =========================== */
 function filterImages() {
     const query = document.getElementById('search-input').value.toLowerCase();
@@ -1076,7 +918,6 @@ function filterImages() {
         img.onload = () => { spinner.remove(); img.style.opacity = 1; };
         img.onerror = () => { spinner.remove(); img.style.opacity = 1; };
         img.src = imgSrc(filename);
-        img.src = imgSrc(filename);
         const star = document.createElement('div');
         star.className = 'favorite-star';
         const favOn = isFavorite(filename);
@@ -1102,6 +943,71 @@ function filterImages() {
         grid.appendChild(container);
     });
     updateLayoutBasedOnWidth();
+}
+function setLayout(type, manual = true) {
+    imageGrid.classList.remove('grid', 'list');
+    imageGrid.classList.add(type);
+    if (type === 'grid') {
+        gridIcon.classList.add('active');
+        listIcon.classList.remove('active');
+    } else {
+        listIcon.classList.add('active');
+        gridIcon.classList.remove('active');
+    }
+    if (manual) {
+        userSelectedLayout = type;
+        localStorage.setItem('preferredLayout', type);
+    }
+}
+function updateLayoutBasedOnWidth() {
+    const containerWidth = imageGrid.offsetWidth;
+    const columnWidth = 280 + 32;
+    const columns = Math.floor(containerWidth / columnWidth);
+    const toggleIconsEl = document.getElementById('toggleIcons');
+    const searchContainer = document.querySelector('.search-container');
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    if (columns < 2) {
+        toggleIconsEl.style.display = 'none';
+        if (!searchContainer.classList.contains('active')) {
+            searchContainer.classList.add('active');
+            searchBtn.classList.add('active');
+        }
+        searchBtn.disabled = true;
+        setSearchInputFocusability(true);
+        if (userSelectedLayout !== 'list') setLayout('list', false);
+    } else {
+        toggleIconsEl.style.display = 'inline-flex';
+        if (searchWasInitiallyClosed && searchInput.value.trim() === '') {
+            searchContainer.classList.remove('active');
+            searchBtn.classList.remove('active');
+        }
+        searchBtn.disabled = false;
+        setSearchInputFocusability(searchContainer.classList.contains('active'));
+        const storedLayout = localStorage.getItem('preferredLayout');
+        const preferred =
+            userSelectedLayout ||
+            (storedLayout === 'grid' || storedLayout === 'list' ? storedLayout : null) ||
+            (imageGrid.classList.contains('list') ? 'list' : 'grid');
+        setLayout(preferred, false);
+    }
+}
+function toggleSearch() {
+    const container = document.querySelector('.search-container');
+    const input = document.getElementById('search-input');
+    const button = document.getElementById('search-btn');
+    const nowActive = !container.classList.contains('active');
+    container.classList.toggle('active');
+    button.classList.toggle('active', nowActive);
+    setSearchInputFocusability(nowActive);
+    if (nowActive) {
+        searchWasInitiallyClosed = false;
+        input.focus();
+    } else {
+        input.value = '';
+        searchWasInitiallyClosed = true;
+        filterImages();
+    }
 }
 
 /* ===========================
@@ -1251,10 +1157,8 @@ function openModalByIndex(index) {
         const chosenRange = myrRangeFromFilename(fname) || MYR_DEFAULT_RANGE;
         myrSelect.value = chosenRange;
         setMyrRange(chosenRange);
-
     } else {
         setModalImageAndCenter(fname, image.title);
-        modalImg.alt = image.title;
         replaceUrlForFilename(fname);
     }
     const fav = isFavorite(visibleImages[currentIndex].filename);
@@ -1691,7 +1595,6 @@ function cycleDalScale(direction) {
 
 /* ===========================
  * MODULE: Price On This Day (POTD)
- * price_on_this_day.png / price_on_this_day_log.png
  * =========================== */
 const POTD_BASE = 'price_on_this_day';
 const POTD_STORAGE_KEY = 'potdScale';
@@ -1783,7 +1686,6 @@ function cycleDominance(direction) {
 
 /* ===========================
  * MODULE: Never Look Back Price (NLBP)
- * never_look_back_price.png / never_look_back_price_log.png
  * =========================== */
 const NLBP_BASE = 'never_look_back_price';
 const NLBP_STORAGE_KEY = 'nlbpScale';
@@ -1831,7 +1733,6 @@ function cycleNlbpScale(direction) {
 
 /* ===========================
  * MODULE: Target & Block Hashes length (32 / 64)
- * target_and_block_hashes.png / target_and_block_hashes_64.png
  * =========================== */
 const TARGET_HASH_BASE = 'target_and_block_hashes';
 const TARGET_HASH_32 = 'target_and_block_hashes.png';
@@ -1890,7 +1791,6 @@ function cycleHashLength(direction) {
 
 /* ===========================
  * MODULE: Halving Cycles Alignment
- * (halving_cycles.png / halving_cycles_days.png)
  * =========================== */
 const HALVING_ALIGN_OPTIONS = ['block', 'days'];
 const HALVING_STORAGE_KEY = 'halvingAlignment';
@@ -2228,7 +2128,6 @@ function cyclePriceOf(direction) {
 
 /* ===========================
  * MODULE: Unit of Account (UOA)
- * uoa_<slug>.png  e.g. uoa_btc_usd.png
  * =========================== */
 const UOA_BASE = 'uoa_';
 const UOA_STORAGE_KEY = 'uoaItem';
@@ -2801,6 +2700,379 @@ function cycleMyrRange(direction) {
 }
 
 /* ===========================
+ * BUY ME: BUTTON + THANKS OVERLAY
+ * =========================== */
+function updateBuyMeButton() {
+    const icon = document.getElementById("buyCoffeeIcon");
+    const text = document.getElementById("buyCoffeeText");
+    if (!icon || !text) return;
+    const hour = new Date().getHours();
+    const isBeerTime = (hour >= 17 || hour < 3);
+    if (isBeerTime) {
+        icon.textContent = "🍺";
+        text.textContent = "Buy me a beer";
+    } else {
+        icon.textContent = "☕";
+        text.textContent = "Buy me a coffee";
+    }
+}
+document.addEventListener("DOMContentLoaded", updateBuyMeButton);
+setInterval(updateBuyMeButton, 5 * 60 * 1000);
+function updateBuyMeButtonLayout() {
+    const btn = document.getElementById("buyCoffeeBtn");
+    if (!btn) return;
+    const narrow = window.innerWidth <= 750;
+    btn.classList.toggle("buy-coffee-hide-text", narrow);
+}
+document.addEventListener("DOMContentLoaded", updateBuyMeButtonLayout);
+window.addEventListener("resize", updateBuyMeButtonLayout);
+
+function normalizeBuyCoffeeMethod(m) {
+    const v = String(m || '').toLowerCase().trim();
+    if (v === 'on-chain') return 'onchain';
+    if (v === 'lightning' || v === 'liquid' || v === 'onchain') return v;
+    return 'lightning';
+}
+function getStoredBuyCoffeeMethod() {
+    return normalizeBuyCoffeeMethod(localStorage.getItem(BUY_COFFEE_METHOD_KEY) || 'lightning');
+}
+function setStoredBuyCoffeeMethod(m) {
+    const norm = normalizeBuyCoffeeMethod(m);
+    localStorage.setItem(BUY_COFFEE_METHOD_KEY, norm);
+    return norm;
+}
+function setActiveBuyCoffeeMethod(method) {
+    const norm = setStoredBuyCoffeeMethod(method);
+    if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return norm;
+    buyCoffeeMethodBtns.forEach(btn => {
+        const isOn = btn.dataset.method === norm;
+        btn.classList.toggle('active', isOn);
+        btn.setAttribute('aria-pressed', String(isOn));
+    });
+    return norm;
+}
+function initBuyCoffeeMethodsUI() {
+    if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return;
+    buyCoffeeMethodBtns.forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            const m = btn.dataset.method;
+            setActiveBuyCoffeeMethod(m);
+        });
+        btn.addEventListener('keydown', e => {
+            if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
+            e.preventDefault();
+            e.stopPropagation();
+            btn.click();
+        });
+    });
+}
+
+/* ===========================
+ * SLIDESHOW: DURATION + CORE + UI
+ * =========================== */
+const EXP_MIN = 1;
+const EXP_MAX = 6;
+const THUMB_PX = 16;
+function expToSecs(exp) {
+    return Math.pow(2, exp);
+}
+function clampExp(val) {
+    return Math.max(EXP_MIN, Math.min(EXP_MAX, Math.round(val)));
+}
+function positionBubble(rangeEl, bubbleEl) {
+    if (!rangeEl || !bubbleEl) return;
+    const wrap = rangeEl.parentElement;
+    const rect = rangeEl.getBoundingClientRect();
+    const padL = parseFloat(getComputedStyle(wrap).paddingLeft) || 0;
+    const min = Number(rangeEl.min || 0);
+    const max = Number(rangeEl.max || 6);
+    const val = Number(rangeEl.value || 0);
+    const pct = (val - min) / (max - min);
+    const xWithinTrack = pct * (rect.width - THUMB_PX) + THUMB_PX / 2;
+    bubbleEl.style.left = `${padL + xWithinTrack}px`;
+}
+function updateSlideDurationUI(fromUser = false) {
+    if (!slideRange || !slideBubble) return;
+    if (fromUser) {
+        const snapped = clampExp(Number(slideRange.value));
+        if (snapped !== Number(slideRange.value)) slideRange.value = String(snapped);
+        localStorage.setItem(SLIDE_EXP_KEY, String(snapped));
+    }
+    const exp = clampExp(Number(slideRange.value));
+    const secs = expToSecs(exp);
+    slideRange.setAttribute('aria-valuenow', String(secs));
+    slideRange.setAttribute('aria-valuemin', String(expToSecs(EXP_MIN)));
+    slideRange.setAttribute('aria-valuemax', String(expToSecs(EXP_MAX)));
+    slideRange.setAttribute('aria-valuetext', `${secs} seconds`);
+    slideBubble.textContent = `${secs}s`;
+    positionBubble(slideRange, slideBubble);
+}
+function initSlideDurationControl() {
+    if (!slideRange || !slideBubble) return;
+    const saved = Number(localStorage.getItem(SLIDE_EXP_KEY));
+    const initial = Number.isFinite(saved) ? clampExp(saved) : 2;
+    slideRange.value = String(initial);
+    requestAnimationFrame(() => updateSlideDurationUI(false));
+    window.addEventListener('resize', () => positionBubble(slideRange, slideBubble));
+    slideRange.addEventListener('input', () => updateSlideDurationUI(true));
+    slideRange.addEventListener('change', () => updateSlideDurationUI(true));
+}
+function bindSliderEventGuards() {
+    if (!slideRange) return;
+    const stop = ev => {
+        ev.stopPropagation();
+    };
+    ['pointerdown', 'pointerup', 'pointercancel', 'mousedown', 'mouseup', 'click', 'touchstart', 'touchend'].forEach(type => slideRange.addEventListener(type, stop, {passive: true}));
+    const wrap = slideRange.closest('.slideshow-row');
+    if (wrap) {
+        ['click', 'pointerdown', 'pointerup', 'touchstart', 'touchend'].forEach(type => wrap.addEventListener(type, stop, {passive: true}));
+    }
+}
+window.addEventListener('load', () => {
+    kebabMenu?.classList.add('hidden');
+    kebabBtn?.setAttribute('aria-expanded', 'false');
+    updateLayoutBasedOnWidth();
+    initSearchPrefsAndUI();
+    initSlideDurationControl();
+    bindSliderEventGuards();
+    initBuyCoffeeMethodsUI();
+    [gridIcon, listIcon, favoritesToggleBtn].forEach(el => {
+        if (!el) return;
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'button');
+    });
+});
+let slideshowIndex = 0;
+let slideshowPlaying = false;
+let slideshowTimer = null;
+function isSlideshowOpen() {
+    return !!slideshowEl && !slideshowEl.classList.contains('hidden');
+}
+function focusSlideshowShell() {
+    try {
+        slideshowEl?.focus();
+    } catch (_) {}
+}
+function getSlideDurationSecs() {
+    if (!slideRange) return 4;
+    const exp = Number(slideRange.value || 2);
+    return Math.pow(2, Math.max(1, Math.min(6, Math.round(exp))));
+}
+function _applySlide(idx) {
+    if (!visibleImages || visibleImages.length === 0) return;
+    slideshowIndex = ((idx % visibleImages.length) + visibleImages.length) % visibleImages.length;
+    const item = visibleImages[slideshowIndex];
+    const alt = item?.title || item?.description || 'Slideshow image';
+    slideshowImg.classList.add('ss-img-hidden');
+    const onLoad = () => {
+        requestAnimationFrame(() => {
+            slideshowImg.classList.remove('ss-img-hidden');
+        });
+        slideshowImg.removeEventListener('load', onLoad);
+    };
+    slideshowImg.removeEventListener('load', onLoad);
+    slideshowImg.addEventListener('load', onLoad);
+    slideshowImg.dataset.filename = item.filename;
+    slideshowImg.alt = alt;
+    slideshowImg.src = imgSrc(item.filename);
+}
+function setSlideshowImage(idx, restartTimer = false) {
+    _applySlide(idx);
+    if (restartTimer) restartSlideshowTimer();
+    else if (slideshowPlaying) scheduleNextSlide();
+}
+function slideshowNext(restartTimer = true) {
+    setSlideshowImage(slideshowIndex + 1, restartTimer);
+}
+function slideshowPrev(restartTimer = true) {
+    setSlideshowImage(slideshowIndex - 1, restartTimer);
+}
+function clearSlideshowTimer() {
+    if (slideshowTimer) {
+        clearTimeout(slideshowTimer);
+        slideshowTimer = null;
+    }
+}
+function scheduleNextSlide() {
+    clearSlideshowTimer();
+    if (!slideshowPlaying) return;
+    const delayMs = getSlideDurationSecs() * 1000;
+    slideshowTimer = setTimeout(() => {
+        slideshowNext(false);
+    }, delayMs);
+}
+function restartSlideshowTimer() {
+    if (!slideshowPlaying) return;
+    scheduleNextSlide();
+}
+function updatePlayButton() {
+    if (!ssPlayPauseBtn) return;
+    if (slideshowPlaying) {
+        ssPlayPauseBtn.textContent = '။';
+        ssPlayPauseBtn.setAttribute('aria-label', 'Pause slideshow');
+        ssPlayPauseBtn.dataset.state = 'playing';
+    } else {
+        ssPlayPauseBtn.textContent = '▸';
+        ssPlayPauseBtn.setAttribute('aria-label', 'Play slideshow');
+        ssPlayPauseBtn.dataset.state = 'paused';
+    }
+}
+function playSlideshow() {
+    if (!slideshowEl || !visibleImages?.length) return;
+    slideshowPlaying = true;
+    updatePlayButton();
+    showSlideshowUI(true);
+    scheduleNextSlide();
+}
+function pauseSlideshow() {
+    slideshowPlaying = false;
+    updatePlayButton();
+    clearSlideshowTimer();
+    clearTimeout(slideshowUiTimer);
+    slideshowUiTimer = null;
+    showSlideshowUI(false);
+}
+function togglePlayPause() {
+    if (slideshowPlaying) pauseSlideshow();
+    else playSlideshow();
+}
+async function enterFullscreen(el) {
+    try {
+        if (!document.fullscreenElement) {
+            if (el?.requestFullscreen) await el.requestFullscreen();
+            else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+        }
+    } catch (_) {}
+}
+const UI_HIDE_DELAY_MS = 1500;
+let slideshowUiTimer = null;
+function showSlideshowUI(armTimer = true) {
+    if (!slideshowEl) return;
+    slideshowEl.classList.add('show-ui');
+    document.body.classList.remove('hide-cursor');
+    clearTimeout(slideshowUiTimer);
+    if (armTimer && slideshowPlaying) {
+        slideshowUiTimer = setTimeout(() => {
+            if (!slideshowPlaying) return;
+            hideSlideshowUI();
+        }, UI_HIDE_DELAY_MS);
+    } else {
+        slideshowUiTimer = null;
+    }
+}
+function hideSlideshowUI() {
+    if (!slideshowEl) return;
+    if (!slideshowPlaying) return;
+    slideshowEl.classList.remove('show-ui');
+    if (document.body.classList.contains('slideshow-open')) {
+        document.body.classList.add('hide-cursor');
+    }
+    clearTimeout(slideshowUiTimer);
+    slideshowUiTimer = null;
+}
+function onSlideshowActivity() {
+    showSlideshowUI(slideshowPlaying);
+}
+function bindSlideshowUiActivityListeners() {
+    slideshowEl?.addEventListener('pointermove', onSlideshowActivity, {passive: true});
+    slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, {passive: true});
+    slideshowEl?.addEventListener('wheel', onSlideshowActivity, {passive: true});
+    slideshowEl?.addEventListener('mousemove', onSlideshowActivity, {passive: true});
+}
+function unbindSlideshowUiActivityListeners() {
+    slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
+    slideshowEl?.removeEventListener('pointerdown', onSlideshowActivity);
+    slideshowEl?.removeEventListener('wheel', onSlideshowActivity);
+    slideshowEl?.removeEventListener('mousemove', onSlideshowActivity);
+}
+async function exitFullscreen() {
+    try {
+        if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
+    } catch (_) {}
+}
+async function openSlideshow(startAt = 0, startPlaying = true) {
+    if (!slideshowEl) return;
+    if (!visibleImages || visibleImages.length === 0) return;
+    if (modal && modal.style.display === 'flex') closeModal();
+    slideshowEl.classList.remove('hidden');
+    slideshowEl.classList.add('show-ui');
+    slideshowEl.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('slideshow-open');
+    _applySlide(startAt);
+    await enterFullscreen(slideshowEl);
+    requestAnimationFrame(focusSlideshowShell);
+    bindSlideshowUiActivityListeners();
+    if (startPlaying) {
+        slideshowPlaying = true;
+        updatePlayButton();
+        scheduleNextSlide();
+    } else {
+        slideshowPlaying = false;
+        updatePlayButton();
+    }
+    showSlideshowUI(slideshowPlaying);
+}
+async function closeSlideshow() {
+    if (!slideshowEl) return;
+    pauseSlideshow();
+    clearSlideshowTimer();
+    unbindSlideshowUiActivityListeners();
+    clearTimeout(slideshowUiTimer);
+    slideshowUiTimer = null;
+    document.body.classList.remove('hide-cursor');
+    slideshowEl.classList.add('hidden');
+    slideshowEl.classList.remove('show-ui');
+    slideshowEl.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    document.body.classList.remove('slideshow-open');
+    await exitFullscreen();
+}
+
+/* ===========================
+ * AUTO-REFRESH EVERY 15 MINUTES (IMAGES ONLY)
+ * =========================== */
+let lastImgVersion = getImgVersion();
+function refreshVisibleImagesForNewVersion() {
+    document.querySelectorAll('img.grid-thumb').forEach(img => {
+        const filename = img.dataset.filename;
+        if (!filename) return;
+        img.src = imgSrc(filename);
+    });
+    if (modal && modal.style.display === 'flex' && modalImg && modalImg.dataset.filename) {
+        const fname = modalImg.dataset.filename;
+        modalImg.src = imgSrc(fname);
+    }
+    if (typeof isSlideshowOpen === 'function' && isSlideshowOpen() && slideshowImg && slideshowImg.dataset.filename) {
+        const fname = slideshowImg.dataset.filename;
+        slideshowImg.src = imgSrc(fname);
+    }
+}
+(function setupImageVersionRefresh() {
+    function checkForNewVersion() {
+        const v = getImgVersion();
+        if (v !== lastImgVersion) {
+            lastImgVersion = v;
+            refreshVisibleImagesForNewVersion();
+        }
+    }
+    setInterval(checkForNewVersion, 60 * 1000);
+})();
+
+/* ===========================
+ * GLOBAL IMAGE VERSION (cache-buster)
+ * =========================== */
+function getImgVersion() {
+    const BUCKET_MS = 15 * 60 * 1000;
+    return Math.floor(Date.now() / BUCKET_MS);
+}
+function imgSrc(filename) {
+    return `final_frames/${filename}?v=${getImgVersion()}`;
+}
+
+/* ===========================
  * FETCH LIST / BUILD VIEW / DEEP LINKS
  * =========================== */
 function getImageNameFromPath() {
@@ -3133,307 +3405,6 @@ fetch('final_frames/image_list.json')
         imageGrid.textContent = "Failed to load visualizations.";
         console.error(err);
     });
-
-/* ===========================
- * SLIDESHOW: Duration control (2^x seconds; x = 1..6)
- * =========================== */
-const EXP_MIN = 1;
-const EXP_MAX = 6;
-const THUMB_PX = 16;
-function expToSecs(exp) {
-    return Math.pow(2, exp);
-}
-function clampExp(val) {
-    return Math.max(EXP_MIN, Math.min(EXP_MAX, Math.round(val)));
-}
-function positionBubble(rangeEl, bubbleEl) {
-    if (!rangeEl || !bubbleEl) return;
-    const wrap = rangeEl.parentElement;
-    const rect = rangeEl.getBoundingClientRect();
-    const padL = parseFloat(getComputedStyle(wrap).paddingLeft) || 0;
-    const min = Number(rangeEl.min || 0);
-    const max = Number(rangeEl.max || 6);
-    const val = Number(rangeEl.value || 0);
-    const pct = (val - min) / (max - min);
-    const xWithinTrack = pct * (rect.width - THUMB_PX) + THUMB_PX / 2;
-    bubbleEl.style.left = `${padL + xWithinTrack}px`;
-}
-function updateSlideDurationUI(fromUser = false) {
-    if (!slideRange || !slideBubble) return;
-    if (fromUser) {
-        const snapped = clampExp(Number(slideRange.value));
-        if (snapped !== Number(slideRange.value)) slideRange.value = String(snapped);
-        localStorage.setItem(SLIDE_EXP_KEY, String(snapped));
-    }
-    const exp = clampExp(Number(slideRange.value));
-    const secs = expToSecs(exp);
-    slideRange.setAttribute('aria-valuenow', String(secs));
-    slideRange.setAttribute('aria-valuemin', String(expToSecs(EXP_MIN)));
-    slideRange.setAttribute('aria-valuemax', String(expToSecs(EXP_MAX)));
-    slideRange.setAttribute('aria-valuetext', `${secs} seconds`);
-    slideBubble.textContent = `${secs}s`;
-    positionBubble(slideRange, slideBubble);
-}
-function initSlideDurationControl() {
-    if (!slideRange || !slideBubble) return;
-    const saved = Number(localStorage.getItem(SLIDE_EXP_KEY));
-    const initial = Number.isFinite(saved) ? clampExp(saved) : 2;
-    slideRange.value = String(initial);
-    requestAnimationFrame(() => updateSlideDurationUI(false));
-    window.addEventListener('resize', () => positionBubble(slideRange, slideBubble));
-    slideRange.addEventListener('input', () => updateSlideDurationUI(true));
-    slideRange.addEventListener('change', () => updateSlideDurationUI(true));
-}
-function bindSliderEventGuards() {
-    if (!slideRange) return;
-    const stop = ev => {
-        ev.stopPropagation();
-    };
-    ['pointerdown', 'pointerup', 'pointercancel', 'mousedown', 'mouseup', 'click', 'touchstart', 'touchend'].forEach(type => slideRange.addEventListener(type, stop, {passive: true}));
-    const wrap = slideRange.closest('.slideshow-row');
-    if (wrap) {
-        ['click', 'pointerdown', 'pointerup', 'touchstart', 'touchend'].forEach(type => wrap.addEventListener(type, stop, {passive: true}));
-    }
-}
-window.addEventListener('load', () => {
-    kebabMenu?.classList.add('hidden');
-    kebabBtn?.setAttribute('aria-expanded', 'false');
-    updateLayoutBasedOnWidth();
-    initSearchPrefsAndUI();
-    initSlideDurationControl();
-    bindSliderEventGuards();
-    initBuyCoffeeMethodsUI();
-    [gridIcon, listIcon, favoritesToggleBtn].forEach(el => {
-        if (!el) return;
-        el.setAttribute('tabindex', '0');
-        el.setAttribute('role', 'button');
-    });
-});
-
-/* ===========================
- * AUTO-REFRESH EVERY 15 MINUTES (IMAGES ONLY)
- * =========================== */
-let lastImgVersion = getImgVersion();
-function refreshVisibleImagesForNewVersion() {
-    document.querySelectorAll('img.grid-thumb').forEach(img => {
-        const filename = img.dataset.filename;
-        if (!filename) return;
-        img.src = imgSrc(filename);
-    });
-    if (modal && modal.style.display === 'flex' && modalImg && modalImg.dataset.filename) {
-        const fname = modalImg.dataset.filename;
-        modalImg.src = imgSrc(fname);
-    }
-    if (typeof isSlideshowOpen === 'function' && isSlideshowOpen() && slideshowImg && slideshowImg.dataset.filename) {
-        const fname = slideshowImg.dataset.filename;
-        slideshowImg.src = imgSrc(fname);
-    }
-}
-(function setupImageVersionRefresh() {
-    function checkForNewVersion() {
-        const v = getImgVersion();
-        if (v !== lastImgVersion) {
-            lastImgVersion = v;
-            refreshVisibleImagesForNewVersion();
-        }
-    }
-    setInterval(checkForNewVersion, 60 * 1000);
-})();
-
-/* ===========================
- * SLIDESHOW: core (autoplay + fade)
- * =========================== */
-let slideshowIndex = 0;
-let slideshowPlaying = false;
-let slideshowTimer = null;
-function isSlideshowOpen() {
-    return !!slideshowEl && !slideshowEl.classList.contains('hidden');
-}
-function focusSlideshowShell() {
-    try {
-        slideshowEl?.focus();
-    } catch (_) {}
-}
-function getSlideDurationSecs() {
-    if (!slideRange) return 4;
-    const exp = Number(slideRange.value || 2);
-    return Math.pow(2, Math.max(1, Math.min(6, Math.round(exp))));
-}
-function _applySlide(idx) {
-    if (!visibleImages || visibleImages.length === 0) return;
-    slideshowIndex = ((idx % visibleImages.length) + visibleImages.length) % visibleImages.length;
-    const item = visibleImages[slideshowIndex];
-    const alt = item?.title || item?.description || 'Slideshow image';
-    slideshowImg.classList.add('ss-img-hidden');
-    const onLoad = () => {
-        requestAnimationFrame(() => {
-            slideshowImg.classList.remove('ss-img-hidden');
-        });
-        slideshowImg.removeEventListener('load', onLoad);
-    };
-    slideshowImg.removeEventListener('load', onLoad);
-    slideshowImg.addEventListener('load', onLoad);
-    slideshowImg.dataset.filename = item.filename;
-    slideshowImg.alt = alt;
-    slideshowImg.src = imgSrc(item.filename);
-}
-function setSlideshowImage(idx, restartTimer = false) {
-    _applySlide(idx);
-    if (restartTimer) restartSlideshowTimer();
-    else if (slideshowPlaying) scheduleNextSlide();
-}
-function slideshowNext(restartTimer = true) {
-    setSlideshowImage(slideshowIndex + 1, restartTimer);
-}
-function slideshowPrev(restartTimer = true) {
-    setSlideshowImage(slideshowIndex - 1, restartTimer);
-}
-function clearSlideshowTimer() {
-    if (slideshowTimer) {
-        clearTimeout(slideshowTimer);
-        slideshowTimer = null;
-    }
-}
-function scheduleNextSlide() {
-    clearSlideshowTimer();
-    if (!slideshowPlaying) return;
-    const delayMs = getSlideDurationSecs() * 1000;
-    slideshowTimer = setTimeout(() => {
-        slideshowNext(false);
-    }, delayMs);
-}
-function restartSlideshowTimer() {
-    if (!slideshowPlaying) return;
-    scheduleNextSlide();
-}
-function updatePlayButton() {
-    if (!ssPlayPauseBtn) return;
-    if (slideshowPlaying) {
-        ssPlayPauseBtn.textContent = '။';
-        ssPlayPauseBtn.setAttribute('aria-label', 'Pause slideshow');
-        ssPlayPauseBtn.dataset.state = 'playing';
-    } else {
-        ssPlayPauseBtn.textContent = '▸';
-        ssPlayPauseBtn.setAttribute('aria-label', 'Play slideshow');
-        ssPlayPauseBtn.dataset.state = 'paused';
-    }
-}
-function playSlideshow() {
-    if (!slideshowEl || !visibleImages?.length) return;
-    slideshowPlaying = true;
-    updatePlayButton();
-    showSlideshowUI(true);
-    scheduleNextSlide();
-}
-function pauseSlideshow() {
-    slideshowPlaying = false;
-    updatePlayButton();
-    clearSlideshowTimer();
-    clearTimeout(slideshowUiTimer);
-    slideshowUiTimer = null;
-    showSlideshowUI(false);
-}
-function togglePlayPause() {
-    if (slideshowPlaying) pauseSlideshow();
-    else playSlideshow();
-}
-async function enterFullscreen(el) {
-    try {
-        if (!document.fullscreenElement) {
-            if (el?.requestFullscreen) await el.requestFullscreen();
-            else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
-        }
-    } catch (_) {}
-}
-
-/* ===========================
- * SLIDESHOW: auto-hide UI + cursor after inactivity (pause-aware)
- * =========================== */
-const UI_HIDE_DELAY_MS = 1500;
-let slideshowUiTimer = null;
-function showSlideshowUI(armTimer = true) {
-    if (!slideshowEl) return;
-    slideshowEl.classList.add('show-ui');
-    document.body.classList.remove('hide-cursor');
-    clearTimeout(slideshowUiTimer);
-    if (armTimer && slideshowPlaying) {
-        slideshowUiTimer = setTimeout(() => {
-            if (!slideshowPlaying) return;
-            hideSlideshowUI();
-        }, UI_HIDE_DELAY_MS);
-    } else {
-        slideshowUiTimer = null;
-    }
-}
-function hideSlideshowUI() {
-    if (!slideshowEl) return;
-    if (!slideshowPlaying) return;
-    slideshowEl.classList.remove('show-ui');
-    if (document.body.classList.contains('slideshow-open')) {
-        document.body.classList.add('hide-cursor');
-    }
-    clearTimeout(slideshowUiTimer);
-    slideshowUiTimer = null;
-}
-function onSlideshowActivity() {
-    showSlideshowUI(slideshowPlaying);
-}
-function bindSlideshowUiActivityListeners() {
-    slideshowEl?.addEventListener('pointermove', onSlideshowActivity, {passive: true});
-    slideshowEl?.addEventListener('pointerdown', onSlideshowActivity, {passive: true});
-    slideshowEl?.addEventListener('wheel', onSlideshowActivity, {passive: true});
-    slideshowEl?.addEventListener('mousemove', onSlideshowActivity, {passive: true});
-}
-function unbindSlideshowUiActivityListeners() {
-    slideshowEl?.removeEventListener('pointermove', onSlideshowActivity);
-    slideshowEl?.removeEventListener('pointerdown', onSlideshowActivity);
-    slideshowEl?.removeEventListener('wheel', onSlideshowActivity);
-    slideshowEl?.removeEventListener('mousemove', onSlideshowActivity);
-}
-async function exitFullscreen() {
-    try {
-        if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
-    } catch (_) {}
-}
-async function openSlideshow(startAt = 0, startPlaying = true) {
-    if (!slideshowEl) return;
-    if (!visibleImages || visibleImages.length === 0) return;
-    if (modal && modal.style.display === 'flex') closeModal();
-    slideshowEl.classList.remove('hidden');
-    slideshowEl.classList.add('show-ui');
-    slideshowEl.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('slideshow-open');
-    _applySlide(startAt);
-    await enterFullscreen(slideshowEl);
-    requestAnimationFrame(focusSlideshowShell);
-    bindSlideshowUiActivityListeners();
-    if (startPlaying) {
-        slideshowPlaying = true;
-        updatePlayButton();
-        scheduleNextSlide();
-    } else {
-        slideshowPlaying = false;
-        updatePlayButton();
-    }
-    showSlideshowUI(slideshowPlaying);
-}
-async function closeSlideshow() {
-    if (!slideshowEl) return;
-    pauseSlideshow();
-    clearSlideshowTimer();
-    unbindSlideshowUiActivityListeners();
-    clearTimeout(slideshowUiTimer);
-    slideshowUiTimer = null;
-    document.body.classList.remove('hide-cursor');
-    slideshowEl.classList.add('show-ui');
-    slideshowEl.classList.add('hidden');
-    slideshowEl.classList.remove('show-ui');
-    slideshowEl.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    document.body.classList.remove('slideshow-open');
-    await exitFullscreen();
-}
 
 /* ===========================
  * EVENT LISTENERS
@@ -3942,8 +3913,6 @@ document.addEventListener('keydown', e => {
         nextThumb.focus();
     }
 });
-
-
 
 /* ===========================
  * BRIDGE FOR INLINE HTML HANDLERS
