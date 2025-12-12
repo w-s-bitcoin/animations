@@ -122,6 +122,7 @@ let thanksToastTimeout = null;
 let isBuyMeVisible = false;
 let buyCoffeeCloseBtn = null;
 let tempNonFavInjected = false;
+let modalImgLoadToken = 0;
 
 /* ===========================
  * PERSISTENCE (cookies + localStorage)
@@ -392,18 +393,36 @@ function openByFilenameAllowingNonFav(filename) {
     return false;
 }
 function setModalImageAndCenter(filename, altText = '') {
+    const token = ++modalImgLoadToken;
+    modalImg.style.transition = 'opacity 0.12s ease-out';
+    modalImg.style.opacity = '0';
+    currentScale = 1;
+    pinchFocus = null;
+    modal.classList.remove('zoomed');
     modalImg.dataset.filename = filename;
     modalImg.alt = altText || '';
+    const finalize = () => {
+        if (token !== modalImgLoadToken) return;
+        if (currentScale <= 1.001) centerImageAtScale1();
+        else {
+            clampPanToBounds();
+            applyTransform();
+        }
+        requestAnimationFrame(() => {
+            if (token !== modalImgLoadToken) return;
+            modalImg.style.opacity = '1';
+        });
+    };
     modalImg.src = imgSrc(filename);
     if (modalImg.complete && modalImg.naturalWidth) {
-        if (currentScale <= 1.001) centerImageAtScale1();
+        finalize();
         return;
     }
-    const onLoad = () => {
-        if (currentScale <= 1.001) centerImageAtScale1();
-        modalImg.removeEventListener('load', onLoad);
-    };
-    modalImg.addEventListener('load', onLoad);
+    modalImg.addEventListener('load', finalize, { once: true });
+    modalImg.addEventListener('error', () => {
+        if (token !== modalImgLoadToken) return;
+        modalImg.style.opacity = '1';
+    }, { once: true });
 }
 function clamp(v, lo, hi) {
     return Math.max(lo, Math.min(hi, v));
@@ -758,10 +777,7 @@ function openModalByIndex(index) {
     isPanning = false;
     gestureConsumed = false;
     currentScale = 1;
-    translateX = 0;
-    translateY = 0;
     pinchFocus = null;
-    modalImg.style.transform = '';
     modalImg.style.transformOrigin = '0 0';
     modal.classList.remove('zoomed');
     updateModalSafePadding();
