@@ -688,7 +688,6 @@ function handleThanksOverlayResize() {
     updateThanksOverlayImageForMethod(method);
     positionThanksMethodButtonsForOrientation();
 }
-
 function showThanksPopup() {
     const beerMode = isBeerTime();
     const isPortrait = window.innerHeight >= window.innerWidth;
@@ -3531,7 +3530,6 @@ document.addEventListener('keydown', e => {
         togglePlayPause();
     }
 });
-
 function onFullscreenChangeAutoClose() {
     if (!document.fullscreenElement && isSlideshowOpen()) {
         closeSlideshow();
