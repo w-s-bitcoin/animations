@@ -52,6 +52,12 @@ const uoaShowSelect = document.getElementById('uoa-show-select');
 const buyMeBtn = document.getElementById('buyCoffeeBtn');
 const favoritesToggleBtn = document.getElementById('favoritesToggle');
 
+/* NEW: Buy Coffee method buttons */
+const buyCoffeeMethods = document.querySelector('.buy-coffee-methods');
+const buyCoffeeMethodBtns = Array.from(document.querySelectorAll('.buy-coffee-method-btn'));
+const BUY_COFFEE_METHOD_KEY = 'buyCoffeeMethod';
+
+
 /* ===========================
  * GLOBAL IMAGE VERSION (cache-buster)
  * =========================== */
@@ -134,6 +140,64 @@ let thanksOverlay = null;
 let thanksToastTimeout = null;
 let isBuyMeVisible = false;
 let buyCoffeeCloseBtn = null;
+
+function normalizeBuyCoffeeMethod(m) {
+    const v = String(m || '').toLowerCase().trim();
+    if (v === 'on-chain') return 'onchain';
+    if (v === 'lightning' || v === 'liquid' || v === 'onchain') return v;
+    return 'lightning';
+}
+
+function getStoredBuyCoffeeMethod() {
+    return normalizeBuyCoffeeMethod(localStorage.getItem(BUY_COFFEE_METHOD_KEY) || 'lightning');
+}
+
+function setStoredBuyCoffeeMethod(m) {
+    const norm = normalizeBuyCoffeeMethod(m);
+    localStorage.setItem(BUY_COFFEE_METHOD_KEY, norm);
+    return norm;
+}
+
+function setActiveBuyCoffeeMethod(method) {
+    const norm = setStoredBuyCoffeeMethod(method);
+
+    // If you haven't added the HTML yet or you're in portrait, these may be empty.
+    if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return norm;
+
+    buyCoffeeMethodBtns.forEach(btn => {
+        const isOn = btn.dataset.method === norm;
+        btn.classList.toggle('active', isOn);
+        btn.setAttribute('aria-pressed', String(isOn));
+    });
+
+    return norm;
+}
+
+function initBuyCoffeeMethodsUI() {
+    if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return;
+
+    // Click handling (one selected at a time)
+    buyCoffeeMethodBtns.forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            const m = btn.dataset.method;
+            setActiveBuyCoffeeMethod(m);
+
+            // OPTIONAL HOOK: swap QR/image/text later if you want
+            // updateThanksPopupForMethod(m);
+        });
+
+        // Keyboard accessibility
+        btn.addEventListener('keydown', e => {
+            if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
+            e.preventDefault();
+            e.stopPropagation();
+            btn.click();
+        });
+    });
+}
+
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -582,7 +646,6 @@ function showThanksPopup() {
             ? 'assets/thanks_for_the_coffee_portrait.png'
             : 'assets/thanks_for_the_coffee_landscape.png';
     }
-
     if (!thanksOverlay) {
         thanksOverlay = document.createElement('div');
         thanksOverlay.id = 'thanks-overlay';
@@ -627,21 +690,63 @@ function showThanksPopup() {
             e.stopPropagation();
             e.preventDefault();
             hideThanksPopup();
-});
-        img.addEventListener('click', async e => {
-            e.stopPropagation();
-            e.preventDefault();
-            await copyToClipboard('wicked@getalby.com');
-            showThanksToast('wicked@getalby.com<br>copied to clipboard');
         });
-        img.addEventListener('keydown', async e => {
-            if (e.key !== 'Enter') return;
-            e.preventDefault();
-            e.stopPropagation();
-            await copyToClipboard('wicked@getalby.com');
-            showThanksToast('wicked@getalby.com<br>copied to clipboard');
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'buy-coffee-methods';
+        const overlayMethodBtns = [];
+        function setActiveOverlayBuyCoffeeMethod(methodRaw) {
+            const norm = setStoredBuyCoffeeMethod(methodRaw);
+            overlayMethodBtns.forEach(b => {
+                const isOn = b.dataset.method === norm;
+                b.classList.toggle('active', isOn);
+                b.setAttribute('aria-pressed', String(isOn));
+            });
+            return norm;
+        }
+        Object.assign(buttonContainer.style, {
+            position: 'absolute',
+            left: '0',
+            bottom: '20px',
+            width: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            zIndex: '10'
         });
+        function makeMethodBtn(label, methodRaw) {
+            const method = normalizeBuyCoffeeMethod(methodRaw);
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'buy-coffee-method-btn';
+            btn.textContent = label;
+            btn.dataset.method = method;
+            btn.setAttribute('aria-pressed', 'false');
+            btn.addEventListener('click', async e => {
+                e.stopPropagation();
+                e.preventDefault();
+                const active = setActiveOverlayBuyCoffeeMethod(method);
+                const donationKey = active === 'onchain' ? 'onchain' : active;
+                const text = getDonationTextForMethod(donationKey);
+                await copyToClipboard(text);
+                showThanksToast(getDonationToastForMethod(donationKey));
+            });
+            btn.addEventListener('keydown', e => {
+                if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
+                e.preventDefault();
+                e.stopPropagation();
+                btn.click();
+            });
+            return btn;
+        }
+        const lightningButton = makeMethodBtn('Lightning', 'lightning');
+        const liquidButton    = makeMethodBtn('Liquid', 'liquid');
+        const onChainButton   = makeMethodBtn('On-chain', 'onchain');
+        overlayMethodBtns.push(lightningButton, liquidButton, onChainButton);
+        setActiveOverlayBuyCoffeeMethod('lightning');
+        buttonContainer.appendChild(lightningButton);
+        buttonContainer.appendChild(liquidButton);
+        buttonContainer.appendChild(onChainButton);
         container.appendChild(img);
+        container.appendChild(buttonContainer);
         container.appendChild(closeBtn);
         thanksOverlay.appendChild(container);
         thanksOverlay.addEventListener('click', e => {
@@ -654,26 +759,17 @@ function showThanksPopup() {
             if (e.key !== 'Tab') return;
             const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
             const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
-            const focusables = [closeEl, imgEl].filter(Boolean);
+            const methodBtns = Array.from(thanksOverlay.querySelectorAll('.buy-coffee-method-btn'));
+            const focusables = [closeEl, ...methodBtns, imgEl].filter(Boolean);
             if (!focusables.length) return;
-            const current = document.activeElement;
-            const isFirst = current === closeEl;
-            const isLast = current === imgEl;
-            if (e.shiftKey && isFirst) {
-                isBuyMeVisible = false;
-                return;
-            }
+            const currentIdx = focusables.indexOf(document.activeElement);
+            const delta = e.shiftKey ? -1 : 1;
+            let nextIdx = currentIdx + delta;
+            if (nextIdx < 0) nextIdx = focusables.length - 1;
+            if (nextIdx >= focusables.length) nextIdx = 0;
             e.preventDefault();
             e.stopPropagation();
-            if (!e.shiftKey && isLast) {
-                closeEl.focus();
-                return;
-            }
-            if (!e.shiftKey) {
-                imgEl.focus();
-            } else {
-                closeEl.focus();
-            }
+            focusables[nextIdx].focus();
         });
     }
     const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
@@ -694,7 +790,6 @@ function showThanksPopup() {
 function setSearchInputFocusability(active) {
     const input = document.getElementById('search-input');
     if (!input) return;
-
     if (active) {
         const orig = input.getAttribute('data-original-tabindex');
         if (orig !== null) {
@@ -3049,6 +3144,7 @@ window.addEventListener('load', () => {
     initSearchPrefsAndUI();
     initSlideDurationControl();
     bindSliderEventGuards();
+    initBuyCoffeeMethodsUI();
     [gridIcon, listIcon, favoritesToggleBtn].forEach(el => {
         if (!el) return;
         el.setAttribute('tabindex', '0');
