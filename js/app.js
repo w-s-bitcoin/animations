@@ -124,7 +124,7 @@ let buyCoffeeCloseBtn = null;
 let tempNonFavInjected = false;
 
 /* ===========================
- * STORAGE + COOKIES (generic)
+ * PERSISTENCE (cookies + localStorage)
  * =========================== */
 function setCookie(name, value, days = 365) {
     const d = new Date();
@@ -135,9 +135,159 @@ function getCookie(name) {
     const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
     return match ? decodeURIComponent(match.split('=')[1]) : null;
 }
+function readSearchPrefs() {
+    const t = localStorage.getItem('searchTitles');
+    const d = localStorage.getItem('searchDescriptions');
+    let inTitle = t === null ? true : t === 'true';
+    let inDesc = d === null ? true : d === 'true';
+    if (!inTitle && !inDesc) {
+        inTitle = true;
+        inDesc = false;
+    }
+    return {inTitle, inDesc};
+}
+function writeSearchPrefs(inTitle, inDesc) {
+    localStorage.setItem('searchTitles', String(inTitle));
+    localStorage.setItem('searchDescriptions', String(inDesc));
+}
+function applySearchPrefsToUI(inTitle, inDesc) {
+    if (chkSearchTitles) {
+        chkSearchTitles.classList.toggle('checked', inTitle);
+        chkSearchTitles.setAttribute('aria-checked', String(inTitle));
+    }
+    if (chkSearchDescriptions) {
+        chkSearchDescriptions.classList.toggle('checked', inDesc);
+        chkSearchDescriptions.setAttribute('aria-checked', String(inDesc));
+    }
+}
+function initSearchPrefsAndUI() {
+    const {inTitle, inDesc} = readSearchPrefs();
+    writeSearchPrefs(inTitle, inDesc);
+    applySearchPrefsToUI(inTitle, inDesc);
+}
+function isSearchHappening() {
+    const container = document.querySelector('.search-container');
+    const input = document.getElementById('search-input');
+    if (!container || !input) return false;
+    return container.classList.contains('active') && input.value.trim().length > 0;
+}
+function toggleSearchPref(which) {
+    let {inTitle, inDesc} = readSearchPrefs();
+    if (which === 'title') {
+        if (inTitle && !inDesc) {
+            inTitle = false;
+            inDesc = true;
+        } else inTitle = !inTitle;
+    } else {
+        if (inDesc && !inTitle) {
+            inDesc = false;
+            inTitle = true;
+        } else inDesc = !inDesc;
+    }
+    if (!inTitle && !inDesc) {
+        if (which === 'title') inTitle = true;
+        else inDesc = true;
+    }
+    writeSearchPrefs(inTitle, inDesc);
+    applySearchPrefsToUI(inTitle, inDesc);
+    if (isSearchHappening()) filterImages();
+}
+function migrateFavoriteFilename(oldFilename, newFilename) {
+    let favs = getFavorites();
+    const pos = favs.indexOf(oldFilename);
+    if (pos !== -1) {
+        favs.splice(pos, 1);
+        if (!favs.includes(newFilename)) favs.push(newFilename);
+        saveFavorites(favs);
+        modalFavBtn.classList.add('filled');
+        modalFavBtn.textContent = '★';
+    }
+    const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
+    if (gridStar) gridStar.setAttribute('data-filename', newFilename);
+}
+function getFavorites() {
+    const stored = localStorage.getItem('favorites');
+    return stored ? JSON.parse(stored) : [];
+}
+function saveFavorites(favs) {
+    localStorage.setItem('favorites', JSON.stringify(favs));
+}
+function getAllFavoriteKeys() {
+    const keys = new Set();
+    if (!Array.isArray(imageList) || imageList.length === 0) return keys;
+    let hasPriceOf = false;
+    for (const img of imageList) {
+        if (!img || !img.filename) continue;
+        if (img.filename.startsWith(POF_BASE)) hasPriceOf = true;
+        else keys.add(img.filename);
+    }
+    if (hasPriceOf) keys.add(POF_FAV_KEY);
+    return keys;
+}
+function refreshFavoriteStarsUI() {
+    const favs = new Set(getFavorites());
+    document.querySelectorAll('.favorite-star').forEach(star => {
+        const key = star.getAttribute('data-filename');
+        const on = favs.has(key) || (key !== POF_FAV_KEY && favs.has(POF_FAV_KEY) && /^price_of_/.test(key));
+        star.textContent = on ? '★' : '☆';
+        star.classList.toggle('filled', on);
+    });
+    if (modal && modal.style.display === 'flex') {
+        const cur = visibleImages[currentIndex];
+        if (cur) {
+            const key = cur.filename.startsWith(POF_BASE) ? POF_FAV_KEY : cur.filename;
+            const on = favs.has(key);
+            modalFavBtn.textContent = on ? '★' : '☆';
+            modalFavBtn.classList.toggle('filled', on);
+        }
+    }
+}
+function favoriteAll() {
+    const all = Array.from(getAllFavoriteKeys());
+    saveFavorites(all);
+    refreshFavoriteStarsUI();
+    if (showFavoritesOnly) filterImages();
+}
+function unfavoriteAll() {
+    saveFavorites([]);
+    refreshFavoriteStarsUI();
+    if (showFavoritesOnly) filterImages();
+}
+function isFavorite(filename) {
+    const favs = getFavorites();
+    if (filename.startsWith(POF_BASE)) {
+        return favs.includes(POF_FAV_KEY) || favs.some(f => /^price_of_/.test(f));
+    }
+    return favs.includes(filename);
+}
+function toggleFavorite(filename, starElem) {
+    const favKey = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
+    let favs = getFavorites();
+    const index = favs.indexOf(favKey);
+    if (index !== -1) {
+        favs.splice(index, 1);
+        starElem.textContent = '☆';
+        starElem.classList.remove('filled');
+    } else {
+        if (favKey === POF_FAV_KEY) favs = favs.filter(f => !/^price_of_/.test(f));
+        favs.push(favKey);
+        starElem.textContent = '★';
+        starElem.classList.add('filled');
+    }
+    saveFavorites(favs);
+    if (showFavoritesOnly && index !== -1) filterImages();
+}
+function migratePriceOfFavorites() {
+    let favs = getFavorites();
+    const hadLegacy = favs.some(f => /^price_of_/.test(f));
+    if (!hadLegacy) return;
+    favs = favs.filter(f => !/^price_of_/.test(f));
+    if (!favs.includes(POF_FAV_KEY)) favs.push(POF_FAV_KEY);
+    saveFavorites(favs);
+}
 
 /* ===========================
- * GENERIC HELPERS
+ * CORE HELPERS (url + image src + geometry)
  * =========================== */
 function replaceUrlForFilename(newFilename) {
     const slug = newFilename.replace('.png', '');
@@ -390,164 +540,43 @@ function setSearchInputFocusability(active) {
         input.setAttribute('aria-hidden', 'true');
     }
 }
-
-/* ===========================
- * SEARCH PREFS (Title / Description)
- * =========================== */
-function readSearchPrefs() {
-    const t = localStorage.getItem('searchTitles');
-    const d = localStorage.getItem('searchDescriptions');
-    let inTitle = t === null ? true : t === 'true';
-    let inDesc = d === null ? true : d === 'true';
-    if (!inTitle && !inDesc) {
-        inTitle = true;
-        inDesc = false;
-    }
-    return {inTitle, inDesc};
+function getImgVersion() {
+    const BUCKET_MS = 15 * 60 * 1000;
+    return Math.floor(Date.now() / BUCKET_MS);
 }
-function writeSearchPrefs(inTitle, inDesc) {
-    localStorage.setItem('searchTitles', String(inTitle));
-    localStorage.setItem('searchDescriptions', String(inDesc));
-}
-function applySearchPrefsToUI(inTitle, inDesc) {
-    if (chkSearchTitles) {
-        chkSearchTitles.classList.toggle('checked', inTitle);
-        chkSearchTitles.setAttribute('aria-checked', String(inTitle));
-    }
-    if (chkSearchDescriptions) {
-        chkSearchDescriptions.classList.toggle('checked', inDesc);
-        chkSearchDescriptions.setAttribute('aria-checked', String(inDesc));
-    }
-}
-function initSearchPrefsAndUI() {
-    const {inTitle, inDesc} = readSearchPrefs();
-    writeSearchPrefs(inTitle, inDesc);
-    applySearchPrefsToUI(inTitle, inDesc);
-}
-function isSearchHappening() {
-    const container = document.querySelector('.search-container');
-    const input = document.getElementById('search-input');
-    if (!container || !input) return false;
-    return container.classList.contains('active') && input.value.trim().length > 0;
-}
-function toggleSearchPref(which) {
-    let {inTitle, inDesc} = readSearchPrefs();
-    if (which === 'title') {
-        if (inTitle && !inDesc) {
-            inTitle = false;
-            inDesc = true;
-        } else inTitle = !inTitle;
-    } else {
-        if (inDesc && !inTitle) {
-            inDesc = false;
-            inTitle = true;
-        } else inDesc = !inDesc;
-    }
-    if (!inTitle && !inDesc) {
-        if (which === 'title') inTitle = true;
-        else inDesc = true;
-    }
-    writeSearchPrefs(inTitle, inDesc);
-    applySearchPrefsToUI(inTitle, inDesc);
-    if (isSearchHappening()) filterImages();
+function imgSrc(filename) {
+    return `final_frames/${filename}?v=${getImgVersion()}`;
 }
 
 /* ===========================
- * FAVORITES (localStorage)
+ * IMAGE LOADING (cache-bust + refresh)
  * =========================== */
-function migrateFavoriteFilename(oldFilename, newFilename) {
-    let favs = getFavorites();
-    const pos = favs.indexOf(oldFilename);
-    if (pos !== -1) {
-        favs.splice(pos, 1);
-        if (!favs.includes(newFilename)) favs.push(newFilename);
-        saveFavorites(favs);
-        modalFavBtn.classList.add('filled');
-        modalFavBtn.textContent = '★';
-    }
-    const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
-    if (gridStar) gridStar.setAttribute('data-filename', newFilename);
-}
-function getFavorites() {
-    const stored = localStorage.getItem('favorites');
-    return stored ? JSON.parse(stored) : [];
-}
-function saveFavorites(favs) {
-    localStorage.setItem('favorites', JSON.stringify(favs));
-}
-function getAllFavoriteKeys() {
-    const keys = new Set();
-    if (!Array.isArray(imageList) || imageList.length === 0) return keys;
-    let hasPriceOf = false;
-    for (const img of imageList) {
-        if (!img || !img.filename) continue;
-        if (img.filename.startsWith(POF_BASE)) hasPriceOf = true;
-        else keys.add(img.filename);
-    }
-    if (hasPriceOf) keys.add(POF_FAV_KEY);
-    return keys;
-}
-function refreshFavoriteStarsUI() {
-    const favs = new Set(getFavorites());
-    document.querySelectorAll('.favorite-star').forEach(star => {
-        const key = star.getAttribute('data-filename');
-        const on = favs.has(key) || (key !== POF_FAV_KEY && favs.has(POF_FAV_KEY) && /^price_of_/.test(key));
-        star.textContent = on ? '★' : '☆';
-        star.classList.toggle('filled', on);
+let lastImgVersion = getImgVersion();
+function refreshVisibleImagesForNewVersion() {
+    document.querySelectorAll('img.grid-thumb').forEach(img => {
+        const filename = img.dataset.filename;
+        if (!filename) return;
+        img.src = imgSrc(filename);
     });
-    if (modal && modal.style.display === 'flex') {
-        const cur = visibleImages[currentIndex];
-        if (cur) {
-            const key = cur.filename.startsWith(POF_BASE) ? POF_FAV_KEY : cur.filename;
-            const on = favs.has(key);
-            modalFavBtn.textContent = on ? '★' : '☆';
-            modalFavBtn.classList.toggle('filled', on);
+    if (modal && modal.style.display === 'flex' && modalImg && modalImg.dataset.filename) {
+        const fname = modalImg.dataset.filename;
+        modalImg.src = imgSrc(fname);
+    }
+    if (typeof isSlideshowOpen === 'function' && isSlideshowOpen() && slideshowImg && slideshowImg.dataset.filename) {
+        const fname = slideshowImg.dataset.filename;
+        slideshowImg.src = imgSrc(fname);
+    }
+}
+(function setupImageVersionRefresh() {
+    function checkForNewVersion() {
+        const v = getImgVersion();
+        if (v !== lastImgVersion) {
+            lastImgVersion = v;
+            refreshVisibleImagesForNewVersion();
         }
     }
-}
-function favoriteAll() {
-    const all = Array.from(getAllFavoriteKeys());
-    saveFavorites(all);
-    refreshFavoriteStarsUI();
-    if (showFavoritesOnly) filterImages();
-}
-function unfavoriteAll() {
-    saveFavorites([]);
-    refreshFavoriteStarsUI();
-    if (showFavoritesOnly) filterImages();
-}
-function isFavorite(filename) {
-    const favs = getFavorites();
-    if (filename.startsWith(POF_BASE)) {
-        return favs.includes(POF_FAV_KEY) || favs.some(f => /^price_of_/.test(f));
-    }
-    return favs.includes(filename);
-}
-function toggleFavorite(filename, starElem) {
-    const favKey = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
-    let favs = getFavorites();
-    const index = favs.indexOf(favKey);
-    if (index !== -1) {
-        favs.splice(index, 1);
-        starElem.textContent = '☆';
-        starElem.classList.remove('filled');
-    } else {
-        if (favKey === POF_FAV_KEY) favs = favs.filter(f => !/^price_of_/.test(f));
-        favs.push(favKey);
-        starElem.textContent = '★';
-        starElem.classList.add('filled');
-    }
-    saveFavorites(favs);
-    if (showFavoritesOnly && index !== -1) filterImages();
-}
-function migratePriceOfFavorites() {
-    let favs = getFavorites();
-    const hadLegacy = favs.some(f => /^price_of_/.test(f));
-    if (!hadLegacy) return;
-    favs = favs.filter(f => !/^price_of_/.test(f));
-    if (!favs.includes(POF_FAV_KEY)) favs.push(POF_FAV_KEY);
-    saveFavorites(favs);
-}
+    setInterval(checkForNewVersion, 60 * 1000);
+})();
 
 /* ===========================
  * GRID: LAYOUT + FILTER/RENDER
@@ -3032,48 +3061,7 @@ async function closeSlideshow() {
 }
 
 /* ===========================
- * IMAGE CACHE-BUSTER + AUTO-REFRESH
- * =========================== */
-let lastImgVersion = getImgVersion();
-function refreshVisibleImagesForNewVersion() {
-    document.querySelectorAll('img.grid-thumb').forEach(img => {
-        const filename = img.dataset.filename;
-        if (!filename) return;
-        img.src = imgSrc(filename);
-    });
-    if (modal && modal.style.display === 'flex' && modalImg && modalImg.dataset.filename) {
-        const fname = modalImg.dataset.filename;
-        modalImg.src = imgSrc(fname);
-    }
-    if (typeof isSlideshowOpen === 'function' && isSlideshowOpen() && slideshowImg && slideshowImg.dataset.filename) {
-        const fname = slideshowImg.dataset.filename;
-        slideshowImg.src = imgSrc(fname);
-    }
-}
-(function setupImageVersionRefresh() {
-    function checkForNewVersion() {
-        const v = getImgVersion();
-        if (v !== lastImgVersion) {
-            lastImgVersion = v;
-            refreshVisibleImagesForNewVersion();
-        }
-    }
-    setInterval(checkForNewVersion, 60 * 1000);
-})();
-
-/* ===========================
- * GLOBAL IMAGE VERSION (cache-buster)
- * =========================== */
-function getImgVersion() {
-    const BUCKET_MS = 15 * 60 * 1000;
-    return Math.floor(Date.now() / BUCKET_MS);
-}
-function imgSrc(filename) {
-    return `final_frames/${filename}?v=${getImgVersion()}`;
-}
-
-/* ===========================
- * FETCH LIST / BUILD VIEW / DEEP LINKS
+ * BOOTSTRAP (fetch + init + global exports)
  * =========================== */
 function getImageNameFromPath() {
     if (location.hash) {
@@ -3405,9 +3393,16 @@ fetch('final_frames/image_list.json')
         imageGrid.textContent = "Failed to load visualizations.";
         console.error(err);
     });
+window.setLayout = setLayout;
+window.toggleSearch = toggleSearch;
+window.toggleFavoritesView = toggleFavoritesView;
+window.closeModal = closeModal;
+window.prevImage = prevImage;
+window.nextImage = nextImage;
+window.toggleFavoriteFromModal = toggleFavoriteFromModal;
 
 /* ===========================
- * EVENT LISTENERS
+ * EVENT BINDINGS (global + modal + menu)
  * =========================== */
 window.addEventListener('resize', updateLayoutBasedOnWidth);
 window.addEventListener('resize', updateModalSafePadding);
@@ -3522,187 +3517,6 @@ function onToolbarButtonKeydown(e) {
 gridIcon?.addEventListener('keydown', onToolbarButtonKeydown);
 listIcon?.addEventListener('keydown', onToolbarButtonKeydown);
 favoritesToggleBtn?.addEventListener('keydown', onToolbarButtonKeydown);
-
-/* ===========================
- * SITE-WIDE: Option(Alt)+S starts slideshow (robust for macOS 'ß')
- * =========================== */
-function onOptionSStartSlideshow(e) {
-    if (isBuyMeVisible) return;
-    if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-    if (e.code !== 'KeyS') return;
-    const a = document.activeElement;
-    if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.isContentEditable)) return;
-    const slideshowOpen = !!slideshowEl && !slideshowEl.classList.contains('hidden');
-    if (slideshowOpen) return;
-    e.preventDefault();
-    e.stopPropagation();
-    kebabMenu?.classList.add('hidden');
-    kebabBtn?.setAttribute('aria-expanded', 'false');
-    if (modal && modal.style.display === 'flex') closeModal();
-    if (startSlideshowBtn) startSlideshowBtn.click();
-    else if (typeof openSlideshow === 'function') openSlideshow(0, true);
-}
-document.addEventListener('keydown', onOptionSStartSlideshow, true);
-
-/* ===========================
- * KEBAB MENU (⋯) EVENTS
- * =========================== */
-kebabBtn?.addEventListener('click', e => {
-    e.stopPropagation();
-    const isOpen = !kebabMenu.classList.contains('hidden');
-    kebabMenu.classList.toggle('hidden', isOpen);
-    const nowOpen = !isOpen;
-    kebabBtn.setAttribute('aria-expanded', String(nowOpen));
-    if (nowOpen) {
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => updateSlideDurationUI(false));
-        });
-    }
-});
-kebabMenu?.addEventListener('click', e => {
-    const btn = e.target.closest('.menu-item');
-    if (!btn) return;
-    if (btn.classList.contains('slideshow-row') || btn.closest('.slideshow-row')) {
-        e.stopPropagation();
-        return;
-    }
-    if (btn.classList.contains('menu-check')) {
-        e.stopPropagation();
-        if (btn.id === 'chkSearchTitles') toggleSearchPref('title');
-        else if (btn.id === 'chkSearchDescriptions') toggleSearchPref('desc');
-        return;
-    }
-    const action = btn.dataset.action;
-    if (action === 'star-all') favoriteAll();
-    else if (action === 'unstar-all') unfavoriteAll();
-    kebabMenu.classList.add('hidden');
-    kebabBtn.setAttribute('aria-expanded', 'false');
-});
-document.addEventListener('click', e => {
-    if (!kebabMenu || kebabMenu.classList.contains('hidden')) return;
-    if (e.target === kebabBtn || kebabBtn.contains(e.target)) return;
-    if (kebabMenu.contains(e.target)) return;
-    kebabMenu.classList.add('hidden');
-    kebabBtn.setAttribute('aria-expanded', 'false');
-});
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && kebabMenu && !kebabMenu.classList.contains('hidden')) {
-        kebabMenu.classList.add('hidden');
-        kebabBtn.setAttribute('aria-expanded', 'false');
-    }
-});
-yearSelect?.addEventListener('change', e => setBvgYear(e.target.value));
-scaleSelect?.addEventListener('change', e => {
-    const currentFile = visibleImages[currentIndex]?.filename || '';
-    if (isDalFile(currentFile)) setDalScale(e.target.value);
-    else if (isPotdFile(currentFile)) setPotdScale(e.target.value);
-    else if (isNlbpFile(currentFile)) setNlbpScale(e.target.value);
-});
-dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value));
-priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
-pofSortSelect?.addEventListener('change', e => setPofSortMode(e.target.value));
-coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
-myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
-alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
-uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
-uoaSortSelect?.addEventListener('change', e => setUoaSortMode(e.target.value));
-hashSelect?.addEventListener('change', e => setHashLength(e.target.value));
-uoaShowSelect?.addEventListener('change', e => setUoaShowMode(e.target.value));
-uoaIndexInput?.addEventListener('input', e => {
-    const opts = getFilteredUoaOptions();
-    if (!Array.isArray(opts) || opts.length === 0) return;
-    let raw = e.target.value || '';
-    raw = raw.replace(/\D+/g, '');
-    if (raw === '') {
-        e.target.value = '';
-        return;
-    }
-    let n = parseInt(raw, 10);
-    if (!Number.isFinite(n)) {
-        e.target.value = '';
-        return;
-    }
-    const total = opts.length;
-    if (n < 1) n = 1;
-    if (n > total) n = total;
-    if (String(n) !== raw) {
-        e.target.value = String(n);
-    }
-    const target = opts[n - 1];
-    if (!target) return;
-    if (uoaSelect) {
-        uoaSelect.value = target.slug;
-    }
-    setUoaItem(target.slug);
-});
-uoaIndexInput?.addEventListener('blur', () => {
-    const raw = (uoaIndexInput.value || '').trim();
-    if (raw !== '') return;
-    let currentSlug = null;
-    if (uoaSelect && uoaSelect.value) {
-        currentSlug = uoaSelect.value;
-    } else {
-        const image = visibleImages?.[currentIndex];
-        if (image && isUoaFile(image.filename)) {
-            currentSlug = uoaSlugFromFilename(image.filename);
-        }
-    }
-    if (currentSlug) {
-        updateUoaIndexUiBySlug(currentSlug);
-    }
-});
-pofIndexInput?.addEventListener('input', e => {
-    if (!Array.isArray(PRICE_OF_OPTIONS) || PRICE_OF_OPTIONS.length === 0) return;
-    let raw = e.target.value || '';
-    raw = raw.replace(/\D+/g, '');
-    if (raw === '') {
-        e.target.value = '';
-        return;
-    }
-    let n = parseInt(raw, 10);
-    if (!Number.isFinite(n)) {
-        e.target.value = '';
-        return;
-    }
-    const total = PRICE_OF_OPTIONS.length;
-    if (n < 1) n = 1;
-    if (n > total) n = total;
-    if (String(n) !== raw) {
-        e.target.value = String(n);
-    }
-    const target = PRICE_OF_OPTIONS[n - 1];
-    if (!target) return;
-    if (priceOfSelect) {
-        priceOfSelect.value = target.slug;
-    }
-    setPriceOfItem(target.slug);
-});
-pofIndexInput?.addEventListener('blur', () => {
-    const raw = (pofIndexInput.value || '').trim();
-    if (raw !== '') return;
-    let currentSlug = null;
-    if (priceOfSelect && priceOfSelect.value) {
-        currentSlug = priceOfSelect.value;
-    } else {
-        const image = visibleImages?.[currentIndex];
-        if (image && isPriceOfFile(image.filename)) {
-            currentSlug = pofSlugFromFilename(image.filename);
-        }
-    }
-    if (currentSlug) {
-        updatePofIndexUiBySlug(currentSlug);
-    }
-});
-function toggleFavoritesView() {
-    showFavoritesOnly = !showFavoritesOnly;
-    localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
-    document.getElementById('favoritesToggle').classList.toggle('active', showFavoritesOnly);
-    filterImages();
-}
-
-/* ===========================
- * MODAL KEYBOARD SHORTCUTS
- * =========================== */
 document.addEventListener('keydown', e => {
     if (!isBuyMeVisible) return;
     const k = e.key;
@@ -3855,10 +3669,6 @@ document.addEventListener('keydown', e => {
         }
     }
 }, true);
-
-/* ===========================
- * SITE-WIDE SPACEBAR: reopen last modal image on main page
- * =========================== */
 document.addEventListener('keydown', e => {
     if (isBuyMeVisible) return;
     if (!(e.key === ' ' || e.code === 'Space')) return;
@@ -3887,10 +3697,6 @@ document.addEventListener('keydown', e => {
     }
     openModalByIndex(indexToOpen);
 });
-
-/* ===========================
- * GRID TAB NAVIGATION: keep Tab within visible images
- * =========================== */
 document.addEventListener('keydown', e => {
     if (e.key !== 'Tab') return;
     if (e.altKey || e.ctrlKey || e.metaKey) return;
@@ -3913,14 +3719,172 @@ document.addEventListener('keydown', e => {
         nextThumb.focus();
     }
 });
-
-/* ===========================
- * BRIDGE FOR INLINE HTML HANDLERS
- * =========================== */
-window.setLayout = setLayout;
-window.toggleSearch = toggleSearch;
-window.toggleFavoritesView = toggleFavoritesView;
-window.closeModal = closeModal;
-window.prevImage = prevImage;
-window.nextImage = nextImage;
-window.toggleFavoriteFromModal = toggleFavoriteFromModal;
+function onOptionSStartSlideshow(e) {
+    if (isBuyMeVisible) return;
+    if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (e.code !== 'KeyS') return;
+    const a = document.activeElement;
+    if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.isContentEditable)) return;
+    const slideshowOpen = !!slideshowEl && !slideshowEl.classList.contains('hidden');
+    if (slideshowOpen) return;
+    e.preventDefault();
+    e.stopPropagation();
+    kebabMenu?.classList.add('hidden');
+    kebabBtn?.setAttribute('aria-expanded', 'false');
+    if (modal && modal.style.display === 'flex') closeModal();
+    if (startSlideshowBtn) startSlideshowBtn.click();
+    else if (typeof openSlideshow === 'function') openSlideshow(0, true);
+}
+document.addEventListener('keydown', onOptionSStartSlideshow, true);
+kebabBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    const isOpen = !kebabMenu.classList.contains('hidden');
+    kebabMenu.classList.toggle('hidden', isOpen);
+    const nowOpen = !isOpen;
+    kebabBtn.setAttribute('aria-expanded', String(nowOpen));
+    if (nowOpen) {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => updateSlideDurationUI(false));
+        });
+    }
+});
+kebabMenu?.addEventListener('click', e => {
+    const btn = e.target.closest('.menu-item');
+    if (!btn) return;
+    if (btn.classList.contains('slideshow-row') || btn.closest('.slideshow-row')) {
+        e.stopPropagation();
+        return;
+    }
+    if (btn.classList.contains('menu-check')) {
+        e.stopPropagation();
+        if (btn.id === 'chkSearchTitles') toggleSearchPref('title');
+        else if (btn.id === 'chkSearchDescriptions') toggleSearchPref('desc');
+        return;
+    }
+    const action = btn.dataset.action;
+    if (action === 'star-all') favoriteAll();
+    else if (action === 'unstar-all') unfavoriteAll();
+    kebabMenu.classList.add('hidden');
+    kebabBtn.setAttribute('aria-expanded', 'false');
+});
+document.addEventListener('click', e => {
+    if (!kebabMenu || kebabMenu.classList.contains('hidden')) return;
+    if (e.target === kebabBtn || kebabBtn.contains(e.target)) return;
+    if (kebabMenu.contains(e.target)) return;
+    kebabMenu.classList.add('hidden');
+    kebabBtn.setAttribute('aria-expanded', 'false');
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && kebabMenu && !kebabMenu.classList.contains('hidden')) {
+        kebabMenu.classList.add('hidden');
+        kebabBtn.setAttribute('aria-expanded', 'false');
+    }
+});
+yearSelect?.addEventListener('change', e => setBvgYear(e.target.value));
+scaleSelect?.addEventListener('change', e => {
+    const currentFile = visibleImages[currentIndex]?.filename || '';
+    if (isDalFile(currentFile)) setDalScale(e.target.value);
+    else if (isPotdFile(currentFile)) setPotdScale(e.target.value);
+    else if (isNlbpFile(currentFile)) setNlbpScale(e.target.value);
+});
+dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value));
+priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
+pofSortSelect?.addEventListener('change', e => setPofSortMode(e.target.value));
+coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
+myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
+alignmentSelect?.addEventListener('change', e => setHalvingAlignment(e.target.value));
+uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
+uoaSortSelect?.addEventListener('change', e => setUoaSortMode(e.target.value));
+hashSelect?.addEventListener('change', e => setHashLength(e.target.value));
+uoaShowSelect?.addEventListener('change', e => setUoaShowMode(e.target.value));
+uoaIndexInput?.addEventListener('input', e => {
+    const opts = getFilteredUoaOptions();
+    if (!Array.isArray(opts) || opts.length === 0) return;
+    let raw = e.target.value || '';
+    raw = raw.replace(/\D+/g, '');
+    if (raw === '') {
+        e.target.value = '';
+        return;
+    }
+    let n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) {
+        e.target.value = '';
+        return;
+    }
+    const total = opts.length;
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    if (String(n) !== raw) {
+        e.target.value = String(n);
+    }
+    const target = opts[n - 1];
+    if (!target) return;
+    if (uoaSelect) {
+        uoaSelect.value = target.slug;
+    }
+    setUoaItem(target.slug);
+});
+uoaIndexInput?.addEventListener('blur', () => {
+    const raw = (uoaIndexInput.value || '').trim();
+    if (raw !== '') return;
+    let currentSlug = null;
+    if (uoaSelect && uoaSelect.value) {
+        currentSlug = uoaSelect.value;
+    } else {
+        const image = visibleImages?.[currentIndex];
+        if (image && isUoaFile(image.filename)) {
+            currentSlug = uoaSlugFromFilename(image.filename);
+        }
+    }
+    if (currentSlug) {
+        updateUoaIndexUiBySlug(currentSlug);
+    }
+});
+pofIndexInput?.addEventListener('input', e => {
+    if (!Array.isArray(PRICE_OF_OPTIONS) || PRICE_OF_OPTIONS.length === 0) return;
+    let raw = e.target.value || '';
+    raw = raw.replace(/\D+/g, '');
+    if (raw === '') {
+        e.target.value = '';
+        return;
+    }
+    let n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) {
+        e.target.value = '';
+        return;
+    }
+    const total = PRICE_OF_OPTIONS.length;
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    if (String(n) !== raw) {
+        e.target.value = String(n);
+    }
+    const target = PRICE_OF_OPTIONS[n - 1];
+    if (!target) return;
+    if (priceOfSelect) {
+        priceOfSelect.value = target.slug;
+    }
+    setPriceOfItem(target.slug);
+});
+pofIndexInput?.addEventListener('blur', () => {
+    const raw = (pofIndexInput.value || '').trim();
+    if (raw !== '') return;
+    let currentSlug = null;
+    if (priceOfSelect && priceOfSelect.value) {
+        currentSlug = priceOfSelect.value;
+    } else {
+        const image = visibleImages?.[currentIndex];
+        if (image && isPriceOfFile(image.filename)) {
+            currentSlug = pofSlugFromFilename(image.filename);
+        }
+    }
+    if (currentSlug) {
+        updatePofIndexUiBySlug(currentSlug);
+    }
+});
+function toggleFavoritesView() {
+    showFavoritesOnly = !showFavoritesOnly;
+    localStorage.setItem('showFavoritesOnly', showFavoritesOnly);
+    document.getElementById('favoritesToggle').classList.toggle('active', showFavoritesOnly);
+    filterImages();
+}
