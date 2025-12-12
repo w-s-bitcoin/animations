@@ -85,6 +85,7 @@ const uoaShowSelect = document.getElementById('uoa-show-select');
 const buyMeBtn = document.getElementById('buyCoffeeBtn');
 const favoritesToggleBtn = document.getElementById('favoritesToggle');
 const buyCoffeeMethodBtns = Array.from(document.querySelectorAll('.buy-coffee-method-btn'));
+const DONATE_ROUTE = 'donate';
 
 /* ===========================
  * GLOBAL STATE
@@ -297,6 +298,31 @@ function replaceUrlForFilename(newFilename) {
     } else {
         const base = location.pathname.replace(/\/[^/]*$/, '');
         history.replaceState(null, '', `${base}/${slug}`);
+    }
+}
+function isDonateRouteActive() {
+    if (location.hostname === 'localhost') {
+        return (location.hash || '').replace(/^#/, '') === DONATE_ROUTE;
+    }
+    const path = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+    return path === DONATE_ROUTE;
+}
+function setDonateRouteUrl(active, { push = true } = {}) {
+    if (location.hostname === 'localhost') {
+        location.hash = active ? DONATE_ROUTE : '';
+        return;
+    }
+    const target = active ? `/${DONATE_ROUTE}` : '/';
+    const fn = push ? 'pushState' : 'replaceState';
+    history[fn](null, '', target);
+}
+function syncDonateOverlayToRoute() {
+    if (modal && modal.style.display === 'flex') return;
+
+    if (isDonateRouteActive()) {
+        if (!isBuyMeVisible) showThanksPopup({ fromRoute: true });
+    } else {
+        if (isBuyMeVisible) hideThanksPopup({ fromRoute: true });
     }
 }
 function updateGridThumbAtCurrent(newFilename, newAlt) {
@@ -2446,12 +2472,10 @@ function onThanksKeydown(e) {
         hideThanksPopup();
     }
 }
-function hideThanksPopup() {
+function hideThanksPopup({ fromRoute = false } = {}) {
     if (!thanksOverlay) return;
     const toast = thanksOverlay.querySelector('.thanks-toast');
-    if (toast) {
-        toast.style.opacity = '0';
-    }
+    if (toast) toast.style.opacity = '0';
     thanksOverlay.style.display = 'none';
     if (thanksOverlay.parentNode) {
         thanksOverlay.parentNode.removeChild(thanksOverlay);
@@ -2462,6 +2486,9 @@ function hideThanksPopup() {
         thanksToastTimeout = null;
     }
     isBuyMeVisible = false;
+    if (!fromRoute && !(modal && modal.style.display === 'flex') && isDonateRouteActive()) {
+        setDonateRouteUrl(false, { push: true });
+    }
 }
 async function copyToClipboard(text) {
     try {
@@ -2584,7 +2611,7 @@ function handleThanksOverlayResize() {
     updateThanksOverlayImageForMethod(method);
     positionThanksMethodButtonsForOrientation();
 }
-function showThanksPopup() {
+function showThanksPopup({ fromRoute = false } = {}) {
     const beerMode = isBeerTime();
     const isPortrait = window.innerHeight >= window.innerWidth;
     const method = getStoredBuyCoffeeMethod();
@@ -2649,7 +2676,7 @@ function showThanksPopup() {
         closeBtn.addEventListener('click', e => {
             e.stopPropagation();
             e.preventDefault();
-            hideThanksPopup();
+            hideThanksPopup({ fromRoute: false });
         });
         const buttonContainer = document.createElement('div');
         buttonContainer.className = 'buy-coffee-methods';
@@ -2710,7 +2737,7 @@ function showThanksPopup() {
         thanksOverlay.appendChild(container);
         thanksOverlay.addEventListener('click', e => {
             if (e.target === thanksOverlay) {
-                hideThanksPopup();
+                hideThanksPopup({ fromRoute: false });
             }
         });
         thanksOverlay.addEventListener('keydown', e => {
@@ -3080,11 +3107,15 @@ async function closeSlideshow() {
  * BOOTSTRAP (fetch + init + global exports)
  * =========================== */
 function getImageNameFromPath() {
+    if (isDonateRouteActive()) return null;
     if (location.hash) {
-        return location.hash.replace(/^#/, '') + '.png';
+        const h = location.hash.replace(/^#/, '');
+        if (h.toLowerCase() === DONATE_ROUTE) return null;
+        return h + '.png';
     }
     const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
     if (!path) return null;
+    if (path.toLowerCase() === DONATE_ROUTE) return null;
     return path + '.png';
 }
 fetch('final_frames/image_list.json')
@@ -3102,6 +3133,7 @@ fetch('final_frames/image_list.json')
         sortUoaOptions(getStoredUoaSort());
         setUoaShowMode(getStoredUoaShowMode());
         const initialFilename = getImageNameFromPath();
+        const initialIsDonate = isDonateRouteActive();
         const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
         let urlPofSlug = null;
         let urlCoinSlug = null;
@@ -3323,7 +3355,9 @@ fetch('final_frames/image_list.json')
         }
         if (showFavoritesOnly)
             document.getElementById("favoritesToggle").classList.add("active");
-        if (initialFilename) {
+        if (initialIsDonate) {
+            showThanksPopup({ fromRoute: true });
+        } else if (initialFilename) {
             let opened = false;
             let openIdx = -1;
             if (urlBvgYear) {
@@ -3425,6 +3459,9 @@ window.addEventListener('resize', updateModalSafePadding);
 window.addEventListener('orientationchange', updateModalSafePadding);
 window.addEventListener('resize', handleModalViewportChange);
 window.addEventListener('orientationchange', handleModalViewportChange);
+window.addEventListener('popstate', () => {
+    syncDonateOverlayToRoute();
+});
 window.addEventListener('resize', () => {
     if (!isBuyMeVisible) return;
     positionThanksMethodButtonsForOrientation();
@@ -3522,7 +3559,9 @@ slideRange?.addEventListener('change', () => restartSlideshowTimer());
 slideRange?.addEventListener('input', () => restartSlideshowTimer());
 buyMeBtn?.addEventListener('click', e => {
     e.preventDefault();
-    showThanksPopup();
+    if (modal && modal.style.display === 'flex') return;
+    setDonateRouteUrl(true, { push: true });
+    showThanksPopup({ fromRoute: false });
 });
 function onToolbarButtonKeydown(e) {
     if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
