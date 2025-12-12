@@ -626,6 +626,21 @@ function refreshVisibleImagesForNewVersion() {
 /* ===========================
  * GRID: LAYOUT + FILTER/RENDER
  * =========================== */
+function getCardImageCount(filename) {
+    if (!filename) return "0 Vizualizations";
+    if (isUoaFile(filename)) return String(Array.isArray(UOA_OPTIONS) ? UOA_OPTIONS.length : 0) + " Vizualizations";
+    if (isPriceOfFile(filename)) return String(Array.isArray(PRICE_OF_OPTIONS) ? PRICE_OF_OPTIONS.length : 0) + " Vizualizations";
+    if (isCoinFile(filename)) return String(Array.isArray(COIN_OPTIONS) ? COIN_OPTIONS.length : 0) + " Vizualizations";
+    if (isBvgFile(filename)) return String(Array.isArray(BVG_YEARS) ? BVG_YEARS.length : 0) + " Vizualizations";
+    if (isDalFile(filename)) return String(Array.isArray(DAL_SCALES) ? DAL_SCALES.length : 0) + " Vizualizations";
+    if (isPotdFile(filename)) return String(Array.isArray(POTD_SCALES) ? POTD_SCALES.length : 0) + " Vizualizations";
+    if (isNlbpFile(filename)) return String(Array.isArray(NLBP_SCALES) ? NLBP_SCALES.length : 0) + " Vizualizations";
+    if (isDominanceFile(filename)) return String(Array.isArray(DOM_UNITS) ? DOM_UNITS.length : 0) + " Vizualizations";
+    if (isTargetHashFile(filename)) return String(Array.isArray(TARGET_HASH_LENGTHS) ? TARGET_HASH_LENGTHS.length : 0) + " Vizualizations";
+    if (isHalvingCyclesFile(filename)) return String(Array.isArray(HALVING_ALIGN_OPTIONS) ? HALVING_ALIGN_OPTIONS.length : 0) + " Vizualizations";
+    if (isMyrFile(filename)) return String(Array.isArray(MYR_RANGES) ? MYR_RANGES.length : 0) + " Vizualizations";
+    return "1 Vizualization";
+}
 function filterImages() {
     const query = document.getElementById('search-input').value.toLowerCase();
     const grid = document.getElementById('image-grid');
@@ -693,6 +708,11 @@ function filterImages() {
         desc.textContent = description;
         desc.dataset.gridIndex = index;
         chartContainer.appendChild(desc);
+        const countElem = document.createElement('div');
+        countElem.className = 'chart-count';
+        countElem.textContent = String(getCardImageCount(filename));
+        countElem.setAttribute('aria-label', `Images in this set: ${countElem.textContent}`);
+        chartContainer.appendChild(countElem);
         container.appendChild(titleElem);
         container.appendChild(chartContainer);
         grid.appendChild(container);
