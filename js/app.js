@@ -51,17 +51,13 @@ const uoaShowControls = document.getElementById('uoa-show-controls');
 const uoaShowSelect = document.getElementById('uoa-show-select');
 const buyMeBtn = document.getElementById('buyCoffeeBtn');
 const favoritesToggleBtn = document.getElementById('favoritesToggle');
-
-/* NEW: Buy Coffee method buttons */
 const buyCoffeeMethods = document.querySelector('.buy-coffee-methods');
 const buyCoffeeMethodBtns = Array.from(document.querySelectorAll('.buy-coffee-method-btn'));
 const BUY_COFFEE_METHOD_KEY = 'buyCoffeeMethod';
 
-
 /* ===========================
  * GLOBAL IMAGE VERSION (cache-buster)
  * =========================== */
-// Version changes every 15 minutes
 function getImgVersion() {
     const BUCKET_MS = 15 * 60 * 1000;
     return Math.floor(Date.now() / BUCKET_MS);
@@ -147,48 +143,33 @@ function normalizeBuyCoffeeMethod(m) {
     if (v === 'lightning' || v === 'liquid' || v === 'onchain') return v;
     return 'lightning';
 }
-
 function getStoredBuyCoffeeMethod() {
     return normalizeBuyCoffeeMethod(localStorage.getItem(BUY_COFFEE_METHOD_KEY) || 'lightning');
 }
-
 function setStoredBuyCoffeeMethod(m) {
     const norm = normalizeBuyCoffeeMethod(m);
     localStorage.setItem(BUY_COFFEE_METHOD_KEY, norm);
     return norm;
 }
-
 function setActiveBuyCoffeeMethod(method) {
     const norm = setStoredBuyCoffeeMethod(method);
-
-    // If you haven't added the HTML yet or you're in portrait, these may be empty.
     if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return norm;
-
     buyCoffeeMethodBtns.forEach(btn => {
         const isOn = btn.dataset.method === norm;
         btn.classList.toggle('active', isOn);
         btn.setAttribute('aria-pressed', String(isOn));
     });
-
     return norm;
 }
-
 function initBuyCoffeeMethodsUI() {
     if (!buyCoffeeMethodBtns || buyCoffeeMethodBtns.length === 0) return;
-
-    // Click handling (one selected at a time)
     buyCoffeeMethodBtns.forEach(btn => {
         btn.addEventListener('click', e => {
             e.preventDefault();
             e.stopPropagation();
             const m = btn.dataset.method;
             setActiveBuyCoffeeMethod(m);
-
-            // OPTIONAL HOOK: swap QR/image/text later if you want
-            // updateThanksPopupForMethod(m);
         });
-
-        // Keyboard accessibility
         btn.addEventListener('keydown', e => {
             if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
             e.preventDefault();
@@ -197,7 +178,6 @@ function initBuyCoffeeMethodsUI() {
         });
     });
 }
-
 
 /* ===========================
  * SEARCH PREFS (Title / Description)
@@ -633,19 +613,87 @@ function showThanksToast(message) {
         toast.style.opacity = '0';
     }, 2000);
 }
+function thanksImagePath({ beerMode, isPortrait, method }) {
+    const drink = beerMode ? 'beer' : 'coffee';
+    const orient = isPortrait ? 'portrait' : 'landscape';
+    const m = normalizeBuyCoffeeMethod(method);
+    return `assets/thanks_for_the_${drink}_${orient}_${m}.png`;
+}
+function updateThanksOverlayImageForMethod(method) {
+    if (!thanksOverlay) return;
+    const beerMode = isBeerTime();
+    const isPortrait = window.innerHeight >= window.innerWidth;
+    const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
+    if (!imgEl) return;
+    imgEl.src = thanksImagePath({ beerMode, isPortrait, method });
+    positionThanksMethodButtonsForOrientation();
+}
+const DONATION_LIGHTNING = 'wicked@getalby.com';
+const DONATION_LIQUID = 'VJL94Qcg8Bh9Lb1kxxBG62gKvNMv7jWBDR68X66wQr4bw9F7xUwVAcwxeHXoEa4tae4Chd2r42DKHV62';
+const DONATION_ONCHAIN = 'bc1q8mql8fucypd3dllkawqafytmrnwtv77gzxy346';
+function getDonationTextForMethod(method) {
+  const m = normalizeBuyCoffeeMethod(method);
+  if (m === 'lightning') return DONATION_LIGHTNING;
+  if (m === 'liquid') return DONATION_LIQUID;
+  if (m === 'onchain') return DONATION_ONCHAIN;
+  return DONATION_LIGHTNING;
+}
+function getDonationToastForMethod(method) {
+  const m = normalizeBuyCoffeeMethod(method);
+  if (m === 'lightning') return 'Lightning address<br>copied to clipboard';
+  if (m === 'liquid') return 'Liquid address<br>copied to clipboard';
+  if (m === 'onchain') return 'On-chain address<br>copied to clipboard';
+  return 'Copied to clipboard';
+}
+function positionThanksMethodButtonsForOrientation() {
+    if (!thanksOverlay) return;
+    const container = thanksOverlay.querySelector('#thanks-overlay img')?.parentElement;
+    if (!container) return;
+    const buttonContainer = container.querySelector('.buy-coffee-methods');
+    if (!buttonContainer) return;
+    const isPortrait = window.innerHeight >= window.innerWidth;
+    Object.assign(buttonContainer.style, {
+        position: 'absolute',
+        left: '0',
+        bottom: '20px',
+        top: 'auto',
+        width: '50%',
+        maxWidth: '',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: '',
+        flexWrap: '',
+        gap: '',
+        transform: '',
+        zIndex: '10'
+    });
+    if (isPortrait) {
+        Object.assign(buttonContainer.style, {
+            left: '50%',
+            top: '50%',
+            bottom: 'auto',
+            width: 'auto',
+            maxWidth: '92%',
+            alignItems: 'center',
+            flexWrap: 'nowrap',
+            whiteSpace: 'nowrap',
+            gap: 'clamp(6px, 1.5vw, 12px)',
+            transform: 'translate(-50%, calc(-100% - clamp(8px, 2vh, 18px)))'
+        });
+    }
+}
+function handleThanksOverlayResize() {
+    if (!isBuyMeVisible || !thanksOverlay) return;
+    const method = getStoredBuyCoffeeMethod();
+    updateThanksOverlayImageForMethod(method);
+    positionThanksMethodButtonsForOrientation();
+}
+
 function showThanksPopup() {
     const beerMode = isBeerTime();
     const isPortrait = window.innerHeight >= window.innerWidth;
-    let imgSrc;
-    if (beerMode) {
-        imgSrc = isPortrait
-            ? 'assets/thanks_for_the_beer_portrait.png'
-            : 'assets/thanks_for_the_beer_landscape.png';
-    } else {
-        imgSrc = isPortrait
-            ? 'assets/thanks_for_the_coffee_portrait.png'
-            : 'assets/thanks_for_the_coffee_landscape.png';
-    }
+    const method = getStoredBuyCoffeeMethod();
+    const imgSrc = thanksImagePath({ beerMode, isPortrait, method });
     if (!thanksOverlay) {
         thanksOverlay = document.createElement('div');
         thanksOverlay.id = 'thanks-overlay';
@@ -667,6 +715,23 @@ function showThanksPopup() {
         });
         const img = document.createElement('img');
         img.id = 'thanks-overlay-img';
+        async function copyActiveDonationToClipboard() {
+        const active = getStoredBuyCoffeeMethod();
+        const text = getDonationTextForMethod(active);
+        await copyToClipboard(text);
+        showThanksToast(getDonationToastForMethod(active));
+        }
+        img.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        await copyActiveDonationToClipboard();
+        });
+        img.addEventListener('keydown', async (e) => {
+        if (!(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        await copyActiveDonationToClipboard();
+        });
         img.alt = 'Thanks!';
         img.style.maxWidth = '90vw';
         img.style.maxHeight = '90vh';
@@ -720,17 +785,14 @@ function showThanksPopup() {
             btn.textContent = label;
             btn.dataset.method = method;
             btn.setAttribute('aria-pressed', 'false');
-            btn.addEventListener('click', async e => {
+            btn.addEventListener('click', e => {
                 e.stopPropagation();
                 e.preventDefault();
                 const active = setActiveOverlayBuyCoffeeMethod(method);
-                const donationKey = active === 'onchain' ? 'onchain' : active;
-                const text = getDonationTextForMethod(donationKey);
-                await copyToClipboard(text);
-                showThanksToast(getDonationToastForMethod(donationKey));
+                updateThanksOverlayImageForMethod(active);
             });
             btn.addEventListener('keydown', e => {
-                if (e.key !== 'Enter' && e.key !== ' ' && e.code !== 'Space') return;
+                if (!(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
                 e.preventDefault();
                 e.stopPropagation();
                 btn.click();
@@ -741,7 +803,9 @@ function showThanksPopup() {
         const liquidButton    = makeMethodBtn('Liquid', 'liquid');
         const onChainButton   = makeMethodBtn('On-chain', 'onchain');
         overlayMethodBtns.push(lightningButton, liquidButton, onChainButton);
-        setActiveOverlayBuyCoffeeMethod('lightning');
+        const initialMethod = getStoredBuyCoffeeMethod();
+        setActiveOverlayBuyCoffeeMethod(initialMethod);
+        updateThanksOverlayImageForMethod(initialMethod);
         buttonContainer.appendChild(lightningButton);
         buttonContainer.appendChild(liquidButton);
         buttonContainer.appendChild(onChainButton);
@@ -781,6 +845,7 @@ function showThanksPopup() {
     document.body.appendChild(thanksOverlay);
     thanksOverlay.style.display = 'flex';
     isBuyMeVisible = true;
+    positionThanksMethodButtonsForOrientation();
     document.addEventListener('keydown', onThanksKeydown);
     buyCoffeeCloseBtn = thanksOverlay.querySelector('#thanks-overlay-close');
     if (buyCoffeeCloseBtn && typeof buyCoffeeCloseBtn.focus === 'function') {
@@ -998,26 +1063,20 @@ function filterImages() {
         img.className = 'grid-thumb';
         img.dataset.gridIndex = index;
         img.dataset.filename = filename;
-        img.alt = title;
-        img.style.opacity = 0;
+        img.alt = title || '';
         img.tabIndex = 0;
-        img.setAttribute('role', 'button');
-        img.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                e.stopPropagation();
-                openModalByIndex(index);
-            }
+        img.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModalByIndex(index);
         });
-        img.onload = () => {
-            spinner.remove();
-            img.style.opacity = 1;
-        };
-        img.onerror = () => {
-            spinner.remove();
-            img.style.opacity = 1;
-        };
-        img.onclick = () => openModalByIndex(index);
+        img.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        openModalByIndex(index);
+        });
+        img.onload = () => { spinner.remove(); img.style.opacity = 1; };
+        img.onerror = () => { spinner.remove(); img.style.opacity = 1; };
+        img.src = imgSrc(filename);
         img.src = imgSrc(filename);
         const star = document.createElement('div');
         star.className = 'favorite-star';
@@ -3385,6 +3444,16 @@ window.addEventListener('resize', updateModalSafePadding);
 window.addEventListener('orientationchange', updateModalSafePadding);
 window.addEventListener('resize', handleModalViewportChange);
 window.addEventListener('orientationchange', handleModalViewportChange);
+window.addEventListener('resize', () => {
+    if (!isBuyMeVisible) return;
+    positionThanksMethodButtonsForOrientation();
+});
+window.addEventListener('orientationchange', () => {
+    if (!isBuyMeVisible) return;
+    positionThanksMethodButtonsForOrientation();
+});
+window.addEventListener('resize', handleThanksOverlayResize);
+window.addEventListener('orientationchange', handleThanksOverlayResize);
 chkSearchTitles?.addEventListener('click', e => {
     e.stopPropagation();
     toggleSearchPref('title');
