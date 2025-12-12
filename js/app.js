@@ -25,11 +25,12 @@ const MYR_BASE = 'monthly_yearly_returns';
 let MYR_RANGES = [];
 const MYR_START_YEAR = 2010;
 const MYR_DEFAULT_RANGE = `${THIS_YEAR - 4} - ${THIS_YEAR}`;
-function buildMyrRanges(startYear, endYear) {
-    const ranges = [];
-    for (let s = startYear; s <= endYear - 4; s++) ranges.push(`${s} - ${s + 4}`);
-    return ranges;
-}
+const MIN_SCALE = 1;
+const MAX_SCALE = 5;
+const DOUBLE_TAP_DELAY = 300;
+const MAX_TAP_MOVE_PX = 12;
+const SLIDE_EXP_KEY = 'slideshowExp';
+const BUY_COFFEE_METHOD_KEY = 'buyCoffeeMethod';
 
 /* ===========================
  * DOM ELEMENTS
@@ -53,7 +54,6 @@ const ssPrevBtn = document.getElementById('ssPrevBtn');
 const ssNextBtn = document.getElementById('ssNextBtn');
 const slideRange = document.getElementById('slideDuration');
 const slideBubble = document.getElementById('slideDurationBubble');
-const SLIDE_EXP_KEY = 'slideshowExp';
 const yearControls = document.getElementById('year-controls');
 const yearSelect = document.getElementById('year-select');
 const scaleControls = document.getElementById('scale-controls');
@@ -85,7 +85,6 @@ const uoaShowSelect = document.getElementById('uoa-show-select');
 const buyMeBtn = document.getElementById('buyCoffeeBtn');
 const favoritesToggleBtn = document.getElementById('favoritesToggle');
 const buyCoffeeMethodBtns = Array.from(document.querySelectorAll('.buy-coffee-method-btn'));
-const BUY_COFFEE_METHOD_KEY = 'buyCoffeeMethod';
 
 /* ===========================
  * GLOBAL STATE
@@ -114,18 +113,15 @@ let translateX = 0;
 let translateY = 0;
 let panStartX = 0;
 let panStartY = 0;
-const MIN_SCALE = 1;
-const MAX_SCALE = 5;
-const DOUBLE_TAP_DELAY = 300;
 let lastTapX = 0;
 let lastTapY = 0;
 let singleTapMoved = false;
-const MAX_TAP_MOVE_PX = 12;
 let nonModalFocusable = [];
 let thanksOverlay = null;
 let thanksToastTimeout = null;
 let isBuyMeVisible = false;
 let buyCoffeeCloseBtn = null;
+let tempNonFavInjected = false;
 
 /* ===========================
  * STORAGE + COOKIES (generic)
@@ -159,19 +155,6 @@ function updateGridThumbAtCurrent(newFilename, newAlt) {
         thumb.src = imgSrc(newFilename);
         if (newAlt) thumb.alt = newAlt;
     }
-}
-function migrateFavoriteFilename(oldFilename, newFilename) {
-    let favs = getFavorites();
-    const pos = favs.indexOf(oldFilename);
-    if (pos !== -1) {
-        favs.splice(pos, 1);
-        if (!favs.includes(newFilename)) favs.push(newFilename);
-        saveFavorites(favs);
-        modalFavBtn.classList.add('filled');
-        modalFavBtn.textContent = '★';
-    }
-    const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
-    if (gridStar) gridStar.setAttribute('data-filename', newFilename);
 }
 function showYearControls(show) {
     yearControls?.classList.toggle('show', !!show);
@@ -243,7 +226,6 @@ function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
         ytLink.setAttribute('tabindex', '-1');
     }
 }
-let tempNonFavInjected = false;
 function openByFilenameAllowingNonFav(filename) {
     let idx = visibleImages.findIndex(img => img.filename === filename);
     if (idx !== -1) {
@@ -387,320 +369,6 @@ function getContainerOrigin() {
     const r = modal.getBoundingClientRect();
     return {ox: r.left, oy: r.top};
 }
-function isBeerTime() {
-    const now = new Date();
-    const hour = now.getHours();
-    return hour >= 17 || hour < 3;
-}
-function onThanksKeydown(e) {
-    if (e.key === 'Escape') {
-        hideThanksPopup();
-    }
-}
-function hideThanksPopup() {
-    if (!thanksOverlay) return;
-    const toast = thanksOverlay.querySelector('.thanks-toast');
-    if (toast) {
-        toast.style.opacity = '0';
-    }
-    thanksOverlay.style.display = 'none';
-    if (thanksOverlay.parentNode) {
-        thanksOverlay.parentNode.removeChild(thanksOverlay);
-    }
-    document.removeEventListener('keydown', onThanksKeydown);
-    if (thanksToastTimeout) {
-        clearTimeout(thanksToastTimeout);
-        thanksToastTimeout = null;
-    }
-    isBuyMeVisible = false;
-}
-async function copyToClipboard(text) {
-    try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(text);
-        } else {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-        }
-        console.log('Copied to clipboard:', text);
-    } catch (err) {
-        console.error('Failed to copy to clipboard', err);
-    }
-}
-function showThanksToast(message) {
-    if (!thanksOverlay) return;
-    let toast = thanksOverlay.querySelector('.thanks-toast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.className = 'thanks-toast';
-        Object.assign(toast.style, {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            padding: '0.5rem 1rem',
-            fontSize: '0.9rem',
-            borderRadius: '999px',
-            background: 'rgba(0, 0, 0, 0.85)',
-            color: '#fff',
-            pointerEvents: 'none',
-            opacity: '0',
-            transition: 'opacity 0.2s ease-out',
-            zIndex: '20'
-        });
-        thanksOverlay.appendChild(toast);
-    }
-    toast.innerHTML = message;
-    toast.style.opacity = '1';
-    if (thanksToastTimeout) clearTimeout(thanksToastTimeout);
-    thanksToastTimeout = setTimeout(() => {
-        toast.style.opacity = '0';
-    }, 2000);
-}
-function thanksImagePath({ beerMode, isPortrait, method }) {
-    const drink = beerMode ? 'beer' : 'coffee';
-    const orient = isPortrait ? 'portrait' : 'landscape';
-    const m = normalizeBuyCoffeeMethod(method);
-    return `assets/thanks_for_the_${drink}_${orient}_${m}.png`;
-}
-function updateThanksOverlayImageForMethod(method) {
-    if (!thanksOverlay) return;
-    const beerMode = isBeerTime();
-    const isPortrait = window.innerHeight >= window.innerWidth;
-    const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
-    if (!imgEl) return;
-    imgEl.src = thanksImagePath({ beerMode, isPortrait, method });
-    positionThanksMethodButtonsForOrientation();
-}
-const DONATION_LIGHTNING = 'wicked@getalby.com';
-const DONATION_LIQUID = 'VJL94Qcg8Bh9Lb1kxxBG62gKvNMv7jWBDR68X66wQr4bw9F7xUwVAcwxeHXoEa4tae4Chd2r42DKHV62';
-const DONATION_ONCHAIN = 'bc1q8mql8fucypd3dllkawqafytmrnwtv77gzxy346';
-function getDonationTextForMethod(method) {
-  const m = normalizeBuyCoffeeMethod(method);
-  if (m === 'lightning') return DONATION_LIGHTNING;
-  if (m === 'liquid') return DONATION_LIQUID;
-  if (m === 'onchain') return DONATION_ONCHAIN;
-  return DONATION_LIGHTNING;
-}
-function getDonationToastForMethod(method) {
-  const m = normalizeBuyCoffeeMethod(method);
-  if (m === 'lightning') return 'Lightning address<br>copied to clipboard';
-  if (m === 'liquid') return 'Liquid address<br>copied to clipboard';
-  if (m === 'onchain') return 'On-chain address<br>copied to clipboard';
-  return 'Copied to clipboard';
-}
-function positionThanksMethodButtonsForOrientation() {
-    if (!thanksOverlay) return;
-    const container = thanksOverlay.querySelector('#thanks-overlay img')?.parentElement;
-    if (!container) return;
-    const buttonContainer = container.querySelector('.buy-coffee-methods');
-    if (!buttonContainer) return;
-    const isPortrait = window.innerHeight >= window.innerWidth;
-    Object.assign(buttonContainer.style, {
-        position: 'absolute',
-        left: '0',
-        bottom: '20px',
-        top: 'auto',
-        width: '50%',
-        maxWidth: '',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: '',
-        flexWrap: '',
-        gap: '',
-        transform: '',
-        zIndex: '10'
-    });
-    if (isPortrait) {
-        Object.assign(buttonContainer.style, {
-            left: '50%',
-            top: '50%',
-            bottom: 'auto',
-            width: 'auto',
-            maxWidth: '92%',
-            alignItems: 'center',
-            flexWrap: 'nowrap',
-            whiteSpace: 'nowrap',
-            gap: 'clamp(6px, 1.5vw, 12px)',
-            transform: 'translate(-50%, calc(-100% - clamp(8px, 2vh, 18px)))'
-        });
-    }
-}
-function handleThanksOverlayResize() {
-    if (!isBuyMeVisible || !thanksOverlay) return;
-    const method = getStoredBuyCoffeeMethod();
-    updateThanksOverlayImageForMethod(method);
-    positionThanksMethodButtonsForOrientation();
-}
-function showThanksPopup() {
-    const beerMode = isBeerTime();
-    const isPortrait = window.innerHeight >= window.innerWidth;
-    const method = getStoredBuyCoffeeMethod();
-    const imgSrc = thanksImagePath({ beerMode, isPortrait, method });
-    if (!thanksOverlay) {
-        thanksOverlay = document.createElement('div');
-        thanksOverlay.id = 'thanks-overlay';
-        Object.assign(thanksOverlay.style, {
-            position: 'fixed',
-            top: '0', left: '0', right: '0', bottom: '0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: '9999',
-            cursor: 'default'
-        });
-        const container = document.createElement('div');
-        Object.assign(container.style, {
-            position: 'relative',
-            display: 'inline-block',
-            cursor: 'pointer',
-            maxWidth: '90vw',
-        });
-        const img = document.createElement('img');
-        img.id = 'thanks-overlay-img';
-        async function copyActiveDonationToClipboard() {
-        const active = getStoredBuyCoffeeMethod();
-        const text = getDonationTextForMethod(active);
-        await copyToClipboard(text);
-        showThanksToast(getDonationToastForMethod(active));
-        }
-        img.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        await copyActiveDonationToClipboard();
-        });
-        img.addEventListener('keydown', async (e) => {
-        if (!(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
-        e.preventDefault();
-        e.stopPropagation();
-        await copyActiveDonationToClipboard();
-        });
-        img.alt = 'Thanks!';
-        img.style.maxWidth = '90vw';
-        img.style.maxHeight = '90vh';
-        img.style.boxShadow = '0 0 20px rgba(0,0,0,0.8)';
-        img.style.borderRadius = '8px';
-        img.style.display = 'block';
-        img.tabIndex = 0;
-        const closeBtn = document.createElement('button');
-        closeBtn.id = 'thanks-overlay-close';
-        closeBtn.type = 'button';
-        closeBtn.textContent = '×';
-        closeBtn.classList.add('buy-coffee-close');
-        closeBtn.setAttribute('aria-label', 'Close');
-        Object.assign(closeBtn.style, {
-            position: 'absolute',
-            top: '8px',
-            left: '8px'
-        });
-        buyCoffeeCloseBtn = closeBtn;
-        closeBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            e.preventDefault();
-            hideThanksPopup();
-        });
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'buy-coffee-methods';
-        const overlayMethodBtns = [];
-        function setActiveOverlayBuyCoffeeMethod(methodRaw) {
-            const norm = setStoredBuyCoffeeMethod(methodRaw);
-            overlayMethodBtns.forEach(b => {
-                const isOn = b.dataset.method === norm;
-                b.classList.toggle('active', isOn);
-                b.setAttribute('aria-pressed', String(isOn));
-            });
-            return norm;
-        }
-        Object.assign(buttonContainer.style, {
-            position: 'absolute',
-            left: '0',
-            bottom: '20px',
-            width: '50%',
-            display: 'flex',
-            justifyContent: 'center',
-            zIndex: '10'
-        });
-        function makeMethodBtn(label, methodRaw) {
-            const method = normalizeBuyCoffeeMethod(methodRaw);
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'buy-coffee-method-btn';
-            btn.textContent = label;
-            btn.dataset.method = method;
-            btn.setAttribute('aria-pressed', 'false');
-            btn.addEventListener('click', e => {
-                e.stopPropagation();
-                e.preventDefault();
-                const active = setActiveOverlayBuyCoffeeMethod(method);
-                updateThanksOverlayImageForMethod(active);
-            });
-            btn.addEventListener('keydown', e => {
-                if (!(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
-                e.preventDefault();
-                e.stopPropagation();
-                btn.click();
-            });
-            return btn;
-        }
-        const lightningButton = makeMethodBtn('Lightning', 'lightning');
-        const liquidButton    = makeMethodBtn('Liquid', 'liquid');
-        const onChainButton   = makeMethodBtn('On-chain', 'onchain');
-        overlayMethodBtns.push(lightningButton, liquidButton, onChainButton);
-        const initialMethod = getStoredBuyCoffeeMethod();
-        setActiveOverlayBuyCoffeeMethod(initialMethod);
-        updateThanksOverlayImageForMethod(initialMethod);
-        buttonContainer.appendChild(lightningButton);
-        buttonContainer.appendChild(liquidButton);
-        buttonContainer.appendChild(onChainButton);
-        container.appendChild(img);
-        container.appendChild(buttonContainer);
-        container.appendChild(closeBtn);
-        thanksOverlay.appendChild(container);
-        thanksOverlay.addEventListener('click', e => {
-            if (e.target === thanksOverlay) {
-                hideThanksPopup();
-            }
-        });
-        thanksOverlay.addEventListener('keydown', e => {
-            if (!isBuyMeVisible) return;
-            if (e.key !== 'Tab') return;
-            const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
-            const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
-            const methodBtns = Array.from(thanksOverlay.querySelectorAll('.buy-coffee-method-btn'));
-            const focusables = [closeEl, ...methodBtns, imgEl].filter(Boolean);
-            if (!focusables.length) return;
-            const currentIdx = focusables.indexOf(document.activeElement);
-            const delta = e.shiftKey ? -1 : 1;
-            let nextIdx = currentIdx + delta;
-            if (nextIdx < 0) nextIdx = focusables.length - 1;
-            if (nextIdx >= focusables.length) nextIdx = 0;
-            e.preventDefault();
-            e.stopPropagation();
-            focusables[nextIdx].focus();
-        });
-    }
-    const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
-    imgEl.src = imgSrc;
-    const toast = thanksOverlay.querySelector('.thanks-toast');
-    if (toast) {
-        toast.style.opacity = '0';
-    }
-    document.body.appendChild(thanksOverlay);
-    thanksOverlay.style.display = 'flex';
-    isBuyMeVisible = true;
-    positionThanksMethodButtonsForOrientation();
-    document.addEventListener('keydown', onThanksKeydown);
-    buyCoffeeCloseBtn = thanksOverlay.querySelector('#thanks-overlay-close');
-    if (buyCoffeeCloseBtn && typeof buyCoffeeCloseBtn.focus === 'function') {
-        requestAnimationFrame(() => buyCoffeeCloseBtn.focus());
-    }
-}
 function setSearchInputFocusability(active) {
     const input = document.getElementById('search-input');
     if (!input) return;
@@ -787,6 +455,19 @@ function toggleSearchPref(which) {
 /* ===========================
  * FAVORITES (localStorage)
  * =========================== */
+function migrateFavoriteFilename(oldFilename, newFilename) {
+    let favs = getFavorites();
+    const pos = favs.indexOf(oldFilename);
+    if (pos !== -1) {
+        favs.splice(pos, 1);
+        if (!favs.includes(newFilename)) favs.push(newFilename);
+        saveFavorites(favs);
+        modalFavBtn.classList.add('filled');
+        modalFavBtn.textContent = '★';
+    }
+    const gridStar = document.querySelector(`.favorite-star[data-filename="${oldFilename}"]`);
+    if (gridStar) gridStar.setAttribute('data-filename', newFilename);
+}
 function getFavorites() {
     const stored = localStorage.getItem('favorites');
     return stored ? JSON.parse(stored) : [];
@@ -2658,6 +2339,11 @@ function cycleCoinType(direction) {
 /* ===========================
  * MODULE: Monthly/Yearly Returns (MYR)
  * =========================== */
+function buildMyrRanges(startYear, endYear) {
+    const ranges = [];
+    for (let s = startYear; s <= endYear - 4; s++) ranges.push(`${s} - ${s + 4}`);
+    return ranges;
+}
 function isMyrFile(fname) {
     return fname.startsWith(MYR_BASE);
 }
@@ -2702,6 +2388,320 @@ function cycleMyrRange(direction) {
 /* ===========================
  * BUY ME: BUTTON + THANKS OVERLAY
  * =========================== */
+const DONATION_LIGHTNING = 'wicked@getalby.com';
+const DONATION_LIQUID = 'VJL94Qcg8Bh9Lb1kxxBG62gKvNMv7jWBDR68X66wQr4bw9F7xUwVAcwxeHXoEa4tae4Chd2r42DKHV62';
+const DONATION_ONCHAIN = 'bc1q8mql8fucypd3dllkawqafytmrnwtv77gzxy346';
+function isBeerTime() {
+    const now = new Date();
+    const hour = now.getHours();
+    return hour >= 17 || hour < 3;
+}
+function onThanksKeydown(e) {
+    if (e.key === 'Escape') {
+        hideThanksPopup();
+    }
+}
+function hideThanksPopup() {
+    if (!thanksOverlay) return;
+    const toast = thanksOverlay.querySelector('.thanks-toast');
+    if (toast) {
+        toast.style.opacity = '0';
+    }
+    thanksOverlay.style.display = 'none';
+    if (thanksOverlay.parentNode) {
+        thanksOverlay.parentNode.removeChild(thanksOverlay);
+    }
+    document.removeEventListener('keydown', onThanksKeydown);
+    if (thanksToastTimeout) {
+        clearTimeout(thanksToastTimeout);
+        thanksToastTimeout = null;
+    }
+    isBuyMeVisible = false;
+}
+async function copyToClipboard(text) {
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        console.log('Copied to clipboard:', text);
+    } catch (err) {
+        console.error('Failed to copy to clipboard', err);
+    }
+}
+function showThanksToast(message) {
+    if (!thanksOverlay) return;
+    let toast = thanksOverlay.querySelector('.thanks-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'thanks-toast';
+        Object.assign(toast.style, {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            padding: '0.5rem 1rem',
+            fontSize: '0.9rem',
+            borderRadius: '999px',
+            background: 'rgba(0, 0, 0, 0.85)',
+            color: '#fff',
+            pointerEvents: 'none',
+            opacity: '0',
+            transition: 'opacity 0.2s ease-out',
+            zIndex: '20'
+        });
+        thanksOverlay.appendChild(toast);
+    }
+    toast.innerHTML = message;
+    toast.style.opacity = '1';
+    if (thanksToastTimeout) clearTimeout(thanksToastTimeout);
+    thanksToastTimeout = setTimeout(() => {
+        toast.style.opacity = '0';
+    }, 2000);
+}
+function thanksImagePath({ beerMode, isPortrait, method }) {
+    const drink = beerMode ? 'beer' : 'coffee';
+    const orient = isPortrait ? 'portrait' : 'landscape';
+    const m = normalizeBuyCoffeeMethod(method);
+    return `assets/thanks_for_the_${drink}_${orient}_${m}.png`;
+}
+function updateThanksOverlayImageForMethod(method) {
+    if (!thanksOverlay) return;
+    const beerMode = isBeerTime();
+    const isPortrait = window.innerHeight >= window.innerWidth;
+    const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
+    if (!imgEl) return;
+    imgEl.src = thanksImagePath({ beerMode, isPortrait, method });
+    positionThanksMethodButtonsForOrientation();
+}
+function getDonationTextForMethod(method) {
+  const m = normalizeBuyCoffeeMethod(method);
+  if (m === 'lightning') return DONATION_LIGHTNING;
+  if (m === 'liquid') return DONATION_LIQUID;
+  if (m === 'onchain') return DONATION_ONCHAIN;
+  return DONATION_LIGHTNING;
+}
+function getDonationToastForMethod(method) {
+  const m = normalizeBuyCoffeeMethod(method);
+  if (m === 'lightning') return 'Lightning address<br>copied to clipboard';
+  if (m === 'liquid') return 'Liquid address<br>copied to clipboard';
+  if (m === 'onchain') return 'On-chain address<br>copied to clipboard';
+  return 'Copied to clipboard';
+}
+function positionThanksMethodButtonsForOrientation() {
+    if (!thanksOverlay) return;
+    const container = thanksOverlay.querySelector('#thanks-overlay img')?.parentElement;
+    if (!container) return;
+    const buttonContainer = container.querySelector('.buy-coffee-methods');
+    if (!buttonContainer) return;
+    const isPortrait = window.innerHeight >= window.innerWidth;
+    Object.assign(buttonContainer.style, {
+        position: 'absolute',
+        left: '0',
+        bottom: '20px',
+        top: 'auto',
+        width: '50%',
+        maxWidth: '',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: '',
+        flexWrap: '',
+        gap: '',
+        transform: '',
+        zIndex: '10'
+    });
+    if (isPortrait) {
+        Object.assign(buttonContainer.style, {
+            left: '50%',
+            top: '50%',
+            bottom: 'auto',
+            width: 'auto',
+            maxWidth: '92%',
+            alignItems: 'center',
+            flexWrap: 'nowrap',
+            whiteSpace: 'nowrap',
+            gap: 'clamp(6px, 1.5vw, 12px)',
+            transform: 'translate(-50%, calc(-100% - clamp(8px, 2vh, 18px)))'
+        });
+    }
+}
+function handleThanksOverlayResize() {
+    if (!isBuyMeVisible || !thanksOverlay) return;
+    const method = getStoredBuyCoffeeMethod();
+    updateThanksOverlayImageForMethod(method);
+    positionThanksMethodButtonsForOrientation();
+}
+function showThanksPopup() {
+    const beerMode = isBeerTime();
+    const isPortrait = window.innerHeight >= window.innerWidth;
+    const method = getStoredBuyCoffeeMethod();
+    const imgSrc = thanksImagePath({ beerMode, isPortrait, method });
+    if (!thanksOverlay) {
+        thanksOverlay = document.createElement('div');
+        thanksOverlay.id = 'thanks-overlay';
+        Object.assign(thanksOverlay.style, {
+            position: 'fixed',
+            top: '0', left: '0', right: '0', bottom: '0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: '9999',
+            cursor: 'default'
+        });
+        const container = document.createElement('div');
+        Object.assign(container.style, {
+            position: 'relative',
+            display: 'inline-block',
+            cursor: 'pointer',
+            maxWidth: '90vw',
+        });
+        const img = document.createElement('img');
+        img.id = 'thanks-overlay-img';
+        async function copyActiveDonationToClipboard() {
+        const active = getStoredBuyCoffeeMethod();
+        const text = getDonationTextForMethod(active);
+        await copyToClipboard(text);
+        showThanksToast(getDonationToastForMethod(active));
+        }
+        img.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        await copyActiveDonationToClipboard();
+        });
+        img.addEventListener('keydown', async (e) => {
+        if (!(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        await copyActiveDonationToClipboard();
+        });
+        img.alt = 'Thanks!';
+        img.style.maxWidth = '90vw';
+        img.style.maxHeight = '90vh';
+        img.style.boxShadow = '0 0 20px rgba(0,0,0,0.8)';
+        img.style.borderRadius = '8px';
+        img.style.display = 'block';
+        img.tabIndex = 0;
+        const closeBtn = document.createElement('button');
+        closeBtn.id = 'thanks-overlay-close';
+        closeBtn.type = 'button';
+        closeBtn.textContent = '×';
+        closeBtn.classList.add('buy-coffee-close');
+        closeBtn.setAttribute('aria-label', 'Close');
+        Object.assign(closeBtn.style, {
+            position: 'absolute',
+            top: '8px',
+            left: '8px'
+        });
+        buyCoffeeCloseBtn = closeBtn;
+        closeBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            hideThanksPopup();
+        });
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'buy-coffee-methods';
+        const overlayMethodBtns = [];
+        function setActiveOverlayBuyCoffeeMethod(methodRaw) {
+            const norm = setStoredBuyCoffeeMethod(methodRaw);
+            overlayMethodBtns.forEach(b => {
+                const isOn = b.dataset.method === norm;
+                b.classList.toggle('active', isOn);
+                b.setAttribute('aria-pressed', String(isOn));
+            });
+            return norm;
+        }
+        Object.assign(buttonContainer.style, {
+            position: 'absolute',
+            left: '0',
+            bottom: '20px',
+            width: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            zIndex: '10'
+        });
+        function makeMethodBtn(label, methodRaw) {
+            const method = normalizeBuyCoffeeMethod(methodRaw);
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'buy-coffee-method-btn';
+            btn.textContent = label;
+            btn.dataset.method = method;
+            btn.setAttribute('aria-pressed', 'false');
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+                e.preventDefault();
+                const active = setActiveOverlayBuyCoffeeMethod(method);
+                updateThanksOverlayImageForMethod(active);
+            });
+            btn.addEventListener('keydown', e => {
+                if (!(e.key === 'Enter' || e.key === ' ' || e.code === 'Space')) return;
+                e.preventDefault();
+                e.stopPropagation();
+                btn.click();
+            });
+            return btn;
+        }
+        const lightningButton = makeMethodBtn('Lightning', 'lightning');
+        const liquidButton    = makeMethodBtn('Liquid', 'liquid');
+        const onChainButton   = makeMethodBtn('On-chain', 'onchain');
+        overlayMethodBtns.push(lightningButton, liquidButton, onChainButton);
+        const initialMethod = getStoredBuyCoffeeMethod();
+        setActiveOverlayBuyCoffeeMethod(initialMethod);
+        updateThanksOverlayImageForMethod(initialMethod);
+        buttonContainer.appendChild(lightningButton);
+        buttonContainer.appendChild(liquidButton);
+        buttonContainer.appendChild(onChainButton);
+        container.appendChild(img);
+        container.appendChild(buttonContainer);
+        container.appendChild(closeBtn);
+        thanksOverlay.appendChild(container);
+        thanksOverlay.addEventListener('click', e => {
+            if (e.target === thanksOverlay) {
+                hideThanksPopup();
+            }
+        });
+        thanksOverlay.addEventListener('keydown', e => {
+            if (!isBuyMeVisible) return;
+            if (e.key !== 'Tab') return;
+            const closeEl = thanksOverlay.querySelector('#thanks-overlay-close');
+            const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
+            const methodBtns = Array.from(thanksOverlay.querySelectorAll('.buy-coffee-method-btn'));
+            const focusables = [closeEl, ...methodBtns, imgEl].filter(Boolean);
+            if (!focusables.length) return;
+            const currentIdx = focusables.indexOf(document.activeElement);
+            const delta = e.shiftKey ? -1 : 1;
+            let nextIdx = currentIdx + delta;
+            if (nextIdx < 0) nextIdx = focusables.length - 1;
+            if (nextIdx >= focusables.length) nextIdx = 0;
+            e.preventDefault();
+            e.stopPropagation();
+            focusables[nextIdx].focus();
+        });
+    }
+    const imgEl = thanksOverlay.querySelector('#thanks-overlay-img');
+    imgEl.src = imgSrc;
+    const toast = thanksOverlay.querySelector('.thanks-toast');
+    if (toast) {
+        toast.style.opacity = '0';
+    }
+    document.body.appendChild(thanksOverlay);
+    thanksOverlay.style.display = 'flex';
+    isBuyMeVisible = true;
+    positionThanksMethodButtonsForOrientation();
+    document.addEventListener('keydown', onThanksKeydown);
+    buyCoffeeCloseBtn = thanksOverlay.querySelector('#thanks-overlay-close');
+    if (buyCoffeeCloseBtn && typeof buyCoffeeCloseBtn.focus === 'function') {
+        requestAnimationFrame(() => buyCoffeeCloseBtn.focus());
+    }
+}
 function updateBuyMeButton() {
     const icon = document.getElementById("buyCoffeeIcon");
     const text = document.getElementById("buyCoffeeText");
@@ -2770,7 +2770,7 @@ function initBuyCoffeeMethodsUI() {
 }
 
 /* ===========================
- * SLIDESHOW: DURATION + CORE + UI
+ * SLIDESHOW: CORE + UI + FULLSCREEN
  * =========================== */
 const EXP_MIN = 1;
 const EXP_MAX = 6;
@@ -3032,7 +3032,7 @@ async function closeSlideshow() {
 }
 
 /* ===========================
- * AUTO-REFRESH EVERY 15 MINUTES (IMAGES ONLY)
+ * IMAGE CACHE-BUSTER + AUTO-REFRESH
  * =========================== */
 let lastImgVersion = getImgVersion();
 function refreshVisibleImagesForNewVersion() {
