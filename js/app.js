@@ -2480,7 +2480,7 @@ function cycleMyrRange(direction) {
  * BUY ME: BUTTON + THANKS OVERLAY
  * =========================== */
 const DONATION_LIGHTNING = 'wicked@getalby.com';
-const DONATION_LIQUID = 'VJL94Qcg8Bh9Lb1kxxBG62gKvNMv7jWBDR68X66wQr4bw9F7xUwVAcwxeHXoEa4tae4Chd2r42DKHV62';
+const DONATION_LIQUID = 'VJLDEF7n8TBjyJY2BaAgeVvzPSRMJ7VAP5opW9mB5A7ChyiKHnaguTugZNznxNiV2ZDyPxJyQoeZ2KhM';
 const DONATION_ONCHAIN = 'bc1q8mql8fucypd3dllkawqafytmrnwtv77gzxy346';
 function isBeerTime() {
     const now = new Date();
