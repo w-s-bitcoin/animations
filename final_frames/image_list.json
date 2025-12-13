@@ -1,5 +1,13 @@
 [
     {
+        "filename": "btcmap.png",
+        "title": "Global Bitcoin Merchant Adoption",
+        "description": "A world map showing the distribution of verified and active Bitcoin merchants by region, with top countries ranked by total merchants and recent 30-day changes.",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "uoa_btc_usd.png",
         "title": "Unit of Account (BTC/USD)",
         "description": "Shows the price of $1 USD in terms of bitcoin and 1 BTC in terms of $",
