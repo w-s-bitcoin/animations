@@ -1,6 +1,25 @@
 /* ===========================
  * BOOTSTRAP (fetch + init + global exports)
  * =========================== */
+
+function updateLastUpdatedStamp() {
+  const el = document.getElementById("last-updated");
+  if (!el) return;
+  const url = `${getPageBasePath()}/assets/last_updated.txt?ts=${Date.now()}`;
+  fetch(url, { cache: "no-store" })
+    .then((res) => {
+      if (!res.ok) return null;
+      return res.text();
+    })
+    .then((text) => {
+      if (!text) return;
+      const t = String(text).trim();
+      if (!t) return;
+      el.textContent = t;
+    })
+    .catch(() => {});
+}
+updateLastUpdatedStamp();
 function syncModalToUrl() {
   if (!Array.isArray(imageList) || imageList.length === 0) return;
   const fname = getImageNameFromPath();
