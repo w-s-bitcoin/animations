@@ -1,0 +1,393 @@
+ua,software,main_version,listening,est_unreachable,total_count
+/Satoshi:29.0.0/,Bitcoin Core,v29,1109,19312,20421
+/Satoshi:28.1.0/,Bitcoin Core,v28,744,13174,13918
+/Satoshi:27.0.0/,Bitcoin Core,v27,1013,9938,10951
+/Satoshi:28.1.0/Knots:20250305/,Bitcoin Knots,v28,336,8992,9328
+/Satoshi:29.1.0/,Bitcoin Core,v29,462,4587,5049
+/Satoshi:29.1.0/Knots:20250903/,Bitcoin Knots,v29,424,4056,4480
+/Satoshi:27.1.0/,Bitcoin Core,v27,887,3528,4415
+/Satoshi:28.0.0/,Bitcoin Core,v28,247,3622,3869
+/WalletKit:0.1.0/,other (excluded),,0,3602,3602
+/Satoshi:22.0.0/,Bitcoin Core,v22,105,3030,3135
+/Satoshi:25.0.0/,Bitcoin Core,v25,160,2965,3125
+/Satoshi:26.0.0/,Bitcoin Core,v26,102,2414,2516
+/bitcoinj:0.16.5/Bitcoin Wallet:10.26/,bitcoinj / wallets,,0,2477,2477
+/Satoshi:25.1.0/,Bitcoin Core,v25,637,1666,2303
+/Satoshi:0.21.1/,Bitcoin Core,v0.21,36,1783,1819
+/Satoshi:24.0.1/,Bitcoin Core,v24,97,1087,1184
+/Satoshi:23.0.0/,Bitcoin Core,v23,40,620,660
+/Satoshi:27.2.0/,Bitcoin Core,v27,28,329,357
+/Satoshi:26.1.0/,Bitcoin Core,v26,13,271,284
+/Satoshi:28.2.0/,Bitcoin Core,v28,31,224,255
+/Satoshi:0.21.0/,Bitcoin Core,v0.21,13,235,248
+/bread:2.1/,other (excluded),,0,234,234
+/Satoshi:0.20.1/,Bitcoin Core,v0.20,12,193,205
+/Satoshi:29.99.0/,Bitcoin Core,v29,28,172,200
+/Bither1.6.2/,Bither,,0,170,170
+/Bither:1.7.3/,other (excluded),,0,148,148
+/Satoshi:27.1.0/Knots:20240801/,Bitcoin Knots,v27,10,138,148
+/Satoshi:26.2.0/,Bitcoin Core,v26,10,128,138
+/Satoshi:0.0.156.64/,Bitcoin Core,v0.0,0,132,132
+/bitcoinj:0.16.2/,bitcoinj / wallets,,0,117,117
+/Satoshi:0.18.0/,Bitcoin Core,v0.18,10,98,108
+/Satoshi:0.20.0/,Bitcoin Core,v0.20,6,102,108
+/Satoshi:0.18.1/,Bitcoin Core,v0.18,7,98,105
+/Satoshi:0.17.1/,Bitcoin Core,v0.17,6,88,94
+/btcwire:0.5.0/neutrino:0.12.0-beta/,btcsuite,,0,87,87
+/Satoshi:0.16.1/,Bitcoin Core,v0.16,0,87,87
+/Satoshi:28.99.0/,Bitcoin Core,v28,9,76,85
+/Satoshi:0.15.1/,Bitcoin Core,v0.15,1,84,85
+/Satoshi:0.7.2/,Bitcoin Core,v0.7,1,83,84
+/btcwire:0.5.0/btcd:0.24.2/,btcsuite,,12,69,81
+/Satoshi:0.19.0.1/,Bitcoin Core,v0.19,2,74,76
+/Bither1.6.1/,Bither,,0,72,72
+/vds_0.9.53/,other (excluded),,0,72,72
+/hodlwallet:0.2/,other (excluded),,0,67,67
+/bitcoinj:0.16.3/,bitcoinj / wallets,,0,65,65
+/Satoshi:24.1.0/,Bitcoin Core,v24,3,62,65
+/Satoshi:27.99.0/,Bitcoin Core,v27,7,57,64
+/bcoin:2.2.0/,other (excluded),,0,64,64
+/Satoshi:0.19.1/,Bitcoin Core,v0.19,4,60,64
+/nebula/2.4.1-65580d4/,other (excluded),,0,63,63
+/bcoin:2.1.2/,other (excluded),,0,51,51
+/Satoshi:24.0.0/,Bitcoin Core,v24,7,40,47
+/bitcoinj:0.16.5/Bitcoin Wallet:10.24/,bitcoinj / wallets,,0,44,44
+/Satoshi:0.14.2/,Bitcoin Core,v0.14,0,44,44
+/bitcoinj:0.16.2/Bitcoin Wallet:10.14/,bitcoinj / wallets,,0,43,43
+/Satoshi:25.2.0/,Bitcoin Core,v25,5,37,42
+/Satoshi:30.99.0/,Bitcoin Core,v30,13,27,40
+/:1.0.0-dev+e79d9922c/,other (excluded),,0,39,39
+/Satoshi:0.16.0/,Bitcoin Core,v0.16,0,39,39
+/Satoshi:0.12.1/,Bitcoin Core,v0.12,4,34,38
+/Satoshi:0.13.1/,Bitcoin Core,v0.13,1,36,37
+/Satoshi:30.0.0/,Bitcoin Core,v30,19,17,36
+/btcwire:0.5.0/:/,btcsuite,,0,36,36
+/Satoshi:0.14.1/,Bitcoin Core,v0.14,0,34,34
+/Satoshi:0.15.0.1/,Bitcoin Core,v0.15,0,33,33
+/Satoshi:22.1.0/,Bitcoin Core,v22,3,30,33
+/bitcoinj:0.16.1/Bitcoin Wallet:9.03/,bitcoinj / wallets,,0,32,32
+/Satoshi:0.15.0/,Bitcoin Core,v0.15,0,32,32
+/bitcoinj:0.16.3/Bitcoin Wallet:10.20/,bitcoinj / wallets,,0,31,31
+/Satoshi:0.17.0.1/,Bitcoin Core,v0.17,3,28,31
+/Satoshi:23.1.0/,Bitcoin Core,v23,8,21,29
+/Satoshi:0.16.2/,Bitcoin Core,v0.16,1,28,29
+/bitcoin-seeder:0.01/,other (excluded),,0,26,26
+/Satoshi:26.99.0/,Bitcoin Core,v26,4,21,25
+/bitcoinj:0.16.1/Bitcoin Wallet:1.0.3.3/,bitcoinj / wallets,,0,25,25
+/Satoshi:0.11.2/,Bitcoin Core,v0.11,1,23,24
+/Satoshi:24.2.0/,Bitcoin Core,v24,2,22,24
+/Satoshi:25.99.0/,Bitcoin Core,v25,5,19,24
+/bitcoinj:0.16.3/Bitcoin Wallet:10.16/,bitcoinj / wallets,,0,24,24
+/bitcoinj:0.16.4/Bitcoin Wallet:10.21/,bitcoinj / wallets,,0,24,24
+/Satoshi:23.0.0/Knots:20220529/,Bitcoin Knots,v23,0,23,23
+/bitcoinj:0.15.10.bisq.16/Bisq:1.9.21/,bitcoinj / wallets,,0,23,23
+/Satoshi:0.21.2/,Bitcoin Core,v0.21,1,21,22
+/bitcoinj:0.16.1/Bitcoin Wallet:1.2.0.7/,bitcoinj / wallets,,0,22,22
+/Satoshi:0.8.6/,Bitcoin Core,v0.8,4,17,21
+/Satoshi:0.13.2/,Bitcoin Core,v0.13,0,19,19
+/Satoshi:0.8.5/,Bitcoin Core,v0.8,2,17,19
+/bitcoinj:0.16.5/Bitcoin Wallet:10.25/,bitcoinj / wallets,,0,19,19
+/bitcoinj:0.16.3/Bitcoin Wallet:10.15/,bitcoinj / wallets,,0,19,19
+/bitcoinj:0.16.2/Bitcoin Wallet:10.13/,bitcoinj / wallets,,0,18,18
+/bitcoinj:0.16.2/Bitcoin Wallet:9.26/,bitcoinj / wallets,,0,18,18
+/Satoshi:0.1.17.128/,Bitcoin Core,v0.1,0,18,18
+/Satoshi:0.11.0/,Bitcoin Core,v0.11,0,17,17
+/Satoshi:0.16.3/,Bitcoin Core,v0.16,2,15,17
+/Satoshi:0.17.0/,Bitcoin Core,v0.17,1,16,17
+/BitCoinJ:0.11.2/MultiBit:0.5.18/,bitcoinj / wallets,,0,16,16
+/Satoshi:0.8.1/,Bitcoin Core,v0.8,0,16,16
+/Satoshi:26.1.0/Knots:20240513/,Bitcoin Knots,v26,1,15,16
+/Satoshi:24.99.0/,Bitcoin Core,v24,4,12,16
+/python-bitcoin-verifier:0.1/,other (excluded),,0,15,15
+/bitcoinj:0.16.2/Bitcoin Wallet:10.03/,bitcoinj / wallets,,0,15,15
+/Satoshi:0.14.0/,Bitcoin Core,v0.14,0,14,14
+/btcwire:0.5.0/bitcoinstats.com:0.2/,btcsuite,,0,14,14
+/Satoshi:0.13.0/,Bitcoin Core,v0.13,2,11,13
+/bitcoinj:0.15-SNAPSHOT/,bitcoinj / wallets,,0,13,13
+/bitcoinj:0.15.9/Bitcoin Wallet:1.0.7.5/,bitcoinj / wallets,,0,13,13
+/Satoshi:26.1.0/Knots:20240325/,Bitcoin Knots,v26,0,13,13
+/breadwallet:0.6.7/,bread,,0,12,12
+/bitcoinj:0.16.2/Bitcoin Wallet:3.0.7/,bitcoinj / wallets,,0,12,12
+/Satoshi:0.7.0.3/,Bitcoin Core,v0.7,0,12,12
+/bitcoinj:0.13.3/MultiBitHD:0.5.1/,bitcoinj / wallets,,0,11,11
+/BitcoinUnlimited:1.0.3/,Bitcoin Unlimited,,1,10,11
+/Satoshi:0.8.0/,Bitcoin Core,v0.8,0,11,11
+/Satoshi:0.15.2/,Bitcoin Core,v0.15,0,11,11
+/Satoshi:0.15.0/Knots:20170914/,Bitcoin Knots,v0.15,0,11,11
+/Satoshi:0.20.2/,Bitcoin Core,v0.20,2,9,11
+/Satoshi:23.99.0/,Bitcoin Core,v23,1,10,11
+/bitcoinj:0.14.3/Bitcoin Wallet:5.04/,bitcoinj / wallets,,0,11,11
+/bitcoinj:0.14.4/Bitcoin Wallet:5.20/,bitcoinj / wallets,,0,11,11
+/btcwire:0.5.0/btcd:0.23.3/,btcsuite,,0,10,10
+/bitcoinj:0.14.5/Bitcoin Wallet:5.44/,bitcoinj / wallets,,0,10,10
+/bitcoinj:0.16.1/,bitcoinj / wallets,,0,10,10
+/breadwallet:0.6.9/,bread,,0,10,10
+/bitcoinj:0.16.2/Bitcoin Wallet:10.11/,bitcoinj / wallets,,0,10,10
+/bitcoinj:0.14.4/Bitcoin Wallet:5.23/,bitcoinj / wallets,,0,10,10
+/bitcoinj:0.15.8/Bitcoin Wallet:7.69/,bitcoinj / wallets,,0,10,10
+/btcwire:0.5.0/Satoshi:25.0.0/,btcsuite,v25,0,10,10
+/Satoshi:0.11.1/,Bitcoin Core,v0.11,0,10,10
+/Satoshi:0.8.3/,Bitcoin Core,v0.8,1,8,9
+/Classic:1.3.8/,Bitcoin Classic,,0,9,9
+/bitcoinj:0.14.4/Bitcoin:1.075/,bitcoinj / wallets,,0,9,9
+/Yuki / 0.0.1/,other (excluded),,0,9,9
+/bitcoinj:0.14.4/Bitcoin Wallet:5.30/,bitcoinj / wallets,,0,9,9
+/bitcoinj:0.14.4/Bitcoin Wallet:5.24/,bitcoinj / wallets,,0,9,9
+/Satoshi:0.15.99/,Bitcoin Core,v0.15,1,8,9
+/bitcoinj:0.16.2/Bitcoin Wallet:10.01/,bitcoinj / wallets,,0,9,9
+/bitcoinj:0.14.5/Bitcoin Wallet:5.31/,bitcoinj / wallets,,0,9,9
+/breadwallet:1.3.5/,bread,,0,9,9
+/bitcoinj:0.14.3/Bitcoin Wallet:4.58.1-btcx/,bitcoinj / wallets,,0,9,9
+/bitcoinj:0.14.5/Bitcoin Wallet:5.32/,bitcoinj / wallets,,0,9,9
+/Satoshi:0.14.2/UASF-Segwit:0.3/,Bitcoin Core,v0.14,0,8,8
+/bitcoinj:0.14.4/Bitcoin Wallet:5.17/,bitcoinj / wallets,,0,8,8
+/bitcoinj:0.14.4/Bitcoin Wallet:5.28/,bitcoinj / wallets,,0,8,8
+/bitcoinj:0.14.4/Bitcoin Wallet:5.21/,bitcoinj / wallets,,0,8,8
+/BitCoinJ:0.11.1/MultiBit:0.5.17/,bitcoinj / wallets,,0,8,8
+/bitcoinj:0.14.3/Bitcoin Wallet:5.10/,bitcoinj / wallets,,0,8,8
+/bitcoinj:0.14.5/Bitcoin Wallet:5.42/,bitcoinj / wallets,,0,8,8
+/bitcoinj:0.16.2/Bitcoin Wallet:10.06/,bitcoinj / wallets,,0,8,8
+/Bither:1.6.5/,other (excluded),,0,8,8
+/bitcoinj:0.14.5/,bitcoinj / wallets,,0,8,8
+/bitcoinj:0.13.3/Bitcoin Wallet:4.43-blackberry/,bitcoinj / wallets,,0,8,8
+/Satoshi:0.15.1/Knots:20171111/,Bitcoin Knots,v0.15,0,8,8
+/bitcoinj:0.15.10/Bitcoin Wallet:8.17/,bitcoinj / wallets,,0,8,8
+/Satoshi:23.2.0/,Bitcoin Core,v23,1,7,8
+/Satoshi:0.14.99/,Bitcoin Core,v0.14,0,8,8
+/breadwallet:0.6.5/,bread,,0,8,8
+/bitcoinj:0.14.4/Bitcoin Wallet:5.26/,bitcoinj / wallets,,0,8,8
+/bitcoinj:0.14.5/Bitcoin Wallet:5.37/,bitcoinj / wallets,,0,8,8
+/Satoshi:0.9.2/,Bitcoin Core,v0.9,0,7,7
+/Satoshi:22.99.0/,Bitcoin Core,v22,0,7,7
+/breadwallet:0.6.4/,bread,,0,7,7
+/Satoshi:0.9.1/,Bitcoin Core,v0.9,2,5,7
+/bitcoinj:0.14.3/Bitcoin Wallet:5.12/,bitcoinj / wallets,,0,7,7
+/bitcoinj:0.14.5/Bitcoin Wallet:5.35/,bitcoinj / wallets,,0,7,7
+/Classic:1.3.4/,Bitcoin Classic,,0,7,7
+/bitcoinj:0.14.5/Bitcoin Wallet:5.41/,bitcoinj / wallets,,0,7,7
+/Satoshi:0.8.2.2/,Bitcoin Core,v0.8,0,7,7
+/Satoshi:0.17.2/,Bitcoin Core,v0.17,1,6,7
+/bitcoinj:0.16.2/Bitcoin Wallet:10.10/,bitcoinj / wallets,,0,7,7
+/Satoshi:21.99.0/,Bitcoin Core,v21,1,6,7
+/Bither1.4.7/,Bither,,0,7,7
+/bitcoinj:0.14.5/Bitcoin Wallet:5.33/,bitcoinj / wallets,,0,7,7
+/Satoshi:0.12.0/,Bitcoin Core,v0.12,0,7,7
+/bitcoinj:0.15.10/Bitcoin Wallet:8.19/,bitcoinj / wallets,,0,7,7
+/Satoshi:0.14.3/,Bitcoin Core,v0.14,0,7,7
+/Satoshi:0.9.3/,Bitcoin Core,v0.9,0,7,7
+/bitcore:1.1.0/,other (excluded),,0,6,6
+/bitcoinj:0.14.4/,bitcoinj / wallets,,0,6,6
+/vds_0.9.49/,other (excluded),,0,6,6
+/BitCoinJ:0.11.2/MultiBit:0.5.19/,bitcoinj / wallets,,0,6,6
+/bitcoinj:0.14.5/Bitcoin Wallet:5.39/,bitcoinj / wallets,,0,6,6
+/breadwallet:1.51/,bread,,0,6,6
+/Satoshi:27.1.0/Knots:20240621/,Bitcoin Knots,v27,2,4,6
+/bitcoinj:0.14.3/Bitcoin Wallet:4.58/,bitcoinj / wallets,,0,6,6
+/bitcoinj:0.14.4/Bitcoin Wallet:5.21-blackberry/,bitcoinj / wallets,,0,6,6
+/bitcoinj:0.14.1/Bitcoin:1.072/,bitcoinj / wallets,,0,6,6
+/bitcoinj:0.14.5/Bitcoin Wallet:5.36/,bitcoinj / wallets,,0,6,6
+/breadwallet:0.6.6/,bread,,0,6,6
+/bitcoinj:0.15.10/Bitcoin Wallet:8.11/,bitcoinj / wallets,,0,6,6
+/vds_0.9.48/,other (excluded),,0,6,6
+/bitcoinj:0.13.5/,bitcoinj / wallets,,0,6,6
+/bitcoinj:0.14.3/Bitcoin Wallet:1.0.5/,bitcoinj / wallets,,0,6,6
+/bitcoinj:0.16.2/Bitcoin Wallet:10.12/,bitcoinj / wallets,,0,5,5
+/libbitcoin:4.0.0/,other (excluded),,0,5,5
+/Satoshi:0.14.1/Knots:20170420/,Bitcoin Knots,v0.14,0,5,5
+/bitcoinj:0.15.10/Bitcoin Wallet:8.16/,bitcoinj / wallets,,0,5,5
+/bitcoinj:0.15.9/Bitcoin Wallet:8.08/,bitcoinj / wallets,,0,5,5
+/bitcoinj:0.17/,bitcoinj / wallets,,0,5,5
+/bitcoinj:0.16.4/Bitcoin Wallet:10.22/,bitcoinj / wallets,,0,5,5
+/bcoin:v1.0.0-beta.14/,other (excluded),,0,5,5
+/Satoshi:0.16.99/,Bitcoin Core,v0.16,0,5,5
+/breadwallet:1.50/,bread,,0,5,5
+/bitcoinj:0.13.3/MultiBitHD:0.4.1/,bitcoinj / wallets,,0,5,5
+/bitcoinj:0.14.4/Bitcoin Wallet:5.22/,bitcoinj / wallets,,0,5,5
+/bitcoinj:0.14.4/Bitcoin Wallet:5.29/,bitcoinj / wallets,,0,5,5
+/Satoshi:0.14.2/UASF-Segwit:1.0/,Bitcoin Core,v0.14,0,5,5
+/bitcoinj:0.14.4/Bitcoin:1.074/,bitcoinj / wallets,,0,5,5
+/Satoshi:0.10.1/,Bitcoin Core,v0.10,0,5,5
+/bitcoinj:0.16.4/Bitcoin Wallet:10.23/,bitcoinj / wallets,,0,5,5
+/vds_0.9.52/,other (excluded),,0,5,5
+/bitcoinj:0.14.4/Bitcoin Wallet:5.18/,bitcoinj / wallets,,0,5,5
+/Satoshi:0.10.0/,Bitcoin Core,v0.10,0,5,5
+/breadwallet:0.6.8/,bread,,0,4,4
+/Satoshi:0.14.2/Knots:20170618/,Bitcoin Knots,v0.14,0,4,4
+/bitcoinj:0.15.10/Bitcoin Wallet:2.2.7/,bitcoinj / wallets,,0,4,4
+/Gocoin:1.11.0pre/,other (excluded),,0,4,4
+/bitcoinj:0.14.4/Bitcoin Wallet:5.25/,bitcoinj / wallets,,0,4,4
+/bitcoinj:0.15.8/Bitcoin Wallet:1.0.6.7/,bitcoinj / wallets,,0,4,4
+/bitcoinj:0.14.5/Bitcoin Wallet:5.40/,bitcoinj / wallets,,0,4,4
+/Satoshi:0.19.0/,Bitcoin Core,v0.19,0,4,4
+/bitcoinj:0.16.2/Bitcoin Wallet:10.09/,bitcoinj / wallets,,0,4,4
+/bitcoinj:0.14.5/Bitcoin Wallet:5.38/,bitcoinj / wallets,,0,4,4
+/bitcoinj:0.15.9/Bitcoin Wallet:1.0.7.2/,bitcoinj / wallets,,0,4,4
+/generic-seeder/,other (excluded),,0,4,4
+/bitcoinj:0.14.3/Bitcoin Wallet:4.72/,bitcoinj / wallets,,0,4,4
+/bitcoinj:0.14.4/Bitcoin Wallet:5.19/,bitcoinj / wallets,,0,4,4
+/Bitaxe:29.0.0/,other (excluded),,0,4,4
+/bitnodes.io:0.3/,other (excluded),,0,4,4
+/Satoshi:0.10.2/,Bitcoin Core,v0.10,0,4,4
+/bitcoinj:0.14.4/Bitcoin Wallet:5.14/,bitcoinj / wallets,,0,4,4
+/bitcoinj:0.13.4/Bitcoin Wallet:4.46/,bitcoinj / wallets,,0,4,4
+/CKCoinD:29.0.0/,other,,1,2,3
+/rust-bitcoin:0.18/bluematt-tokio-client:0.1/,other (excluded),,0,3,3
+/bitcoinj:0.15.8/Bitcoin Wallet:8.02/,bitcoinj / wallets,,0,3,3
+/bitcoinj:0.16.1/Bitcoin Wallet:9.02/,bitcoinj / wallets,,0,3,3
+/multiseeder/,other (excluded),,0,3,3
+/dsn.tm.kit.edu/bitcoin:0.9.99/,other (excluded),,0,3,3
+/Classic:1.3.3/,Bitcoin Classic,,0,3,3
+/Satoshi:0.19.99/,Bitcoin Core,v0.19,2,1,3
+/Satoshi:0.0.126.144/,Bitcoin Core,v0.0,0,3,3
+/BitcoinSystem:1.0.0/,other (excluded),,0,3,3
+/bitcoinj:0.15.10/Bitcoin Wallet:2.2.5/,bitcoinj / wallets,,0,3,3
+/btcwire:0.5.0/utreexod:0.4.1/,btcsuite,,0,3,3
+/bitcoinj:0.13.3/MultiBitHD:0.3.0/,bitcoinj / wallets,,0,3,3
+/breadwallet:1.4/,bread,,0,3,3
+/Satoshi:0.20.99/,Bitcoin Core,v0.20,0,3,3
+/bitcoinj:0.15.9/Bitcoin Wallet:1.0.7.8/,bitcoinj / wallets,,0,3,3
+/therealbitcoin.org:0.9.99.99/,other (excluded),,0,3,3
+/jwrd.net:0.9.99.99/,other (excluded),,0,3,3
+/Satoshi:0.10.3/,Bitcoin Core,v0.10,0,3,3
+/Satoshi:29.1.0/Knots:20250827rc4/,Bitcoin Knots,v29,1,2,3
+/breadwallet:0.6.2/,bread,,0,3,3
+/pytxhorn:0.03/,other (excluded),,0,3,3
+/bitcoinj:0.16.1/Bitcoin Wallet:9.13/,bitcoinj / wallets,,0,3,3
+/bitcoinj:0.16.3/Bitcoin Wallet:10.19/,bitcoinj / wallets,,0,3,3
+/Aurum:0.12.4/,other (excluded),,0,2,2
+/bitcoinj:0.16.1/Bitcoin Wallet:9.05/,bitcoinj / wallets,,0,2,2
+/Fractal:24.0.1/,other (excluded),,0,2,2
+/bitcoinj:0.16.2/Bitcoin Wallet:10.05/,bitcoinj / wallets,,0,2,2
+/Satoshi:22.0.0/Knots:20211108/,Bitcoin Knots,v22,0,2,2
+/Satoshi:1.0.0/,Bitcoin Core,v1,2,0,2
+/bitcoinj:0.16.1/Bitcoin Wallet:1.0.2.3/,bitcoinj / wallets,,0,2,2
+/bitcoinj:0.16.1/Bitcoin Wallet:2.4.2/,bitcoinj / wallets,,0,2,2
+/bitcoinj:0.14.7/Bitcoin Wallet:6.41/,bitcoinj / wallets,,0,2,2
+/Satoshi:0.18.99/,Bitcoin Core,v0.18,0,2,2
+/Satoshi:29.1.0/Knots:20250305/,Bitcoin Knots,v29,1,1,2
+/Satoshi:1.0.5/,Bitcoin Core,v1,0,2,2
+/bitcoinj:0.15.10.bisq.16/Bisq:1.9.19/,bitcoinj / wallets,,0,2,2
+/%22/Satoshi:0.14.2/%22/,other (excluded),v0.14,0,2,2
+/bitcoinj:0.16.1/Bitcoin Wallet:1.0.2.8/,bitcoinj / wallets,,0,2,2
+/bitcoinj:0.16.1/Bitcoin Wallet:9.24/,bitcoinj / wallets,,0,2,2
+/bitcoinj:0.16.2/Bitcoin Wallet:10.02/,bitcoinj / wallets,,0,2,2
+/Satoshi:0.17.99/,Bitcoin Core,v0.17,0,2,2
+/btcwire:0.5.0/btcd:0.20.1/,btcsuite,,0,2,2
+/Crawly/,other (excluded),,0,2,2
+/BitCore:0.14.1.6/,other (excluded),,0,2,2
+/Satoshi:25.1.0/Knots:20231115/,Bitcoin Knots,v25,2,0,2
+/SwiftSync:0.1.0/,other (excluded),,0,2,2
+/Satoshi:0.9.2.1/,Bitcoin Core,v0.9,1,1,2
+/bitcoinj:0.15.10/Bitcoin Wallet:1.0.3.8/,bitcoinj / wallets,,0,2,2
+/Satoshi:28.1/,Bitcoin Core,v28,0,2,2
+/bitcoinj:0.14.4/Bitcoin Wallet:5.16/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.15.8/Bitcoin Wallet:8.07/,bitcoinj / wallets,,0,1,1
+/FAFO:29.2.1/v.1/btcmaxis.com/,other (excluded),,0,1,1
+/bitcoincashj:0.15-SNAPSHOT/,other (excluded),,0,1,1
+/bitcoinj:0.14.3/Bitcoin Wallet:5.05/,bitcoinj / wallets,,0,1,1
+/btcwire:0.5.0/btcd:0.12.0/,btcsuite,,0,1,1
+/:1.0.0-dev+614ff721f/,other (excluded),,0,1,1
+/btcwire:0.5.0/zap-desktop:0.7.4-beta/,btcsuite,,0,1,1
+/bitcore:10.0.28/,other (excluded),,0,1,1
+/dsn.kastel.kit.edu/bitcoin:28.0.0/,other (excluded),,0,1,1
+/bitcoinj:0.14.5/Bitcoin Wallet:5.43/,bitcoinj / wallets,,0,1,1
+/BitcoinMinerPro:2.5.0/,other (excluded),,0,1,1
+/bitcoinj:0.17-rc3/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.15.8/Bitcoin Wallet:7.68/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.17-rc3/btcWallet:1.0/,bitcoinj / wallets,,0,1,1
+/Satoshi:0.1.17.113/,Bitcoin Core,v0.1,0,1,1
+/bitcoinj:0.14.7/Bitcoin Wallet:6.24/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.14.5/Bitcoin Wallet:5.45/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.14.7/Bitcoin Wallet:6.38/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.16.2/PeerMonitor:1.0/,bitcoinj / wallets,,0,1,1
+/bitcore:10.5.3/,other (excluded),,0,1,1
+/Satashi:23.0.0/,other (excluded),,0,1,1
+/Satoshi:0.14.0/Knots:20170307/,Bitcoin Knots,v0.14,0,1,1
+/Classic:1.2.0/,Bitcoin Classic,,1,0,1
+/mempool-guide:v29.1/,other,,1,0,1
+/Satoshi:0.47.0/,Bitcoin Core,v0.47,0,1,1
+/SuperBitcoin:0.16.0.2/,other (excluded),,0,1,1
+/crawler:0.1/,other (excluded),,0,1,1
+/tbcd:2.0.0-dev+94e7bdf02/,other (excluded),,0,1,1
+/python-bitcoinlib:0.12.2/,other (excluded),,0,1,1
+/pycoinnet/,other (excluded),,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:9.04/,bitcoinj / wallets,,0,1,1
+/crawlrs:0.2.0/,other (excluded),,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:1.0.2.9/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:2.6.0/,bitcoinj / wallets,,0,1,1
+/bitcore:8.25.25/,other (excluded),,0,1,1
+/bitnodes.earn.com:0.1/,other (excluded),,0,1,1
+/tbcd:2.0.0-dev+15db39ef4/,other (excluded),,0,1,1
+/btcwire:0.5.0/bitfeed:0.1.0/,btcsuite,,0,1,1
+/semikek/,other (excluded),,0,1,1
+/bitcoinj:0.15.6/Bitcoin Wallet:7.47/,bitcoinj / wallets,,0,1,1
+/Satoshi:0.6.0.6/,Bitcoin Core,v0.6,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:9.10/,bitcoinj / wallets,,0,1,1
+/Domains4Bitcoins.com:443/,other,,1,0,1
+/bitcoinj:0.16.1/Bitcoin Wallet:9.23/,bitcoinj / wallets,,0,1,1
+/Gocoin:1.10.0pre/,other (excluded),,0,1,1
+/bitc:0.1.0/,other (excluded),,0,1,1
+/BitCoinJ:0.10.1/Bitcoin Wallet:3.17/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.15.9/Bitcoin Wallet:2.0.5/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.17/Skinsino-Bitcoin:1.0/,bitcoinj / wallets,,0,1,1
+/libbitcoin:3.8.0/,other (excluded),,0,1,1
+/bitcoinj:0.16.3/APP:1.0/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.14.7/Bitcoin Wallet:6.28/,bitcoinj / wallets,,0,1,1
+/Natasha:0.1.9/,other (excluded),,0,1,1
+/CKCoinD:26.0.0/,other (excluded),,0,1,1
+/Satoshi:27.1/,Bitcoin Core,v27,0,1,1
+/Satoshi:0.9.0/,Bitcoin Core,v0.9,0,1,1
+/Satoshi:0.21.99/,Bitcoin Core,v0.21,0,1,1
+/bitcoinj:0.18-SNAPSHOT/,bitcoinj / wallets,,0,1,1
+/bitcore:8.19.0/,other (excluded),,0,1,1
+/Satoshi:21.2.0/Knots:20210629/,Bitcoin Knots,v21,0,1,1
+/Statoshi:28.0.0/,other (excluded),,0,1,1
+/BitCoinJ:0.10.2/MultiBit:0.5.15/,bitcoinj / wallets,,0,1,1
+/dump_getaddr_host:0.1/,other (excluded),,0,1,1
+/bitdash.io/,other (excluded),,0,1,1
+/bitcoinj:0.15.8/Bitcoin Wallet:8.0/,bitcoinj / wallets,,0,1,1
+/libbitcoin:3.2.0/,other (excluded),,0,1,1
+/haskoin-btc:1.1.0/,other (excluded),,0,1,1
+/bitcore:1.1.0-exodus2/,other (excluded),,0,1,1
+/vds 0.9.46/,other (excluded),,0,1,1
+/vds_0.9.50/,other (excluded),,0,1,1
+/bitcoinj:0.15.10/Bitcoin Wallet:8.14/,bitcoinj / wallets,,0,1,1
+/ge:full/,other (excluded),,0,1,1
+/Satoshi:0.0.125.100/,Bitcoin Core,v0.0,0,1,1
+/pynode:0.0.1/,other (excluded),,0,1,1
+/CKCoinD:27.2.0/,other (excluded),,0,1,1
+/Satoshi:2.6.0.1/,Bitcoin Core,v2,0,1,1
+/bitcoinj:0.14.3/Bitcoin Wallet:5.03/,bitcoinj / wallets,,0,1,1
+/census:0.1.5/,other (excluded),,0,1,1
+/libbitcoin:3.7.0/,other (excluded),,0,1,1
+/bitcoinj:0.14.7/Bitcoin Wallet:6.29/,bitcoinj / wallets,,0,1,1
+/bitcore:10.3.0/,other (excluded),,0,1,1
+/:1.0.0-dev+1c07f2a1a/,other (excluded),,0,1,1
+/Satoshi:0.1.47.209/,Bitcoin Core,v0.1,0,1,1
+/Classic:1.3.6/,Bitcoin Classic,,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:2.3.8/,bitcoinj / wallets,,0,1,1
+/VDS 0.9.34/,other (excluded),,0,1,1
+/bitcoinj:0.14.7/Bitcoin Wallet:6.27/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:9.25/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.13-SNAPSHOT/MultiBitHD:0.1.2/,bitcoinj / wallets,,0,1,1
+/cooltexture:29.1.0/,other,,1,0,1
+/bitcoinj:0.14.7/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:2.4.5/,bitcoinj / wallets,,0,1,1
+/Satoshi:0.9.5/,Bitcoin Core,v0.9,0,1,1
+/opentxs:1.234.3-0-2c1524dbf/,other (excluded),,0,1,1
+/bitcoinj:0.15.10/Bitcoin Wallet:8.15/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.15.8/Bitcoin Wallet:8.05/,bitcoinj / wallets,,0,1,1
+/Satushi:22.69.0/,other (excluded),,0,1,1
+/bitcoinj:0.15.8/Bitcoin Wallet:8.03/,bitcoinj / wallets,,0,1,1
+/BitCoinJ:0.10.3/MultiBit:0.5.16/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.15.3/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.17-SNAPSHOT/,bitcoinj / wallets,,0,1,1
+/elephant Wallet%5B2.1%5D/,other (excluded),,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:9.14/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.16.3/PeerMonitor:1.0/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.17/Bitcoin Wallet:11.0/,bitcoinj / wallets,,0,1,1
+/open-nodes:0.1/,other (excluded),,0,1,1
+/bitcoinj:0.16.1/Bitcoin Wallet:1.2.0.6/,bitcoinj / wallets,,0,1,1
+/bitcoinj:0.16.3/Bitcoin Wallet:10.18/,bitcoinj / wallets,,0,1,1
+/BitCoinJ:0.10.3/Bitcoin Wallet:3.28/,bitcoinj / wallets,,0,1,1
+/Satoshi:29.0.0/Knots:20250903/,Bitcoin Knots,v29,1,0,1
