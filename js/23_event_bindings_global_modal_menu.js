@@ -176,6 +176,12 @@ document.addEventListener('keydown', e => {
         closeModal();
     } else if (e.key === 'Escape') {
         swallow();
+        // Check if YouTube overlay is open - if so, close it instead of the modal
+        const youtubeOverlay = document.getElementById('youtube-overlay');
+        if (youtubeOverlay && !youtubeOverlay.classList.contains('hidden')) {
+            closeYoutubeOverlay();
+            return;
+        }
         closeModal();
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         const currentFile = visibleImages[currentIndex]?.filename || '';
@@ -549,3 +555,28 @@ document.addEventListener('keydown', (e) => {
   const fname = img.dataset.filename;
   if (fname) openModalByFilename(fname);
 }, true);
+
+// YouTube overlay handlers - uses capture phase to intercept Escape before modal handler
+const youtubeLink = document.getElementById('youtube-link');
+const youtubeOverlay = document.getElementById('youtube-overlay');
+const youtubeOverlayClose = document.getElementById('youtubeOverlayClose');
+
+youtubeLink?.addEventListener('click', (e) => {
+  if (youtubeLink.classList.contains('disabled')) return;
+  e.preventDefault();
+  e.stopPropagation();
+  openYoutubeOverlay();
+});
+
+youtubeOverlayClose?.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  closeYoutubeOverlay();
+});
+
+youtubeOverlay?.addEventListener('click', (e) => {
+  if (e.target === youtubeOverlay) {
+    closeYoutubeOverlay();
+  }
+});
+

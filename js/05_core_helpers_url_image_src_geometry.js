@@ -373,6 +373,40 @@ function cycleDistMetric(direction /* 'up' | 'down' */) {
     setDistMetric(next, { title: visibleImages?.[currentIndex]?.title || '' });
     if (metricSelect) metricSelect.value = next;
 }
+// Store current YouTube video ID for the modal
+let currentYoutubeVideoId = '';
+
+function extractYoutubeVideoId(url) {
+    if (!url) return '';
+    // Handle youtu.be/VIDEO_ID format
+    const shortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (shortMatch) return shortMatch[1];
+    // Handle youtube.com/watch?v=VIDEO_ID format
+    const longMatch = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
+    if (longMatch) return longMatch[1];
+    return '';
+}
+
+function openYoutubeOverlay() {
+    if (!currentYoutubeVideoId) return;
+    const overlay = document.getElementById('youtube-overlay');
+    const iframe = document.getElementById('youtube-iframe');
+    if (overlay && iframe) {
+        iframe.src = `https://www.youtube.com/embed/${currentYoutubeVideoId}?autoplay=1`;
+        overlay.classList.remove('hidden');
+        overlay.focus();
+    }
+}
+
+function closeYoutubeOverlay() {
+    const overlay = document.getElementById('youtube-overlay');
+    const iframe = document.getElementById('youtube-iframe');
+    if (overlay && iframe) {
+        overlay.classList.add('hidden');
+        iframe.src = '';
+    }
+}
+
 function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
     const xLink = document.getElementById('x-link');
     const nostrLink = document.getElementById('nostr-link');
@@ -400,12 +434,12 @@ function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
         nostrLink.setAttribute('tabindex', '-1');
     }
     if (youtube) {
-        ytLink.href = youtube;
+        currentYoutubeVideoId = extractYoutubeVideoId(youtube);
         ytLink.classList.remove('disabled');
         ytLink.removeAttribute('aria-disabled');
         ytLink.removeAttribute('tabindex');
     } else {
-        ytLink.href = '#';
+        currentYoutubeVideoId = '';
         ytLink.classList.add('disabled');
         ytLink.setAttribute('aria-disabled', 'true');
         ytLink.setAttribute('tabindex', '-1');

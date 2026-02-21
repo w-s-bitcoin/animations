@@ -367,6 +367,16 @@
                 </span>
             </div>
             <img id="modal-img" src="" alt="Full size image" draggable="false" />
+            <div id="youtube-overlay" class="youtube-overlay hidden" role="dialog" aria-modal="true">
+                <div class="youtube-overlay-content">
+                    <button type="button" class="youtube-overlay-close" id="youtubeOverlayClose" aria-label="Close YouTube video">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    <div class="youtube-embed-container">
+                        <iframe id="youtube-iframe" class="youtube-iframe" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="slideshow" class="slideshow hidden" aria-hidden="true" role="dialog" aria-modal="true" tabindex="-1" data-esc-exit="true">
             <div class="slideshow-controls" id="slideshowControls" aria-label="Slideshow controls">

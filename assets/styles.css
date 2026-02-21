@@ -1088,6 +1088,93 @@ body.slideshow-open.hide-cursor .slideshow * {
 }
 
 /* ===========================
+   YOUTUBE OVERLAY
+   =========================== */
+.youtube-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.youtube-overlay:not(.hidden) {
+    display: flex;
+}
+
+.youtube-overlay.hidden {
+    display: none !important;
+}
+
+.youtube-overlay-content {
+    position: relative;
+    width: 95vw;
+    height: 88vh;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.youtube-embed-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.youtube-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.youtube-overlay-close {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    transition: transform 0.2s, opacity 0.2s;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+}
+
+.youtube-overlay-close:hover,
+.youtube-overlay-close:focus {
+    transform: scale(1.1);
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.youtube-overlay-close:focus {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .youtube-overlay-content {
+        width: 95vw;
+        height: 95vh;
+    }
+
+    .youtube-overlay-close {
+        top: 10px;
+        left: 10px;
+    }
+}
+
+/* ===========================
    SLIDESHOW OVERLAY
    =========================== */
 .slideshow.hidden {

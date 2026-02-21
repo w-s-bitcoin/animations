@@ -15,6 +15,7 @@ function updateModalSafePadding() {
 function openModalByIndex(index) {
     const image = visibleImages[index];
     if (!image) return;
+    closeYoutubeOverlay();
     const firstOpen = modal.style.display !== 'flex';
     currentIndex = index;
     lastOpenedFilename = image.filename || null;
@@ -260,6 +261,7 @@ function openModalByIndex(index) {
     });
 }
 function closeModal() {
+    closeYoutubeOverlay();
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
     if (location.hostname === 'localhost') {
