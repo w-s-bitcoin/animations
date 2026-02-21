@@ -38,8 +38,50 @@ function openModalByIndex(index) {
     gestureConsumed = false;
     currentScale = 1;
     pinchFocus = null;
+    const fname = image.filename;
+    showModalSpinner();
+    const token = ++modalImgLoadToken;
+    modalImg.style.transition = '';
+    modalImg.style.opacity = '0';
+    modalImg.style.visibility = 'hidden';
+    modalImg.style.transform = 'translate3d(-9999px,-9999px,0) scale(1)';
+    void modalImg.offsetHeight;
+    modalImg.style.transition = 'opacity 0.12s ease-out';
     modalImg.style.transformOrigin = '0 0';
     modal.classList.remove('zoomed');
+    modalImg.dataset.filename = fname;
+    modalImg.alt = image.title || '';
+    const nextUrl = imgSrc(fname);
+    const reveal = () => {
+        modalImg.style.visibility = 'visible';
+        requestAnimationFrame(() => {
+            if (token !== modalImgLoadToken) return;
+            modalImg.style.opacity = '1';
+        });
+    };
+    const done = () => {
+        if (token !== modalImgLoadToken) return;
+        hideModalSpinner();
+        if (currentScale <= 1.001) centerImageAtScale1();
+        else {
+            clampPanToBounds();
+            applyTransform();
+        }
+        reveal();
+    };
+    const fail = () => {
+        if (token !== modalImgLoadToken) return;
+        hideModalSpinner();
+        modalImg.style.visibility = 'visible';
+        modalImg.style.opacity = '1';
+    };
+    if (modalImg.src && modalImg.src.endsWith(nextUrl) && modalImg.complete && modalImg.naturalWidth) {
+        done();
+    } else {
+        modalImg.addEventListener('load', done, { once: true });
+        modalImg.addEventListener('error', fail, { once: true });
+        modalImg.src = nextUrl;
+    }
     updateModalSafePadding();
     setTimeout(updateModalSafePadding, 0);
     document.body.style.overflow = 'hidden';
@@ -49,7 +91,6 @@ function openModalByIndex(index) {
         youtube: image.latest_youtube || ''
     });
     populateYearSelect();
-    const fname = image.filename;
     showYearControls(false);
     showScaleControls(false);
     showHashControls(false);

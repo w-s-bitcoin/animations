@@ -517,10 +517,26 @@ fetch(IMAGE_LIST_URL)
                     history.replaceState(null, "", "/");
             }
         }
-        filterImages();
-        refreshFavoriteStarsUI();
-        syncDonateOverlayToRoute();
-        syncModalToUrl();
+        if (modal?.style?.display === 'flex') {
+            refreshFavoriteStarsUI();
+            syncDonateOverlayToRoute();
+            if (typeof requestIdleCallback !== 'undefined') {
+                requestIdleCallback(() => {
+                    filterImages();
+                    syncModalToUrl();
+                });
+            } else {
+                setTimeout(() => {
+                    filterImages();
+                    syncModalToUrl();
+                }, 100);
+            }
+        } else {
+            filterImages();
+            refreshFavoriteStarsUI();
+            syncDonateOverlayToRoute();
+            syncModalToUrl();
+        }
     })
     .catch(err => {
         imageGrid.textContent = "Failed to load visualizations.";
