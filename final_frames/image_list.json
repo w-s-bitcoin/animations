@@ -1,7 +1,7 @@
 [
     {
         "file": "bip110_signaling.png",
-        "title": "SegWit vs RDTS (BIP-110) Signaling Comparison",
+        "title": "BIP-110 Signaling Progress",
         "description": "Side-by-side visualization of BIP9 SegWit signaling periods and BIP-110 signaling progress, showing block counts per 2,016-block window and activation thresholds.",
         "latest_x": "",
         "latest_nostr": "",
