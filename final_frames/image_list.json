@@ -8,6 +8,14 @@
         "latest_youtube": ""
     },
     {
+        "filename": "node_count.png",
+        "title": "Node Count",
+        "description": "Shows each node count by software and version",
+        "latest_x": "",
+        "latest_nostr": "",
+        "latest_youtube": ""
+    },
+    {
         "filename": "btcmap.png",
         "title": "Global Bitcoin Merchant Adoption",
         "description": "World map showing the distribution of verified and active Bitcoin merchants by region, with top countries ranked by total merchants",
@@ -2083,14 +2091,6 @@
         "latest_nostr": "",
         "latest_youtube": "",
         "uoa_msat": 4348228
-    },
-    {
-        "filename": "node_count.png",
-        "title": "Node Count",
-        "description": "Shows each node count by software and version",
-        "latest_x": "",
-        "latest_nostr": "",
-        "latest_youtube": ""
     },
     {
         "filename": "block_size.png",
