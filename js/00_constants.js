@@ -17,10 +17,7 @@ const POF_FAV_KEY = 'price_of_*';
 const POF_SORT_STORAGE_KEY = 'pofSort';
 let PRICE_OF_OPTIONS = [];
 let PRICE_OF_META = {};
-const COIN_STORAGE_KEY = 'coinType';
-const COIN_ORDER = ['wholecoins', 'pi_coins', 'v_coins', 'x_coins', 'l_coins', 'c_coins', 'd_coins', 'm_coins'];
-let COIN_OPTIONS = [];
-let COIN_META = {};
+
 const MYR_BASE = 'monthly_yearly_returns';
 let MYR_RANGES = [];
 const BTCMAP_GLOBAL_FILE = 'btcmap.png';

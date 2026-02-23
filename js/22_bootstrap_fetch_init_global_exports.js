@@ -83,8 +83,7 @@ fetch(IMAGE_LIST_URL)
         populateMyrSelect();
         buildPriceOfOptionsFromList(imageList);
         sortPriceOfOptions(getStoredPofSort());
-        buildCoinOptionsFromList(imageList);
-        populateCoinSelect();
+        // coin options removed
         buildUoaOptionsFromList(imageList);
         sortUoaOptions(getStoredUoaSort());
         setUoaShowMode(getStoredUoaShowMode());
@@ -97,9 +96,7 @@ fetch(IMAGE_LIST_URL)
             urlDistMetric = distMetricFromFilename(initialFilename) || null;
             if (urlDistMetric) setStoredDistMetric(urlDistMetric);
         }
-        const coinSet = new Set(COIN_ORDER.map(s => `${s}.png`));
         let urlPofSlug = null;
-        let urlCoinSlug = null;
         let urlUoaSlug = null;
         let urlBtcmapsRegion = null;
         let urlBtcmapsView = null;
@@ -110,13 +107,6 @@ fetch(IMAGE_LIST_URL)
             if (BTCMAP_OPTIONS.some(o => o.slug === r0)) {
                 urlBtcmapsRegion = setStoredBtcmapsRegion(r0);
                 urlBtcmapsView = setStoredBtcmapsView(urlBtcmapsRegion, v0);
-            }
-        }
-        if (initialFilename && coinSet.has(initialFilename)) {
-            const s = coinSlugFromFilename(initialFilename);
-            if (s && COIN_ORDER.includes(s)) {
-                urlCoinSlug = s;
-                setStoredCoinSlug(s);
             }
         }
         if (initialFilename && isUoaFile(initialFilename)) {
@@ -156,39 +146,8 @@ fetch(IMAGE_LIST_URL)
                 ...nonUoa.slice(insertIndex)
             ];
         }
-        const coinsAll = imageList.filter(img => coinSet.has(img.filename));
-        const nonCoins = imageList.filter(img => !coinSet.has(img.filename));
-        const firstCoinIdx = imageList.findIndex(img => coinSet.has(img.filename));
-        let insertIdx =
-            firstCoinIdx !== -1
-                ? firstCoinIdx
-                : nonCoins.findIndex(img => img.filename.startsWith("bitcoin_dominance")) + 1;
-        if (insertIdx < 0) insertIdx = nonCoins.length;
-        const storedCoinSlug = getStoredCoinSlug();
-        const repCoinMeta =
-            COIN_META[storedCoinSlug] ||
-            COIN_META["wholecoins"] ||
-            COIN_OPTIONS[0];
-        let coinCard = null;
-        if (repCoinMeta) {
-            coinCard = {
-                filename: coinFilenameForSlug(repCoinMeta.slug),
-                title: repCoinMeta.title,
-                description: repCoinMeta.description,
-                latest_x: repCoinMeta.latest_x || "",
-                latest_nostr: repCoinMeta.latest_nostr || "",
-                latest_youtube: repCoinMeta.latest_youtube || ""
-            };
-        }
-        if (coinCard) {
-            imageList = [
-                ...nonCoins.slice(0, insertIdx),
-                coinCard,
-                ...nonCoins.slice(insertIdx)
-            ];
-        } else {
-            imageList = nonCoins;
-        }
+        // coin card logic removed
+
         const btcmapsAll = imageList.filter(img => isBtcmapsFile(img.filename));
         if (btcmapsAll.length) {
         const storedRegion = getStoredBtcmapsRegion();
@@ -490,14 +449,6 @@ fetch(IMAGE_LIST_URL)
                 if (openIdx === -1)
                     openIdx = visibleImages.findIndex(img =>
                         img.filename.startsWith(DOM_BASE)
-                    );
-            } else if (coinSet.has(initialFilename)) {
-                openIdx = visibleImages.findIndex(
-                    img => img.filename === initialFilename
-                );
-                if (openIdx === -1)
-                    openIdx = visibleImages.findIndex(img =>
-                        isCoinFile(img.filename)
                     );
             } else if (
                 !initialFilename.startsWith("bitcoin_vs_gold_")

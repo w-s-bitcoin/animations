@@ -35,8 +35,7 @@ const pofSortControls = document.getElementById('pof-sort-controls');
 const pofSortSelect = document.getElementById('pof-sort-select');
 const pofIndexInput = document.getElementById('pof-index-input');
 const pofIndexTotal = document.getElementById('pof-index-total');
-const coinControls = document.getElementById('coin-controls');
-const coinSelect = document.getElementById('coin-select');
+
 const myrControls = document.getElementById('myr-controls');
 const myrSelect = document.getElementById('myr-select');
 const btcmapsControls =

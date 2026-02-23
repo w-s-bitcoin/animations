@@ -54,8 +54,7 @@ Include scripts in this exact order in `index.html`:
 16. `15_module_halving_cycles_alignment.js`
 17. `16_module_price_of_price_of.js`
 18. `17_module_unit_of_account_uoa.js`
-19. `18_module_coins_single_card.js`
-20. `19_module_monthly_yearly_returns_myr.js`
+19. `19_module_monthly_yearly_returns_myr.js`
 21. `20_buy_me_button_thanks_overlay.js`
 22. `21_slideshow_core_ui_fullscreen.js`
 23. `22_bootstrap_fetch_init_global_exports.js`
@@ -160,8 +159,6 @@ Builds option list + meta map from `image_list.json`, sorting, index navigation,
 ### 17_module_unit_of_account_uoa.js — Unit of Account (uoa_*)
 Builds UOA option list + meta, supports group filters (e.g., G7/G20/regions), sorting, index navigation, persistence.
 
-### 18_module_coins_single_card.js — Coins (single representative card)
-Coin type selection and representative-card swapping.
 
 ### 19_module_monthly_yearly_returns_myr.js — MYR 5-year ranges
 5-year window selection and representative-card swapping.

@@ -1373,13 +1373,12 @@ body.slideshow-open {
 
 /* ===========================
     DROPDOWN CONTROLS IN MODAL
-    (BVG year / DAL scale / Dominance / Price Of / Coins / UoA)
+    (BVG year / DAL scale / Dominance / Price Of / UoA)
     =========================== */
 .year-controls,
 .scale-controls,
 .dominance-controls,
 .priceof-controls,
-.coin-controls,
 .myr-controls,
 .halving-view-controls,
 .uoa-controls,
@@ -1400,7 +1399,6 @@ body.slideshow-open {
 .scale-controls.show,
 .priceof-controls.show,
 .dominance-controls.show,
-.coin-controls.show,
 .myr-controls.show,
 .halving-view-controls.show,
 .uoa-controls.show,
@@ -1418,7 +1416,6 @@ body.slideshow-open {
 #scale-select,
 #dominance-select,
 #priceof-select,
-#coin-select,
 #myr-select,
 #halving-view-select,
 #uoa-select,
@@ -1455,8 +1452,6 @@ body.slideshow-open {
 #dominance-select:focus,
 #priceof-select:hover,
 #priceof-select:focus,
-#coin-select:hover,
-#coin-select:focus,
 #myr-select:hover,
 #myr-select:focus,
 #halving-view-select:hover,
@@ -1563,7 +1558,6 @@ body.slideshow-open {
     #scale-controls,
     #dominance-controls,
     #priceof-controls,
-    #coin-controls,
     #myr-controls,
     #halving-view-controls,
     #uoa-controls,

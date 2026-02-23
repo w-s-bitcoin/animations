@@ -11,7 +11,6 @@ function getCardImageCount(filename) {
     if (!filename) return "0 Vizualizations";
     if (isUoaFile(filename)) return String(Array.isArray(UOA_OPTIONS) ? UOA_OPTIONS.length : 0) + " Vizualizations";
     if (isPriceOfFile(filename)) return String(Array.isArray(PRICE_OF_OPTIONS) ? PRICE_OF_OPTIONS.length : 0) + " Vizualizations";
-    if (isCoinFile(filename)) return String(Array.isArray(COIN_OPTIONS) ? COIN_OPTIONS.length : 0) + " Vizualizations";
     if (isBvgFile(filename)) return String(Array.isArray(BVG_YEARS) ? BVG_YEARS.length : 0) + " Vizualizations";
     if (isDalFile(filename)) return String(Array.isArray(DAL_SCALES) ? DAL_SCALES.length : 0) + " Vizualizations";
     if (isPotdFile(filename)) return String(Array.isArray(POTD_SCALES) ? POTD_SCALES.length : 0) + " Vizualizations";

@@ -97,7 +97,6 @@ function openModalByIndex(index) {
     showHashControls(false);
     showPriceOfControls(false);
     showDominanceControls(false);
-    showCoinControls(false);
     showMyrControls(false);
     showHalvingViewControls(false);
     showUoaControls(false);
@@ -198,15 +197,6 @@ function openModalByIndex(index) {
         const len = hashLengthFromFilename(fname);
         if (hashSelect) hashSelect.value = len;
         setHashLength(len);
-    } else if (isCoinFile(fname)) {
-        showCoinControls(true);
-        populateCoinSelect();
-        let chosen = coinSlugFromFilename(fname) || getStoredCoinSlug();
-        if (!COIN_OPTIONS.some(o => o.slug === chosen)) {
-            chosen = COIN_OPTIONS[0]?.slug || 'wholecoins';
-        }
-        coinSelect.value = chosen;
-        setCoinType(chosen);
     } else if (isMyrFile(fname)) {
         showMyrControls(true);
         populateMyrSelect();
@@ -285,7 +275,6 @@ function closeModal() {
     showPriceOfControls(false);
     showMyrControls(false);
     showDominanceControls(false);
-    showCoinControls(false);
     showHalvingViewControls(false);
     showMetricControls(false);
     showAnchorControls(false);

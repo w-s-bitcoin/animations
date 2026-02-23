@@ -209,9 +209,7 @@ function showUoaControls(show) {
 function showDominanceControls(show) {
     dominanceControls?.classList.toggle('show', !!show);
 }
-function showCoinControls(show) {
-    coinControls?.classList.toggle('show', !!show);
-}
+
 function showMyrControls(show) {
     myrControls?.classList.toggle('show', !!show);
 }

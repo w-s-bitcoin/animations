@@ -245,9 +245,6 @@ document.addEventListener('keydown', e => {
         } else if (active === hashSelect) {
             isUp ? cycleHashLength('up') : cycleHashLength('down');
             dropdownToFocus = hashSelect;
-        } else if (active === coinSelect) {
-            isUp ? cycleCoinType('up') : cycleCoinType('down');
-            dropdownToFocus = coinSelect;
         } else if (active === myrSelect) {
             isUp ? cycleMyrRange('up') : cycleMyrRange('down');
             dropdownToFocus = myrSelect;
@@ -292,9 +289,6 @@ document.addEventListener('keydown', e => {
             } else if (isTargetHashFile(currentFile)) {
                 isUp ? cycleHashLength('up') : cycleHashLength('down');
                 dropdownToFocus = hashSelect;
-            } else if (isCoinFile(currentFile)) {
-                isUp ? cycleCoinType('up') : cycleCoinType('down');
-                dropdownToFocus = coinSelect;
             } else if (isBtcmapsFile(currentFile)) {
                 isUp ? cycleBtcmapsRegion('up') : cycleBtcmapsRegion('down');
                 dropdownToFocus = btcmapsSelect;
@@ -435,7 +429,7 @@ scaleSelect?.addEventListener('change', e => {
 dominanceSelect?.addEventListener('change', e => setDominanceUnit(e.target.value));
 priceOfSelect?.addEventListener('change', e => setPriceOfItem(e.target.value));
 pofSortSelect?.addEventListener('change', e => setPofSortMode(e.target.value));
-coinSelect?.addEventListener('change', e => setCoinType(e.target.value));
+
 myrSelect?.addEventListener('change', e => setMyrRange(e.target.value));
 halvingViewSelect?.addEventListener('change', e => setHalvingView(e.target.value));
 uoaSelect?.addEventListener('change', e => setUoaItem(e.target.value));
