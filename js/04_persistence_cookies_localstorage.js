@@ -139,7 +139,8 @@ function toggleFavorite(filename, starElem) {
     const favKey = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
     let favs = getFavorites();
     const index = favs.indexOf(favKey);
-    if (index !== -1) {
+    const becameFav = index === -1;
+    if (!becameFav) {
         favs.splice(index, 1);
         starElem.textContent = '☆';
         starElem.classList.remove('filled');
@@ -150,8 +151,21 @@ function toggleFavorite(filename, starElem) {
         starElem.classList.add('filled');
     }
     saveFavorites(favs);
-    if (showFavoritesOnly && index !== -1) filterImages();
+
+    // keep the corresponding thumbnail dataset in sync so the lazy loader can
+    // pick this up without another isFavorite() call.
+    const thumb = document.querySelector(`img.grid-thumb[data-filename="${filename}"]`);
+    if (thumb) thumb.dataset.fav = becameFav ? '1' : '0';
+
+    if (showFavoritesOnly && !becameFav) filterImages();
+    // if the user just added a favorite we want its thumbnail to begin
+    // loading even if it's off‑screen; our lazy loader will load all favorites
+    // first when initLazyImages runs.
+    if (becameFav) {
+        try { initLazyImages(); } catch (_) {}
+    }
 }
+
 function migratePriceOfFavorites() {
     let favs = getFavorites();
     const hadLegacy = favs.some(f => /^price_of_/.test(f));

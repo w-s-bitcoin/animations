@@ -31,6 +31,12 @@ function syncModalToUrl() {
   }
   if (isBuyMeVisible) hideThanksPopup({ fromRoute: true });
   if (fname) {
+    // if we're about to open a specific image via the URL, bump its
+    // priority ahead of the grid thumbs so the modal will render as quickly
+    // as possible. the preload helper adds a high‑priority request.
+    try {
+      preloadImage(imgSrc(fname));
+    } catch (_) {}
     try { filterImages(); } catch (_) {}
     openModalByFilename(fname);
     return;
@@ -384,6 +390,11 @@ fetch(IMAGE_LIST_URL)
         );
         visibleImages = [...imageList];
         migratePriceOfFavorites();
+        // if we're about to open something right away (deep link) make sure the
+        // modal image gets preloaded before we fire off a bunch of thumb loads.
+        if (initialFilename) {
+            try { preloadImage(imgSrc(initialFilename)); } catch (_) {}
+        }
         filterImages();
         const savedLayout = localStorage.getItem("preferredLayout");
         if (savedLayout === "list" || savedLayout === "grid") {

@@ -654,9 +654,26 @@ function getPageBasePath(){
   if (parts.length <= 1) return '';
   return `/${parts.slice(0, -1).join('/')}`;
 }
+
 function imgSrc(filename){
   const base = getPageBasePath();
   return `${base}/final_frames/${filename}`;
+}
+
+// prefetch an image URL by inserting a <link rel="preload"> element; this
+// gives the browser high network priority and is useful when an image is about
+// to be shown in the modal (especially during route‑driven opens).
+function preloadImage(url){
+  if (!url) return;
+  const existing = document.querySelector(`link[rel=preload][href="${url}"]`);
+  if (existing) return; // already added
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'image';
+  link.href = url;
+  document.head.appendChild(link);
+  // remove after a minute to keep DOM clean; the browser retains the fetch
+  setTimeout(() => { link.remove(); }, 60 * 1000);
 }
 async function downloadCurrentModalImage() {
     const fname = modalImg?.dataset?.filename || visibleImages?.[currentIndex]?.filename;

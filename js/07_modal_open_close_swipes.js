@@ -15,6 +15,12 @@ function updateModalSafePadding() {
 function openModalByIndex(index) {
     const image = visibleImages[index];
     if (!image) return;
+    // temporarily suspend the thumbnail observer so it doesn't fire off a
+    // bunch of grid loads that could compete with the modal image request.
+    if (io && io.disconnect) {
+        io.disconnect();
+        // we'll re‑initialise again when the modal closes (see closeModal)
+    }
     closeYoutubeOverlay();
     const firstOpen = modal.style.display !== 'flex';
     currentIndex = index;
@@ -53,6 +59,8 @@ function openModalByIndex(index) {
     modalImg.dataset.filename = fname;
     modalImg.alt = image.title || '';
     const nextUrl = imgSrc(fname);
+    // preload so that the browser treats this as a high‑priority fetch
+    try { preloadImage(nextUrl); } catch (_){ }
     const reveal = () => {
         modalImg.style.visibility = 'visible';
         requestAnimationFrame(() => {
@@ -254,6 +262,8 @@ function closeModal() {
     closeYoutubeOverlay();
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
+    // restart lazy loading so thumbnails continue to fetch when user returns
+    try { initLazyImages(); } catch (_) {}
     if (location.hostname === 'localhost') {
         location.hash = '';
     } else {

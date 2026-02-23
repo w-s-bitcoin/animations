@@ -33,6 +33,7 @@ At a high level, the system works as follows:
 - Displays all charts with titles and descriptions.
 - Responsive **grid** and **list** layouts.
 - Keyboard‑navigable and mobile‑friendly.
+- **Smart thumbnail loading:** favorites are fetched first, followed by cards nearer the top of the grid; off‑screen / filtered thumbnails only load later. Deep‑linked modal images are preloaded ahead of other assets for immediate display.
 
 ### Modal Viewer
 - Click or press Enter/Space to open any visualization.

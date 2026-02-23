@@ -73,6 +73,10 @@ function buildGridOnce(){
     if(favOn) star.classList.add('filled');
     const favKeyForThisCard = filename.startsWith(POF_BASE) ? POF_FAV_KEY : filename;
     star.setAttribute('data-filename', favKeyForThisCard);
+    // record favourite state on the image element itself so that the lazy loader
+    // can quickly inspect it without hitting localStorage repeatedly.
+    img.dataset.fav = favOn ? '1' : '0';
+    img.dataset.filename = filename; // already set but ensure consistency
     star.onclick = e => {
       e.stopPropagation();
       toggleFavorite(img.dataset.filename, star);
@@ -122,6 +126,8 @@ function filterImages(){
     if(!card) return;
     card.container.style.display = '';
     card.img.dataset.gridIndex = index;
+    // update the fav flag in case the user changed it while browsing
+    card.img.dataset.fav = isFavorite(item.filename) ? '1' : '0';
     card.titleElem.dataset.gridIndex = index;
     card.desc.dataset.gridIndex = index;
     frag.appendChild(card.container);
