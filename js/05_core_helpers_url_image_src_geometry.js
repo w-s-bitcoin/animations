@@ -443,6 +443,15 @@ function setModalLinks({x = '', nostr = '', youtube = ''} = {}) {
         ytLink.setAttribute('tabindex', '-1');
     }
 }
+
+// Store the raw youtube URL on the link node so click handlers can use it
+// even if the global `currentYoutubeVideoId` is out of sync for some reason.
+try {
+    if (typeof document !== 'undefined') {
+        const _yt = document.getElementById('youtube-link');
+        if (_yt) _yt.dataset.youtube = (typeof youtube !== 'undefined' && youtube) ? String(youtube) : '';
+    }
+} catch (_) {}
 function openByFilenameAllowingNonFav(filename) {
     let idx = visibleImages.findIndex(img => img.filename === filename);
     if (idx !== -1) {

@@ -556,10 +556,31 @@ const youtubeOverlay = document.getElementById('youtube-overlay');
 const youtubeOverlayClose = document.getElementById('youtubeOverlayClose');
 
 youtubeLink?.addEventListener('click', (e) => {
-  if (youtubeLink.classList.contains('disabled')) return;
-  e.preventDefault();
-  e.stopPropagation();
-  openYoutubeOverlay();
+    // Prefer the explicit URL stored on the element; fall back to the extracted ID.
+    const urlFromData = youtubeLink?.dataset?.youtube || '';
+    const url = urlFromData || (currentYoutubeVideoId ? `https://www.youtube.com/watch?v=${currentYoutubeVideoId}` : '');
+    if (!url) return; // nothing available — keep behavior no‑op
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Try to open the in-page overlay. If that doesn't actually show, fall
+    // back to opening the YouTube page in a new tab so the user still reaches
+    // the video on deployed sites where the overlay may be blocked or broken.
+    try {
+        openYoutubeOverlay();
+    } catch (err) {
+        console.warn('openYoutubeOverlay failed', err);
+    }
+
+    // If the overlay isn't visible after attempting to open it, open a new tab.
+    try {
+        const overlay = document.getElementById('youtube-overlay');
+        const visible = overlay && !overlay.classList.contains('hidden');
+        if (!visible) {
+            window.open(url, '_blank', 'noopener');
+        }
+    } catch (_) {}
 });
 
 youtubeOverlayClose?.addEventListener('click', (e) => {
