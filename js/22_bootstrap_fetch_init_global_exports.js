@@ -577,7 +577,9 @@ function onGridArrowNav(e){
 }
 window.setLayout = setLayout;
 window.toggleSearch = toggleSearch;
-window.toggleFavoritesView = toggleFavoritesView;
+if (typeof toggleFavoritesView === 'function') {
+  window.toggleFavoritesView = toggleFavoritesView;
+}
 window.closeModal = closeModal;
 window.prevImage = prevImage;
 window.nextImage = nextImage;

@@ -39,7 +39,7 @@ let modalImgLoadToken = 0;
 let modalSpinnerEl = null;
 let lastThanksPreloadMode = null;
 let gridBuilt = false;
-let distMetric = localStorage.getItem(DIST_METRIC_STORAGE_KEY) || "price";
+let distMetric = localStorage.getItem(DIST_STORAGE_KEY) || "price";
 function ensureModalSpinner(){
   const wrap = modalImg?.parentElement || modal;
   if(!wrap) return null;
