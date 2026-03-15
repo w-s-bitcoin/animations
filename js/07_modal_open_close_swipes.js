@@ -4,12 +4,13 @@
 function updateModalSafePadding() {
     const controls = document.querySelector('.modal-controls');
     const isSmallLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
-    if (!controls || !isSmallLandscape || modal.style.display !== 'flex') {
+    const isEmbed = modalContentMode === 'embed';
+    if (!controls || modal.style.display !== 'flex' || (!isSmallLandscape && !isEmbed)) {
         modal.style.removeProperty('--controls-offset');
         return;
     }
     const h = controls.getBoundingClientRect().height;
-    const offset = Math.max(20, Math.min(h - 6, 44));
+    const offset = Math.max(24, Math.ceil(h + 12));
     modal.style.setProperty('--controls-offset', offset + 'px');
 }
 function openModalByIndex(index) {
@@ -46,50 +47,69 @@ function openModalByIndex(index) {
     currentScale = 1;
     pinchFocus = null;
     const fname = image.filename;
-    showModalSpinner();
-    const token = ++modalImgLoadToken;
-    modalImg.style.transition = '';
-    modalImg.style.opacity = '0';
-    modalImg.style.visibility = 'hidden';
-    modalImg.style.transform = 'translate3d(-9999px,-9999px,0) scale(1)';
-    void modalImg.offsetHeight;
-    modalImg.style.transition = 'opacity 0.12s ease-out';
-    modalImg.style.transformOrigin = '0 0';
     modal.classList.remove('zoomed');
     modalImg.dataset.filename = fname;
     modalImg.alt = image.title || '';
-    const nextUrl = imgSrc(fname);
-    // preload so that the browser treats this as a high‑priority fetch
-    try { preloadImage(nextUrl); } catch (_){ }
-    const reveal = () => {
-        modalImg.style.visibility = 'visible';
-        requestAnimationFrame(() => {
-            if (token !== modalImgLoadToken) return;
-            modalImg.style.opacity = '1';
-        });
-    };
-    const done = () => {
-        if (token !== modalImgLoadToken) return;
+    const embedUrl = image.modal_type === 'embed' ? modalEmbedSrc(image.embed_url) : '';
+    const isEmbed = !!embedUrl;
+    if (isEmbed) {
+        modalContentMode = 'embed';
         hideModalSpinner();
-        if (currentScale <= 1.001) centerImageAtScale1();
-        else {
-            clampPanToBounds();
-            applyTransform();
-        }
-        reveal();
-    };
-    const fail = () => {
-        if (token !== modalImgLoadToken) return;
-        hideModalSpinner();
-        modalImg.style.visibility = 'visible';
-        modalImg.style.opacity = '1';
-    };
-    if (modalImg.src && modalImg.src.endsWith(nextUrl) && modalImg.complete && modalImg.naturalWidth) {
-        done();
+        modal.classList.add('embed-active');
+        if (modalEmbedWrap) modalEmbedWrap.hidden = false;
+        if (modalEmbed && modalEmbed.src !== embedUrl) modalEmbed.src = embedUrl;
+        modalImg.style.opacity = '0';
+        modalImg.style.visibility = 'hidden';
+        modalImg.style.transform = 'translate3d(-9999px,-9999px,0) scale(1)';
+        if (modalDlBtn) modalDlBtn.style.display = 'none';
     } else {
-        modalImg.addEventListener('load', done, { once: true });
-        modalImg.addEventListener('error', fail, { once: true });
-        modalImg.src = nextUrl;
+        modalContentMode = 'image';
+        modal.classList.remove('embed-active');
+        if (modalEmbedWrap) modalEmbedWrap.hidden = true;
+        if (modalEmbed) modalEmbed.src = 'about:blank';
+        if (modalDlBtn) modalDlBtn.style.display = '';
+        showModalSpinner();
+        const token = ++modalImgLoadToken;
+        modalImg.style.transition = '';
+        modalImg.style.opacity = '0';
+        modalImg.style.visibility = 'hidden';
+        modalImg.style.transform = 'translate3d(-9999px,-9999px,0) scale(1)';
+        void modalImg.offsetHeight;
+        modalImg.style.transition = 'opacity 0.12s ease-out';
+        modalImg.style.transformOrigin = '0 0';
+        const nextUrl = imgSrc(fname);
+        // preload so that the browser treats this as a high‑priority fetch
+        try { preloadImage(nextUrl); } catch (_){ }
+        const reveal = () => {
+            modalImg.style.visibility = 'visible';
+            requestAnimationFrame(() => {
+                if (token !== modalImgLoadToken) return;
+                modalImg.style.opacity = '1';
+            });
+        };
+        const done = () => {
+            if (token !== modalImgLoadToken) return;
+            hideModalSpinner();
+            if (currentScale <= 1.001) centerImageAtScale1();
+            else {
+                clampPanToBounds();
+                applyTransform();
+            }
+            reveal();
+        };
+        const fail = () => {
+            if (token !== modalImgLoadToken) return;
+            hideModalSpinner();
+            modalImg.style.visibility = 'visible';
+            modalImg.style.opacity = '1';
+        };
+        if (modalImg.src && modalImg.src.endsWith(nextUrl) && modalImg.complete && modalImg.naturalWidth) {
+            done();
+        } else {
+            modalImg.addEventListener('load', done, { once: true });
+            modalImg.addEventListener('error', fail, { once: true });
+            modalImg.src = nextUrl;
+        }
     }
     updateModalSafePadding();
     setTimeout(updateModalSafePadding, 0);
@@ -227,8 +247,12 @@ function openModalByIndex(index) {
         setCycleAnchor(anchor, { title: image.title });
 
     } else {
-        setModalImageAndCenter(fname, image.title);
-        replaceUrlForFilename(fname);
+        if (modalContentMode === 'embed') {
+            replaceUrlForFilename(fname);
+        } else {
+            setModalImageAndCenter(fname, image.title);
+            replaceUrlForFilename(fname);
+        }
     }
     const fav = isFavorite(visibleImages[currentIndex].filename);
     modalFavBtn.textContent = fav ? '★' : '☆';
@@ -261,6 +285,11 @@ function openModalByIndex(index) {
 function closeModal() {
     closeYoutubeOverlay();
     modal.style.display = 'none';
+    modalContentMode = 'image';
+    modal.classList.remove('embed-active');
+    if (modalEmbedWrap) modalEmbedWrap.hidden = true;
+    if (modalEmbed) modalEmbed.src = 'about:blank';
+    if (modalDlBtn) modalDlBtn.style.display = '';
     document.body.classList.remove('modal-open');
     // restart lazy loading so thumbnails continue to fetch when user returns
     try { initLazyImages(); } catch (_) {}
@@ -307,6 +336,8 @@ function closeModal() {
     translateX = 0;
     translateY = 0;
     pinchFocus = null;
+    modalImg.style.opacity = '1';
+    modalImg.style.visibility = 'visible';
     modalImg.style.transform = '';
     modalImg.style.transformOrigin = '';
     modal.classList.remove('zoomed');

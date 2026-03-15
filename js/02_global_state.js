@@ -36,6 +36,7 @@ let isBuyMeVisible = false;
 let buyCoffeeCloseBtn = null;
 let tempNonFavInjected = false;
 let modalImgLoadToken = 0;
+let modalContentMode = 'image';
 let modalSpinnerEl = null;
 let lastThanksPreloadMode = null;
 let gridBuilt = false;

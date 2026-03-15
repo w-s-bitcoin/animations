@@ -669,6 +669,15 @@ function imgSrc(filename){
   return `${base}/final_frames/${filename}`;
 }
 
+function modalEmbedSrc(pathOrUrl){
+    const raw = String(pathOrUrl || '').trim();
+    if (!raw) return '';
+    if (/^https?:\/\//i.test(raw)) return raw;
+    const base = getPageBasePath();
+    if (raw.startsWith('/')) return `${base}${raw}`;
+    return `${base}/${raw.replace(/^\/+/, '')}`;
+}
+
 // prefetch an image URL by inserting a <link rel="preload"> element; this
 // gives the browser high network priority and is useful when an image is about
 // to be shown in the modal (especially during route‑driven opens).
@@ -685,6 +694,11 @@ function preloadImage(url){
   setTimeout(() => { link.remove(); }, 60 * 1000);
 }
 async function downloadCurrentModalImage() {
+    if (modalContentMode === 'embed') {
+        const src = modalEmbed?.src || '';
+        if (src) window.open(src, '_blank', 'noopener');
+        return;
+    }
     const fname = modalImg?.dataset?.filename || visibleImages?.[currentIndex]?.filename;
     if (!fname) return;
     const url = imgSrc(fname);

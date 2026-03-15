@@ -910,6 +910,23 @@ body.slideshow-open.hide-cursor .slideshow * {
     image-rendering: optimizeQuality;
     z-index: 1;
 }
+.modal-embed-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+.modal-embed {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #000;
+}
+.modal.embed-active #modal-img {
+    display: none;
+}
+.modal.embed-active .modal-embed-wrap {
+    display: block;
+}
 .modal-controls {
     z-index: 2000;
     pointer-events: auto;
@@ -1051,6 +1068,9 @@ body.slideshow-open.hide-cursor .slideshow * {
     .modal {
         padding-top: var(--controls-offset, 1.5rem);
     }
+    .modal.embed-active {
+        padding-top: 0;
+    }
     .modal img {
         max-height: calc(88vh - var(--controls-offset, 1.5rem));
     }
@@ -1067,6 +1087,9 @@ body.slideshow-open.hide-cursor .slideshow * {
     @media (max-width: 900px) and (orientation: landscape) {
         .modal {
             padding-top: max(var(--controls-offset, 1.5rem), env(safe-area-inset-top));
+        }
+        .modal.embed-active {
+            padding-top: 0;
         }
     }
 }
