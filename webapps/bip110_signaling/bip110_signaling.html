@@ -1,0 +1,1599 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIP-110 Signaling Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #06080a;
+      --panel: #0c1216;
+      --panel-border: #1f2a30;
+      --fg: #f1f5f7;
+      --muted: #95a6ae;
+      --signal: #ff9800;
+      --nonsignal: #8b8f93;
+      --threshold: #00e676;
+      --future: #222831;
+      --marker: #4169e1;
+      --accent: #79d8ff;
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+      --modal-controls-clearance: 0px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "Helvetica Neue", sans-serif;
+      color: var(--fg);
+      background: #000;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    body.embedded-in-modal .wrap {
+      padding-top: calc(12px + var(--modal-controls-clearance));
+    }
+
+    .topbar {
+      display: grid;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      background: #000;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(1.05rem, 2vw, 1.5rem);
+      letter-spacing: 0.015em;
+      font-weight: 700;
+      text-wrap: balance;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .info-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .info-btn {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      background: transparent;
+      color: #d6e1e6;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.66rem;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .info-btn:hover,
+    .info-btn:focus-visible {
+      color: var(--signal);
+      border-color: var(--signal);
+      outline: none;
+    }
+
+    .info-popover {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 50;
+      width: min(420px, calc(100vw - 36px));
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      background: #000;
+      color: #d9e5ea;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+      font-family: "IBM Plex Mono", monospace;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-2px);
+      transition: opacity 120ms ease, transform 120ms ease, visibility 0ms linear 120ms;
+    }
+
+    .info-wrap:hover .info-popover,
+    .info-wrap:focus-within .info-popover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 120ms ease, transform 120ms ease;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: transparent;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.8rem;
+      color: #d6e1e6;
+      font-family: "IBM Plex Mono", monospace;
+      white-space: nowrap;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 8px;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #d8e4ea;
+      font-size: 0.84rem;
+      user-select: none;
+    }
+
+    .toggle input {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--signal);
+      cursor: pointer;
+    }
+
+    .card {
+      position: relative;
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      background: #000;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .canvas-box {
+      position: relative;
+      width: 100%;
+      height: max(300px, 44svh);
+    }
+
+    .canvas-box.solo {
+      height: max(600px, 88svh);
+    }
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .tooltip {
+      position: fixed;
+      z-index: 20;
+      pointer-events: none;
+      width: max-content;
+      max-width: calc(100vw - 24px);
+      background: #000;
+      border: 1px solid #223038;
+      color: #e9f1f5;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: clamp(0.72rem, 0.64rem + 0.30vw, 0.9rem);
+      line-height: clamp(1.35, 1.28 + 0.15vw, 1.5);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+      white-space: pre-line;
+      transform: translate(-50%, calc(-100% - 14px));
+      opacity: 0;
+      transition: opacity 130ms ease;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .tooltip.show { opacity: 1; }
+
+    .error {
+      margin: 10px 12px;
+      border: 1px solid rgba(255, 86, 86, 0.4);
+      color: #ffc7c7;
+      background: rgba(255, 86, 86, 0.1);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 860px) {
+      .wrap { width: 100%; margin: 0; padding: 8px; }
+      body.embedded-in-modal .wrap { padding-top: calc(8px + var(--modal-controls-clearance)); }
+      .topbar { padding: 10px; border-radius: 12px; }
+      .card { border-radius: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" id="mainWrap">
+    <section class="topbar" id="topbar">
+      <div class="title-row">
+        <h1 class="title">SegWit and BIP-110 Signaling by 2,016-Block Period</h1>
+        <div class="info-wrap">
+          <button type="button" class="info-btn" id="vizInfoBtn" aria-label="About this visualization" aria-describedby="vizInfoPopover">?</button>
+          <div class="info-popover" id="vizInfoPopover" role="tooltip">
+            This dashboard shows miner signaling across each 2,016-block period for SegWit and BIP-110. Bars show signaling vs non-signaling blocks, markers denote notable releases, and threshold lines indicate each proposal's activation target.
+          </div>
+        </div>
+      </div>
+      <div class="chips" id="statusChips"></div>
+      <div class="controls">
+        <label class="toggle"><input type="checkbox" id="toggleSegwitWindow" checked /> SegWit periods</label>
+        <label class="toggle"><input type="checkbox" id="toggleBip110Window" checked /> BIP-110 periods</label>
+        <label class="toggle"><input type="checkbox" id="toggleStripes" checked /> Block markers</label>
+        <label class="toggle"><input type="checkbox" id="toggleMarkers" checked /> Release markers</label>
+        <label class="toggle"><input type="checkbox" id="toggleLabels" checked /> Percentage labels</label>
+      </div>
+    </section>
+
+    <section class="card" id="segwitPanel">
+      <div class="canvas-box" id="segwitCanvasBox"><canvas id="segwitCanvas" aria-label="SegWit signaling chart"></canvas></div>
+    </section>
+
+    <section class="card" id="bip110Panel">
+      <div class="canvas-box" id="bip110CanvasBox"><canvas id="bip110Canvas" aria-label="BIP-110 signaling chart"></canvas></div>
+    </section>
+
+  </main>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const AUTO_REFRESH_MS = 30000;
+
+    const state = {
+      data: null,
+      dataSignature: null,
+      autoRefreshTimer: null,
+      pinnedTooltip: null,
+      hoverTooltip: null,
+      controls: {
+        stripes: true,
+        markers: true,
+        labels: true,
+        showSegwit: true,
+        showBip110: true,
+      },
+      hitMaps: {
+        segwit: [],
+        bip110: [],
+      },
+      releaseMaps: {
+        segwit: [],
+        bip110: [],
+      },
+      stripeMaps: {
+        segwit: [],
+        bip110: [],
+      },
+      barMaps: {
+        segwit: [],
+        bip110: [],
+      },
+      dpr: Math.max(1, window.devicePixelRatio || 1),
+    };
+
+    const segwitCanvas = document.getElementById("segwitCanvas");
+    const bip110Canvas = document.getElementById("bip110Canvas");
+    const segwitPanel = document.getElementById("segwitPanel");
+    const bip110Panel = document.getElementById("bip110Panel");
+    const segwitCanvasBox = document.getElementById("segwitCanvasBox");
+    const bip110CanvasBox = document.getElementById("bip110CanvasBox");
+    const mainWrap = document.getElementById("mainWrap");
+    const topbar = document.getElementById("topbar");
+    const tooltip = document.getElementById("tooltip");
+
+    function applyEmbedModalTopClearance() {
+      if (window.self === window.top) return;
+
+      const minClearance = 32;
+      const extraGap = 0;
+      const root = document.documentElement;
+
+      const updateClearance = () => {
+        let clearance = minClearance;
+        try {
+          const controls = window.parent?.document?.querySelector(".modal-controls");
+          if (controls) {
+            clearance = Math.max(minClearance, Math.ceil(controls.getBoundingClientRect().height + extraGap));
+          }
+        } catch (_) {
+          clearance = minClearance;
+        }
+        root.style.setProperty("--modal-controls-clearance", `${clearance}px`);
+        document.body.classList.add("embedded-in-modal");
+      };
+
+      updateClearance();
+      window.addEventListener("resize", updateClearance);
+      try {
+        window.parent?.addEventListener?.("resize", updateClearance);
+      } catch (_) {
+        // Ignore parent resize binding issues (e.g., cross-origin embed).
+      }
+    }
+
+    applyEmbedModalTopClearance();
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i += 1) {
+        const c = text[i];
+        const n = text[i + 1];
+
+        if (c === '"') {
+          if (inQuotes && n === '"') {
+            value += '"';
+            i += 1;
+          } else {
+            inQuotes = !inQuotes;
+          }
+          continue;
+        }
+
+        if (c === "," && !inQuotes) {
+          row.push(value);
+          value = "";
+          continue;
+        }
+
+        if ((c === "\n" || c === "\r") && !inQuotes) {
+          if (c === "\r" && n === "\n") i += 1;
+          row.push(value);
+          value = "";
+          if (row.length > 1 || row[0] !== "") {
+            rows.push(row);
+          }
+          row = [];
+          continue;
+        }
+
+        value += c;
+      }
+
+      if (value.length > 0 || row.length > 0) {
+        row.push(value);
+        rows.push(row);
+      }
+
+      if (!rows.length) return [];
+      const headers = rows[0];
+      return rows.slice(1).map((r) => {
+        const o = {};
+        headers.forEach((h, idx) => {
+          o[h] = (r[idx] ?? "").trim();
+        });
+        return o;
+      });
+    }
+
+    function parseMaybeNumber(value) {
+      if (value === "" || value == null) return null;
+      const n = Number(value);
+      return Number.isFinite(n) ? n : value;
+    }
+
+    function castRows(rows) {
+      return rows.map((row) => {
+        const casted = {};
+        Object.entries(row).forEach(([k, v]) => {
+          casted[k] = parseMaybeNumber(v);
+        });
+        return casted;
+      });
+    }
+
+    function decodeBlockPoints(buffer, startHeight, periodSize) {
+      const view = new DataView(buffer);
+      const recordSize = 5;
+      const count = Math.floor(view.byteLength / recordSize);
+      const rows = new Array(count);
+
+      for (let i = 0; i < count; i += 1) {
+        const offset = i * recordSize;
+        const height = view.getUint32(offset, true);
+        const isSignaling = view.getUint8(offset + 4);
+        const rel = height - startHeight;
+        const period = Math.floor(rel / periodSize) + 1;
+        const yInPeriod = ((rel % periodSize) + periodSize) % periodSize;
+
+        rows[i] = {
+          height,
+          is_signaling: isSignaling,
+          period,
+          y_in_period: yInPeriod,
+        };
+      }
+
+      return rows;
+    }
+
+    async function loadAllData(cacheBust = null) {
+      const withBust = (path) => {
+        if (cacheBust == null) return path;
+        const sep = path.includes("?") ? "&" : "?";
+        return `${path}${sep}_=${cacheBust}`;
+      };
+
+      const files = {
+        metadata: withBust("webapp_data/chart_metadata.json"),
+        segwitPeriods: withBust("webapp_data/segwit_periods.csv"),
+        bip110Periods: withBust("webapp_data/bip110_periods.csv"),
+        segwitBlocks: withBust("webapp_data/segwit_block_points.bin"),
+        bip110Blocks: withBust("webapp_data/bip110_block_points.bin"),
+        segwitReleases: withBust("webapp_data/segwit_releases.csv"),
+        bip110Releases: withBust("webapp_data/bip110_releases.csv"),
+        segwitTicks: withBust("webapp_data/segwit_month_ticks.csv"),
+        bip110Ticks: withBust("webapp_data/bip110_month_ticks.csv"),
+      };
+
+      const [
+        metadataResp,
+        segwitPeriodsResp,
+        bip110PeriodsResp,
+        segwitBlocksResp,
+        bip110BlocksResp,
+        segwitReleasesResp,
+        bip110ReleasesResp,
+        segwitTicksResp,
+        bip110TicksResp,
+      ] = await Promise.all(Object.values(files).map((f) => fetch(f)));
+
+      const responses = [
+        metadataResp,
+        segwitPeriodsResp,
+        bip110PeriodsResp,
+        segwitBlocksResp,
+        bip110BlocksResp,
+        segwitReleasesResp,
+        bip110ReleasesResp,
+        segwitTicksResp,
+        bip110TicksResp,
+      ];
+
+      responses.forEach((resp, idx) => {
+        if (!resp.ok) {
+          throw new Error(`Failed to load ${Object.values(files)[idx]} (${resp.status})`);
+        }
+      });
+
+      const metadata = await metadataResp.json();
+      const periodSize = Number(metadata?.chart?.period_size || 2016);
+      const segwitStart = Number(metadata?.datasets?.segwit_blocks?.start_height || 0);
+      const bip110Start = Number(metadata?.datasets?.bip110_blocks?.start_height || 0);
+
+      const data = {
+        metadata,
+        segwitPeriods: castRows(parseCsv(await segwitPeriodsResp.text())),
+        bip110Periods: castRows(parseCsv(await bip110PeriodsResp.text())),
+        segwitBlocks: decodeBlockPoints(await segwitBlocksResp.arrayBuffer(), segwitStart, periodSize),
+        bip110Blocks: decodeBlockPoints(await bip110BlocksResp.arrayBuffer(), bip110Start, periodSize),
+        segwitReleases: castRows(parseCsv(await segwitReleasesResp.text())).map((d) => ({
+          ...d,
+          display_label: String(d.display_label || "").replaceAll("\\n", "\n"),
+        })),
+        bip110Releases: castRows(parseCsv(await bip110ReleasesResp.text())).map((d) => ({
+          ...d,
+          display_label: String(d.display_label || "").replaceAll("\\n", "\n"),
+        })),
+        segwitTicks: castRows(parseCsv(await segwitTicksResp.text())),
+        bip110Ticks: castRows(parseCsv(await bip110TicksResp.text())),
+      };
+
+      return data;
+    }
+
+    function getDataSignature(meta) {
+      const generated = String(meta?.generated_utc || "");
+      const height = String(meta?.source_block_height ?? "");
+      return `${generated}|${height}`;
+    }
+
+    async function fetchLatestMetadataSignature() {
+      const url = `webapp_data/chart_metadata.json?_=${Date.now()}`;
+      const resp = await fetch(url, { cache: "no-store" });
+      if (!resp.ok) {
+        throw new Error(`Failed to check metadata (${resp.status})`);
+      }
+      const meta = await resp.json();
+      return getDataSignature(meta);
+    }
+
+    async function refreshIfDataChanged() {
+      if (!state.data) return;
+      try {
+        const latestSig = await fetchLatestMetadataSignature();
+        if (!latestSig || latestSig === state.dataSignature) {
+          return;
+        }
+
+        state.data = await loadAllData(Date.now());
+        state.dataSignature = getDataSignature(state.data.metadata);
+        setStatus(state.data);
+        updatePanelVisibility();
+        state.pinnedTooltip = null;
+        hideTooltip();
+        renderAll();
+      } catch (err) {
+        console.warn("Auto-refresh check failed:", err);
+      }
+    }
+
+    function startAutoRefresh() {
+      if (state.autoRefreshTimer) {
+        clearInterval(state.autoRefreshTimer);
+      }
+      state.autoRefreshTimer = setInterval(() => {
+        refreshIfDataChanged();
+      }, AUTO_REFRESH_MS);
+    }
+
+    function applyNarrowWindowDefaults() {
+      // Apply once at initial load only.
+      if (window.innerWidth > 860) return;
+
+      const stripes = document.getElementById("toggleStripes");
+      const markers = document.getElementById("toggleMarkers");
+      const labels = document.getElementById("toggleLabels");
+
+      if (stripes) stripes.checked = false;
+      if (markers) markers.checked = false;
+      if (labels) labels.checked = false;
+
+      state.controls.stripes = false;
+      state.controls.markers = false;
+      state.controls.labels = false;
+    }
+
+    function setStatus(data) {
+      const meta = data.metadata;
+      const chips = document.getElementById("statusChips");
+      const s = meta.state;
+      const currentPeriod = Number(s.current_period_index);
+      const currentPeriodRow = data.bip110Periods.find((row) => Number(row.period) === currentPeriod) || null;
+      const currentSignal = currentPeriodRow ? Number(currentPeriodRow.signal_blocks || 0) : null;
+      const currentSignalPct = currentPeriodRow
+        ? pctLabel(Number(currentPeriodRow.signal_blocks || 0), Number(meta.chart.period_size))
+        : null;
+
+      chips.innerHTML = "";
+      const chipValues = [
+        `Height ${Number(meta.source_block_height).toLocaleString()}`,
+        `Updated ${meta.source_block_time_utc}`,
+        `BIP-110 ${s.completed_periods}/${s.bip110_total_periods} periods complete`,
+        currentSignal != null
+          ? `Period ${s.current_period_index ?? "n/a"} signaling ${currentSignal.toLocaleString()} (${currentSignalPct})`
+          : `Period ${s.current_period_index ?? "n/a"} signaling n/a`,
+      ];
+      chipValues.forEach((text) => {
+        const div = document.createElement("div");
+        div.className = "chip";
+        div.textContent = text;
+        chips.appendChild(div);
+      });
+    }
+
+    function configureCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = state.dpr;
+      canvas.width = Math.max(2, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(2, Math.floor(rect.height * dpr));
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+
+    function clamp(x, min, max) {
+      return Math.max(min, Math.min(max, x));
+    }
+
+    function pctLabel(signal, periodSize) {
+      const pct = (signal / periodSize) * 100;
+      if (pct > 0 && pct < 0.1) return "< 0.1%";
+      return `${pct.toFixed(1)}%`;
+    }
+
+    function fitFontPx(ctx, text, maxWidth, basePx, minPx, fontFamily) {
+      let size = basePx;
+      while (size > minPx) {
+        ctx.font = `${size}px ${fontFamily}`;
+        if (ctx.measureText(text).width <= maxWidth) {
+          return size;
+        }
+        size -= 0.5;
+      }
+      return minPx;
+    }
+
+    function fitUniformMultilineFontPx(ctx, multilineLabels, maxWidth, basePx, minPx, fontFamily) {
+      let size = basePx;
+      const labels = Array.isArray(multilineLabels) && multilineLabels.length ? multilineLabels : [[""]];
+      while (size > minPx) {
+        ctx.font = `${size}px ${fontFamily}`;
+        const longest = labels.reduce((longestSoFar, lines) => {
+          const safeLines = Array.isArray(lines) && lines.length ? lines : [""];
+          const localMax = safeLines.reduce((w, line) => Math.max(w, ctx.measureText(String(line)).width), 0);
+          return Math.max(longestSoFar, localMax);
+        }, 0);
+        if (longest <= maxWidth) {
+          return size;
+        }
+        size -= 0.5;
+      }
+      return minPx;
+    }
+
+    function markerLabelLines(label) {
+      return String(label || "").split("\n");
+    }
+
+    function drawDiamond(ctx, x, y, size, color) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = color;
+      ctx.fillRect(-size / 2, -size / 2, size, size);
+      ctx.restore();
+    }
+
+    function drawMultiline(ctx, text, x, y, align, baseline, color, font, lineHeight) {
+      const lines = markerLabelLines(text);
+      let startY = y;
+      if (baseline === "bottom") {
+        // For bottom-anchored labels, draw the full text block above the anchor.
+        startY = y - (Math.max(lines.length, 1) * lineHeight) + 3;
+      }
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.font = font;
+      ctx.textAlign = align;
+      ctx.textBaseline = "top";
+      lines.forEach((line, idx) => {
+        ctx.fillText(line, x, startY + idx * lineHeight);
+      });
+      ctx.restore();
+    }
+
+    function drawPanel({ canvas, key, title, periods, blocks, releases, ticks, threshold, thresholdPct, showBottomAxis, specialLabels = [], markerTypography = null, numericTypography = null }) {
+      const { metadata } = state.data;
+      const chart = metadata.chart;
+      const periodSize = chart.period_size;
+      const xMax = chart.x_max;
+      const colors = chart.colors;
+
+      const { ctx, width, height } = configureCanvas(canvas);
+      const isMobile = width < 760;
+
+      const margin = {
+        top: isMobile ? 44 : 46,
+        right: isMobile ? 10 : 14,
+        bottom: showBottomAxis ? (isMobile ? 44 : 50) : (isMobile ? 18 : 20),
+        left: isMobile ? 44 : 56,
+      };
+
+      const plot = {
+        x: margin.left,
+        y: margin.top,
+        w: width - margin.left - margin.right,
+        h: height - margin.top - margin.bottom,
+      };
+
+      const xMin = 0.1;
+      const xMaxDomain = 20.5;
+      const xScale = (x) => plot.x + ((x - xMin) / (xMaxDomain - xMin)) * plot.w;
+      const yScale = (y) => plot.y + plot.h - (y / periodSize) * plot.h;
+      const barWidth = xScale(1 + chart.bar.width / 2) - xScale(1 - chart.bar.width / 2);
+      const minSignalLinePx = isMobile ? 1.25 : 1.5;
+      const renderedSignalTopByPeriod = new Map();
+
+      state.hitMaps[key] = [];
+      state.releaseMaps[key] = [];
+      state.stripeMaps[key] = [];
+      state.barMaps[key] = [];
+
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = "#06080a";
+      ctx.fillRect(0, 0, width, height);
+
+      for (let p = 1; p <= xMax; p += 1) {
+        const xCenter = xScale(p);
+        const x0 = xCenter - barWidth / 2;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
+        ctx.fillRect(x0, plot.y, barWidth, plot.h);
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(plot.x, plot.y, plot.w, plot.h);
+      ctx.clip();
+
+      periods.forEach((row) => {
+        const p = Number(row.period);
+        if (!Number.isFinite(p)) return;
+
+        const xCenter = xScale(p);
+        const x0 = xCenter - barWidth / 2;
+
+        const signalRaw = Number(row.signal_blocks || 0);
+        let signal = signalRaw;
+        let nonsignal = clamp(periodSize - signalRaw, 0, periodSize);
+        let unmined = 0;
+
+        if (key === "bip110") {
+          const status = String(row.status || "");
+          const elapsed = Number(row.elapsed_blocks || 0);
+          if (status === "completed") {
+            signal = signalRaw;
+            nonsignal = clamp(periodSize - signalRaw, 0, periodSize);
+            unmined = 0;
+          } else if (status === "in_progress") {
+            signal = signalRaw;
+            nonsignal = clamp(elapsed - signalRaw, 0, periodSize);
+            unmined = clamp(periodSize - elapsed, 0, periodSize);
+          } else {
+            signal = 0;
+            nonsignal = 0;
+            unmined = periodSize;
+          }
+        }
+
+        const ySignal = yScale(signal);
+        const yNonSignal = yScale(signal + nonsignal);
+        const actualSignalHeightPx = yScale(0) - ySignal;
+        const displaySignalHeightPx = signalRaw > 0 ? Math.max(actualSignalHeightPx, minSignalLinePx) : 0;
+        const displaySignalTopY = yScale(0) - displaySignalHeightPx;
+        renderedSignalTopByPeriod.set(p, displaySignalTopY);
+
+        if (signalRaw > 0) {
+          ctx.fillStyle = colors.signal;
+          ctx.fillRect(x0, displaySignalTopY, barWidth, displaySignalHeightPx);
+        }
+
+        if (nonsignal > 0) {
+          ctx.fillStyle = colors.nonsignal;
+          ctx.fillRect(x0, yNonSignal, barWidth, displaySignalTopY - yNonSignal);
+        }
+
+        if (unmined > 0) {
+          const yTopUnmined = yScale(signal + nonsignal + unmined);
+          ctx.fillStyle = colors.future;
+          ctx.fillRect(x0, yTopUnmined, barWidth, yNonSignal - yTopUnmined);
+        }
+
+        state.barMaps[key].push({
+          period: p,
+          x0,
+          x1: x0 + barWidth,
+          y0: plot.y,
+          y1: yScale(0),
+          data: row,
+        });
+      });
+
+      if (state.controls.stripes) {
+        const stripeOffset = Number(chart.signal_stripes.x_offset);
+        const stripeHalf = Number(chart.signal_stripes.halfwidth);
+        const stripeWidth = Math.max(0.5, Number(chart.signal_stripes.linewidth) * 2.5);
+        const stripeHitPad = Math.max(2.5, stripeWidth * 1.6);
+
+        blocks.forEach((b) => {
+          const p = Number(b.period);
+          const y = yScale(Number(b.y_in_period));
+          const signaling = Number(b.is_signaling) === 1;
+
+          const x0 = signaling
+            ? xScale(p + stripeOffset - stripeHalf)
+            : xScale(p - stripeOffset - stripeHalf);
+          const x1 = signaling
+            ? xScale(p + stripeOffset + stripeHalf)
+            : xScale(p - stripeOffset + stripeHalf);
+
+          ctx.strokeStyle = signaling ? colors.signal : colors.nonsignal;
+          ctx.lineWidth = stripeWidth;
+          ctx.globalAlpha = 0.98;
+          ctx.beginPath();
+          ctx.moveTo(x0, y);
+          ctx.lineTo(x1, y);
+          ctx.stroke();
+
+          state.stripeMaps[key].push({
+            x0: Math.min(x0, x1),
+            x1: Math.max(x0, x1),
+            y0: y - stripeHitPad,
+            y1: y + stripeHitPad,
+            data: b,
+          });
+        });
+
+        ctx.globalAlpha = 1;
+      }
+
+      ctx.restore();
+
+      const thresholdY = yScale(threshold);
+      ctx.strokeStyle = colors.threshold;
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.84;
+      ctx.beginPath();
+      ctx.moveTo(plot.x, thresholdY);
+      ctx.lineTo(plot.x + plot.w, thresholdY);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      const thresholdX = xScale(0.375);
+      const thresholdPctText = `${thresholdPct}%`;
+      const thresholdCountText = Number(threshold).toLocaleString();
+      const firstBarLeft = xScale(1) - barWidth / 2;
+      const halfSpace = Math.max(
+        10,
+        Math.min(
+          thresholdX - plot.x - 2,
+          firstBarLeft - thresholdX - 2
+        )
+      );
+      const thresholdMaxWidth = Math.max(20, halfSpace * 2);
+      const thresholdFontSize = numericTypography?.fontSize
+        ? Math.min(
+            numericTypography.fontSize,
+            fitFontPx(ctx, thresholdPctText, thresholdMaxWidth, numericTypography.fontSize, 6, '"IBM Plex Mono", monospace'),
+            fitFontPx(ctx, thresholdCountText, thresholdMaxWidth, numericTypography.fontSize, 6, '"IBM Plex Mono", monospace')
+          )
+        : Math.min(
+            fitFontPx(ctx, thresholdPctText, thresholdMaxWidth, isMobile ? 10 : 11, 6, '"IBM Plex Mono", monospace'),
+            fitFontPx(ctx, thresholdCountText, thresholdMaxWidth, isMobile ? 10 : 11, 6, '"IBM Plex Mono", monospace')
+          );
+      const thresholdOffset = Math.max(4, Math.round(thresholdFontSize * 0.6));
+
+      ctx.fillStyle = colors.threshold;
+      ctx.font = `${thresholdFontSize}px "IBM Plex Mono", monospace`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(thresholdPctText, thresholdX, thresholdY - thresholdOffset);
+      ctx.textBaseline = "top";
+      ctx.fillText(thresholdCountText, thresholdX, thresholdY + thresholdOffset);
+
+      if (state.controls.labels) {
+        periods.forEach((row) => {
+          const p = Number(row.period);
+          const signalRaw = Number(row.signal_blocks || 0);
+          const status = String(row.status || "completed");
+          if (key === "bip110" && status === "future") return;
+          if (key === "bip110" && status === "post_window") return;
+
+          const x = xScale(p);
+          const pct = pctLabel(signalRaw, periodSize);
+          const countText = Number(signalRaw).toLocaleString();
+          const baseNumericSize = numericTypography?.fontSize ?? (isMobile ? 10 : 11);
+          const fitPct = fitFontPx(
+            ctx,
+            pct,
+            Math.max(14, barWidth - 4),
+            baseNumericSize,
+            6,
+            '"IBM Plex Mono", monospace'
+          );
+          const fitCount = fitFontPx(
+            ctx,
+            countText,
+            Math.max(14, barWidth - 4),
+            baseNumericSize,
+            6,
+            '"IBM Plex Mono", monospace'
+          );
+          const sharedNumericSize = Math.min(baseNumericSize, fitPct, fitCount);
+
+          ctx.fillStyle = "#111";
+          ctx.font = `${sharedNumericSize}px "IBM Plex Mono", monospace`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(pct, x, (renderedSignalTopByPeriod.get(p) ?? yScale(signalRaw)) - 4);
+
+          if (signalRaw > 0) {
+            if (signalRaw < 100) {
+              ctx.fillStyle = colors.signal;
+              ctx.font = `${sharedNumericSize}px "IBM Plex Mono", monospace`;
+              ctx.textBaseline = "top";
+              ctx.fillText(countText, x - barWidth * 0.48, yScale(0) + 6);
+            } else {
+              ctx.fillStyle = "#111";
+              ctx.font = `${sharedNumericSize}px "IBM Plex Mono", monospace`;
+              ctx.textBaseline = "top";
+              ctx.fillText(countText, x, (renderedSignalTopByPeriod.get(p) ?? yScale(signalRaw)) + 2);
+            }
+          }
+        });
+      }
+
+      if (state.controls.markers) {
+        const markerFontSize = markerTypography?.fontSize ?? (isMobile ? 8.5 : 9.5);
+        const markerLineHeight = markerTypography?.lineHeight ?? Math.max(8, markerFontSize + 1);
+
+        releases.forEach((r) => {
+          const p = Number(r.period);
+          const y = yScale(Number(r.y_in_period));
+          const x = xScale(p);
+          const dyDataUnits = Number(r.label_dy || 55);
+          // Keep original spacing in two-panel mode, but normalize in solo mode
+          // so the marker-label distance stays visually identical.
+          const isSoloPanel = canvas.parentElement?.classList.contains("solo") === true;
+          const soloScale = isSoloPanel ? 0.5 : 1.0;
+          const labelY = y - (dyDataUnits * (plot.h / periodSize) * soloScale);
+          const anchor = String(r.label_anchor || "").toLowerCase();
+          const baseline = anchor === "below"
+            ? "top"
+            : anchor === "above"
+              ? "bottom"
+              : (dyDataUnits < 0 ? "top" : "bottom");
+          drawDiamond(ctx, x, y, isMobile ? 6 : 7, colors.marker);
+
+          drawMultiline(
+            ctx,
+            String(r.display_label || r.label || ""),
+            x,
+            labelY,
+            "center",
+            baseline,
+            chart.colors.foreground,
+            `${markerFontSize}px "Space Grotesk", sans-serif`,
+            markerLineHeight
+          );
+
+          state.releaseMaps[key].push({ x, y, radius: isMobile ? 10 : 11, data: r });
+        });
+      }
+
+      specialLabels.forEach((labelDef) => {
+        const p = Number(labelDef.period);
+        const x = xScale(p);
+        const bottomInset = isMobile ? 8 : 10;
+        const y = yScale(0) - bottomInset;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillStyle = colors.foreground;
+        ctx.font = `${isMobile ? 10 : 12}px "Space Grotesk", sans-serif`;
+        // Center on the bar horizontally, start near the bar bottom, and draw upward.
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.fillText(String(labelDef.text || ""), 0, 0);
+        ctx.restore();
+      });
+
+      drawAxes(ctx, { plot, xScale, yScale, xMax, periodSize, title, ticks, showBottomAxis, chart, isMobile });
+
+      state.hitMaps[key] = [
+        ...state.stripeMaps[key].map((s) => ({ type: "stripe", ...s })),
+        ...state.barMaps[key].map((b) => ({ type: "period", ...b })),
+        ...state.releaseMaps[key].map((r) => ({ type: "release", ...r })),
+      ];
+    }
+
+    function estimateBarWidthForCanvas(canvas, chart) {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || rect.width < 40) {
+        return 0;
+      }
+      const isMobile = rect.width < 760;
+      const left = isMobile ? 44 : 56;
+      const right = isMobile ? 10 : 14;
+      const plotW = Math.max(10, rect.width - left - right);
+      const xMin = 0.1;
+      const xMaxDomain = 20.5;
+      const pxPerDomain = plotW / (xMaxDomain - xMin);
+      return pxPerDomain * Number(chart.bar.width || 0.5);
+    }
+
+    function estimateThresholdLabelWidthForCanvas(canvas, chart) {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || rect.width < 40) {
+        return 0;
+      }
+      const isMobile = rect.width < 760;
+      const left = isMobile ? 44 : 56;
+      const right = isMobile ? 10 : 14;
+      const plotW = Math.max(10, rect.width - left - right);
+      const xMin = 0.1;
+      const xMaxDomain = 20.5;
+      const pxPerDomain = plotW / (xMaxDomain - xMin);
+      const xScale = (x) => left + (x - xMin) * pxPerDomain;
+      const barWidth = pxPerDomain * Number(chart.bar.width || 0.5);
+      const thresholdX = xScale(0.375);
+      const firstBarLeft = xScale(1) - barWidth / 2;
+      const halfSpace = Math.max(
+        10,
+        Math.min(
+          thresholdX - left - 2,
+          firstBarLeft - thresholdX - 2
+        )
+      );
+      return Math.max(20, halfSpace * 2);
+    }
+
+    function getSharedMarkerTypography(metadata, segwitReleases, bip110Releases) {
+      const chart = metadata.chart;
+      const tmpCanvas = document.createElement("canvas");
+      const tmpCtx = tmpCanvas.getContext("2d");
+      if (!tmpCtx) {
+        const fallbackSize = window.innerWidth < 760 ? 8.5 : 9.5;
+        return { fontSize: fallbackSize, lineHeight: Math.max(8, fallbackSize + 1) };
+      }
+
+      const combinedReleases = [...segwitReleases, ...bip110Releases];
+      const combinedLines = combinedReleases.map((r) => markerLabelLines(String(r.display_label || r.label || "")));
+      const barW1 = estimateBarWidthForCanvas(segwitCanvas, chart);
+      const barW2 = estimateBarWidthForCanvas(bip110Canvas, chart);
+      const widthCandidates = [barW1, barW2].filter((w) => Number.isFinite(w) && w > 8);
+      const targetWidth = Math.max(32, (widthCandidates.length ? Math.min(...widthCandidates) : 30) * 1.35);
+      const visibleWidths = [
+        segwitCanvas.getBoundingClientRect().width,
+        bip110Canvas.getBoundingClientRect().width,
+      ].filter((w) => Number.isFinite(w) && w > 8);
+      const isMobile = (visibleWidths.length ? Math.min(...visibleWidths) : window.innerWidth) < 760;
+      const fontSize = fitUniformMultilineFontPx(
+        tmpCtx,
+        combinedLines,
+        targetWidth,
+        isMobile ? 8.5 : 9.5,
+        6,
+        '"Space Grotesk", sans-serif'
+      );
+
+      return {
+        fontSize,
+        lineHeight: Math.max(8, fontSize + 1),
+      };
+    }
+
+    function getSharedNumericTypography(metadata, segwitPeriods, bip110Periods) {
+      const chart = metadata.chart;
+      const tmpCanvas = document.createElement("canvas");
+      const tmpCtx = tmpCanvas.getContext("2d");
+      if (!tmpCtx) {
+        const fallbackSize = window.innerWidth < 760 ? 10 : 11;
+        return { fontSize: fallbackSize };
+      }
+
+      const segBarW = estimateBarWidthForCanvas(segwitCanvas, chart);
+      const bipBarW = estimateBarWidthForCanvas(bip110Canvas, chart);
+      const segThrW = estimateThresholdLabelWidthForCanvas(segwitCanvas, chart);
+      const bipThrW = estimateThresholdLabelWidthForCanvas(bip110Canvas, chart);
+      const widthCandidates = [segBarW - 4, bipBarW - 4, segThrW, bipThrW].filter((w) => Number.isFinite(w) && w > 8);
+      const maxWidth = Math.max(14, widthCandidates.length ? Math.min(...widthCandidates) : 18);
+
+      const texts = [
+        ...segwitPeriods.map((r) => pctLabel(Number(r.signal_blocks || 0), Number(chart.period_size))),
+        ...segwitPeriods.map((r) => Number(r.signal_blocks || 0).toLocaleString()),
+        ...bip110Periods.map((r) => pctLabel(Number(r.signal_blocks || 0), Number(chart.period_size))),
+        ...bip110Periods.map((r) => Number(r.signal_blocks || 0).toLocaleString()),
+        `${Number(chart.thresholds.segwit.pct)}%`,
+        `${Number(chart.thresholds.bip110.pct)}%`,
+        Number(chart.thresholds.segwit.blocks).toLocaleString(),
+        Number(chart.thresholds.bip110.blocks).toLocaleString(),
+      ];
+
+      const visibleWidths = [
+        segwitCanvas.getBoundingClientRect().width,
+        bip110Canvas.getBoundingClientRect().width,
+      ].filter((w) => Number.isFinite(w) && w > 8);
+      const isMobile = (visibleWidths.length ? Math.min(...visibleWidths) : window.innerWidth) < 760;
+      const base = isMobile ? 10 : 11;
+      const size = texts.reduce((acc, txt) => {
+        const fitted = fitFontPx(tmpCtx, String(txt), maxWidth, acc, 6, '"IBM Plex Mono", monospace');
+        return Math.min(acc, fitted);
+      }, base);
+
+      return { fontSize: size };
+    }
+
+    function updatePanelVisibility() {
+      segwitPanel.classList.toggle("hidden", !state.controls.showSegwit);
+      bip110Panel.classList.toggle("hidden", !state.controls.showBip110);
+
+      const visibleCount = (state.controls.showSegwit ? 1 : 0) + (state.controls.showBip110 ? 1 : 0);
+      const solo = visibleCount === 1;
+
+      segwitCanvasBox.classList.toggle("solo", solo && state.controls.showSegwit);
+      bip110CanvasBox.classList.toggle("solo", solo && state.controls.showBip110);
+
+      applyDynamicPanelHeights();
+    }
+
+    function applyDynamicPanelHeights() {
+      const visibleBoxes = [];
+      if (state.controls.showSegwit) visibleBoxes.push(segwitCanvasBox);
+      if (state.controls.showBip110) visibleBoxes.push(bip110CanvasBox);
+      if (!visibleBoxes.length) return;
+
+      const wrapStyle = getComputedStyle(mainWrap);
+      const padTop = parseFloat(wrapStyle.paddingTop) || 0;
+      const padBottom = parseFloat(wrapStyle.paddingBottom) || 0;
+      const gap = parseFloat(wrapStyle.rowGap || wrapStyle.gap) || 0;
+
+      const n = visibleBoxes.length;
+      const viewportH = window.innerHeight;
+      const topbarH = topbar.getBoundingClientRect().height;
+      const gapsOutsidePanels = gap * n;
+      const availableForPanels = viewportH - topbarH - padTop - padBottom - gapsOutsidePanels;
+
+      const minPerPanel = n === 1 ? 600 : 300;
+      const panelHeight = Math.max(minPerPanel, Math.floor(availableForPanels / n));
+
+      // Use inline height so panel sizing accounts for dynamic topbar/chip wrapping.
+      visibleBoxes.forEach((box) => {
+        box.style.height = `${panelHeight}px`;
+      });
+
+      if (!state.controls.showSegwit) {
+        segwitCanvasBox.style.height = "";
+      }
+      if (!state.controls.showBip110) {
+        bip110CanvasBox.style.height = "";
+      }
+    }
+
+    function drawAxes(ctx, { plot, xScale, yScale, xMax, periodSize, title, ticks, showBottomAxis, chart, isMobile }) {
+      const fg = chart.colors.foreground;
+      const yTicks = [0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000];
+
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
+      ctx.lineWidth = 1;
+      yTicks.forEach((t) => {
+        const y = yScale(t);
+        ctx.beginPath();
+        ctx.moveTo(plot.x, y);
+        ctx.lineTo(plot.x + plot.w, y);
+        ctx.stroke();
+      });
+
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+      ctx.beginPath();
+      ctx.moveTo(plot.x, plot.y);
+      ctx.lineTo(plot.x, plot.y + plot.h);
+      ctx.lineTo(plot.x + plot.w, plot.y + plot.h);
+      ctx.stroke();
+
+      ctx.fillStyle = fg;
+      ctx.font = `${isMobile ? 10 : 11}px "IBM Plex Mono", monospace`;
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      yTicks.forEach((t) => {
+        ctx.fillText(String(t), plot.x - 8, yScale(t));
+      });
+
+      ctx.save();
+      ctx.translate(isMobile ? 10 : 12, plot.y + plot.h / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = fg;
+      ctx.font = `${isMobile ? 11 : 12}px "Space Grotesk", sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(chart.axis_labels.y, 0, 0);
+      ctx.restore();
+
+      ctx.fillStyle = fg;
+      ctx.font = `${isMobile ? 11 : 13}px "Space Grotesk", sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(title, plot.x + plot.w / 2, plot.y - 28);
+
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.font = `${isMobile ? 10 : 11}px "IBM Plex Mono", monospace`;
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+      ctx.lineWidth = 1;
+      ticks.forEach((tick) => {
+        const x = xScale(Number(tick.x));
+        ctx.beginPath();
+        ctx.moveTo(x, plot.y);
+        ctx.lineTo(x, plot.y - (isMobile ? 5 : 6));
+        ctx.stroke();
+        ctx.fillStyle = fg;
+        ctx.fillText(String(tick.label), x, plot.y - 8);
+      });
+
+      if (showBottomAxis) {
+        ctx.font = `${isMobile ? 10 : 11}px "IBM Plex Mono", monospace`;
+        for (let i = 1; i <= xMax; i += 1) {
+          const x = xScale(i);
+          ctx.fillStyle = fg;
+          ctx.textBaseline = "top";
+          ctx.fillText(String(i), x, plot.y + plot.h + 6);
+        }
+
+        ctx.fillStyle = fg;
+        ctx.font = `${isMobile ? 11 : 12}px "Space Grotesk", sans-serif`;
+        ctx.textBaseline = "bottom";
+        ctx.fillText(chart.axis_labels.x_bottom, plot.x + plot.w / 2, plot.y + plot.h + (isMobile ? 34 : 38));
+      }
+    }
+
+    function formatPeriodTooltip(data, chartType) {
+      if (chartType === "segwit") {
+        const signal = Number(data.signal_blocks || 0);
+        const periodSize = Number(state?.data?.metadata?.chart?.period_size || 2016);
+        const non = clamp(periodSize - signal, 0, periodSize);
+        return [
+          `SegWit period ${data.period}`,
+          `Height ${Number(data.period_start_height).toLocaleString()}-${Number(data.period_end_height).toLocaleString()}`,
+          `Signaling ${signal.toLocaleString()} (${pctLabel(signal, periodSize)})`,
+          `Non-signaling ${non.toLocaleString()}`,
+        ].join("\n");
+      }
+
+      const signal = Number(data.signal_blocks || 0);
+      const elapsed = Number(data.elapsed_blocks || 0);
+      const periodSize = Number(state?.data?.metadata?.chart?.period_size || 2016);
+      const non = clamp(elapsed - signal, 0, periodSize);
+      const unmined = clamp(periodSize - elapsed, 0, periodSize);
+      const status = String(data.status || "");
+
+      const lines = [
+        `BIP-110 period ${data.period}`,
+        `Status ${status}`,
+        data.period_start_height ? `Height ${Number(data.period_start_height).toLocaleString()}-${Number(data.period_end_height).toLocaleString()}` : "Outside signaling window",
+        `Signaling ${signal.toLocaleString()} (${pctLabel(signal, periodSize)})`,
+      ];
+
+      if (status === "completed") {
+        lines.push(`Non-signaling ${non.toLocaleString()}`);
+      } else if (status === "in_progress") {
+        lines.push(`Non-signaling ${non.toLocaleString()}`);
+        lines.push(`Mined ${elapsed.toLocaleString()} | Unmined ${unmined.toLocaleString()}`);
+      } else {
+        lines.push(`Mined ${elapsed.toLocaleString()} | Unmined ${unmined.toLocaleString()}`);
+      }
+
+      return lines.join("\n");
+    }
+
+    function formatReleaseTooltip(data) {
+      const when = data.release_time_utc
+        ? String(data.release_time_utc)
+        : "Date/time unavailable";
+      return [
+        String(data.label || "Release"),
+        when,
+      ].join("\n");
+    }
+
+    function formatStripeTooltip(data, chartType) {
+      const fork = chartType === "segwit" ? "SegWit" : "BIP-110";
+      const mode = Number(data.is_signaling) === 1
+        ? `Signaling for ${fork}`
+        : `Non-signaling for ${fork}`;
+      return [
+        `Height ${Number(data.height).toLocaleString()}`,
+        mode,
+      ].join("\n");
+    }
+
+    function getReleaseGithubUrl(data) {
+      if (data && typeof data.github_url === "string" && data.github_url.trim()) {
+        return data.github_url.trim();
+      }
+
+      const rawLabel = String(data?.label || "");
+      const idx = rawLabel.indexOf(":");
+      const prefix = (idx >= 0 ? rawLabel.slice(0, idx) : rawLabel).toLowerCase();
+      const version = idx >= 0 ? rawLabel.slice(idx + 1) : "";
+
+      const perPrefixRepo = {
+        core: "bitcoin/bitcoin",
+        bip110: "dathonohm/bitcoin",
+        uasf: "UASF/bitcoin",
+        segwit2x: "btc1/bitcoin",
+      };
+
+      if (version && perPrefixRepo[prefix]) {
+        return `https://github.com/${perPrefixRepo[prefix]}/releases/tag/${encodeURIComponent(version)}`;
+      }
+
+      const q = encodeURIComponent(rawLabel || version || "bitcoin release");
+      return `https://github.com/search?q=${q}&type=repositories`;
+    }
+
+    function findHit(key, x, y) {
+      const releases = state.releaseMaps[key];
+      for (let i = 0; i < releases.length; i += 1) {
+        const r = releases[i];
+        const dx = x - r.x;
+        const dy = y - r.y;
+        if (dx * dx + dy * dy <= r.radius * r.radius) {
+          return { type: "release", data: r.data };
+        }
+      }
+
+      const stripes = state.stripeMaps[key];
+      for (let i = 0; i < stripes.length; i += 1) {
+        const s = stripes[i];
+        if (x >= s.x0 && x <= s.x1 && y >= s.y0 && y <= s.y1) {
+          return { type: "stripe", data: s.data };
+        }
+      }
+
+      const bars = state.barMaps[key];
+      for (let i = 0; i < bars.length; i += 1) {
+        const b = bars[i];
+        if (x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1) {
+          return { type: "period", data: b.data };
+        }
+      }
+      return null;
+    }
+
+    function showTooltip(content, clientX, clientY) {
+      tooltip.textContent = content;
+      const viewportW = window.innerWidth;
+      const tipW = tooltip.offsetWidth || 320;
+      const edgePad = 12;
+      const half = tipW / 2;
+      const clampedX = clamp(clientX, edgePad + half, viewportW - edgePad - half);
+      tooltip.style.left = `${clampedX}px`;
+      tooltip.style.top = `${clientY}px`;
+      tooltip.classList.add("show");
+    }
+
+    function hideTooltip() {
+      if (!state.pinnedTooltip) {
+        tooltip.classList.remove("show");
+      }
+    }
+
+    function attachPointer(canvas, key) {
+      canvas.addEventListener("mousemove", (ev) => {
+        if (!state.data) return;
+        if (state.pinnedTooltip) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const x = ev.clientX - rect.left;
+        const y = ev.clientY - rect.top;
+        const hit = findHit(key, x, y);
+        if (!hit) {
+          hideTooltip();
+          return;
+        }
+
+        const content = hit.type === "release"
+          ? formatReleaseTooltip(hit.data)
+          : hit.type === "stripe"
+            ? formatStripeTooltip(hit.data, key)
+          : formatPeriodTooltip(hit.data, key);
+        showTooltip(content, ev.clientX, ev.clientY);
+      });
+
+      canvas.addEventListener("mouseleave", () => {
+        hideTooltip();
+      });
+
+      canvas.addEventListener("click", (ev) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = ev.clientX - rect.left;
+        const y = ev.clientY - rect.top;
+        const hit = findHit(key, x, y);
+
+        if (!hit) {
+          state.pinnedTooltip = null;
+          hideTooltip();
+          return;
+        }
+
+        if (hit.type === "stripe") {
+          const h = Number(hit.data.height);
+          if (Number.isFinite(h)) {
+            window.open(`https://mempool.space/block/${h}`, "_blank", "noopener,noreferrer");
+          }
+          return;
+        }
+
+        if (hit.type === "release") {
+          const url = getReleaseGithubUrl(hit.data);
+          window.open(url, "_blank", "noopener,noreferrer");
+          return;
+        }
+
+        const content = hit.type === "release"
+          ? formatReleaseTooltip(hit.data)
+          : hit.type === "stripe"
+            ? formatStripeTooltip(hit.data, key)
+          : formatPeriodTooltip(hit.data, key);
+
+        state.pinnedTooltip = { content, x: ev.clientX, y: ev.clientY };
+        showTooltip(content, ev.clientX, ev.clientY);
+      });
+    }
+
+    function renderAll() {
+      if (!state.data) return;
+
+      const { metadata } = state.data;
+      const segThreshold = Number(metadata.chart.thresholds.segwit.blocks);
+      const bipThreshold = Number(metadata.chart.thresholds.bip110.blocks);
+      const sharedMarkerTypography = getSharedMarkerTypography(
+        metadata,
+        state.data.segwitReleases,
+        state.data.bip110Releases
+      );
+      const sharedNumericTypography = getSharedNumericTypography(
+        metadata,
+        state.data.segwitPeriods,
+        state.data.bip110Periods
+      );
+
+      if (state.controls.showSegwit) {
+        drawPanel({
+          canvas: segwitCanvas,
+          key: "segwit",
+          title: "SegWit (BIP-141) Signaling Periods",
+          periods: state.data.segwitPeriods,
+          blocks: state.data.segwitBlocks,
+          releases: state.data.segwitReleases,
+          ticks: state.data.segwitTicks,
+          threshold: segThreshold,
+          thresholdPct: Number(metadata.chart.thresholds.segwit.pct),
+          showBottomAxis: true,
+          markerTypography: sharedMarkerTypography,
+          numericTypography: sharedNumericTypography,
+        });
+      }
+
+      if (state.controls.showBip110) {
+        drawPanel({
+          canvas: bip110Canvas,
+          key: "bip110",
+          title: "Reduced Data Temporary Softfork (BIP-110) Signaling Periods",
+          periods: state.data.bip110Periods,
+          blocks: state.data.bip110Blocks,
+          releases: state.data.bip110Releases,
+          ticks: state.data.bip110Ticks,
+          threshold: bipThreshold,
+          thresholdPct: Number(metadata.chart.thresholds.bip110.pct),
+          showBottomAxis: true,
+          specialLabels: metadata.chart.special_period_labels,
+          markerTypography: sharedMarkerTypography,
+          numericTypography: sharedNumericTypography,
+        });
+      }
+    }
+
+    function setControlHandlers() {
+      const stripes = document.getElementById("toggleStripes");
+      const markers = document.getElementById("toggleMarkers");
+      const labels = document.getElementById("toggleLabels");
+      const segwitWindow = document.getElementById("toggleSegwitWindow");
+      const bip110Window = document.getElementById("toggleBip110Window");
+
+      stripes.addEventListener("change", () => {
+        state.controls.stripes = stripes.checked;
+        renderAll();
+      });
+
+      markers.addEventListener("change", () => {
+        state.controls.markers = markers.checked;
+        renderAll();
+      });
+
+      labels.addEventListener("change", () => {
+        state.controls.labels = labels.checked;
+        renderAll();
+      });
+
+      segwitWindow.addEventListener("change", () => {
+        if (!segwitWindow.checked && !bip110Window.checked) {
+          bip110Window.checked = true;
+        }
+        state.controls.showSegwit = segwitWindow.checked;
+        state.controls.showBip110 = bip110Window.checked;
+        updatePanelVisibility();
+        renderAll();
+      });
+
+      bip110Window.addEventListener("change", () => {
+        if (!segwitWindow.checked && !bip110Window.checked) {
+          segwitWindow.checked = true;
+        }
+        state.controls.showSegwit = segwitWindow.checked;
+        state.controls.showBip110 = bip110Window.checked;
+        updatePanelVisibility();
+        renderAll();
+      });
+    }
+
+    function showError(message) {
+      const error = document.createElement("div");
+      error.className = "error";
+      error.innerHTML = `${message}<br><br>Tip: if this page is opened with file://, load it from a simple local server so fetch() can read CSV files.`;
+      document.querySelector("main").prepend(error);
+    }
+
+    async function init() {
+      try {
+        state.data = await loadAllData();
+        state.dataSignature = getDataSignature(state.data.metadata);
+        applyNarrowWindowDefaults();
+        setStatus(state.data);
+        setControlHandlers();
+        updatePanelVisibility();
+        attachPointer(segwitCanvas, "segwit");
+        attachPointer(bip110Canvas, "bip110");
+        renderAll();
+        startAutoRefresh();
+
+        window.addEventListener("resize", () => {
+          applyDynamicPanelHeights();
+          renderAll();
+          if (state.pinnedTooltip) {
+            showTooltip(state.pinnedTooltip.content, state.pinnedTooltip.x, state.pinnedTooltip.y);
+          }
+        });
+
+        window.addEventListener("keydown", (ev) => {
+          if (ev.key === "Escape") {
+            state.pinnedTooltip = null;
+            hideTooltip();
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        showError(String(err.message || err));
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
