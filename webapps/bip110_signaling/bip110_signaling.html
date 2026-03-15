@@ -201,6 +201,47 @@
       height: max(300px, 44svh);
     }
 
+    .panel-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 2;
+      transition: opacity 180ms ease, visibility 0ms linear 180ms;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: none;
+    }
+
+    .panel-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .panel-loader .circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top-color: var(--signal);
+      animation: spin 850ms linear infinite;
+    }
+
+    .panel-loader .label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      color: #d6e1e6;
+      letter-spacing: 0.01em;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     .canvas-box.solo {
       height: max(600px, 88svh);
     }
@@ -277,11 +318,23 @@
     </section>
 
     <section class="card" id="segwitPanel">
-      <div class="canvas-box" id="segwitCanvasBox"><canvas id="segwitCanvas" aria-label="SegWit signaling chart"></canvas></div>
+      <div class="canvas-box" id="segwitCanvasBox">
+        <div class="panel-loader" id="segwitLoader" aria-live="polite" aria-label="Loading SegWit signaling chart">
+          <div class="circle" aria-hidden="true"></div>
+          <div class="label">Loading SegWit signaling...</div>
+        </div>
+        <canvas id="segwitCanvas" aria-label="SegWit signaling chart"></canvas>
+      </div>
     </section>
 
     <section class="card" id="bip110Panel">
-      <div class="canvas-box" id="bip110CanvasBox"><canvas id="bip110Canvas" aria-label="BIP-110 signaling chart"></canvas></div>
+      <div class="canvas-box" id="bip110CanvasBox">
+        <div class="panel-loader" id="bip110Loader" aria-live="polite" aria-label="Loading BIP-110 signaling chart">
+          <div class="circle" aria-hidden="true"></div>
+          <div class="label">Loading BIP-110 signaling...</div>
+        </div>
+        <canvas id="bip110Canvas" aria-label="BIP-110 signaling chart"></canvas>
+      </div>
     </section>
 
   </main>
@@ -329,9 +382,18 @@
     const bip110Panel = document.getElementById("bip110Panel");
     const segwitCanvasBox = document.getElementById("segwitCanvasBox");
     const bip110CanvasBox = document.getElementById("bip110CanvasBox");
+    const segwitLoader = document.getElementById("segwitLoader");
+    const bip110Loader = document.getElementById("bip110Loader");
     const mainWrap = document.getElementById("mainWrap");
     const topbar = document.getElementById("topbar");
     const tooltip = document.getElementById("tooltip");
+
+    function setPanelLoadersVisible(visible) {
+      [segwitLoader, bip110Loader].forEach((loader) => {
+        if (!loader) return;
+        loader.classList.toggle("hidden", !visible);
+      });
+    }
 
     function applyEmbedModalTopClearance() {
       if (window.self === window.top) return;
@@ -1562,6 +1624,7 @@
 
     async function init() {
       try {
+        setPanelLoadersVisible(true);
         state.data = await loadAllData();
         state.dataSignature = getDataSignature(state.data.metadata);
         applyNarrowWindowDefaults();
@@ -1571,6 +1634,7 @@
         attachPointer(segwitCanvas, "segwit");
         attachPointer(bip110Canvas, "bip110");
         renderAll();
+        setPanelLoadersVisible(false);
         startAutoRefresh();
 
         window.addEventListener("resize", () => {
@@ -1589,6 +1653,7 @@
         });
       } catch (err) {
         console.error(err);
+        setPanelLoadersVisible(false);
         showError(String(err.message || err));
       }
     }
