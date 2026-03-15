@@ -50,7 +50,13 @@ function openModalByIndex(index) {
     modal.classList.remove('zoomed');
     modalImg.dataset.filename = fname;
     modalImg.alt = image.title || '';
-    const embedUrl = image.modal_type === 'embed' ? modalEmbedSrc(image.embed_url) : '';
+    const modalType = String(image.modal_type || '').trim().toLowerCase();
+    const fallbackEmbedPath = fname === 'bip110_signaling.png'
+        ? '/webapps/bip110_signaling/bip110_signaling.html'
+        : '';
+    const embedPath = String(image.embed_url || '').trim() || fallbackEmbedPath;
+    const shouldEmbed = modalType === 'embed' || !!embedPath;
+    const embedUrl = shouldEmbed ? modalEmbedSrc(embedPath) : '';
     const isEmbed = !!embedUrl;
     if (isEmbed) {
         modalContentMode = 'embed';
