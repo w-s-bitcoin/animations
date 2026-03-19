@@ -1,7 +1,7 @@
 (() => {
-  const STANDALONE_FILENAME = "bip110_signaling.png";
+  const STANDALONE_FILENAME = "node_count.png";
   const IMAGE_LIST_URL = "final_frames/image_list.json";
-  const DASHBOARD_URL = "webapps/bip110_signaling/dashboard.html";
+  const DASHBOARD_URL = "webapps/node_count/dashboard.html";
   const FAVORITES_STORAGE_KEY = "favorites";
 
   const modal = document.getElementById("modal");
@@ -19,7 +19,7 @@
 
   let currentImage = {
     filename: STANDALONE_FILENAME,
-    title: "SegWit and BIP-110 Signaling",
+    title: "Node Count",
     description: "",
     latest_x: "",
     latest_nostr: "",
@@ -43,8 +43,8 @@
   function getStandalonePath() {
     const base = getPageBasePath();
     const path = location.hostname === "localhost"
-      ? `${base}/bip110_signaling.html`
-      : `${base}/bip110_signaling`;
+      ? `${base}/node_count.html`
+      : `${base}/node_count`;
     return normalizeJoinedPath(path);
   }
 
@@ -58,7 +58,7 @@
 
   function getMainRouteUrl(filename) {
     const slug = slugFromFilename(filename);
-    if (slug === "bip110_signaling") return getStandalonePath();
+    if (slug === "node_count") return getStandalonePath();
 
     const base = getPageBasePath();
     if (location.hostname === "localhost") {
@@ -144,7 +144,7 @@
   function setCurrentImage(image, index) {
     currentImage = image || currentImage;
     currentIndex = Number.isInteger(index) ? index : currentIndex;
-    document.title = `${currentImage.title || "BIP-110 Signaling"} | Wicked Smart Bitcoin`;
+    document.title = `${currentImage.title || "Node Count"} | Wicked Smart Bitcoin`;
     if (modalImg) {
       modalImg.dataset.filename = currentImage.filename;
       modalImg.alt = currentImage.title || "";
