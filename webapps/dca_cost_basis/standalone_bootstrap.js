@@ -1,7 +1,7 @@
 (() => {
-  const STANDALONE_FILENAME = "bip110_signaling.png";
+  const STANDALONE_FILENAME = "dca_cost_basis.png";
   const IMAGE_LIST_URL = "assets/image_list.json";
-  const DASHBOARD_URL = "webapps/bip110_signaling/dashboard.html";
+  const DASHBOARD_URL = "webapps/dca_cost_basis/dashboard.html";
   const FAVORITES_STORAGE_KEY = "favorites";
   const MODAL_NAV_SNAPSHOT_KEY = "wsb_modal_nav_snapshot_v1";
   const GRID_FOCUS_RESTORE_KEY = "wsb_pending_grid_focus_filename_v1";
@@ -22,7 +22,7 @@
 
   let currentImage = {
     filename: STANDALONE_FILENAME,
-    title: "SegWit and BIP-110 Signaling",
+    title: "DCA Cost Basis",
     description: "",
     latest_x: "",
     latest_nostr: "",
@@ -72,8 +72,8 @@
   function getStandalonePath() {
     const base = getPageBasePath();
     const path = IS_LOCAL_HOST
-      ? `${base}/bip110_signaling.html`
-      : `${base}/bip110_signaling`;
+      ? `${base}/dca_cost_basis.html`
+      : `${base}/dca_cost_basis`;
     return normalizeJoinedPath(path);
   }
 
@@ -90,12 +90,12 @@
     const localStandaloneBySlug = {
       quantum_exposure: 'quantum_exposure.html',
       bip110_signaling: 'bip110_signaling.html',
-      dca_cost_basis: 'dca_cost_basis.html',
       node_count: 'node_count.html',
       bitcoin_dominance: 'bitcoin_dominance.html',
+      dca_cost_basis: 'dca_cost_basis.html',
     };
 
-    if (slug === "bip110_signaling") return getStandalonePath();
+    if (slug === "dca_cost_basis") return getStandalonePath();
 
     const base = getPageBasePath();
     if (IS_LOCAL_HOST) {
@@ -186,7 +186,7 @@
   function setCurrentImage(image, index) {
     currentImage = image || currentImage;
     currentIndex = Number.isInteger(index) ? index : currentIndex;
-    document.title = `${currentImage.title || "BIP-110 Signaling"} | Wicked Smart Bitcoin`;
+    document.title = `${currentImage.title || "DCA Cost Basis"} | Wicked Smart Bitcoin`;
     if (modalImg) {
       modalImg.dataset.filename = currentImage.filename;
       modalImg.alt = currentImage.title || "";
