@@ -160,6 +160,7 @@ ua,software,main_version,sub_version,listening,est_unreachable,total_count
 /Satoshi:27.1.0/Knots:20240621/,Bitcoin Knots,v27,v27.1.0,0,1,1
 /Satoshi:0.15.2/,Bitcoin Core,v0.15,v0.15.2,1,1,2
 /Satoshi:0.20.99/,Bitcoin Core,v0.20,v0.20.99,0,1,1
+/Satoshi:0.14.2/Knots:20170618/,Bitcoin Knots,v0.14,v0.14.2,0,3,3
 /btcwire:0.5.0/bitfeed:0.1.0/,btcsuite,,,0,1,1
 /Satoshi:1.0.0/,Bitcoin Core,v1,v1.0.0,2,0,2
 /Satoshi:30.2.0/Knots:20251110/,Bitcoin Knots,v30,v30.2.0,1,0,1
@@ -169,6 +170,7 @@ ua,software,main_version,sub_version,listening,est_unreachable,total_count
 /Satoshi:0.14.3/,Bitcoin Core,v0.14,v0.14.3,0,2,2
 /Satoshi:0.0.126.144/,Bitcoin Core,v0.0,v0.0.126,1,1,2
 /Satoshi:77.0.0/PyBLOCK+BIP110:/UASF-BIP110:0.4/RUG THE SPAMMERS/,BIP110,v77,v77.0.0,1,1,2
+/Satoshi:29.3.0/Knots:20260210-bip110-v0.3/,BIP110,v29,v29.3.0,0,1,1
 /Satoshi:29.2.0/Corea:20251021/,Bitcoin Core,v29,v29.2.0,0,1,1
 /Satoshi:%2A.%2A.%2A/,Bitcoin Core,,,0,1,1
 /btcwire:0.5.0/btcd:0.20.1/,btcsuite,,,0,1,1
