@@ -1,7 +1,7 @@
 (() => {
-  const STANDALONE_FILENAME = "bitcoin_dominance.png";
+  const STANDALONE_FILENAME = "bitcoin_net_worth.png";
   const IMAGE_LIST_URL = "assets/image_list.json";
-  const DASHBOARD_URL = "webapps/bitcoin_dominance/dashboard.html";
+  const DASHBOARD_URL = "webapps/bitcoin_net_worth/dashboard.html";
   const FAVORITES_STORAGE_KEY = "favorites";
   const MODAL_NAV_SNAPSHOT_KEY = "wsb_modal_nav_snapshot_v1";
   const GRID_FOCUS_RESTORE_KEY = "wsb_pending_grid_focus_filename_v1";
@@ -22,7 +22,7 @@
 
   let currentImage = {
     filename: STANDALONE_FILENAME,
-    title: "Bitcoin Dominance",
+    title: "Bitcoin Net Worth",
     description: "",
     latest_x: "",
     latest_nostr: "",
@@ -72,8 +72,8 @@
   function getStandalonePath() {
     const base = getPageBasePath();
     const path = IS_LOCAL_HOST
-      ? `${base}/bitcoin_dominance.html`
-      : `${base}/bitcoin_dominance`;
+      ? `${base}/bitcoin_net_worth.html`
+      : `${base}/bitcoin_net_worth`;
     return normalizeJoinedPath(path);
   }
 
@@ -90,13 +90,13 @@
     const localStandaloneBySlug = {
       quantum_exposure: 'quantum_exposure.html',
       bip110_signaling: 'bip110_signaling.html',
-      node_count: 'node_count.html',
       dca_cost_basis: 'dca_cost_basis.html',
+      node_count: 'node_count.html',
       bitcoin_dominance: 'bitcoin_dominance.html',
       bitcoin_net_worth: 'bitcoin_net_worth.html',
     };
 
-    if (slug === "bitcoin_dominance") return getStandalonePath();
+    if (slug === "bitcoin_net_worth") return getStandalonePath();
 
     const base = getPageBasePath();
     if (IS_LOCAL_HOST) {
@@ -187,7 +187,7 @@
   function setCurrentImage(image, index) {
     currentImage = image || currentImage;
     currentIndex = Number.isInteger(index) ? index : currentIndex;
-    document.title = `${currentImage.title || "Bitcoin Dominance"} | Wicked Smart Bitcoin`;
+    document.title = `${currentImage.title || "Bitcoin Net Worth"} | Wicked Smart Bitcoin`;
     if (modalImg) {
       modalImg.dataset.filename = currentImage.filename;
       modalImg.alt = currentImage.title || "";
